@@ -1,0 +1,245 @@
+{
+  "auth": {
+    "agree": "Acepto los",
+    "createAccount": "Crear cuenta",
+    "createNewAccount": "Crear Nueva Cuenta",
+    "email": "Correo electrónico",
+    "login": "Iniciar sesión",
+    "password": "Contraseña",
+    "recover_password": "Recuperar contraseña",
+    "sign_up": "Registrarse",
+    "keep_logged_in": "Mantenerme conectado",
+    "termsOfUse": "Términos de Uso.",
+    "reset_password": "Restablecer contraseña"
+  },
+  "404": {
+    "title": "Esta página se fue de pesca.",
+    "text": "Si crees que esto no es correcto, por favor envíanos un mensaje a ",
+    "back_button": "Volver al panel"
+  },
+  "typography": {
+    "primary": "Estilos de texto primario",
+    "secondary": "Estilos de texto secundario"
+  },
+  "dashboard": {
+    "versions": "Versiones",
+    "setupRemoteConnections": "Configurar Conexiones Remotas",
+    "currentVisitors": "Visitantes Actuales",
+    "navigationLayout": "disposición de navegación",
+    "topBarButton": "Barra Superior",
+    "sideBarButton": "Barra Lateral"
+  },
+  "language": {
+    "brazilian_portuguese": "Portugués Brasileño",
+    "english": "Inglés",
+    "spanish": "Español",
+    "simplified_chinese": "Chino Simplificado",
+    "persian": "Persa"
+  },
+  "menu": {
+    "auth": "Autenticación",
+    "buttons": "Botones",
+    "timelines": "Líneas de tiempo",
+    "dashboard": "Panel",
+    "billing": "Facturación",
+    "login": "Inicio de sesión",
+    "preferences": "Preferencias de cuenta",
+    "payments": "Pagos",
+    "settings": "Configuración de la aplicación",
+    "pricing-plans": "Planes de precios",
+    "payment-methods": "Métodos de pago",
+    "signup": "Registro",
+    "recover-password": "Recuperar contraseña",
+    "recover-password-email": "Correo de recuperación",
+    "404": "404",
+    "faq": "Preguntas frecuentes",
+    "users": "Usuarios",
+    "projects": "Proyectos"
+  },
+  "messages": {
+    "all": "Ver todos los mensajes",
+    "new": "Nuevos mensajes de {name}",
+    "mark_as_read": "Marcar como leído"
+  },
+  "navbar": {
+    "messageUs": "Consultas de desarrollo web:",
+    "repository": "Repositorio GitHub"
+  },
+  "notifications": {
+    "all": "Ver todas las notificaciones",
+    "less": "Ver menos notificaciones",
+    "mark_as_read": "Marcar como leída",
+    "sentMessage": "te envió un mensaje",
+    "uploadedZip": "subió un nuevo archivo Zip con {type}",
+    "startedTopic": "comenzó un nuevo tema"
+  },
+  "user": {
+    "language": "Cambiar idioma",
+    "logout": "Cerrar sesión",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "billing": "Facturación",
+    "faq": "Preguntas frecuentes",
+    "helpAndSupport": "Ayuda y soporte",
+    "projects": "Proyectos",
+    "account": "Cuenta",
+    "explore": "Explorar"
+  },
+  "treeView": {
+    "basic": "Básico",
+    "icons": "Iconos",
+    "selectable": "Seleccionable",
+    "editable": "Editable",
+    "advanced": "Avanzado"
+  },
+  "chat": {
+    "title": "Chat",
+    "sendButton": "Enviar"
+  },
+  "spacingPlayground": {
+    "value": "Valor",
+    "margin": "Margen",
+    "padding": "Relleno"
+  },
+  "spacing": {
+    "title": "Espaciado"
+  },
+  "cards": {
+    "cards": "Tarjetas",
+    "fixed": "Fijo",
+    "floating": "Flotante",
+    "contentText": "Las rayas únicas de las cebras las convierten en uno de los animales más familiares para las personas.",
+    "contentTextLong": "Las rayas únicas de las cebras las convierten en uno de los animales más familiares para las personas. Ocurren en una variedad de hábitats, como pastizales, sabanas, bosques, matorrales espinosos, montañas y colinas costeras. Varios factores antropogénicos han tenido un impacto severo en las poblaciones de cebras, en particular la caza por pieles y la destrucción del hábitat. La cebra de Grévy y la cebra de montaña están en peligro de extinción. Mientras que las cebras de las llanuras son mucho más abundantes, una subespecie, la quagga.",
+    "rowHeight": "Altura de fila",
+    "title": {
+      "default": "Por defecto",
+      "withControls": "Con controles",
+      "customHeader": "Encabezado personalizado",
+      "withoutHeader": "Sin encabezado",
+      "withImage": "Con imagen",
+      "withTitleOnImage": "Con título en imagen",
+      "withCustomTitleOnImage": "Con título personalizado en imagen",
+      "withStripe": "Con franja",
+      "withBackground": "Con fondo"
+    },
+    "button": {
+      "main": "Principal",
+      "cancel": "Cancelar",
+      "showMore": "Mostrar más",
+      "readMore": "Mostrar más"
+    },
+    "link": {
+      "edit": "Editar",
+      "setAsDefault": "Establecer como predeterminado",
+      "delete": "Eliminar",
+      "traveling": "Viajes",
+      "france": "Francia",
+      "review": "Revisar",
+      "feedback": "Dejar comentarios",
+      "readFull": "Leer artículo completo",
+      "secondaryAction": "Acción secundaria",
+      "action1": "Acción 1",
+      "action2": "Acción 2"
+    }
+  },
+  "colors": {
+    "themeColors": "Colores del tema",
+    "extraColors": "Colores adicionales",
+    "gradients": {
+      "basic": {
+        "title": "Degradados de botones"
+      },
+      "hovered": {
+        "title": "Degradados de botones al pasar",
+        "text": "Se aplica un 15% más claro al estilo original (degradado o color plano) para el estado al pasar el cursor."
+      },
+      "pressed": {
+        "title": "Degradados de botones presionados",
+        "text": "Se aplica un 15% más oscuro al estilo original (degradado o color plano) para el estado presionado."
+      }
+    }
+  },
+  "tabs": {
+    "alignment": "Alineación de pestañas",
+    "overflow": "Desbordamiento de pestañas",
+    "hidden": "Pestañas con control deslizante oculto",
+    "grow": "Pestañas expandibles"
+  },
+  "helpAndSupport": "Ayuda y soporte",
+  "aboutVuesticAdmin": "Acerca de Vuestic Admin",
+  "supportAndConsulting": "Soporte y Consultoría",
+  "search": {
+    "placeholder": "Buscar..."
+  },
+  "buttonSelect": {
+    "dark": "Oscuro",
+    "light": "Claro"
+  },
+  "vuestic": {
+    "search": "Buscar",
+    "noOptions": "Elementos no encontrados",
+    "ok": "Aceptar",
+    "cancel": "Cancelar",
+    "uploadFile": "Subir archivo",
+    "undo": "Deshacer",
+    "dropzone": "Suelta archivos aquí para subir",
+    "fileDeleted": "Archivo eliminado",
+    "closeAlert": "cerrar alerta",
+    "backToTop": "volver arriba",
+    "toggleDropdown": "alternar menú desplegable",
+    "carousel": "carrusel",
+    "goPreviousSlide": "ir a la diapositiva anterior",
+    "goNextSlide": "ir a la siguiente diapositiva",
+    "goSlide": "ir a la diapositiva {index}",
+    "slideOf": "diapositiva {index} de {length}",
+    "close": "cerrar",
+    "openColorPicker": "abrir selector de color",
+    "colorSelection": "selección de color",
+    "colorName": "color {color}",
+    "decreaseCounter": "disminuir contador",
+    "increaseCounter": "aumentar contador",
+    "selectAllRows": "seleccionar todas las filas",
+    "sortColumnBy": "ordenar columna por {name}",
+    "selectRowByIndex": "seleccionar fila {index}",
+    "resetDate": "reiniciar fecha",
+    "nextPeriod": "siguiente período",
+    "switchView": "cambiar vista",
+    "previousPeriod": "período anterior",
+    "removeFile": "eliminar archivo",
+    "reset": "reiniciar",
+    "pagination": "paginación",
+    "goToTheFirstPage": "ir a la primera página",
+    "goToPreviousPage": "ir a la página anterior",
+    "goToSpecificPage": "ir a la página {page}",
+    "goToSpecificPageInput": "ingrese el número de página para ir",
+    "goNextPage": "ir a la página siguiente",
+    "goLastPage": "ir a la última página",
+    "currentRating": "valoración actual {value} de {max}",
+    "voteRating": "votar {value} de {max}",
+    "optionsFilter": "filtro de opciones",
+    "splitPanels": "dividir paneles",
+    "movePaginationLeft": "mover paginación a la izquierda",
+    "movePaginationRight": "mover paginación a la derecha",
+    "resetTime": "reiniciar tiempo",
+    "closeToast": "cerrar notificación",
+    "selectedOption": "Opción seleccionada",
+    "noSelectedOption": "Opción no seleccionada",
+    "breadcrumbs": "migas de pan",
+    "counterValue": "valor del contador",
+    "selectedDate": "fecha seleccionada",
+    "selectedTime": "hora seleccionada",
+    "progressState": "estado de progreso",
+    "color": "color",
+    "next": "Siguiente",
+    "back": "Anterior",
+    "finish": "Finalizar",
+    "step": "paso",
+    "progress": "progreso",
+    "loading": "Cargando",
+    "sliderValue": "El valor actual del control deslizante es {value}",
+    "switch": "Interruptor",
+    "inputField": "Campo de entrada",
+    "fileTypeIncorrect": "El tipo de archivo es incorrecto",
+    "select": "Seleccionar una opción"
+  }
+}
