@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('auth', () => {
   function login(userData: User, rememberMe: boolean) {
     user.value = userData
     isAuthenticated.value = true
-    
+
     if (rememberMe) {
       localStorage.setItem('authToken', userData.token)
       localStorage.setItem('userData', JSON.stringify(userData))
@@ -43,13 +43,13 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // Resto de las funciones...
-  
-  return { 
-    user, 
-    isAuthenticated, 
-    login, 
-    logout, 
+
+  return {
+    user,
+    isAuthenticated,
+    login,
+    logout,
     initialize,
-    fetchUserProfile
+    fetchUserProfile,
   }
 })
