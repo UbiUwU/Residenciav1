@@ -6,7 +6,7 @@ export const useUserStore = defineStore('user', {
   state: () => ({
     memberSince: '8/12/2020', // Puedes obtener esto de tu API
     pfp: 'https://picsum.photos/id/22/200/300', // Imagen por defecto
-    is2FAEnabled: false
+    is2FAEnabled: false,
   }),
 
   getters: {
@@ -17,7 +17,7 @@ export const useUserStore = defineStore('user', {
     email: () => {
       const authStore = useAuthStore()
       return authStore.user?.correo || 'Sin correo'
-    }
+    },
   },
 
   actions: {
@@ -34,6 +34,6 @@ export const useUserStore = defineStore('user', {
       if (data.email) {
         // Actualizar email en el backend
       }
-    }
-  }
+    },
+  },
 })

@@ -57,9 +57,9 @@ const twoFA = computed(() => {
 
 const toggle2FA = () => {
   userStore.toggle2FA()
-  init({ 
-    message: userStore.is2FAEnabled ? '2FA activado' : '2FA desactivado', 
-    color: 'success' 
+  init({
+    message: userStore.is2FAEnabled ? '2FA activado' : '2FA desactivado',
+    color: 'success',
   })
 }
 
