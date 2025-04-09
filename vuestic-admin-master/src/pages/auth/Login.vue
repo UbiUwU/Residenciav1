@@ -79,7 +79,7 @@ const submit = async () => {
     if (response.data.success) {
       authStore.login(response.data.data, formData.keepLoggedIn)
       init({ message: "You've successfully logged in", color: 'success' })
-      push({ name: 'dashboard' })
+      push({ name: 'dashboard' }) // Redirige al dashboard después del login
     } else {
       init({ message: response.data.message || 'Login failed', color: 'danger' })
     }
@@ -90,4 +90,5 @@ const submit = async () => {
     loading.value = false
   }
 }
+
 </script>

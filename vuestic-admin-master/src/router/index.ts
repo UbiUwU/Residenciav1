@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { useAuthStore } from '../stores/auth' // Importa tu store de autenticación
 
 import AuthLayout from '../layouts/AuthLayout.vue'
 import AppLayout from '../layouts/AppLayout.vue'
@@ -15,26 +16,31 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     component: AppLayout,
     redirect: { name: 'dashboard' },
+    meta: { requiresAuth: true }, // Indica que esta ruta requiere autenticación
     children: [
       {
         name: 'dashboard',
         path: 'dashboard',
         component: () => import('../pages/admin/dashboard/Dashboard.vue'),
+        meta: { requiresAuth: true }, // Requiere autenticación
       },
       {
         name: 'settings',
         path: 'settings',
         component: () => import('../pages/settings/Settings.vue'),
+        meta: { requiresAuth: true },
       },
       {
         name: 'preferences',
         path: 'preferences',
         component: () => import('../pages/preferences/Preferences.vue'),
+        meta: { requiresAuth: true },
       },
       {
         name: 'users',
         path: 'users',
         component: () => import('../pages/users/UsersPage.vue'),
+        meta: { requiresAuth: true },
       },
       {
         name: 'projects',
@@ -109,18 +115,19 @@ const routes: Array<RouteRecordRaw> = [
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  scrollBehavior(to, from, savedPosition) {
-    if (savedPosition) {
-      return savedPosition
-    }
-    // For some reason using documentation example doesn't scroll on page navigation.
-    if (to.hash) {
-      return { el: to.hash, behavior: 'smooth' }
-    } else {
-      window.scrollTo(0, 0)
-    }
-  },
   routes,
+})
+
+// **Guarda de navegación para redirigir a usuarios no autenticados**
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  const isAuthenticated = authStore.isAuthenticated
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next({ name: 'login' }) // Redirige al login si no está autenticado
+  } else {
+    next() // Permite la navegación si está autenticado o la ruta no necesita autenticación
+  }
 })
 
 export default router
