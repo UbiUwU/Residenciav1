@@ -15,6 +15,7 @@ const theme = computed({
     return currentPresetName.value
   },
   set(value) {
+    localStorage.setItem('theme', value)
     applyPreset(value)
   },
 })

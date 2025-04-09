@@ -40,7 +40,9 @@ const model = computed({
     return languageCodes[locale.value]
   },
   set(value) {
-    locale.value = languageName[value]
+    const langCode = languageName[value]
+    localStorage.setItem('locale', langCode)
+    locale.value = langCode
   },
 })
 </script>

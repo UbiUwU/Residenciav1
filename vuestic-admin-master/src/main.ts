@@ -32,4 +32,6 @@ if (import.meta.env.VITE_APP_GTM_ENABLED) {
   )
 }
 
+authStore.initialize()
+
 app.mount('#app')
