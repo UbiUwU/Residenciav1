@@ -1,8 +1,11 @@
+/* eslint-disable prettier/prettier */
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { useAuthStore } from '../stores/auth' // Importa tu store de autenticación
 
 import AuthLayout from '../layouts/AuthLayout.vue'
 import AppLayout from '../layouts/AppLayout.vue'
+import Asignaturas from '../test/Asignaturas.vue'
+import AsignaturaDetail from '../test/AsignaturaDetail.vue'
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
 
@@ -23,6 +26,17 @@ const routes: Array<RouteRecordRaw> = [
         path: 'dashboard',
         component: () => import('../pages/admin/dashboard/Dashboard.vue'),
         meta: { requiresAuth: true }, // Requiere autenticación
+      },
+      {
+        path: '/asignaturas',
+        name: 'asignaturas',
+        component: Asignaturas
+      },
+      {
+        path: '/asignaturas/:clave',
+        name: 'asignatura-detail',
+        component: AsignaturaDetail,
+        props: true
       },
       {
         name: 'settings',
@@ -46,6 +60,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'projects',
         path: 'projects',
         component: () => import('../pages/projects/ProjectsPage.vue'),
+      },
+      {
+        name: 'Asignaturas',
+        path: 'Asignaturas',
+        component: Asignaturas,
       },
       {
         name: 'payments',

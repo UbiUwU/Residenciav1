@@ -2,7 +2,6 @@
 import axios from 'axios'
 
 const apiClient = axios.create({
-  // eslint-disable-next-line prettier/prettier
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
   headers: {
     'Content-Type': 'application/json',
@@ -18,7 +17,6 @@ apiClient.interceptors.request.use(
     return config
   },
   (error) => {
-    // eslint-disable-next-line prettier/prettier
     return Promise.reject(error)
   },
 )
@@ -34,4 +32,13 @@ export default {
       password: password,
     })
   },
+
+  // Nuevos métodos para asignaturas
+  getAsignaturas() {
+    return apiClient.get('/asignaturas')
+  },
+
+  getAsignatura(clave) {
+    return apiClient.get(`/asignaturas/${clave}`)
+  }
 }
