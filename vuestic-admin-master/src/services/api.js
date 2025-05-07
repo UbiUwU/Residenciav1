@@ -40,5 +40,31 @@ export default {
 
   getAsignatura(clave) {
     return apiClient.get(`/asignaturas/${clave}`)
+  },
+
+  getPlantillas() {
+    return apiClient.get('/plantillas')
+  },
+
+  crearPlantilla(formData) {
+    return apiClient.post('/plantillas', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  },
+  
+  actualizarPlantilla(id, data) {
+    return apiClient.post(`/plantillas/${id}?_method=PUT`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  },
+
+  eliminarPlantilla(id) {
+    return apiClient.delete(`/plantillas/${id}`)
   }
+
 }
+

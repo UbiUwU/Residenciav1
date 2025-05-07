@@ -1,4 +1,6 @@
 <template>
+  <button @click="enviarAPHP" class="export-button">📤 Exportar a PHP</button>
+
     <div class="asignatura-detail">
       <button @click="volverALista" class="back-button">← Volver a la lista</button>
       
@@ -121,6 +123,33 @@
   onMounted(() => {
     fetchAsignatura()
   })
+
+  const enviarAPHP = async () => {
+  try {
+    const response = await fetch('http://localhost/Inicio%20de%20sesion/PlugginPDF2/gestionar_plantillas.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        asignatura: asignatura.value,
+        presentacion: presentacion.value,
+        competencias: competencias.value,
+        temas: temas.value
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error('Error al enviar los datos al PHP')
+    }
+
+    alert('Datos enviados correctamente al PHP')
+  } catch (err) {
+    console.error(err)
+    alert('Hubo un error al enviar los datos')
+  }
+}
+
   </script>
   
   <style scoped>
@@ -246,4 +275,18 @@
   .error {
     color: #e74c3c;
   }
+  .export-button {
+  background-color: #2ecc71;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  margin-left: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.export-button:hover {
+  background-color: #27ae60;
+}
+
   </style>

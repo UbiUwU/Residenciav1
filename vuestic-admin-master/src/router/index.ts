@@ -6,6 +6,7 @@ import AuthLayout from '../layouts/AuthLayout.vue'
 import AppLayout from '../layouts/AppLayout.vue'
 import Asignaturas from '../test/Asignaturas.vue'
 import AsignaturaDetail from '../test/AsignaturaDetail.vue'
+import Plantilla from '../pages/Plantilla/PlantillaAdmin.vue'
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
 
@@ -30,13 +31,18 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/asignaturas',
         name: 'asignaturas',
-        component: Asignaturas
+        component: Asignaturas,
+      },
+      {
+        path: 'plantillas',
+        name: 'PlantillaAdmin',
+        component: Plantilla,
       },
       {
         path: '/asignaturas/:clave',
         name: 'asignatura-detail',
         component: AsignaturaDetail,
-        props: true
+        props: true,
       },
       {
         name: 'settings',
