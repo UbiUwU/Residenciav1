@@ -6,6 +6,8 @@ import AuthLayout from '../layouts/AuthLayout.vue'
 import AppLayout from '../layouts/AppLayout.vue'
 import Asignaturas from '../test/Asignaturas.vue'
 import AsignaturaDetail from '../test/AsignaturaDetail.vue'
+import HorarioMaestro from '../test/HorarioMaestro.vue'
+import InHorarioMaestro from '../test/IngresarHorario.vue'
 import Plantilla from '../pages/Plantilla/PlantillaAdmin.vue'
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
@@ -32,6 +34,16 @@ const routes: Array<RouteRecordRaw> = [
         path: '/asignaturas',
         name: 'asignaturas',
         component: Asignaturas,
+      },
+      {
+        path: '/Horario',
+        name: 'HorarioMaestro',
+        component: HorarioMaestro,
+      },
+      {
+        path: '/InHorario',
+        name: 'HorarioMaestro',
+        component: InHorarioMaestro,
       },
       {
         path: 'plantillas',

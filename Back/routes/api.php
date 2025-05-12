@@ -24,6 +24,6 @@ Route::get('/plantillas', [PlantillaController::class, 'index']);
 Route::get('/plantillas/{id}', [PlantillaController::class, 'show']);
 Route::post('/plantillas', [PlantillaController::class, 'store']);
 
-Route::get('/plantillas/{id}/generar-pdf', [PlantillaController::class, 'generarPDF']);
 
 Route::post('/login', [AuthController::class, 'login']);
+
