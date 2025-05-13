@@ -22,18 +22,26 @@ apiClient.interceptors.request.use(
 )
 
 export default {
-  getMaestros() {
-    return apiClient.get('/maestros')
-  },
-
+  // Autenticación
   login(email, password) {
     return apiClient.post('/login', {
       correo: email,
       password: password,
     })
   },
+  // Agregar este nuevo método
+  getUserData() {
+    return apiClient.get('/me')
+  },
+  getMe() {
+    return apiClient.get('/me')
+  },
+  // Maestros
+  getMaestros() {
+    return apiClient.get('/maestros')
+  },
 
-  // Nuevos métodos para asignaturas
+  // Asignaturas
   getAsignaturas() {
     return apiClient.get('/asignaturas')
   },
@@ -41,30 +49,4 @@ export default {
   getAsignatura(clave) {
     return apiClient.get(`/asignaturas/${clave}`)
   },
-
-  getPlantillas() {
-    return apiClient.get('/plantillas')
-  },
-
-  crearPlantilla(formData) {
-    return apiClient.post('/plantillas', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-  },
-  
-  actualizarPlantilla(id, data) {
-    return apiClient.post(`/plantillas/${id}?_method=PUT`, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-  },
-
-  eliminarPlantilla(id) {
-    return apiClient.delete(`/plantillas/${id}`)
-  }
-
 }
-

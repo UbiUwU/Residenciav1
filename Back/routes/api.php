@@ -26,4 +26,4 @@ Route::post('/plantillas', [PlantillaController::class, 'store']);
 
 
 Route::post('/login', [AuthController::class, 'login']);
-
+Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum'); // O usa tu middleware de autenticación

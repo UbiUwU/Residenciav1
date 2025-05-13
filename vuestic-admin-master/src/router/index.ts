@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { useAuthStore } from '../stores/auth' // Importa tu store de autenticación
+import { useAuthStore } from '../services/auth' // Importa tu store de autenticación
 
 import AuthLayout from '../layouts/AuthLayout.vue'
 import AppLayout from '../layouts/AppLayout.vue'
@@ -8,6 +8,7 @@ import Asignaturas from '../test/Asignaturas.vue'
 import AsignaturaDetail from '../test/AsignaturaDetail.vue'
 import HorarioMaestro from '../test/HorarioMaestro.vue'
 import InHorarioMaestro from '../test/IngresarHorario.vue'
+import perfil from '../test/perfil.vue'
 import Plantilla from '../pages/Plantilla/PlantillaAdmin.vue'
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
@@ -39,6 +40,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/Horario',
         name: 'HorarioMaestro',
         component: HorarioMaestro,
+      },
+      {
+        path: '/perfil',
+        name: 'perfil',
+        component: perfil,
       },
       {
         path: '/InHorario',

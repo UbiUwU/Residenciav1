@@ -54,7 +54,7 @@ import { useRouter } from 'vue-router'
 import { useForm, useToast } from 'vuestic-ui'
 import { validators } from '../../services/utils'
 import api from '../../services/api'
-import { useAuthStore } from '../../stores/auth'
+import { useAuthStore } from '../../services/auth'
 
 const { validate } = useForm('form')
 const { push } = useRouter()
@@ -77,9 +77,14 @@ const submit = async () => {
     const response = await api.login(formData.email, formData.password)
 
     if (response.data.success) {
-      authStore.login(response.data.data, formData.keepLoggedIn)
+      authStore.login({
+        token: response.data.token,
+        user: response.data.data.user,
+        maestro: response.data.data.maestro
+      }, formData.keepLoggedIn)
+      
       init({ message: "You've successfully logged in", color: 'success' })
-      push({ name: 'dashboard' }) // Redirige al dashboard después del login
+      push({ name: 'dashboard' })
     } else {
       init({ message: response.data.message || 'Login failed', color: 'danger' })
     }
@@ -90,5 +95,4 @@ const submit = async () => {
     loading.value = false
   }
 }
-
 </script>

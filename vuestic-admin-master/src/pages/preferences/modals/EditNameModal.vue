@@ -20,25 +20,23 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { useUserStore } from '../../../stores/user-store'
 
 import { buttonStyles } from '../styles'
 import { useToast } from 'vuestic-ui'
 
-const store = useUserStore()
 
 const { init } = useToast()
 
 const emits = defineEmits(['cancel'])
 
-const Name = ref<string>(store.userName)
+const Name = ref<string>(localStorage.getItem('userName') || '')
 
 const submit = () => {
-  if (!Name.value || Name.value === store.userName) {
+  if (!Name.value || Name.value === localStorage.getItem('userName')) {
     return emits('cancel')
   }
 
-  store.changeUserName(Name.value)
+  localStorage.setItem('userName', Name.value)
   init({ message: "You've successfully changed your name", color: 'success' })
   emits('cancel')
 }

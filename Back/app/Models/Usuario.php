@@ -20,3 +20,5 @@ class Usuario extends Model
         'IdRol'
     ];
 }
+
+
