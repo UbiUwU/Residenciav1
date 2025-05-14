@@ -29,7 +29,7 @@ export default {
       password: password,
     })
   },
-  // Agregar este nuevo método
+  //Meotodo de inicio de sesión con ID del usuario que se obtiene al iniciar sesión
   getUserData() {
     return apiClient.get('/me')
   },
@@ -41,6 +41,22 @@ export default {
     return apiClient.get('/maestros')
   },
 
+  getMaestro(id) {
+    return apiClient.get(`/maestros/${id}`)
+  },
+
+  crearMaestro(data) {
+    return apiClient.post('/maestros', data)
+  },
+
+  actualizarMaestro(id, data) {
+    return apiClient.put(`/maestros/${id}`, data)
+  },
+
+  eliminarMaestro(id) {
+    return apiClient.delete(`/maestros/${id}`)
+  },
+
   // Asignaturas
   getAsignaturas() {
     return apiClient.get('/asignaturas')
@@ -50,21 +66,21 @@ export default {
     return apiClient.get(`/asignaturas/${clave}`)
   },
 
-    // Horarios de Maestros
+    // Horarios de Maestros /horarios/{maestro_id}
   getHorariosDeMaestro(maestroId) {
-    return apiClient.get(`/horarios-maestros/${maestroId}`)
+    return apiClient.get(`/horarios/${maestroId}`)
   },
 
-  crearHorarioMaestro(data) {
-    return apiClient.post('/horarios-maestros', data)
+  createHorarioMaestro(data) {
+    return apiClient.post('/horarios', data)
   },
 
-  actualizarHorarioMaestro(id, data) {
-    return apiClient.put(`/horarios-maestros/${id}`, data)
+  updateHorarioMaestro(id, data) {
+    return apiClient.put(`/horarios/${id}`, data)
   },
 
-  eliminarHorarioMaestro(id) {
-    return apiClient.delete(`/horarios-maestros/${id}`)
+  deleteHorarioMaestro(id) {
+    return apiClient.delete(`/horarios/${id}`)
   },
 
 }

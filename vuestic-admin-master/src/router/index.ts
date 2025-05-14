@@ -4,11 +4,13 @@ import { useAuthStore } from '../services/auth' // Importa tu store de autentica
 
 import AuthLayout from '../layouts/AuthLayout.vue'
 import AppLayout from '../layouts/AppLayout.vue'
+//Todo lo que sea test es para pruebas
 import Asignaturas from '../test/Asignaturas.vue'
 import AsignaturaDetail from '../test/AsignaturaDetail.vue'
 import HorarioMaestro from '../test/HorarioMaestro.vue'
 import InHorarioMaestro from '../test/IngresarHorario.vue'
 import perfil from '../test/perfil.vue'
+import visualizarhorario from '../test/visualizarhorario.vue'
 import Plantilla from '../pages/Plantilla/PlantillaAdmin.vue'
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
@@ -37,9 +39,9 @@ const routes: Array<RouteRecordRaw> = [
         component: Asignaturas,
       },
       {
-        path: '/Horario',
-        name: 'HorarioMaestro',
-        component: HorarioMaestro,
+        path: '/horario',
+        name: 'horario',
+        component: visualizarhorario,
       },
       {
         path: '/perfil',
