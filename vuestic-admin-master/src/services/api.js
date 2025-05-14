@@ -49,4 +49,22 @@ export default {
   getAsignatura(clave) {
     return apiClient.get(`/asignaturas/${clave}`)
   },
+
+    // Horarios de Maestros
+  getHorariosDeMaestro(maestroId) {
+    return apiClient.get(`/horarios-maestros/${maestroId}`)
+  },
+
+  crearHorarioMaestro(data) {
+    return apiClient.post('/horarios-maestros', data)
+  },
+
+  actualizarHorarioMaestro(id, data) {
+    return apiClient.put(`/horarios-maestros/${id}`, data)
+  },
+
+  eliminarHorarioMaestro(id) {
+    return apiClient.delete(`/horarios-maestros/${id}`)
+  },
+
 }
