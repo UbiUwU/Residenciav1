@@ -7,7 +7,7 @@ import AppLayout from '../layouts/AppLayout.vue'
 //Todo lo que sea test es para pruebas
 import Asignaturas from '../test/Asignaturas.vue'
 import AsignaturaDetail from '../test/AsignaturaDetail.vue'
-import HorarioMaestro from '../test/HorarioMaestro.vue'
+import departamento from '../test/departamentos.vue'
 import InHorarioMaestro from '../test/IngresarHorario.vue'
 import perfil from '../test/perfil.vue'
 import visualizarhorario from '../test/visualizarhorario.vue'
@@ -47,6 +47,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/perfil',
         name: 'perfil',
         component: perfil,
+      },
+      {
+        path: '/departamento',
+        name: 'departamento',
+        component: departamento,
       },
       {
         path: '/InHorario',

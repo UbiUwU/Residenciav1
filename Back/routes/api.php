@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AsignaturaController;
 use App\Http\Controllers\Api\MaestroController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\HorarioMaestroController;
+use App\Http\Controllers\DepartamentoController;
 
 use App\Http\Controllers\PlantillaController;
 
@@ -34,3 +35,12 @@ Route::get('/horarios/{maestro_id}', [HorarioMaestroController::class, 'index'])
 Route::post('/horarios', [HorarioMaestroController::class, 'store']);
 Route::put('/horarios/{id}', [HorarioMaestroController::class, 'update']);
 Route::delete('/horarios/{id}', [HorarioMaestroController::class, 'destroy']);
+
+
+Route::prefix('departamentos')->group(function () {
+    Route::get('/', [DepartamentoController::class, 'index']);
+    Route::get('/{id}', [DepartamentoController::class, 'show']);
+    Route::post('/', [DepartamentoController::class, 'store']);
+    Route::put('/{id}', [DepartamentoController::class, 'update']);
+    Route::delete('/{id}', [DepartamentoController::class, 'destroy']);
+});

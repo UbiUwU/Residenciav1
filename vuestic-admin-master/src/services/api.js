@@ -66,7 +66,7 @@ export default {
     return apiClient.get(`/asignaturas/${clave}`)
   },
 
-    // Horarios de Maestros /horarios/{maestro_id}
+  // Horarios de Maestros /horarios/{maestro_id}
   getHorariosDeMaestro(maestroId) {
     return apiClient.get(`/horarios/${maestroId}`)
   },
@@ -81,6 +81,23 @@ export default {
 
   deleteHorarioMaestro(id) {
     return apiClient.delete(`/horarios/${id}`)
+  },
+
+  //Departamentos
+  getDepartamentos() {
+    return apiClient.get('/departamentos')
+  },
+  crearDepartamento(data) {
+    return apiClient.post('/departamentos', data)
+  },
+  actualizarDepartamento(id, data) {
+    return apiClient.put(`/departamentos/${id}`, data)
+  },
+  eliminarDepartamento(id) {
+    return apiClient.delete(`/departamentos/${id}`)
+  },
+  obtenerDepartamento(id) {
+    return apiClient.get(`/departamentos/${id}`)
   },
 
 }
