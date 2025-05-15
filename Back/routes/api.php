@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\MaestroController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\HorarioMaestroController;
 use App\Http\Controllers\DepartamentoController;
+use App\Http\Controllers\UsuarioController;
 
 use App\Http\Controllers\PlantillaController;
 
@@ -44,3 +45,13 @@ Route::prefix('departamentos')->group(function () {
     Route::put('/{id}', [DepartamentoController::class, 'update']);
     Route::delete('/{id}', [DepartamentoController::class, 'destroy']);
 });
+
+
+
+
+Route::get('/usuarios', [UsuarioController::class, 'getAll']);
+Route::get('/usuarios/{id}', [UsuarioController::class, 'getById']);
+Route::post('/usuarios', [UsuarioController::class, 'insert']);
+Route::put('/usuarios/{id}', [UsuarioController::class, 'update']);
+Route::delete('/usuarios/{id}', [UsuarioController::class, 'delete']);
+

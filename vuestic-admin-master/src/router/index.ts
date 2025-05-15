@@ -11,6 +11,8 @@ import departamento from '../test/departamentos.vue'
 import InHorarioMaestro from '../test/IngresarHorario.vue'
 import perfil from '../test/perfil.vue'
 import visualizarhorario from '../test/visualizarhorario.vue'
+import maestro from '../test/maestro.vue'
+import usuarios from '../test/usuarios.vue'
 import Plantilla from '../pages/Plantilla/PlantillaAdmin.vue'
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
@@ -59,9 +61,14 @@ const routes: Array<RouteRecordRaw> = [
         component: InHorarioMaestro,
       },
       {
-        path: 'plantillas',
-        name: 'PlantillaAdmin',
-        component: Plantilla,
+        path: '/maestro',
+        name: 'maestro',
+        component: maestro,
+      },
+      {
+        path: '/usuarios',
+        name: 'usuarios',
+        component: usuarios,
       },
       {
         path: '/asignaturas/:clave',

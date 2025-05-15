@@ -100,4 +100,25 @@ export default {
     return apiClient.get(`/departamentos/${id}`)
   },
 
+    // Usuarios
+  getUsuarios() {
+    return apiClient.get('/usuarios')
+  },
+
+  getUsuario(id) {
+    return apiClient.get(`/usuarios/${id}`)
+  },
+
+  crearUsuario(data) {
+    return apiClient.post('/usuarios', data)
+  },
+
+  actualizarUsuario(id, data) {
+    return apiClient.put(`/usuarios/${id}`, data)
+  },
+
+  eliminarUsuario(id) {
+    return apiClient.delete(`/usuarios/${id}`)
+  },
+
 }
