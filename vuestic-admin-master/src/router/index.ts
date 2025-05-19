@@ -1,8 +1,19 @@
+/* eslint-disable prettier/prettier */
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { useAuthStore } from '../stores/auth' // Importa tu store de autenticación
+import { useAuthStore } from '../services/auth' // Importa tu store de autenticación
 
 import AuthLayout from '../layouts/AuthLayout.vue'
 import AppLayout from '../layouts/AppLayout.vue'
+//Todo lo que sea test es para pruebas
+import Asignaturas from '../test/Asignaturas.vue'
+import AsignaturaDetail from '../test/AsignaturaDetail.vue'
+import departamento from '../test/departamentos.vue'
+import InHorarioMaestro from '../test/IngresarHorario.vue'
+import perfil from '../test/perfil.vue'
+import visualizarhorario from '../test/visualizarhorario.vue'
+import maestro from '../test/maestro.vue'
+import usuarios from '../test/usuarios.vue'
+import Plantilla from '../pages/Plantilla/PlantillaAdmin.vue'
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
 
@@ -23,6 +34,47 @@ const routes: Array<RouteRecordRaw> = [
         path: 'dashboard',
         component: () => import('../pages/admin/dashboard/Dashboard.vue'),
         meta: { requiresAuth: true }, // Requiere autenticación
+      },
+      {
+        path: '/asignaturas',
+        name: 'asignaturas',
+        component: Asignaturas,
+      },
+      {
+        path: '/horario',
+        name: 'horario',
+        component: visualizarhorario,
+      },
+      {
+        path: '/perfil',
+        name: 'perfil',
+        component: perfil,
+      },
+      {
+        path: '/departamento',
+        name: 'departamento',
+        component: departamento,
+      },
+      {
+        path: '/InHorario',
+        name: 'HorarioMaestro',
+        component: InHorarioMaestro,
+      },
+      {
+        path: '/maestro',
+        name: 'maestro',
+        component: maestro,
+      },
+      {
+        path: '/usuarios',
+        name: 'usuarios',
+        component: usuarios,
+      },
+      {
+        path: '/asignaturas/:clave',
+        name: 'asignatura-detail',
+        component: AsignaturaDetail,
+        props: true,
       },
       {
         name: 'settings',
@@ -46,6 +98,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'projects',
         path: 'projects',
         component: () => import('../pages/projects/ProjectsPage.vue'),
+      },
+      {
+        name: 'Asignaturas',
+        path: 'Asignaturas',
+        component: Asignaturas,
       },
       {
         name: 'payments',

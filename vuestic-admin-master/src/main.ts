@@ -11,7 +11,8 @@ import stores from './stores'
 import router from './router'
 import vuesticGlobalConfig from './services/vuestic-ui/global-config'
 
-import { useAuthStore } from './stores/auth'
+import { useAuthStore } from './services/auth'
+
 
 const app = createApp(App)
 

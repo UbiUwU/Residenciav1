@@ -45,7 +45,7 @@ import { useColors } from 'vuestic-ui'
 const { colors, setHSLAColor } = useColors()
 const hoverColor = computed(() => setHSLAColor(colors.focus, { a: 0.1 }))
 
-import { useAuthStore } from '../../../../stores/auth' // ajusta según tu ruta
+import { useAuthStore } from '../../../../services/auth' // ajusta según tu ruta
 const auth = useAuthStore()
 
 function handleItemClick(item: ProfileListItem) {
