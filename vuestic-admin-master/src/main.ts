@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import './scss/main.scss'
 
 import { createApp } from 'vue'

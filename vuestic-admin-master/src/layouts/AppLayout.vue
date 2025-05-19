@@ -20,7 +20,7 @@
       </div>
       <AppLayoutNavigation v-if="!isMobile" class="p-4" />
       <main class="p-4 pt-0">
-        <article>
+        <article style="flex-direction: column; justify-content: flex-end; align-items: center">
           <RouterView />
         </article>
       </main>

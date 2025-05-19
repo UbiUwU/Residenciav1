@@ -5,7 +5,9 @@
         <VaButton preset="secondary" color="textPrimary">
           <span class="profile-dropdown__anchor min-w-max">
             <slot />
-            <VaAvatar :size="32" color="warning"> 😍 </VaAvatar>
+            <VaAvatar :size="32" color="warning">
+              <VaIcon name="person" />
+            </VaAvatar>
           </span>
         </VaButton>
       </template>

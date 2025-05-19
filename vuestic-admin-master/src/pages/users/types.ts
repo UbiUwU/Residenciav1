@@ -13,3 +13,11 @@ export type User = {
   notes: string
   active: boolean
 }
+
+export interface Maestro {
+  id: number
+  nombre: string
+  correo: string
+  departamento: string
+  activo: boolean
+}
