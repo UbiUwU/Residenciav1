@@ -14,6 +14,8 @@ import visualizarhorario from '../test/visualizarhorario.vue'
 import maestro from '../test/maestro.vue'
 import usuarios from '../test/usuarios.vue'
 import Plantilla from '../pages/Plantilla/PlantillaAdmin.vue'
+import roles from '../test/roles.vue'
+
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
 
@@ -39,6 +41,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/asignaturas',
         name: 'asignaturas',
         component: Asignaturas,
+      },
+      {
+        path: '/roles',
+        name: 'roles',
+        component: roles,
       },
       {
         path: '/horario',

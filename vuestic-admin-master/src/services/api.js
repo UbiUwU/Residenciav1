@@ -100,7 +100,7 @@ export default {
     return apiClient.get(`/departamentos/${id}`)
   },
 
-    // Usuarios
+  // Usuarios
   getUsuarios() {
     return apiClient.get('/usuarios')
   },
@@ -121,4 +121,23 @@ export default {
     return apiClient.delete(`/usuarios/${id}`)
   },
 
+  // Métodos para roles
+  getRoles() {
+    return apiClient.get('/roles')
+  },
+
+  crearRol(data) {
+    return apiClient.post('/roles', data)
+  },
+
+  actualizarRol(id, data) {
+    return apiClient.put(`/roles/${id}`, data) // Asegúrate de usar el ID en la URL
+  },
+
+  eliminarRol(id) {
+    return apiClient.delete(`/roles/${id}`) // Asegúrate de usar el ID en la URL
+  },
+
+
 }
+

@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\HorarioMaestroController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\RoleController;
 
 use App\Http\Controllers\PlantillaController;
 
@@ -28,7 +29,6 @@ Route::get('/plantillas', [PlantillaController::class, 'index']);
 Route::get('/plantillas/{id}', [PlantillaController::class, 'show']);
 Route::post('/plantillas', [PlantillaController::class, 'store']);
 
-
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum'); // O usa tu middleware de autenticación
 
@@ -36,7 +36,6 @@ Route::get('/horarios/{maestro_id}', [HorarioMaestroController::class, 'index'])
 Route::post('/horarios', [HorarioMaestroController::class, 'store']);
 Route::put('/horarios/{id}', [HorarioMaestroController::class, 'update']);
 Route::delete('/horarios/{id}', [HorarioMaestroController::class, 'destroy']);
-
 
 Route::prefix('departamentos')->group(function () {
     Route::get('/', [DepartamentoController::class, 'index']);
@@ -46,12 +45,14 @@ Route::prefix('departamentos')->group(function () {
     Route::delete('/{id}', [DepartamentoController::class, 'destroy']);
 });
 
-
-
-
 Route::get('/usuarios', [UsuarioController::class, 'getAll']);
 Route::get('/usuarios/{id}', [UsuarioController::class, 'getById']);
 Route::post('/usuarios', [UsuarioController::class, 'insert']);
 Route::put('/usuarios/{id}', [UsuarioController::class, 'update']);
 Route::delete('/usuarios/{id}', [UsuarioController::class, 'delete']);
 
+Route::get('/roles', [RoleController::class, 'index']);
+Route::get('/roles/{id}', [RoleController::class, 'show']);
+Route::post('/roles', [RoleController::class, 'store']);
+Route::put('/roles/{id}', [RoleController::class, 'update']);
+Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
