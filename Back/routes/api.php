@@ -9,6 +9,7 @@ use App\Http\Controllers\HorarioMaestroController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ProgramaCursoController;
 
 use App\Http\Controllers\PlantillaController;
 
@@ -56,3 +57,5 @@ Route::get('/roles/{id}', [RoleController::class, 'show']);
 Route::post('/roles', [RoleController::class, 'store']);
 Route::put('/roles/{id}', [RoleController::class, 'update']);
 Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
+
+

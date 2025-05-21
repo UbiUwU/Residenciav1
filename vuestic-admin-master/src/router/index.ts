@@ -15,6 +15,7 @@ import maestro from '../test/maestro.vue'
 import usuarios from '../test/usuarios.vue'
 import Plantilla from '../pages/Plantilla/PlantillaAdmin.vue'
 import roles from '../test/roles.vue'
+import avance from '../test/avanceprogra.vue'
 
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
@@ -56,6 +57,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/perfil',
         name: 'perfil',
         component: perfil,
+      },
+      {
+        path: '/avance',
+        name: 'avance',
+        component: avance,
       },
       {
         path: '/departamento',
