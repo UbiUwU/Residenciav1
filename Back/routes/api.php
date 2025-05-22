@@ -24,9 +24,9 @@ use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\Api\ReservacionAlumnoController;
 use App\Http\Controllers\Api\ReservacionMaestroController;
-use App\Http\Controllers\AlumnoController;
-use App\Http\Controllers\AulaController;
 use App\Http\Controllers\PlantillaController;
+use App\Http\Controllers\Api\AlumnoController;
+use App\Http\Controllers\Api\AulaController;
 
 Route::prefix('maestros')->group(function () {
     Route::get('/', [MaestroController::class, 'index']); // Listar todos
@@ -41,20 +41,17 @@ Route::prefix('asignaturas')->group(function () {
     Route::get('/{clave}', [AsignaturaController::class, 'show']); // Una asignatura por clave
 });
 
-Route::apiResource('alumnos', App\Http\Controllers\Api\AlumnoController::class);
-Route::get('/alumnos', [AlumnoController::class, 'getAllAlumnos']);
-Route::get('/alumnos/{numeroControl}', [AlumnoController::class, 'getAlumnoById']);
-Route::post('/alumnos', [AlumnoController::class, 'insertAlumno']);
-Route::put('/alumnos/{numeroControl}', [AlumnoController::class, 'updateAlumno']);
-Route::delete('/alumnos/{numeroControl}', [AlumnoController::class, 'deleteAlumno']);
+Route::get('/alumnos', [AlumnoController::class, 'index']);
+Route::get('/alumnos/{numeroControl}', [AlumnoController::class, 'show']);
+Route::post('/alumnos', [AlumnoController::class, 'store']);
+Route::put('/alumnos/{numeroControl}', [AlumnoController::class, 'update']);
+Route::delete('/alumnos/{numeroControl}', [AlumnoController::class, 'destroy']);
 
-Route::apiResource('aulas', App\Http\Controllers\Api\AulaController::class);
 Route::get('/aulas', [AulaController::class, 'getAllAulas']);
 Route::get('/aulas/{claveAula}', [AulaController::class, 'getAulaById']);
 Route::post('/aulas', [AulaController::class, 'insertAula']);
 Route::put('/aulas/{claveAula}', [AulaController::class, 'updateAula']);
 Route::delete('/aulas/{claveAula}', [AulaController::class, 'deleteAula']);
-
 
 
 // Bitácora de alumnos
