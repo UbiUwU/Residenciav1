@@ -13,7 +13,19 @@ use App\Http\Controllers\ProgramaCursoController;
 use App\Http\Controllers\PeriodoEscolarController;
 use App\Http\Controllers\TipoEventoController;
 use App\Http\Controllers\PublicoDestinoController;
-
+use App\Http\Controllers\ApiAlumnoller;
+use App\Http\Controllers\Api\Aulatroller;
+use App\Http\Controllers\Api\BitacoraController;
+use App\Http\Controllers\CargaAcademicaController;
+use App\Http\Controllers\CarreraController;
+use App\Http\Controllers\ComputadoraController;
+use App\Http\Controllers\EdificioController;
+use App\Http\Controllers\GrupoController;
+use App\Http\Controllers\HorarioController;
+use App\Http\Controllers\Api\ReservacionAlumnoController;
+use App\Http\Controllers\Api\ReservacionMaestroController;
+use App\Http\Controllers\AlumnoController;
+use App\Http\Controllers\AulaController;
 use App\Http\Controllers\PlantillaController;
 
 Route::prefix('maestros')->group(function () {
@@ -28,6 +40,63 @@ Route::prefix('asignaturas')->group(function () {
     Route::get('/', [AsignaturaController::class, 'index']); // Todas las asignaturas
     Route::get('/{clave}', [AsignaturaController::class, 'show']); // Una asignatura por clave
 });
+
+Route::apiResource('alumnos', App\Http\Controllers\Api\AlumnoController::class);
+Route::get('/alumnos', [AlumnoController::class, 'getAllAlumnos']);
+Route::get('/alumnos/{numeroControl}', [AlumnoController::class, 'getAlumnoById']);
+Route::post('/alumnos', [AlumnoController::class, 'insertAlumno']);
+Route::put('/alumnos/{numeroControl}', [AlumnoController::class, 'updateAlumno']);
+Route::delete('/alumnos/{numeroControl}', [AlumnoController::class, 'deleteAlumno']);
+
+Route::apiResource('aulas', App\Http\Controllers\Api\AulaController::class);
+Route::get('/aulas', [AulaController::class, 'getAllAulas']);
+Route::get('/aulas/{claveAula}', [AulaController::class, 'getAulaById']);
+Route::post('/aulas', [AulaController::class, 'insertAula']);
+Route::put('/aulas/{claveAula}', [AulaController::class, 'updateAula']);
+Route::delete('/aulas/{claveAula}', [AulaController::class, 'deleteAula']);
+
+
+
+// Bitácora de alumnos
+Route::get('bitacora-alumnos', [BitacoraController::class, 'indexAlumnos']);
+Route::get('bitacora-alumnos/{numero_control}', [BitacoraController::class, 'showAlumno']);
+Route::post('bitacora-alumnos', [BitacoraController::class, 'storeAlumno']);
+Route::delete('bitacora-alumnos/{id}', [BitacoraController::class, 'destroyAlumno']);
+
+// Bitácora de maestros
+Route::get('bitacora-maestros', [BitacoraController::class, 'indexMaestros']);
+Route::get('bitacora-maestros/{tarjeta}', [BitacoraController::class, 'showMaestro']);
+Route::post('bitacora-maestros', [BitacoraController::class, 'storeMaestro']);
+Route::delete('bitacora-maestros/{id}', [BitacoraController::class, 'destroyMaestro']);
+
+
+
+Route::prefix('carga-academica-general')->group(function () {
+    Route::get('/', [CargaAcademicaController::class, 'indexGeneral']);
+    Route::get('/{id}', [CargaAcademicaController::class, 'showGeneral']);
+    Route::post('/', [CargaAcademicaController::class, 'storeGeneral']);
+    Route::put('/{id}', [CargaAcademicaController::class, 'updateGeneral']);
+    Route::delete('/{id}', [CargaAcademicaController::class, 'destroyGeneral']);
+});
+
+Route::prefix('carga-academica-detalle')->group(function () {
+    Route::get('/', [CargaAcademicaController::class, 'indexDetalle']);
+    Route::get('/{id}', [CargaAcademicaController::class, 'showDetalle']);
+    Route::post('/', [CargaAcademicaController::class, 'storeDetalle']);
+    Route::put('/{id}', [CargaAcademicaController::class, 'updateDetalle']);
+    Route::delete('/{id}', [CargaAcademicaController::class, 'destroyDetalle']);
+});
+
+
+
+Route::prefix('carreras')->group(function () {
+    Route::get('/', [CarreraController::class, 'index']);
+    Route::get('/{clave}', [CarreraController::class, 'show']);
+    Route::post('/', [CarreraController::class, 'store']);
+    Route::put('/{clave}', [CarreraController::class, 'update']);
+    Route::delete('/{clave}', [CarreraController::class, 'destroy']);
+});
+
 
 Route::get('/plantillas', [PlantillaController::class, 'index']);
 Route::get('/plantillas/{id}', [PlantillaController::class, 'show']);
@@ -86,3 +155,57 @@ Route::prefix('publicos-destino')->group(function () {
     Route::put('/{id}', [PublicoDestinoController::class, 'update']);
     Route::delete('/{id}', [PublicoDestinoController::class, 'destroy']);
 });
+Route::prefix('computadoras')->group(function () {
+    Route::get('/', [ComputadoraController::class, 'index']);
+    Route::get('/{numero_inventario}', [ComputadoraController::class, 'show']);
+    Route::post('/', [ComputadoraController::class, 'store']);
+    Route::put('/{numero_inventario}', [ComputadoraController::class, 'update']);
+    Route::delete('/{numero_inventario}', [ComputadoraController::class, 'destroy']);
+});
+
+Route::prefix('edificios')->group(function () {
+    Route::get('/', [EdificioController::class, 'index']);
+    Route::get('/{clave_edificio}', [EdificioController::class, 'show']);
+    Route::post('/', [EdificioController::class, 'store']);
+    Route::put('/{clave_edificio}', [EdificioController::class, 'update']);
+    Route::delete('/{clave_edificio}', [EdificioController::class, 'destroy']);
+});
+
+Route::prefix('grupos')->group(function () {
+    Route::get('/', [GrupoController::class, 'index']);
+    Route::get('/{clave_grupo}', [GrupoController::class, 'show']);
+    Route::post('/', [GrupoController::class, 'store']);
+    Route::put('/{clave_grupo}', [GrupoController::class, 'update']);
+    Route::delete('/{clave_grupo}', [GrupoController::class, 'destroy']);
+});
+
+
+Route::prefix('horarios')->group(function () {
+    Route::get('/', [HorarioController::class, 'index']);
+    Route::get('/{clave_horario}', [HorarioController::class, 'show']);
+    Route::post('/', [HorarioController::class, 'store']);
+    Route::put('/{clave_horario}', [HorarioController::class, 'update']);
+    Route::delete('/{clave_horario}', [HorarioController::class, 'destroy']);
+});
+
+
+
+
+Route::prefix('reservaciones')->group(function () {
+    Route::get('/', [ReservacionAlumnoController::class, 'index']);      // Listar todas
+    Route::post('/', [ReservacionAlumnoController::class, 'store']);     // Crear nueva
+    Route::get('/{id}', [ReservacionAlumnoController::class, 'show']);   // Obtener una
+    Route::put('/{id}', [ReservacionAlumnoController::class, 'update']); // Actualizar
+    Route::delete('/{id}', [ReservacionAlumnoController::class, 'destroy']); // Eliminar
+});
+
+
+
+Route::prefix('reservaciones-maestro')->group(function () {
+    Route::get('/', [ReservacionMaestroController::class, 'index']);       // Listar todas
+    Route::post('/', [ReservacionMaestroController::class, 'store']);      // Crear nueva
+    Route::get('/{id}', [ReservacionMaestroController::class, 'show']);    // Obtener una
+    Route::put('/{id}', [ReservacionMaestroController::class, 'update']);  // Actualizar
+    Route::delete('/{id}', [ReservacionMaestroController::class, 'destroy']); // Eliminar
+});
+
