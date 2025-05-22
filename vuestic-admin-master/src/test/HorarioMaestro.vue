@@ -1,49 +1,101 @@
 <template>
   <div>
-    <va-calendar
-      mode="agenda"
-      :events="calendarEvents"
-      :event-color="getEventColor"
-    />
+    <va-card>
+      <va-card-title>Calendario de Eventos</va-card-title>
+      <va-card-content>
+        <va-date-picker
+          v-model="fechaSeleccionada"
+          :attributes="eventosMarcados"
+          mode="calendar"
+          is-expanded
+        />
+      </va-card-content>
+    </va-card>
+
+    <va-card v-if="eventosFiltrados.length > 0" class="mt-4">
+      <va-card-title>Eventos del {{ fechaSeleccionada }}</va-card-title>
+      <va-card-content>
+        <va-list>
+          <va-list-item
+            v-for="evento in eventosFiltrados"
+            :key="evento.id"
+          >
+            <va-list-item-section>
+              <strong>{{ evento.nombre }}</strong><br />
+              <span>{{ evento.descripcion }}</span><br />
+              <small>
+                {{ formatDate(evento.fecha_inicio) }}
+                -
+                {{ formatDate(evento.fecha_fin) }}
+              </small>
+            </va-list-item-section>
+          </va-list-item>
+        </va-list>
+      </va-card-content>
+    </va-card>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import api from '../services/api'
+import { ref, onMounted, computed } from 'vue'
+import { useToast } from 'vuestic-ui'
+import api from '../services/api' // Asegúrate que tu api esté bien importado
 
-// Estado para eventos
-const calendarEvents = ref([])
+const { init } = useToast()
 
-// Función para cargar eventos de la API y adaptarlos para va-calendar
+const fechaSeleccionada = ref(new Date().toISOString().substring(0, 10))
+const eventos = ref([])
+
+// Cargar eventos desde API
 const cargarEventos = async () => {
   try {
     const response = await api.getEventos()
-    // Mapear eventos al formato que espera va-calendar
-    calendarEvents.value = response.data.map(evento => ({
-      id: evento.id_evento,
-      title: evento.nombre_evento,
-      description: evento.descripcion_evento,
-      start: new Date(evento.fecha_inicio),
-      end: new Date(evento.fecha_fin),
-      color: 'primary', // o puedes asignar colores según tipo
-    }))
+eventos.value = response.data
   } catch (error) {
-    console.error('Error cargando eventos:', error)
+    init({ message: 'Error al cargar eventos', color: 'danger' })
+    console.error(error)
   }
+}
+
+// Eventos visibles por fecha seleccionada
+const eventosFiltrados = computed(() => {
+  return eventos.value.filter(e =>
+    fechaSeleccionada.value >= e.fecha_inicio &&
+    fechaSeleccionada.value <= e.fecha_fin
+  )
+})
+
+// Marcado en el calendario
+const eventosMarcados = computed(() => {
+  return eventos.value.map(evento => ({
+    dates: {
+      start: evento.fecha_inicio,
+      end: evento.fecha_fin
+    },
+    contentStyle: {
+      backgroundColor: '#E0AF58',
+      color: '#000000',
+      borderRadius: '6px'
+    },
+    popover: {
+      label: evento.nombre
+    }
+  }))
+})
+
+const formatDate = date => {
+  return new Date(date).toLocaleDateString('es-MX', {
+    year: 'numeric', month: 'short', day: 'numeric'
+  })
 }
 
 onMounted(() => {
   cargarEventos()
 })
-
-// Opcional: función para asignar colores según tipo de evento
-const getEventColor = (event) => {
-  switch (event.color) {
-    case 'vacaciones': return 'red'
-    case 'servicio_social': return 'green'
-    case 'inscripcion': return 'blue'
-    default: return 'primary'
-  }
-}
 </script>
+
+<style scoped>
+.va-date-picker {
+  max-width: 100%;
+}
+</style>
