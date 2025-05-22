@@ -10,6 +10,7 @@ use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProgramaCursoController;
+use App\Http\Controllers\PeriodoEscolarController;
 use App\Http\Controllers\ApiAlumnoller;
 use App\Http\Controllers\Api\Aulatroller;
 use App\Http\Controllers\Api\BitacoraController;
@@ -127,6 +128,13 @@ Route::post('/roles', [RoleController::class, 'store']);
 Route::put('/roles/{id}', [RoleController::class, 'update']);
 Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
 
+Route::prefix('periodos-escolares')->group(function () {
+    Route::post('/', [PeriodoEscolarController::class, 'store']);
+    Route::get('/', [PeriodoEscolarController::class, 'index']);
+    Route::get('/{id}', [PeriodoEscolarController::class, 'show']);
+    Route::put('/{id}', [PeriodoEscolarController::class, 'update']);
+    Route::delete('/{id}', [PeriodoEscolarController::class, 'destroy']);
+});
 
 Route::prefix('computadoras')->group(function () {
     Route::get('/', [ComputadoraController::class, 'index']);
