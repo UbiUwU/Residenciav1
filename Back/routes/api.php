@@ -11,6 +11,8 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProgramaCursoController;
 use App\Http\Controllers\PeriodoEscolarController;
+use App\Http\Controllers\TipoEventoController;
+use App\Http\Controllers\PublicoDestinoController;
 
 use App\Http\Controllers\PlantillaController;
 
@@ -65,4 +67,22 @@ Route::prefix('periodos-escolares')->group(function () {
     Route::get('/{id}', [PeriodoEscolarController::class, 'show']);
     Route::put('/{id}', [PeriodoEscolarController::class, 'update']);
     Route::delete('/{id}', [PeriodoEscolarController::class, 'destroy']);
+});
+
+// Rutas para Tipo Evento
+Route::prefix('tipos-evento')->group(function () {
+    Route::get('/', [TipoEventoController::class, 'index']);
+    Route::post('/', [TipoEventoController::class, 'store']);
+    Route::get('/{id}', [TipoEventoController::class, 'show']);
+    Route::put('/{id}', [TipoEventoController::class, 'update']);
+    Route::delete('/{id}', [TipoEventoController::class, 'destroy']);
+});
+
+// Rutas para Público Destino
+Route::prefix('publicos-destino')->group(function () {
+    Route::get('/', [PublicoDestinoController::class, 'index']);
+    Route::post('/', [PublicoDestinoController::class, 'store']);
+    Route::get('/{id}', [PublicoDestinoController::class, 'show']);
+    Route::put('/{id}', [PublicoDestinoController::class, 'update']);
+    Route::delete('/{id}', [PublicoDestinoController::class, 'destroy']);
 });

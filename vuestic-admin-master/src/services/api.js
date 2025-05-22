@@ -131,11 +131,11 @@ export default {
   },
 
   actualizarRol(id, data) {
-    return apiClient.put(`/roles/${id}`, data) 
+    return apiClient.put(`/roles/${id}`, data)
   },
 
   eliminarRol(id) {
-    return apiClient.delete(`/roles/${id}`) 
+    return apiClient.delete(`/roles/${id}`)
   },
 
   // períodos
@@ -153,6 +153,40 @@ export default {
 
   eliminarPeriodo(id) {
     return apiClient.delete(`/periodos-escolares/${id}`)
+  },
+
+  // Tipos de evento
+  getTiposEvento() {
+    return apiClient.get('/tipos-evento')
+  },
+
+  crearTipoEvento(data) {
+    return apiClient.post('/tipos-evento', data)
+  },
+
+  actualizarTipoEvento(id, data) {
+    return apiClient.put(`/tipos-evento/${id}`, data)
+  },
+
+  eliminarTipoEvento(id) {
+    return apiClient.delete(`/tipos-evento/${id}`)
+  },
+
+  // Público destino
+  getPublicosDestino() {
+    return apiClient.get('/publicos-destino')
+  },
+
+  crearPublicoDestino(data) {
+    return apiClient.post('/publicos-destino', data)
+  },
+
+  actualizarPublicoDestino(id, data) {
+    return apiClient.put(`/publicos-destino/${id}`, data)
+  },
+
+  eliminarPublicoDestino(id) {
+    return apiClient.delete(`/publicos-destino/${id}`)
   }
 }
 
