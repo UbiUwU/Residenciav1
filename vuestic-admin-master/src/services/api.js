@@ -131,13 +131,29 @@ export default {
   },
 
   actualizarRol(id, data) {
-    return apiClient.put(`/roles/${id}`, data) // Asegúrate de usar el ID en la URL
+    return apiClient.put(`/roles/${id}`, data) 
   },
 
   eliminarRol(id) {
-    return apiClient.delete(`/roles/${id}`) // Asegúrate de usar el ID en la URL
+    return apiClient.delete(`/roles/${id}`) 
   },
 
+  // períodos
+  getPeriodos() {
+    return apiClient.get('/periodos-escolares')
+  },
 
+  crearPeriodo(data) {
+    return apiClient.post('/periodos-escolares', data)
+  },
+
+  actualizarPeriodo(id, data) {
+    return apiClient.put(`/periodos-escolares/${id}`, data)
+  },
+
+  eliminarPeriodo(id) {
+    return apiClient.delete(`/periodos-escolares/${id}`)
+  }
 }
+
 
