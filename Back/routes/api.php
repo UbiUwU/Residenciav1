@@ -181,9 +181,6 @@ Route::prefix('horarios')->group(function () {
     Route::delete('/{clave_horario}', [HorarioController::class, 'destroy']);
 });
 
-
-
-
 Route::prefix('reservaciones')->group(function () {
     Route::get('/', [ReservacionAlumnoController::class, 'index']);      // Listar todas
     Route::post('/', [ReservacionAlumnoController::class, 'store']);     // Crear nueva
@@ -191,8 +188,6 @@ Route::prefix('reservaciones')->group(function () {
     Route::put('/{id}', [ReservacionAlumnoController::class, 'update']); // Actualizar
     Route::delete('/{id}', [ReservacionAlumnoController::class, 'destroy']); // Eliminar
 });
-
-
 
 Route::prefix('reservaciones-maestro')->group(function () {
     Route::get('/', [ReservacionMaestroController::class, 'index']);       // Listar todas

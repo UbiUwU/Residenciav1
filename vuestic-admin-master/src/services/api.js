@@ -187,6 +187,24 @@ export default {
 
   eliminarPublicoDestino(id) {
     return apiClient.delete(`/publicos-destino/${id}`)
+  },
+
+  getEventos() {
+    return apiClient.get('/eventos')
+  },
+  // Crear un nuevo evento
+  crearEvento(data) {
+    return apiClient.post('/eventos', data)
+  },
+
+  // Actualizar un evento
+  actualizarEvento(id, data) {
+    return apiClient.put(`/eventos/${id}`, data)
+  },
+
+  // Eliminar un evento
+  eliminarEvento(id) {
+    return apiClient.delete(`/eventos/${id}`)
   }
 }
 

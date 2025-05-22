@@ -18,6 +18,7 @@ import roles from '../test/roles.vue'
 import avance from '../test/avanceprogra.vue'
 import periodos from '../test/periodos.vue'
 import eventosmdestino from '../test/tiposeventos_Destino.vue'
+import horaraio2 from '../test/HorarioMaestro.vue'
 
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
@@ -83,7 +84,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/InHorario',
         name: 'HorarioMaestro',
-        component: InHorarioMaestro,
+        component: horaraio2,
       },
       {
         path: '/maestro',
