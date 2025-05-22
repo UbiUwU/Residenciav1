@@ -27,6 +27,8 @@ use App\Http\Controllers\Api\ReservacionMaestroController;
 use App\Http\Controllers\PlantillaController;
 use App\Http\Controllers\Api\AlumnoController;
 use App\Http\Controllers\Api\AulaController;
+use App\Http\Controllers\EventoCalendarioController;
+
 
 Route::prefix('maestros')->group(function () {
     Route::get('/', [MaestroController::class, 'index']); // Listar todos
@@ -53,7 +55,6 @@ Route::post('/aulas', [AulaController::class, 'insertAula']);
 Route::put('/aulas/{claveAula}', [AulaController::class, 'updateAula']);
 Route::delete('/aulas/{claveAula}', [AulaController::class, 'deleteAula']);
 
-
 // Bitácora de alumnos
 Route::get('bitacora-alumnos', [BitacoraController::class, 'indexAlumnos']);
 Route::get('bitacora-alumnos/{numero_control}', [BitacoraController::class, 'showAlumno']);
@@ -65,8 +66,6 @@ Route::get('bitacora-maestros', [BitacoraController::class, 'indexMaestros']);
 Route::get('bitacora-maestros/{tarjeta}', [BitacoraController::class, 'showMaestro']);
 Route::post('bitacora-maestros', [BitacoraController::class, 'storeMaestro']);
 Route::delete('bitacora-maestros/{id}', [BitacoraController::class, 'destroyMaestro']);
-
-
 
 Route::prefix('carga-academica-general')->group(function () {
     Route::get('/', [CargaAcademicaController::class, 'indexGeneral']);
@@ -84,8 +83,6 @@ Route::prefix('carga-academica-detalle')->group(function () {
     Route::delete('/{id}', [CargaAcademicaController::class, 'destroyDetalle']);
 });
 
-
-
 Route::prefix('carreras')->group(function () {
     Route::get('/', [CarreraController::class, 'index']);
     Route::get('/{clave}', [CarreraController::class, 'show']);
@@ -93,7 +90,6 @@ Route::prefix('carreras')->group(function () {
     Route::put('/{clave}', [CarreraController::class, 'update']);
     Route::delete('/{clave}', [CarreraController::class, 'destroy']);
 });
-
 
 Route::get('/plantillas', [PlantillaController::class, 'index']);
 Route::get('/plantillas/{id}', [PlantillaController::class, 'show']);
@@ -206,3 +202,10 @@ Route::prefix('reservaciones-maestro')->group(function () {
     Route::delete('/{id}', [ReservacionMaestroController::class, 'destroy']); // Eliminar
 });
 
+Route::prefix('eventos')->group(function () {
+    Route::get('/', [EventoCalendarioController::class, 'index']);
+    Route::post('/', [EventoCalendarioController::class, 'store']);
+    Route::get('/{id}', [EventoCalendarioController::class, 'show']);
+    Route::put('/{id}', [EventoCalendarioController::class, 'update']);
+    Route::delete('/{id}', [EventoCalendarioController::class, 'destroy']);
+});
