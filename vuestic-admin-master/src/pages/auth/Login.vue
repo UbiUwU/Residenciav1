@@ -1,9 +1,9 @@
 <template>
   <VaForm ref="form" @submit.prevent="submit">
-    <h1 class="font-semibold text-4xl mb-4">Log in</h1>
+    <h1 class="font-semibold text-4xl mb-4">Inicio Sesión</h1>
     <p class="text-base mb-4 leading-5">
-      New to Vuestic?
-      <RouterLink :to="{ name: 'signup' }" class="font-semibold text-primary">Sign up</RouterLink>
+        ¿Eres nuevo usuario? Registrate
+      <RouterLink :to="{ name: 'signup' }" class="font-semibold text-primary">¡Aquí!</RouterLink>
     </p>
 
     <!-- Email Input -->
@@ -11,7 +11,7 @@
       v-model="formData.email"
       :rules="[validators.required, validators.email]"
       class="mb-4"
-      label="Email"
+      label="Correo Electrónico"
       type="email"
     />
 
@@ -22,7 +22,7 @@
         :rules="[validators.required]"
         :type="isPasswordVisible.value ? 'text' : 'password'"
         class="mb-4"
-        label="Password"
+        label="Contraseña"
         @clickAppendInner.stop="isPasswordVisible.value = !isPasswordVisible.value"
       >
         <template #appendInner>
@@ -36,9 +36,9 @@
     </VaValue>
 
     <div class="auth-layout__options flex flex-col sm:flex-row items-start sm:items-center justify-between">
-      <VaCheckbox v-model="formData.keepLoggedIn" class="mb-2 sm:mb-0" label="Keep me signed in on this device" />
+      <VaCheckbox v-model="formData.keepLoggedIn" class="mb-2 sm:mb-0" label="Mantenerme conectado en este dispositivo" />
       <RouterLink :to="{ name: 'recover-password' }" class="mt-2 sm:mt-0 sm:ml-1 font-semibold text-primary">
-        Forgot password?
+        ¿Has olvidado tu contraseña?
       </RouterLink>
     </div>
 

@@ -18,21 +18,132 @@ export default {
         icon: 'vuestic-iconset-dashboard',
       },
     },
+
+   
+
+    //Rutas para generales
     {
-      name: 'users',
+      name: 'Generales',
+      displayName: 'Generales',
+      meta: {
+        icon: 'folder_open',
+      },
+      children: [
+        {
+          name: 'Horario',
+          displayName: 'Horario',
+        },
+        {
+          name: 'Nombramientos',
+          displayName: 'Nombramientos',
+        },
+        
+      ],
+    },
+
+    //Rutas para comisiones
+
+    {
+      name: 'Comisiones',
+      displayName: 'Comisiones',
+      meta: {
+        icon: 'folder',
+      },
+      children: [
+        {
+          name: 'Comisiones',
+          displayName: 'Comisiones',
+        },
+        {
+          name: 'Constancias',
+          displayName: 'Constancias',
+        },
+        
+      ],
+    },
+
+    //Rutas para S.I.G 
+    {
+      name: 'sig',
+      displayName: 'S.I.G',
+      meta: {
+        icon: 'folder_special',
+      },
+      children: [
+        {
+          name: 'AvanceProgramatico',
+          displayName: 'Avance Programatico',
+        },
+        {
+          name: 'InstrumendacionDidactica',
+          displayName: '🛠️ Instrumentación Didáctica', // Emoji de construcción
+        },
+        {
+          name: 'AcuseEstudiante',
+          displayName: 'Acuse Estudiante',
+        },
+        {
+          name: 'EvaluacionDiagnostica',
+          displayName: '🛠️Evaluacion Diagnostica',
+        },
+        {
+          name: 'CarpetaEvidencias',
+          displayName: 'Carpeta Evidencias',
+        },  
+        {
+          name: 'Asesorias',
+          displayName: 'Asesorias',
+        },
+        
+      ],
+    },
+//Rutas para "Projectos Individuales"
+    {
+          name: 'projects',
+          displayName: 'Projectos individuales',
+          meta: {
+            icon: 'folder_shared',
+          },
+        },
+
+////Rutas para "Liberacion de actividades"
+     {
+      name: 'Liberacion',
+      displayName: '🛠️Liberacion de actividades',
+      meta: {
+        icon: 'lock_open',
+      },
+      children: [
+        {
+          name: 'ReporteFinal',
+          displayName: 'Reporte Final',
+        },
+        {
+          name: 'ActasCalificaciones',
+          displayName: 'Actas Calificaciones',
+        },
+        {
+          name: 'LiberacionActividadesD',
+          displayName: 'Liberacion Docente',
+        },
+        {
+          name: 'LiberacionActividadesA',
+          displayName: 'Liberacion Academica',
+        },      
+      ],
+    },
+
+    {
+      name: 'Usuarios',
       displayName: 'menu.users',
       meta: {
         icon: 'group',
       },
     },
-    {
-      name: 'projects',
-      displayName: 'menu.projects',
-      meta: {
-        icon: 'folder_shared',
-      },
-    },
-    {
+   
+
+    //Rutas para la seccion de pagos (que no se plenea usar)
+   /*  {
       name: 'payments',
       displayName: 'menu.payments',
       meta: {
@@ -52,28 +163,8 @@ export default {
           displayName: 'menu.billing',
         },
       ],
-    },
-    {
-      name: 'auth',
-      displayName: 'menu.auth',
-      meta: {
-        icon: 'login',
-      },
-      children: [
-        {
-          name: 'login',
-          displayName: 'menu.login',
-        },
-        {
-          name: 'signup',
-          displayName: 'menu.signup',
-        },
-        {
-          name: 'recover-password',
-          displayName: 'menu.recover-password',
-        },
-      ],
-    },
+    }, */
+    
 
     {
       name: 'faq',
