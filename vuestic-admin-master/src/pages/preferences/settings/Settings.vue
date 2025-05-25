@@ -3,7 +3,6 @@
     <p class="font-bold w-[200px]">Name</p>
     <div class="flex-1">
       <div class="max-w-[748px]">
-        {{ userName }}
       </div>
     </div>
     <VaButton :style="buttonStyles" class="w-fit h-fit" preset="primary" @click="emits('openNameModal')">
@@ -15,52 +14,77 @@
     <p class="font-bold w-[200px]">Email</p>
     <div class="flex-1">
       <div class="max-w-[748px]">
-        {{ email }}
       </div>
     </div>
   </div>
-  <!-- Resto del template se mantiene igual -->
+  <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 min-h-[36px] leading-5">
+    <p class="font-bold w-[200px]">Password</p>
+    <div class="flex-1">
+      <div class="max-w-[748px]">•••••••••••••</div>
+    </div>
+    <VaButton :style="buttonStyles" class="w-fit h-fit" preset="primary" @click="emits('openResetPasswordModal')">
+      Reset Password
+    </VaButton>
+  </div>
+  <VaDivider />
+  <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 min-h-[36px] leading-5">
+    <p class="font-bold w-[200px]">Two-factor authentication</p>
+    <div class="flex-1">
+      <div class="max-w-[748px]">
+        {{ twoFA.content }}
+      </div>
+    </div>
+    <VaButton :style="buttonStyles" class="w-fit h-fit" preset="primary" :color="twoFA.color" @click="toggle2FA">
+      {{ twoFA.button }}
+    </VaButton>
+  </div>
+  <VaDivider />
+  <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 min-h-[36px] leading-5">
+    <p class="font-bold w-[200px]">Email subscriptions</p>
+    <div class="flex-1">
+      <div class="max-w-[748px]">
+        <p>To manage what emails you get, visit the</p>
+        <div class="flex space-x-1 w-fit">
+          <RouterLink :to="{ name: 'settings' }" class="font-semibold text-primary">Notification settings</RouterLink>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
-
 <script lang="ts" setup>
 import { computed } from 'vue'
+
 import { useToast } from 'vuestic-ui'
-import { useUserStore } from '../../../stores/user-store'
-import { useAuthStore } from '../../../stores/auth-store'
 
-const { buttonStyles } = '../styles'
 
-const userStore = useUserStore()
-const authStore = useAuthStore()
+import { buttonStyles } from '../styles'
+
 
 const { init } = useToast()
 
-// Usamos directamente los getters del store
-const userName = computed(() => authStore.user?.token || 'Usuario')
-const email = computed(() => authStore.user?.correo || 'Sin correo')
+const toastMessage = computed(() => (Storage.is2FAEnabled ? '2FA successfully enabled' : '2FA successfully disabled'))
 
 const twoFA = computed(() => {
-  if (userStore.is2FAEnabled) {
+  if (Storage.is2FAEnabled) {
     return {
       color: 'danger',
       button: 'Disable 2FA',
-      content: 'Two-Factor Authentication (2FA) is now enabled for your account...',
+      content:
+        'Two-Factor Authentication (2FA) is now enabled for your account, adding an extra layer of security to your sign-ins.',
     }
   } else {
     return {
       color: 'primary',
       button: 'Set up 2FA',
-      content: 'Add an extra layer of security to your account...',
+      content:
+        'Add an extra layer of security to your account. To sign in, you’ll need to provide a code along with your username and password.',
     }
   }
 })
 
 const toggle2FA = () => {
-  userStore.toggle2FA()
-  init({
-    message: userStore.is2FAEnabled ? '2FA activado' : '2FA desactivado',
-    color: 'success',
-  })
+  Storage.toggle2FA()
+  init({ message: toastMessage.value, color: 'success' })
 }
 
 const emits = defineEmits(['openNameModal', 'openResetPasswordModal'])

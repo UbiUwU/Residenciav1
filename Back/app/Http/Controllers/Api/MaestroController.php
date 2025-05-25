@@ -3,103 +3,207 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Maestro;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class MaestroController extends Controller
 {
-    // Obtener todos los maestros con paginación
-    public function index(Request $request)
+    // Obtener todos los maestros
+    public function index()
     {
-        $maestros = Maestro::paginate(10); // Paginación con 10 resultados por página
-        return response()->json($maestros);
+        $maestros = DB::select("SELECT * FROM get_all_maestros()");
+
+        return response()->json([
+            'success' => true,
+            'data' => $maestros
+        ]);
     }
 
-    // Buscar maestro por Tarjeta
+    // Obtener un maestro por tarjeta
     public function show($tarjeta)
     {
-        $maestro = Maestro::find($tarjeta);
+        $maestro = DB::select("SELECT * FROM get_maestro_by_tarjeta(?)", [$tarjeta]);
 
-        if (!$maestro) {
-            return response()->json(['error' => 'Maestro no encontrado'], 404);
+        if (empty($maestro)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Maestro no encontrado'
+            ], 404);
         }
 
-        return response()->json($maestro);
+        return response()->json([
+            'success' => true,
+            'data' => $maestro[0]
+        ]);
     }
 
     // Crear un nuevo maestro
     public function store(Request $request)
     {
-        // Validaciones
-        $validator = Validator::make($request->all(), [
-            'tarjeta' => 'required|integer',
+        $validated = $request->validate([
+            // Datos del usuario
+            'correo' => 'required|email|unique:usuarios,correo',
+            'password' => 'required|string|min:6',
+            'id_rol' => 'required|integer',
+
+            // Datos del maestro
+            'tarjeta' => 'required|integer|unique:maestros,tarjeta',
             'nombre' => 'required|string|max:255',
             'apellidopaterno' => 'required|string|max:255',
             'apellidomaterno' => 'required|string|max:255',
             'rfc' => 'required|string|max:13',
-            'escolaridad_licenciatura' => 'required|string|max:50',
-            'estado_licenciatura' => 'required|string|max:1',
+            'escolaridad_licenciatura' => 'nullable|string|max:50',
+            'estado_licenciatura' => 'nullable|string|max:1',
+            'escolaridad_especializacion' => 'nullable|string|max:50',
+            'estado_especializacion' => 'nullable|string|max:1',
             'escolaridad_maestria' => 'nullable|string|max:50',
             'estado_maestria' => 'nullable|string|max:1',
+            'escolaridad_doctorado' => 'nullable|string|max:50',
+            'estado_doctorado' => 'nullable|string|max:1',
             'id_departamento' => 'required|integer'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+        try {
+            DB::beginTransaction();
+
+            // 1. Crear usuario y obtener su ID (usamos la nueva función insert_usuario_con_id)
+            $usuario = DB::select('SELECT insert_usuario_con_id(?, ?, ?) AS id', [
+                $validated['correo'],
+                $validated['password'],
+                $validated['id_rol']
+            ]);
+
+            $id_usuario = $usuario[0]->id ?? null;
+
+            if (!$id_usuario) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se pudo crear el usuario.'
+                ], 400);
+            }
+
+            // 2. Crear maestro
+            $result = DB::select("SELECT insert_maestro(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) AS result", [
+                $validated['tarjeta'],
+                $validated['nombre'],
+                $validated['apellidopaterno'],
+                $validated['apellidomaterno'],
+                $id_usuario,
+                $validated['rfc'],
+                $validated['escolaridad_licenciatura'] ?? null,
+                $validated['estado_licenciatura'] ?? null,
+                $validated['escolaridad_especializacion'] ?? null,
+                $validated['estado_especializacion'] ?? null,
+                $validated['escolaridad_maestria'] ?? null,
+                $validated['estado_maestria'] ?? null,
+                $validated['escolaridad_doctorado'] ?? null,
+                $validated['estado_doctorado'] ?? null,
+                $validated['id_departamento']
+            ]);
+
+            $message = $result[0]->result;
+
+            if (str_contains($message, 'Error')) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => $message
+                ], 400);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Maestro y usuario creados correctamente.',
+                'id_usuario' => $id_usuario,
+                'id_maestro' => $validated['tarjeta']
+            ], 201);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error al crear maestro y usuario: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error inesperado: ' . $e->getMessage()
+            ], 500);
         }
-
-        $maestro = Maestro::create($request->all());
-
-        return response()->json($maestro, 201);
     }
 
-    // Actualizar un maestro
+
+    // Actualizar un maestro existente
     public function update(Request $request, $tarjeta)
     {
-        $maestro = Maestro::find($tarjeta);
-
-        if (!$maestro) {
-            return response()->json(['error' => 'Maestro no encontrado'], 404);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'Nombre' => 'string|max:255',
-            'ApellidoPaterno' => 'string|max:255',
-            'ApellidoMaterno' => 'string|max:255',
-            'RFC' => 'string|max:13|unique:maestros,RFC,' . $tarjeta . ',Tarjeta',
-            'Escolaridad_Licenciatura' => 'string|max:50',
-            'Estado_Licenciatura' => 'string|max:1',
-            'Escolaridad_Especializacion' => 'nullable|string|max:50',
-            'Estado_Especializacion' => 'nullable|string|max:1',
-            'Escolaridad_Maestria' => 'nullable|string|max:50',
-            'Estado_Maestria' => 'nullable|string|max:1',
-            'Escolaridad_Doctorado' => 'nullable|string|max:50',
-            'Estado_Doctorado' => 'nullable|string|max:1',
-            'Id_Departamento' => 'integer',
+        $validated = $request->validate([
+            'nombre' => 'sometimes|string|max:255',
+            'apellidopaterno' => 'sometimes|string|max:255',
+            'apellidomaterno' => 'sometimes|string|max:255',
+            'idusuario' => 'sometimes|integer',
+            'rfc' => 'sometimes|string|max:13',
+            'escolaridad_licenciatura' => 'nullable|string|max:50',
+            'estado_licenciatura' => 'nullable|string|max:1',
+            'escolaridad_especializacion' => 'nullable|string|max:50',
+            'estado_especializacion' => 'nullable|string|max:1',
+            'escolaridad_maestria' => 'nullable|string|max:50',
+            'estado_maestria' => 'nullable|string|max:1',
+            'escolaridad_doctorado' => 'nullable|string|max:50',
+            'estado_doctorado' => 'nullable|string|max:1',
+            'id_departamento' => 'sometimes|integer'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+        $result = DB::select("SELECT update_maestro(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) as result", [
+            $tarjeta,
+            $validated['nombre'] ?? null,
+            $validated['apellidopaterno'] ?? null,
+            $validated['apellidomaterno'] ?? null,
+            $validated['idusuario'] ?? null,
+            $validated['rfc'] ?? null,
+            $validated['escolaridad_licenciatura'] ?? null,
+            $validated['estado_licenciatura'] ?? null,
+            $validated['escolaridad_especializacion'] ?? null,
+            $validated['estado_especializacion'] ?? null,
+            $validated['escolaridad_maestria'] ?? null,
+            $validated['estado_maestria'] ?? null,
+            $validated['escolaridad_doctorado'] ?? null,
+            $validated['estado_doctorado'] ?? null,
+            $validated['id_departamento'] ?? null
+        ]);
+
+        $message = $result[0]->result;
+
+        if (str_contains($message, 'Error')) {
+            return response()->json([
+                'success' => false,
+                'message' => $message
+            ], 400);
         }
 
-        $maestro->update($request->all());
-
-        return response()->json($maestro);
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data' => $validated
+        ]);
     }
 
     // Eliminar un maestro
     public function destroy($tarjeta)
     {
-        $maestro = Maestro::find($tarjeta);
+        $result = DB::select("SELECT delete_maestro(?) as result", [$tarjeta]);
+        $message = $result[0]->result;
 
-        if (!$maestro) {
-            return response()->json(['error' => 'Maestro no encontrado'], 404);
+        if (str_contains($message, 'Error')) {
+            return response()->json([
+                'success' => false,
+                'message' => $message
+            ], 404);
         }
 
-        $maestro->delete();
-
-        return response()->json(['message' => 'Maestro eliminado exitosamente']);
+        return response()->json([
+            'success' => true,
+            'message' => $message
+        ]);
     }
-
 }

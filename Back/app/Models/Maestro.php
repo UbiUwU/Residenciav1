@@ -14,6 +14,7 @@ class Maestro extends Model
     public $incrementing = true;
     protected $keyType = 'integer';
     public $timestamps = false;
+    
     protected $fillable = [
         'tarjeta',
         'nombre',
@@ -32,9 +33,9 @@ class Maestro extends Model
         'id_departamento'
     ];
 
-    // Si tienes relaciones, las puedes definir aquí
-    // Por ejemplo:
-    // public function departamento() {
-    //     return $this->belongsTo(Departamento::class, 'Id_Departamento');
-    // }
+    // Relación con departamento (si existe el modelo Departamento)
+    /*
+    public function departamento() {
+        return $this->belongsTo(Departamento::class, 'id_departamento');
+    }*/
 }

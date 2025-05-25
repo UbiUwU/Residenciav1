@@ -10,7 +10,6 @@ Object.entries(fileNameToLocaleModuleDict)
     const fileNameParts = fileName.split('/')
     const fileNameWithoutPath = fileNameParts[fileNameParts.length - 1]
     const localeName = fileNameWithoutPath.split('.json')[0]
-
     return [localeName, localeModule.default] as const
   })
   .forEach((localeNameLocaleMessagesTuple) => {

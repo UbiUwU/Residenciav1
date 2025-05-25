@@ -5,7 +5,13 @@
         <VaButton preset="secondary" color="textPrimary">
           <span class="profile-dropdown__anchor min-w-max">
             <slot />
+<<<<<<< HEAD
             <VaAvatar :size="32" color="warning">  </VaAvatar>
+=======
+            <VaAvatar :size="32" color="warning">
+              <VaIcon name="person" />
+            </VaAvatar>
+>>>>>>> 43823d202f260e8bd8c510b803029d7f80a72cca
           </span>
         </VaButton>
       </template>
@@ -43,7 +49,7 @@ import { useColors } from 'vuestic-ui'
 const { colors, setHSLAColor } = useColors()
 const hoverColor = computed(() => setHSLAColor(colors.focus, { a: 0.1 }))
 
-import { useAuthStore } from '../../../../stores/auth' // ajusta según tu ruta
+import { useAuthStore } from '../../../../services/auth' // ajusta según tu ruta
 const auth = useAuthStore()
 
 function handleItemClick(item: ProfileListItem) {

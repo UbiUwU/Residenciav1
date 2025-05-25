@@ -6,6 +6,7 @@
 import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useColors } from 'vuestic-ui'
+import { useAuthStore } from './services/auth'
 
 onMounted(() => {
   const savedLocale = localStorage.getItem('locale')
@@ -20,6 +21,13 @@ onMounted(() => {
     applyPreset(savedTheme)
   }
 })
+
+const auth = useAuthStore()
+
+onMounted(() => {
+  auth.initialize() // Carga token, usuario y maestro desde sessionStorage
+})
+
 </script>
 
 <style lang="scss">

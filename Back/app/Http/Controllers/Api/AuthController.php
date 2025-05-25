@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,22 +15,76 @@ class AuthController extends Controller
             'password' => 'required|string'
         ]);
 
-        $correo = $request->input('correo');
-        $password = $request->input('password');
+        try {
+            $result = DB::select("SELECT * FROM login_usuario(?, ?)", [
+                $request->input('correo'),
+                $request->input('password')
+            ]);
 
-        // Ejecutar la función PostgreSQL
-        $result = DB::select("SELECT * FROM login_usuario(?, ?)", [$correo, $password]);
+            if (empty($result) || is_null($result[0]->idusuario)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Credenciales incorrectas'
+                ], 401);
+            }
 
-        if (empty($result) || is_null($result[0]->idusuario)) {
+            $maestro = DB::select("SELECT * FROM get_maestro_by_idusuario(?)", [$result[0]->idusuario]);
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'user' => $result[0],
+                    'maestro' => !empty($maestro) ? $maestro[0] : null
+                ],
+                'token' => $result[0]->token
+            ]);
+
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Credenciales incorrectas'
-            ], 401);
+                'message' => 'Error en el servidor',
+                'error' => $e->getMessage()
+            ], 500);
         }
+    }
+    
+    public function me(Request $request)
+    {
+        try {
+            $token = $request->bearerToken();
+            
+            if (!$token) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Token no proporcionado'
+                ], 401);
+            }
 
-        return response()->json([
-            'success' => true,
-            'data' => $result[0]
-        ]);
+            $user = DB::select("SELECT * FROM usuarios WHERE token = ?", [$token]);
+            
+            if (empty($user)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Token inválido o sesión expirada'
+                ], 401);
+            }
+
+            $maestro = DB::select("SELECT * FROM get_maestro_by_idusuario(?)", [$user[0]->idusuario]);
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'user' => $user[0],
+                    'maestro' => !empty($maestro) ? $maestro[0] : null
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener información del usuario',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
