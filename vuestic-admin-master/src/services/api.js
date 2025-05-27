@@ -57,15 +57,6 @@ export default {
     return apiClient.delete(`/maestros/${id}`)
   },
 
-  // Asignaturas
-  getAsignaturas() {
-    return apiClient.get('/asignaturas')
-  },
-
-  getAsignatura(clave) {
-    return apiClient.get(`/asignaturas/${clave}`)
-  },
-
   // Horarios de Maestros /horarios/{maestro_id}
   getHorariosDeMaestro(maestroId) {
     return apiClient.get(`/horarios/${maestroId}`)
@@ -205,6 +196,65 @@ export default {
   // Eliminar un evento
   eliminarEvento(id) {
     return apiClient.delete(`/eventos/${id}`)
+  },
+
+  // Obtener todas las asignaturas
+  getAsignaturas() {
+    return apiClient.get('/asignaturas')
+  },
+
+  // Obtener asignaturas por carrera
+  getAsignaturasByCarrera(claveCarrera) {
+    return apiClient.get(`/asignaturas/carrera/${claveCarrera}`)
+  },
+
+  // Obtener asignatura por clave
+  getAsignatura(clave) {
+    return apiClient.get(`/asignaturas/${clave}`)
+  },
+
+  // Crear nueva asignatura
+  crearAsignatura(data) {
+    return apiClient.post('/asignaturas', data)
+  },
+
+  // Actualizar asignatura
+  actualizarAsignatura(clave, data) {
+    return apiClient.put(`/asignaturas/${clave}`, data)
+  },
+
+  // Eliminar asignatura
+  eliminarAsignatura(clave) {
+    return apiClient.delete(`/asignaturas/${clave}`)
+  },
+
+  getAsignaturaCompleta(clave) {
+    return apiClient.get(`/asignaturas/complete/${clave}`)
+  },
+
+  // Obtener todas las carreras
+  getCarreras() {
+    return apiClient.get('/carreras');
+  },
+
+  // Obtener una carrera por su clave
+  getCarrera(clave) {
+    return apiClient.get(`/carreras/${clave}`);
+  },
+
+  // Crear una nueva carrera
+  createCarrera(carreraData) {
+    return apiClient.post('/carreras', carreraData);
+  },
+
+  // Actualizar una carrera existente
+  updateCarrera(clave, carreraData) {
+    return apiClient.put(`/carreras/${clave}`, carreraData);
+  },
+
+  // Eliminar una carrera
+  deleteCarrera(clave) {
+    return apiClient.delete(`/carreras/${clave}`);
   }
 }
 

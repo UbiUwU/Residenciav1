@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AsignaturaController;
+use App\Http\Controllers\AsignaturaController;
 use App\Http\Controllers\Api\MaestroController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\HorarioMaestroController;
@@ -39,8 +39,16 @@ Route::prefix('maestros')->group(function () {
 });
 
 Route::prefix('asignaturas')->group(function () {
-    Route::get('/', [AsignaturaController::class, 'index']); // Todas las asignaturas
-    Route::get('/{clave}', [AsignaturaController::class, 'show']); // Una asignatura por clave
+    Route::get('/', [AsignaturaController::class, 'index']);
+    Route::post('/', [AsignaturaController::class, 'store']);
+    Route::get('/{clave}', [AsignaturaController::class, 'show']);
+    Route::get('/complete/{clave}', [AsignaturaController::class, 'getByClaveComplete']);
+    Route::put('/{clave}', [AsignaturaController::class, 'update']);
+    Route::delete('/{clave}', [AsignaturaController::class, 'destroy']);
+    
+    // Rutas adicionales
+    Route::get('/carrera/{claveCarrera}', [AsignaturaController::class, 'getByCarrera']);
+    Route::get('/carrera/{claveCarrera}/semestre/{semestre}', [AsignaturaController::class, 'getByCarreraAndSemestre']);
 });
 
 Route::get('/alumnos', [AlumnoController::class, 'index']);
@@ -204,3 +212,4 @@ Route::prefix('eventos')->group(function () {
     Route::put('/{id}', [EventoCalendarioController::class, 'update']);
     Route::delete('/{id}', [EventoCalendarioController::class, 'destroy']);
 });
+
