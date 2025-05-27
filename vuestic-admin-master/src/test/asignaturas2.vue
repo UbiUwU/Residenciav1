@@ -68,7 +68,7 @@
                 <li v-for="act in actividadTema.actividades" :key="act.id" class="mb-2">
                   <p><strong>Actividad:</strong> {{ act.descripcion }}</p>
                   <ul v-if="act.competencias && act.competencias.length" class="ml-4 list-disc list-inside">
-                    <li v-for="comp in act.competencias" :key="comp.id">{{ comp.descripcion }}</li>
+                    <li v-for="comp in act.competencias" :key="comp.id"> <strong>{{ comp.descripcion }} </strong> {{ comp.tipo }}</li>
                   </ul>
                   <p v-else class="text-gray-500 ml-4">No hay competencias asociadas.</p>
                 </li>
