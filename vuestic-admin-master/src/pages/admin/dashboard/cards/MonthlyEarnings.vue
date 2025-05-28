@@ -25,8 +25,8 @@ import VaChart from '../../../../components/va-charts/VaChart.vue'
 import { ChartData, ChartOptions } from 'chart.js'
 
 // Datos de ejemplo
-const maestrosConDocumentos = 18
-const maestrosSinDocumentos = 7
+const maestrosConDocumentos = 1
+const maestrosSinDocumentos = 1
 
 const totalMaestros = computed(() => maestrosConDocumentos + maestrosSinDocumentos)
 

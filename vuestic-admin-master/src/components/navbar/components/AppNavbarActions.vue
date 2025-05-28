@@ -1,16 +1,6 @@
 <template>
   <div class="app-navbar-actions">
-    <VaButton
-      v-if="!isMobile"
-      preset="secondary"
-      href="https://ui.vuestic.dev/support/consulting"
-      target="_blank"
-      color="textPrimary"
-      class="app-navbar-actions__item flex-shrink-0 mx-0"
-    >
-      <VaIcon size="large" class="material-symbols-outlined mr-1">support_agent</VaIcon>
-      {{ t('supportAndConsulting') }}
-    </VaButton>
+    
     <NotificationDropdown class="app-navbar-actions__item" />
     <ProfileDropdown class="app-navbar-actions__item app-navbar-actions__item--profile mr-1" />
   </div>

@@ -1,8 +1,4 @@
-<!-- eslint-disable prettier/prettier -->
-<!-- eslint-disable prettier/prettier -->
-<!-- eslint-disable prettier/prettier -->
-<!-- eslint-disable prettier/prettier -->
-<!-- eslint-disable prettier/prettier -->
+
 <template>
   <div class="asignaturas-container">
     <h1>Lista de Asignaturas</h1>

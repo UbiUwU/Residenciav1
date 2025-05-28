@@ -6,6 +6,7 @@ import AuthLayout from '../layouts/AuthLayout.vue'
 import AppLayout from '../layouts/AppLayout.vue'
 //Todo lo que sea test es para pruebas
 import Asignaturas from '../test/Asignaturas.vue'
+import AsignaturasMaestro from '../pages/admin/pages/AsignaturasMaestros.vue'
 import AsignaturaDetail from '../test/AsignaturaDetail.vue'
 import departamento from '../test/departamentos.vue'
 import InHorarioMaestro from '../test/IngresarHorario.vue'
@@ -72,7 +73,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/asignaturas/:clave',
-        name: 'asignatura-detail',
+        name: 'asignatura',
         component: AsignaturaDetail,
         props: true,
       },
@@ -98,6 +99,16 @@ const routes: Array<RouteRecordRaw> = [
         name: 'projects',
         path: 'projects',
         component: () => import('../pages/projects/ProjectsPage.vue'),
+      },
+      {
+        path: '/asignaturas/maestro/:tarjeta',
+        name: 'materiasMaestro',
+        component: () => import('../pages/admin/pages/AsignaturasMaestros.vue')
+      },
+      {
+        path: '/pdf',
+        name: 'pdf',
+        component: () => import('../pages/admin/pages/AsignaturaDetail.vue')
       },
       {
         name: 'Asignaturas',

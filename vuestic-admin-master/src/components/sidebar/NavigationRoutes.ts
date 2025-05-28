@@ -33,27 +33,19 @@ export default {
       },
     },
     {
-      name: 'auth',
-      displayName: 'menu.auth',
+      name: 'HorarioMaestro',
+      displayName: 'Horario',
       meta: {
-        icon: 'login',
+        icon: 'timer',
       },
-      children: [
-        {
-          name: 'login',
-          displayName: 'menu.login',
-        },
-        {
-          name: 'signup',
-          displayName: 'menu.signup',
-        },
-        {
-          name: 'recover-password',
-          displayName: 'menu.recover-password',
-        },
-      ],
     },
-
+    {
+      name: 'Asignaturas',
+      displayName: 'Asignatura',
+      meta: {
+        icon: 'timer',
+      },
+    },
     {
       name: 'faq',
       displayName: 'menu.faq',
