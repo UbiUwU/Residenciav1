@@ -251,16 +251,16 @@ Route::delete('/proyecto/{id}', [ProyectoController::class, 'destroy']);
 use App\Http\Controllers\EvaluacionController;
 
 Route::prefix('evaluacion')->group(function () {
-    Route::post('/', [EvaluacionController::class, 'store']);     
-    Route::put('/{id}', [EvaluacionController::class, 'update']);   
-    Route::delete('/{id}', [EvaluacionController::class, 'destroy']); 
+    Route::post('/', [EvaluacionController::class, 'store']);
+    Route::put('/{id}', [EvaluacionController::class, 'update']);
+    Route::delete('/{id}', [EvaluacionController::class, 'destroy']);
 });
 
 use App\Http\Controllers\FuenteInformacionController;
 
 Route::prefix('fuente')->group(function () {
-    Route::post('/', [FuenteInformacionController::class, 'store']);     
-    Route::put('/{id}', [FuenteInformacionController::class, 'update']);    
+    Route::post('/', [FuenteInformacionController::class, 'store']);
+    Route::put('/{id}', [FuenteInformacionController::class, 'update']);
     Route::delete('/{id}', [FuenteInformacionController::class, 'destroy']);
 
 });
@@ -268,10 +268,10 @@ Route::prefix('fuente')->group(function () {
 use App\Http\Controllers\TemaController;
 
 Route::post('/tema', [TemaController::class, 'store']);
-Route::put('/tema/{id}', [TemaController::class, 'update']); 
-Route::delete('/tema/{id}', [TemaController::class, 'destroy']); 
-Route::get('/tema', [TemaController::class, 'index']); 
-Route::get('/tema/{id}', [TemaController::class, 'show']); 
+Route::put('/tema/{id}', [TemaController::class, 'update']);
+Route::delete('/tema/{id}', [TemaController::class, 'destroy']);
+Route::get('/tema', [TemaController::class, 'index']);
+Route::get('/tema/{id}', [TemaController::class, 'show']);
 Route::get('/temaSub/{claveAsignatura}', [TemaController::class, 'obtenerTemasYSubtemasPorAsignatura']);
 
 use App\Http\Controllers\SubtemaController;
@@ -285,5 +285,6 @@ use App\Http\Controllers\CompetenciaTemaController;
 Route::prefix('actividades')->group(function () {
     Route::post('/', [CompetenciaTemaController::class, 'store']);
     Route::put('/', [CompetenciaTemaController::class, 'update']);
+    Route::delete('/{id}', [CompetenciaTemaController::class, 'destroy']);
 
 });

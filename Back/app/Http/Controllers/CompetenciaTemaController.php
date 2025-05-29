@@ -43,25 +43,30 @@ class CompetenciaTemaController extends Controller
         }
     }
     public function update(Request $request)
-{
-    $validated = $request->validate([
-        'comp_id' => 'nullable|integer|exists:competencia_tema,id_Comp_Tema',
-        'descripcion_competencia' => 'nullable|string|max:255',
-        'tipo_competencia' => 'nullable|array',
-        'tipo_competencia.*' => 'in:profesional,generica,basica',
-        'act_id' => 'nullable|integer|exists:actividad_aprendizaje,id_Act_Aprendizaje',
-        'descripcion_actividad' => 'nullable|string|max:255',
-    ]);
+    {
+        $validated = $request->validate([
+            'comp_id' => 'nullable|integer|exists:competencia_tema,id_Comp_Tema',
+            'descripcion_competencia' => 'nullable|string|max:255',
+            'tipo_competencia' => 'nullable|array',
+            'tipo_competencia.*' => 'in:profesional,generica,basica',
+            'act_id' => 'nullable|integer|exists:actividad_aprendizaje,id_Act_Aprendizaje',
+            'descripcion_actividad' => 'nullable|string|max:255',
+        ]);
 
-    $result = DB::select('SELECT actualizar_conjunto_competencia_actividad(?, ?, ?, ?, ?)', [
-        $validated['comp_id'] ?? null,
-        $validated['descripcion_competencia'] ?? null,
-        isset($validated['tipo_competencia']) ? '{' . implode(',', $validated['tipo_competencia']) . '}' : null,
-        $validated['act_id'] ?? null,
-        $validated['descripcion_actividad'] ?? null,
-    ]);
+        $result = DB::select('SELECT actualizar_conjunto_competencia_actividad(?, ?, ?, ?, ?)', [
+            $validated['comp_id'] ?? null,
+            $validated['descripcion_competencia'] ?? null,
+            isset($validated['tipo_competencia']) ? '{' . implode(',', $validated['tipo_competencia']) . '}' : null,
+            $validated['act_id'] ?? null,
+            $validated['descripcion_actividad'] ?? null,
+        ]);
 
-    return response()->json(['mensaje' => 'Actualización realizada correctamente'], 200);
-}
+        return response()->json(['mensaje' => 'Actualización realizada correctamente'], 200);
+    }
+    public function destroy($id)
+    {
+        DB::select('SELECT eliminar_conjunto_competencia_actividad(?)', [$id]);
+        return response()->json(['mensaje' => 'Conjunto eliminado correctamente']);
+    }
 
 }
