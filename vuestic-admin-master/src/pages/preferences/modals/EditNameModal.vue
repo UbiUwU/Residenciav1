@@ -24,7 +24,6 @@ import { ref } from 'vue'
 import { buttonStyles } from '../styles'
 import { useToast } from 'vuestic-ui'
 
-
 const { init } = useToast()
 
 const emits = defineEmits(['cancel'])

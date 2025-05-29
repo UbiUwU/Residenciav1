@@ -10,14 +10,14 @@ class Usuario extends Model
     use HasFactory;
 
     protected $table = 'usuarios';
-    protected $primaryKey = 'IdUsuario';
+    protected $primaryKey = 'idusuario';
     public $timestamps = false;
 
     protected $fillable = [
-        'Correo',
-        'Password',
-        'Token',
-        'IdRol'
+        'correo',
+        'password',
+        'token',
+        'idrol'
     ];
 }
 

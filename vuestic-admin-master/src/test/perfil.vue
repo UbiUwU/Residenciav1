@@ -7,9 +7,13 @@
       <p><strong>ID:</strong> {{ maestro.tarjeta }}</p>
       <p><strong>Nombre:</strong> {{ maestro.nombre }} {{ maestro.apellidopaterno }} {{ maestro.apellidomaterno }}</p>
       <p><strong>RFC:</strong> {{ maestro.rfc }}</p>
-      
+
       <p><strong>Licenciatura:</strong> {{ maestro.escolaridad_licenciatura }} ({{ maestro.estado_licenciatura }})</p>
-      <p><strong>Especialización:</strong> {{ maestro.escolaridad_especializacion }} ({{ maestro.estado_especializacion }})</p>
+      <p>
+        <strong>Especialización:</strong> {{ maestro.escolaridad_especializacion }} ({{
+          maestro.estado_especializacion
+        }})
+      </p>
       <p><strong>Maestría:</strong> {{ maestro.escolaridad_maestria }} ({{ maestro.estado_maestria }})</p>
       <p><strong>Doctorado:</strong> {{ maestro.escolaridad_doctorado }} ({{ maestro.estado_doctorado }})</p>
 

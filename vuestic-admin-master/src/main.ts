@@ -13,7 +13,6 @@ import vuesticGlobalConfig from './services/vuestic-ui/global-config'
 
 import { useAuthStore } from './services/auth'
 
-
 const app = createApp(App)
 
 app.use(stores)

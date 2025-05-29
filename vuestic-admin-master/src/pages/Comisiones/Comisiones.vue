@@ -1,74 +1,39 @@
 <template>
-      <!-- Título de la vista -->
-   <h1 class="va-h4 mb-4">Comisiones</h1>
+  <!-- Título de la vista -->
+  <h1 class="va-h4 mb-4">Comisiones</h1>
   <div class="p-4">
-    <va-card>     
+    <va-card>
       <va-card-content>
         <!-- Filtros -->
         <div class="flex flex-wrap gap-4 mb-6">
-          <va-select
-            v-model="selectedStatus"
-            label="Estado"
-            :options="statusOptions"
-            class="min-w-40"
-          />
-          
-          <va-select
-            v-model="selectedEventType"
-            label="Tipo de Evento"
-            :options="eventTypeOptions"
-            class="min-w-48"
-          />
-          
-          <va-date-input
-            v-model="dateRange"
-            label="Rango de fechas"
-            mode="range"
-            clearable
-          />
+          <va-select v-model="selectedStatus" label="Estado" :options="statusOptions" class="min-w-40" />
+
+          <va-select v-model="selectedEventType" label="Tipo de Evento" :options="eventTypeOptions" class="min-w-48" />
+
+          <va-date-input v-model="dateRange" label="Rango de fechas" mode="range" clearable />
         </div>
 
         <!-- Tabla de comisiones -->
-        <va-data-table
-          :items="filteredCommissions"
-          :columns="columns"
-          :loading="loading"
-          hoverable
-        >
+        <va-data-table :items="filteredCommissions" :columns="columns" :loading="loading" hoverable>
           <template #cell(status)="{ value }">
             <va-badge :text="value" :color="getStatusColor(value)" />
           </template>
 
           <template #cell(daysLeft)="{ value }">
-            <span :class="{'text-red-500': value <= 3, 'text-orange-500': value > 3 && value <= 7}">
+            <span :class="{ 'text-red-500': value <= 3, 'text-orange-500': value > 3 && value <= 7 }">
               {{ value }} día(s)
             </span>
           </template>
 
           <template #cell(actions)="{ row }">
-            <va-button
-              preset="secondary"
-              size="small"
-              icon="visibility"
-              @click="viewDetails(row)"
-              class="mr-2"
-            />
-            <va-button
-              preset="secondary"
-              size="small"
-              icon="download"
-              @click="downloadCommissionPDF(row)"
-            />
+            <va-button preset="secondary" size="small" icon="visibility" @click="viewDetails(row)" class="mr-2" />
+            <va-button preset="secondary" size="small" icon="download" @click="downloadCommissionPDF(row)" />
           </template>
         </va-data-table>
 
         <!-- Paginación -->
         <div class="flex justify-center mt-4">
-          <va-pagination
-            v-model="currentPage"
-            :pages="totalPages"
-            :visible-pages="5"
-          />
+          <va-pagination v-model="currentPage" :pages="totalPages" :visible-pages="5" />
         </div>
       </va-card-content>
     </va-card>
@@ -118,7 +83,12 @@
               <va-list-item>
                 <va-list-item-label class="font-medium">Días restantes:</va-list-item-label>
                 <va-list-item-section>
-                  <span :class="{'text-red-500': selectedCommission.daysLeft <= 3, 'text-orange-500': selectedCommission.daysLeft > 3 && selectedCommission.daysLeft <= 7}">
+                  <span
+                    :class="{
+                      'text-red-500': selectedCommission.daysLeft <= 3,
+                      'text-orange-500': selectedCommission.daysLeft > 3 && selectedCommission.daysLeft <= 7,
+                    }"
+                  >
                     {{ selectedCommission.daysLeft }} día(s)
                   </span>
                 </va-list-item-section>
@@ -141,14 +111,8 @@
         </div>
 
         <div class="flex justify-end gap-2">
-          <va-button preset="secondary" @click="showDetailsModal = false">
-            Cerrar
-          </va-button>
-          <va-button 
-            color="success"
-            icon="download"
-            @click="downloadCommissionPDF(selectedCommission)"
-          >
+          <va-button preset="secondary" @click="showDetailsModal = false"> Cerrar </va-button>
+          <va-button color="success" icon="download" @click="downloadCommissionPDF(selectedCommission)">
             Descargar PDF Oficial
           </va-button>
         </div>
@@ -180,7 +144,7 @@ const statusOptions = [
   { text: 'Pendiente', value: 'pending' },
   { text: 'Confirmado', value: 'confirmed' },
   { text: 'Completado', value: 'completed' },
-  { text: 'Cancelado', value: 'canceled' }
+  { text: 'Cancelado', value: 'canceled' },
 ]
 
 const eventTypeOptions = [
@@ -190,7 +154,7 @@ const eventTypeOptions = [
   { text: 'Conferencia', value: 'conferencia' },
   { text: 'Reunión Académica', value: 'reunion_academica' },
   { text: 'Taller', value: 'taller' },
-  { text: 'Evaluación', value: 'evaluacion' }
+  { text: 'Evaluación', value: 'evaluacion' },
 ]
 
 // Columnas de la tabla
@@ -200,7 +164,7 @@ const columns = [
   { key: 'eventName', label: 'Evento', sortable: true },
   { key: 'eventType', label: 'Tipo', sortable: true },
   { key: 'status', label: 'Estado', sortable: true, width: '120px' },
-  { key: 'actions', label: 'Acciones', width: '120px' }
+  { key: 'actions', label: 'Acciones', width: '120px' },
 ]
 
 // Datos de ejemplo
@@ -213,10 +177,11 @@ const sampleCommissions = [
     eventTime: '09:00 - 14:00',
     location: 'Auditorio Principal - Edificio A',
     responsible: 'Dra. María González',
-    description: 'Participación como jurado en la presentación de proyectos de residencias profesionales de estudiantes de 8vo semestre.',
+    description:
+      'Participación como jurado en la presentación de proyectos de residencias profesionales de estudiantes de 8vo semestre.',
     status: 'confirmed',
     daysLeft: 5,
-    pdfUrl: '/comisiones/formatos/jurado-congreso.pdf'
+    pdfUrl: '/comisiones/formatos/jurado-congreso.pdf',
   },
   {
     id: 2,
@@ -229,7 +194,7 @@ const sampleCommissions = [
     description: 'Ponencia Inteligencia Artifical',
     status: 'pending',
     daysLeft: 30,
-    pdfUrl: '/comisiones/formatos/ceremonia-titulacion.pdf'
+    pdfUrl: '/comisiones/formatos/ceremonia-titulacion.pdf',
   },
   {
     id: 3,
@@ -242,7 +207,7 @@ const sampleCommissions = [
     description: 'Participación como ponente en la conferencia sobre aplicaciones de IA en la educación superior.',
     status: 'confirmed',
     daysLeft: 10,
-    pdfUrl: '/comisiones/formatos/conferencia-ia.pdf'
+    pdfUrl: '/comisiones/formatos/conferencia-ia.pdf',
   },
   {
     id: 4,
@@ -255,8 +220,8 @@ const sampleCommissions = [
     description: 'Revisión y actualización del plan de estudios de Ingeniería en Sistemas.',
     status: 'completed',
     daysLeft: -2,
-    pdfUrl: '/comisiones/formatos/reunion-curricular.pdf'
-  }
+    pdfUrl: '/comisiones/formatos/reunion-curricular.pdf',
+  },
 ]
 
 // Computed
@@ -265,27 +230,27 @@ const filteredCommissions = computed(() => {
 
   // Filtrar por estado
   if (selectedStatus.value !== 'all') {
-    result = result.filter(commission => commission.status === selectedStatus.value)
+    result = result.filter((commission) => commission.status === selectedStatus.value)
   }
 
   // Filtrar por tipo de evento
   if (selectedEventType.value !== 'all') {
-    result = result.filter(commission => commission.eventType === selectedEventType.value)
+    result = result.filter((commission) => commission.eventType === selectedEventType.value)
   }
 
   // Filtrar por rango de fechas
   if (dateRange.value && dateRange.value.length === 2) {
     const startDate = new Date(dateRange.value[0])
     const endDate = new Date(dateRange.value[1])
-    
-    result = result.filter(commission => {
+
+    result = result.filter((commission) => {
       const commissionDate = new Date(commission.eventDate)
       return commissionDate >= startDate && commissionDate <= endDate
     })
   }
 
   // Calcular días restantes (si no está ya calculado)
-  result = result.map(commission => {
+  result = result.map((commission) => {
     if (!commission.daysLeft) {
       const today = new Date()
       const eventDate = new Date(commission.eventDate)
@@ -313,17 +278,17 @@ const loadCommissions = async () => {
   loading.value = true
   try {
     // Simular llamada API
-    await new Promise(resolve => setTimeout(resolve, 800))
-    commissions.value = sampleCommissions.map(commission => {
+    await new Promise((resolve) => setTimeout(resolve, 800))
+    commissions.value = sampleCommissions.map((commission) => {
       const today = new Date()
       const eventDate = new Date(commission.eventDate)
       const diffTime = eventDate.getTime() - today.getTime()
       const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-      
+
       return {
         ...commission,
         daysLeft,
-        statusText: getStatusText(commission.status)
+        statusText: getStatusText(commission.status),
       }
     })
   } catch (error) {
@@ -343,7 +308,7 @@ const getStatusColor = (status: string) => {
     pending: 'warning',
     confirmed: 'success',
     completed: 'info',
-    canceled: 'danger'
+    canceled: 'danger',
   }
   return colors[status] || 'primary'
 }
@@ -353,7 +318,7 @@ const getStatusText = (status: string) => {
     pending: 'Pendiente',
     confirmed: 'Confirmado',
     completed: 'Completado',
-    canceled: 'Cancelado'
+    canceled: 'Cancelado',
   }
   return texts[status] || status
 }
@@ -364,11 +329,11 @@ const viewDetails = (commission: any) => {
 }
 
 const downloadCommissionPDF = (commission: any) => {
-  init({ 
+  init({
     message: `Descargando formato PDF para ${commission.eventName}`,
-    color: 'info'
+    color: 'info',
   })
-  
+
   // Simular descarga
   setTimeout(() => {
     const link = document.createElement('a')

@@ -5,7 +5,6 @@ import { useMaestros } from './composables/useMaestros'
 import { useToast } from 'vuestic-ui'
 import { watchEffect } from 'vue'
 
-
 const { maestros, isLoading, error, fetchMaestros } = useMaestros()
 const { init: notify } = useToast()
 

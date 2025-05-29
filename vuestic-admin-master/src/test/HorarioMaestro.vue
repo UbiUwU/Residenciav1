@@ -3,12 +3,7 @@
     <va-card>
       <va-card-title>Calendario de Eventos</va-card-title>
       <va-card-content>
-        <va-date-picker
-          v-model="fechaSeleccionada"
-          :attributes="eventosMarcados"
-          mode="calendar"
-          is-expanded
-        />
+        <va-date-picker v-model="fechaSeleccionada" :attributes="eventosMarcados" mode="calendar" is-expanded />
       </va-card-content>
     </va-card>
 
@@ -16,13 +11,12 @@
       <va-card-title>Eventos del {{ fechaSeleccionada }}</va-card-title>
       <va-card-content>
         <va-list>
-          <va-list-item
-            v-for="evento in eventosFiltrados"
-            :key="evento.id"
-          >
+          <va-list-item v-for="evento in eventosFiltrados" :key="evento.id">
             <va-list-item-section>
-              <strong>{{ evento.nombre }}</strong><br />
-              <span>{{ evento.descripcion }}</span><br />
+              <strong>{{ evento.nombre }}</strong
+              ><br />
+              <span>{{ evento.descripcion }}</span
+              ><br />
               <small>
                 {{ formatDate(evento.fecha_inicio) }}
                 -
@@ -50,7 +44,7 @@ const eventos = ref([])
 const cargarEventos = async () => {
   try {
     const response = await api.getEventos()
-eventos.value = response.data
+    eventos.value = response.data
   } catch (error) {
     init({ message: 'Error al cargar eventos', color: 'danger' })
     console.error(error)
@@ -59,33 +53,34 @@ eventos.value = response.data
 
 // Eventos visibles por fecha seleccionada
 const eventosFiltrados = computed(() => {
-  return eventos.value.filter(e =>
-    fechaSeleccionada.value >= e.fecha_inicio &&
-    fechaSeleccionada.value <= e.fecha_fin
+  return eventos.value.filter(
+    (e) => fechaSeleccionada.value >= e.fecha_inicio && fechaSeleccionada.value <= e.fecha_fin,
   )
 })
 
 // Marcado en el calendario
 const eventosMarcados = computed(() => {
-  return eventos.value.map(evento => ({
+  return eventos.value.map((evento) => ({
     dates: {
       start: evento.fecha_inicio,
-      end: evento.fecha_fin
+      end: evento.fecha_fin,
     },
     contentStyle: {
       backgroundColor: '#E0AF58',
       color: '#000000',
-      borderRadius: '6px'
+      borderRadius: '6px',
     },
     popover: {
-      label: evento.nombre
-    }
+      label: evento.nombre,
+    },
   }))
 })
 
-const formatDate = date => {
+const formatDate = (date) => {
   return new Date(date).toLocaleDateString('es-MX', {
-    year: 'numeric', month: 'short', day: 'numeric'
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
   })
 }
 

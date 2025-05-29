@@ -27,7 +27,6 @@ const auth = useAuthStore()
 onMounted(() => {
   auth.initialize() // Carga token, usuario y maestro desde sessionStorage
 })
-
 </script>
 
 <style lang="scss">

@@ -42,7 +42,7 @@ const usuarios = ref([])
 const nuevoUsuario = ref({
   correo: '',
   password: '',
-  id_rol: 1
+  id_rol: 1,
 })
 
 const obtenerUsuarios = async () => {

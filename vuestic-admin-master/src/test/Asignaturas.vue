@@ -7,13 +7,20 @@
     <div v-else-if="error" class="error">{{ error }}</div>
 
     <div v-else class="asignaturas-grid">
-      <div v-for="asignatura in asignaturas" :key="asignatura.ClaveAsignatura" class="asignatura-card"
-        @click="verDetalle(asignatura.ClaveAsignatura)">
+      <div
+        v-for="asignatura in asignaturas"
+        :key="asignatura.ClaveAsignatura"
+        class="asignatura-card"
+        @click="verDetalle(asignatura.ClaveAsignatura)"
+      >
         <h3>{{ asignatura.ClaveAsignatura }} - {{ asignatura.NombreAsignatura }}</h3>
         <div class="asignatura-info">
           <span>Créditos: {{ asignatura.Creditos }}</span>
-          <span>SATCA: {{ asignatura.Satca_Total }} (T:{{ asignatura.Satca_Teoricas }}, P:{{ asignatura.Satca_Practicas
-          }})</span>
+          <span
+            >SATCA: {{ asignatura.Satca_Total }} (T:{{ asignatura.Satca_Teoricas }}, P:{{
+              asignatura.Satca_Practicas
+            }})</span
+          >
         </div>
       </div>
     </div>
@@ -34,7 +41,7 @@ const fetchAsignaturas = async () => {
   try {
     loading.value = true
     const response = await api.getAsignaturas()
-    asignaturas.value = response.data.asignaturas.map(a => a.asignatura)
+    asignaturas.value = response.data.asignaturas.map((a) => a.asignatura)
   } catch (err) {
     error.value = 'Error al cargar las asignaturas: ' + (err.response?.data?.error || err.message)
     console.error(err)
@@ -76,7 +83,9 @@ h1 {
   padding: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .asignatura-card:hover {

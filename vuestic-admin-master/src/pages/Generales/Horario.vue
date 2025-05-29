@@ -1,47 +1,25 @@
-<template> 
-       <h1 class="va-h2 mb-2">Horario</h1>
-       
+<template>
+  <h1 class="va-h2 mb-2">Horario</h1>
+
   <div class="p-4">
     <va-card>
       <va-card-title class="text-xl font-semibold">
         <va-icon name="calendar_today" class="mr-2" />
         Mi Horario - Ingeniería en Sistemas
       </va-card-title>
-      
+
       <va-card-content>
         <!-- Controles -->
         <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div class="flex items-center gap-2">
-            <va-button
-              preset="secondary"
-              icon="chevron_left"
-              @click="previousWeek"
-            />
-            <va-button
-              preset="secondary"
-              icon="chevron_right"
-              @click="nextWeek"
-            />
-            <va-button
-              preset="secondary"
-              @click="goToToday"
-            >
-              Hoy
-            </va-button>
+            <va-button preset="secondary" icon="chevron_left" @click="previousWeek" />
+            <va-button preset="secondary" icon="chevron_right" @click="nextWeek" />
+            <va-button preset="secondary" @click="goToToday"> Hoy </va-button>
           </div>
-          
-          <va-select
-            v-model="viewType"
-            :options="viewOptions"
-            class="min-w-40"
-          />
-          
-          <va-select
-            v-model="selectedCampus"
-            label="Campus"
-            :options="campusOptions"
-            class="min-w-40"
-          />
+
+          <va-select v-model="viewType" :options="viewOptions" class="min-w-40" />
+
+          <va-select v-model="selectedCampus" label="Campus" :options="campusOptions" class="min-w-40" />
         </div>
 
         <!-- Vista de semana -->
@@ -49,57 +27,42 @@
           <!-- Cabecera con días -->
           <div class="schedule-header">
             <div class="schedule-time-column"></div>
-            <div 
-              v-for="day in visibleDays" 
+            <div
+              v-for="day in visibleDays"
               :key="day.date.toString()"
               class="schedule-day-header"
-              :class="{ 'today': isToday(day.date) }"
+              :class="{ today: isToday(day.date) }"
             >
               <div class="day-name">{{ day.dayName }}</div>
               <div class="day-date">{{ day.date.getDate() }}</div>
             </div>
           </div>
-          
+
           <!-- Cuerpo del horario -->
           <div class="schedule-body">
             <!-- Columna de horas -->
             <div class="schedule-time-column">
-              <div 
-                v-for="time in timeSlots" 
-                :key="time"
-                class="schedule-time-slot"
-              >
+              <div v-for="time in timeSlots" :key="time" class="schedule-time-slot">
                 {{ time }}
               </div>
             </div>
-            
+
             <!-- Columnas de días -->
-            <div 
-              v-for="day in visibleDays" 
-              :key="day.date.toString()"
-              class="schedule-day-column"
-            >
-              <div 
-                v-for="time in timeSlots" 
-                :key="time"
-                class="schedule-slot"
-                @click="openAddDialog(day.date, time)"
-              >
+            <div v-for="day in visibleDays" :key="day.date.toString()" class="schedule-day-column">
+              <div v-for="time in timeSlots" :key="time" class="schedule-slot" @click="openAddDialog(day.date, time)">
                 <!-- Eventos/materias en este horario -->
                 <div
                   v-for="course in getCoursesAt(day.date, time)"
                   :key="course.id"
                   class="schedule-event"
-                  :style="{ 
+                  :style="{
                     backgroundColor: getCourseColor(course.code),
-                    borderLeft: `4px solid ${getCourseDarkColor(course.code)}`
+                    borderLeft: `4px solid ${getCourseDarkColor(course.code)}`,
                   }"
                   @click.stop="openCourseDetails(course)"
                 >
                   <div class="event-title">{{ course.name }}</div>
-                  <div class="event-details">
-                    {{ course.classroom }} • {{ course.teacherShort }}
-                  </div>
+                  <div class="event-details">{{ course.classroom }} • {{ course.teacherShort }}</div>
                 </div>
               </div>
             </div>
@@ -113,35 +76,23 @@
               {{ currentDay.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }) }}
             </h3>
             <div class="flex gap-2">
-              <va-button
-                preset="secondary"
-                size="small"
-                icon="add"
-                @click="openAddDialog(currentDay, '08:00')"
-              >
+              <va-button preset="secondary" size="small" icon="add" @click="openAddDialog(currentDay, '08:00')">
                 Agregar
               </va-button>
             </div>
           </div>
-          
+
           <div class="day-schedule">
-            <div 
-              v-for="time in dayTimeSlots" 
-              :key="time"
-              class="day-schedule-row"
-            >
+            <div v-for="time in dayTimeSlots" :key="time" class="day-schedule-row">
               <div class="day-schedule-time">{{ time }}</div>
-              <div 
-                class="day-schedule-events"
-                @click="openAddDialog(currentDay, time)"
-              >
+              <div class="day-schedule-events" @click="openAddDialog(currentDay, time)">
                 <div
                   v-for="course in getCoursesForDay(currentDay, time)"
                   :key="course.id"
                   class="day-schedule-event"
-                  :style="{ 
+                  :style="{
                     backgroundColor: getCourseColor(course.code),
-                    borderLeft: `4px solid ${getCourseDarkColor(course.code)}`
+                    borderLeft: `4px solid ${getCourseDarkColor(course.code)}`,
                   }"
                   @click.stop="openCourseDetails(course)"
                 >
@@ -168,7 +119,7 @@
           <div class="course-code">{{ selectedCourse.code }}</div>
           <div class="course-title">{{ selectedCourse.name }}</div>
         </div>
-        
+
         <va-list class="mt-4">
           <va-list-item>
             <va-list-item-label class="font-medium">Profesor:</va-list-item-label>
@@ -177,7 +128,7 @@
               <div class="text-sm text-gray-600">{{ selectedCourse.teacherEmail }}</div>
             </va-list-item-section>
           </va-list-item>
-          
+
           <va-list-item>
             <va-list-item-label class="font-medium">Horario:</va-list-item-label>
             <va-list-item-section>
@@ -186,18 +137,16 @@
               </div>
             </va-list-item-section>
           </va-list-item>
-          
+
           <va-list-item>
             <va-list-item-label class="font-medium">Créditos:</va-list-item-label>
             <va-list-item-section>{{ selectedCourse.credits }}</va-list-item-section>
           </va-list-item>
         </va-list>
-        
+
         <div class="flex justify-end gap-2 mt-4">
-          <va-button preset="secondary" @click="showCourseModal = false">
-            Cerrar
-          </va-button>
-          <va-button 
+          <va-button preset="secondary" @click="showCourseModal = false"> Cerrar </va-button>
+          <va-button
             :href="`mailto:${selectedCourse.teacherEmail}?subject=Consulta sobre ${selectedCourse.name}`"
             icon="email"
           >
@@ -219,14 +168,14 @@ const { init } = useToast()
 const viewType = ref('week')
 const viewOptions = [
   { text: 'Vista Semana', value: 'week' },
-  { text: 'Vista Día', value: 'day' }
+  { text: 'Vista Día', value: 'day' },
 ]
 
 const selectedCampus = ref('main')
 const campusOptions = [
   { text: 'Campus Principal', value: 'main' },
   { text: 'Campus Norte', value: 'north' },
-  { text: 'Campus Sur', value: 'south' }
+  { text: 'Campus Sur', value: 'south' },
 ]
 
 // Fechas y horarios
@@ -234,9 +183,20 @@ const currentDate = ref(new Date())
 const currentDay = ref(new Date())
 
 const timeSlots = [
-  '07:00', '08:00', '09:00', '10:00', '11:00', 
-  '12:00', '13:00', '14:00', '15:00', '16:00',
-  '17:00', '18:00', '19:00', '20:00'
+  '07:00',
+  '08:00',
+  '09:00',
+  '10:00',
+  '11:00',
+  '12:00',
+  '13:00',
+  '14:00',
+  '15:00',
+  '16:00',
+  '17:00',
+  '18:00',
+  '19:00',
+  '20:00',
 ]
 
 const dayTimeSlots = [
@@ -248,7 +208,7 @@ const dayTimeSlots = [
   '14:30 - 16:00',
   '16:00 - 17:30',
   '17:30 - 19:00',
-  '19:00 - 20:30'
+  '19:00 - 20:30',
 ]
 
 // Datos de ejemplo
@@ -265,9 +225,9 @@ const courses = ref([
     schedule: [
       { day: 'Lunes', time: '10:00-11:30' },
       { day: 'Miércoles', time: '10:00-11:30' },
-      { day: 'Viernes', time: '10:00-11:30' }
+      { day: 'Viernes', time: '10:00-11:30' },
     ],
-    color: '#4CAF50'
+    color: '#4CAF50',
   },
   {
     id: 2,
@@ -280,9 +240,9 @@ const courses = ref([
     classroom: 'Lab. Redes 3',
     schedule: [
       { day: 'Martes', time: '14:00-15:30' },
-      { day: 'Jueves', time: '14:00-15:30' }
+      { day: 'Jueves', time: '14:00-15:30' },
     ],
-    color: '#2196F3'
+    color: '#2196F3',
   },
   {
     id: 3,
@@ -295,10 +255,10 @@ const courses = ref([
     classroom: 'Aula C-302',
     schedule: [
       { day: 'Lunes', time: '16:00-17:30' },
-      { day: 'Miércoles', time: '16:00-17:30' }
+      { day: 'Miércoles', time: '16:00-17:30' },
     ],
-    color: '#9C27B0'
-  }
+    color: '#9C27B0',
+  },
 ])
 
 // Computed
@@ -306,27 +266,29 @@ const visibleDays = computed(() => {
   const days = []
   const current = new Date(currentDate.value)
   const firstDay = current.getDate() - current.getDay() + (current.getDay() === 0 ? -6 : 1) // Ajuste para que la semana empiece en lunes
-  
+
   for (let i = 0; i < 7; i++) {
     const date = new Date(current)
     date.setDate(firstDay + i)
-    
+
     days.push({
       date,
       dayName: date.toLocaleDateString('es-ES', { weekday: 'short' }),
-      isToday: isToday(date)
+      isToday: isToday(date),
     })
   }
-  
+
   return days
 })
 
 // Métodos
 const isToday = (date: Date) => {
   const today = new Date()
-  return date.getDate() === today.getDate() && 
-         date.getMonth() === today.getMonth() && 
-         date.getFullYear() === today.getFullYear()
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  )
 }
 
 const previousWeek = () => {
@@ -349,13 +311,13 @@ const goToToday = () => {
 const getCoursesAt = (date: Date, time: string) => {
   const dayName = date.toLocaleDateString('es-ES', { weekday: 'long' })
   const hour = parseInt(time.split(':')[0])
-  
-  return courses.value.filter(course => {
-    return course.schedule.some(session => {
+
+  return courses.value.filter((course) => {
+    return course.schedule.some((session) => {
       const sessionDay = session.day.toLowerCase() === dayName.toLowerCase()
       const sessionHour = parseInt(session.time.split(':')[0])
       const sessionEndHour = parseInt(session.time.split('-')[1].split(':')[0])
-      
+
       return sessionDay && hour >= sessionHour && hour < sessionEndHour
     })
   })
@@ -364,23 +326,24 @@ const getCoursesAt = (date: Date, time: string) => {
 const getCoursesForDay = (date: Date, timeRange: string) => {
   const dayName = date.toLocaleDateString('es-ES', { weekday: 'long' })
   const [startTime, endTime] = timeRange.split(' - ')
-  
-  return courses.value.filter(course => {
-    return course.schedule.some(session => {
-      return session.day.toLowerCase() === dayName.toLowerCase() && 
-             session.time === `${startTime}-${endTime}`
+
+  return courses.value
+    .filter((course) => {
+      return course.schedule.some((session) => {
+        return session.day.toLowerCase() === dayName.toLowerCase() && session.time === `${startTime}-${endTime}`
+      })
     })
-  }).map(course => {
-    const session = course.schedule.find(s => s.day.toLowerCase() === dayName.toLowerCase())
-    return {
-      ...course,
-      time: session?.time || ''
-    }
-  })
+    .map((course) => {
+      const session = course.schedule.find((s) => s.day.toLowerCase() === dayName.toLowerCase())
+      return {
+        ...course,
+        time: session?.time || '',
+      }
+    })
 }
 
 const getCourseColor = (code: string) => {
-  const course = courses.value.find(c => c.code === code)
+  const course = courses.value.find((c) => c.code === code)
   return course?.color || '#4CAF50'
 }
 
@@ -402,7 +365,7 @@ const openCourseDetails = (course: any) => {
 const openAddDialog = (date: Date, time: string) => {
   init({
     message: `Agregar evento el ${date.toLocaleDateString()} a las ${time}`,
-    color: 'info'
+    color: 'info',
   })
   // Aquí implementarías la lógica para agregar un nuevo evento
 }

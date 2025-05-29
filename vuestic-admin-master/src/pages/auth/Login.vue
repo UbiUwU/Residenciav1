@@ -2,7 +2,7 @@
   <VaForm ref="form" @submit.prevent="submit">
     <h1 class="font-semibold text-4xl mb-4">Inicio Sesión</h1>
     <p class="text-base mb-4 leading-5">
-        ¿Eres nuevo usuario? Registrate
+      ¿Eres nuevo usuario? Registrate
       <RouterLink :to="{ name: 'signup' }" class="font-semibold text-primary">¡Aquí!</RouterLink>
     </p>
 
@@ -36,18 +36,21 @@
     </VaValue>
 
     <div class="auth-layout__options flex flex-col sm:flex-row items-start sm:items-center justify-between">
-      <VaCheckbox v-model="formData.keepLoggedIn" class="mb-2 sm:mb-0" label="Mantenerme conectado en este dispositivo" />
+      <VaCheckbox
+        v-model="formData.keepLoggedIn"
+        class="mb-2 sm:mb-0"
+        label="Mantenerme conectado en este dispositivo"
+      />
       <RouterLink :to="{ name: 'recover-password' }" class="mt-2 sm:mt-0 sm:ml-1 font-semibold text-primary">
         ¿Has olvidado tu contraseña?
       </RouterLink>
     </div>
 
     <div class="flex justify-center mt-4">
-      <VaButton class="w-full" :loading="loading" @click="submit">Login</VaButton>
+      <VaButton class="w-full" :loading="loading" @click="submit">Iniciar sesión</VaButton>
     </div>
   </VaForm>
 </template>
-
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
@@ -78,12 +81,15 @@ const submit = async () => {
     const response = await api.login(formData.email, formData.password)
 
     if (response.data.success) {
-      authStore.login({
-        token: response.data.token,
-        user: response.data.data.user,
-        maestro: response.data.data.maestro
-      }, formData.keepLoggedIn)
-      
+      authStore.login(
+        {
+          token: response.data.token,
+          user: response.data.data.user,
+          maestro: response.data.data.maestro,
+        },
+        formData.keepLoggedIn,
+      )
+
       init({ message: "You've successfully logged in", color: 'success' })
       push({ name: 'dashboard' })
     } else {

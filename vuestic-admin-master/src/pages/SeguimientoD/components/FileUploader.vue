@@ -11,14 +11,9 @@
         dropzone-text="Arrastra archivos aquí o haz clic para seleccionar"
         @files-added="handleFilesAdded"
       />
-      
+
       <div class="flex justify-end mt-4">
-        <va-button 
-          @click="uploadFiles" 
-          :disabled="files.length === 0"
-        >
-          Subir Archivos
-        </va-button>
+        <va-button @click="uploadFiles" :disabled="files.length === 0"> Subir Archivos </va-button>
       </div>
     </va-card-content>
   </va-card>
@@ -31,8 +26,8 @@ import { useToast } from 'vuestic-ui'
 const props = defineProps({
   materiaId: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const emit = defineEmits(['file-uploaded'])
@@ -45,16 +40,16 @@ const handleFilesAdded = (newFiles) => {
 
 const uploadFiles = () => {
   // Simulación de subida de archivos
-  files.value.forEach(file => {
+  files.value.forEach((file) => {
     setTimeout(() => {
       init({
         message: `${file.name} subido correctamente`,
-        color: 'success'
+        color: 'success',
       })
       emit('file-uploaded', file)
     }, 1000)
   })
-  
+
   files.value = []
 }
 </script>

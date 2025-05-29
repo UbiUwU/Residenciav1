@@ -17,8 +17,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Carga los datos del almacenamiento local o de sesión
   const loadFromStorage = () => {
-    const stored =
-      localStorage.getItem('userData') || sessionStorage.getItem('userData')
+    const stored = localStorage.getItem('userData') || sessionStorage.getItem('userData')
 
     if (stored) {
       try {

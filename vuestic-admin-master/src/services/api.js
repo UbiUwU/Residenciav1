@@ -205,7 +205,5 @@ export default {
   // Eliminar un evento
   eliminarEvento(id) {
     return apiClient.delete(`/eventos/${id}`)
-  }
+  },
 }
-
-
