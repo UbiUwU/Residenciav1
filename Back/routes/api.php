@@ -96,7 +96,7 @@ Route::get('/plantillas/{id}', [PlantillaController::class, 'show']);
 Route::post('/plantillas', [PlantillaController::class, 'store']);
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum'); // O usa tu middleware de autenticación
+Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 
 Route::get('/horarios/{maestro_id}', [HorarioMaestroController::class, 'index']);
 Route::post('/horarios', [HorarioMaestroController::class, 'store']);

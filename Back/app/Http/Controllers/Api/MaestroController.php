@@ -68,7 +68,7 @@ class MaestroController extends Controller
         try {
             DB::beginTransaction();
 
-            // 1. Crear usuario y obtener su ID (usamos la nueva función insert_usuario_con_id)
+            // 1. Crear usuario y obtener su ID (usando la funcion de postgre)
             $usuario = DB::select('SELECT insert_usuario_con_id(?, ?, ?) AS id', [
                 $validated['correo'],
                 $validated['password'],
