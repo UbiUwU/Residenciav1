@@ -264,3 +264,26 @@ Route::prefix('fuente')->group(function () {
     Route::delete('/{id}', [FuenteInformacionController::class, 'destroy']);
 
 });
+
+use App\Http\Controllers\TemaController;
+
+Route::post('/tema', [TemaController::class, 'store']);
+Route::put('/tema/{id}', [TemaController::class, 'update']); 
+Route::delete('/tema/{id}', [TemaController::class, 'destroy']); 
+Route::get('/tema', [TemaController::class, 'index']); 
+Route::get('/tema/{id}', [TemaController::class, 'show']); 
+Route::get('/temaSub/{claveAsignatura}', [TemaController::class, 'obtenerTemasYSubtemasPorAsignatura']);
+
+use App\Http\Controllers\SubtemaController;
+
+Route::post('/subtema', [SubtemaController::class, 'store']);
+Route::put('/subtema/{id}', [SubtemaController::class, 'update']);
+Route::delete('/subtema/{id}', [SubtemaController::class, 'destroy']);
+
+use App\Http\Controllers\CompetenciaTemaController;
+
+Route::prefix('actividades')->group(function () {
+    Route::post('/', [CompetenciaTemaController::class, 'store']);
+    Route::put('/', [CompetenciaTemaController::class, 'update']);
+
+});
