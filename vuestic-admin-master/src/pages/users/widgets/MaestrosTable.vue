@@ -41,9 +41,10 @@ const filteredMaestros = computed(() =>
   }),
 )
 
-const verMaestro = (id: number) => {
-  router.push({ name: 'materiasMaestro', params: { id } })
+const verMaestro = (tarjeta: number) => {
+  router.push({ name: 'materiasMaestro', params: { tarjeta } })
 }
+
 
 const addUser = () => {
   // Abre el modal para agregar un nuevo usuario
@@ -98,7 +99,14 @@ const onUserSaved = () => {
 
   <VaDataTable :columns="columns" :items="filteredMaestros" :loading="loading">
     <template #cell(acciones)="{ rowData }">
-      <VaButton color="primary" icon="visibility" size="small" @click="verMaestro(rowData.id)"> Ver maestro </VaButton>
+      <VaButton
+        color="primary"
+        icon="visibility"
+        size="small"
+        @click="verMaestro(rowData.tarjeta)"
+      >
+        Ver maestro
+      </VaButton>
     </template>
   </VaDataTable>
 

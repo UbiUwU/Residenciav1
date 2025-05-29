@@ -74,6 +74,10 @@ export default {
     return apiClient.delete(`/horarios/${id}`)
   },
 
+    getAsignaturasPorMaestro(tarjeta) {
+    return apiClient.get(`/asignaturas/maestro/${tarjeta}`)
+  },
+
   //Departamentos
   getDepartamentos() {
     return apiClient.get('/departamentos')

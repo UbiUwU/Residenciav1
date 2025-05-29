@@ -141,24 +141,23 @@ export default {
       name: 'payments',
       displayName: 'menu.payments',
       meta: {
-        icon: 'credit_card',
+        icon: 'folder_shared',
       },
-      children: [
-        {
-          name: 'payment-methods',
-          displayName: 'menu.payment-methods',
-        },
-        {
-          name: 'pricing-plans',
-          displayName: 'menu.pricing-plans',
-        },
-        {
-          name: 'billing',
-          displayName: 'menu.billing',
-        },
-      ],
-    }, */
-
+    },
+    {
+      name: 'HorarioMaestro',
+      displayName: 'Horario',
+      meta: {
+        icon: 'timer',
+      },
+    },
+    {
+      name: 'Asignaturas',
+      displayName: 'Asignatura',
+      meta: {
+        icon: 'timer',
+      },
+    },
     {
       name: 'faq',
       displayName: 'menu.faq',
