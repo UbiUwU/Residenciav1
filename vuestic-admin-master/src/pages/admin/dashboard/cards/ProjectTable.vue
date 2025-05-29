@@ -3,19 +3,19 @@ import { ref } from 'vue'
 
 // Definimos las interfaces para las materias y maestros
 interface Materia {
-  [key: string]: boolean;  // Esto permite acceder a cualquier clave de tipo string y obtener un valor booleano
-  'Instrumentación Didáctica': boolean;
-  'Planeación del curso': boolean;
-  'Acuse del estudiante': boolean;
-  'Evaluación Diagnóstica, resultados y acciones a tomar': boolean;
-  'Carpetas de evidencias': boolean;
-  'Listas de calificaciones parciales': boolean;
-  'Evidencias de asesorias y atención a alumnos': boolean;
+  [key: string]: boolean // Esto permite acceder a cualquier clave de tipo string y obtener un valor booleano
+  'Instrumentación Didáctica': boolean
+  'Planeación del curso': boolean
+  'Acuse del estudiante': boolean
+  'Evaluación Diagnóstica, resultados y acciones a tomar': boolean
+  'Carpetas de evidencias': boolean
+  'Listas de calificaciones parciales': boolean
+  'Evidencias de asesorias y atención a alumnos': boolean
 }
 
 interface Maestro {
-  nombre: string;
-  materias: { [key: string]: Materia };
+  nombre: string
+  materias: { [key: string]: Materia }
 }
 
 // Datos de los maestros con materias
@@ -30,7 +30,7 @@ const maestros = ref<Maestro[]>([
         'Evaluación Diagnóstica, resultados y acciones a tomar': true,
         'Carpetas de evidencias': true,
         'Listas de calificaciones parciales': true,
-        'Evidencias de asesorias y atención a alumnos': true
+        'Evidencias de asesorias y atención a alumnos': true,
       },
       'Programación I': {
         'Instrumentación Didáctica': false,
@@ -39,9 +39,9 @@ const maestros = ref<Maestro[]>([
         'Evaluación Diagnóstica, resultados y acciones a tomar': true,
         'Carpetas de evidencias': true,
         'Listas de calificaciones parciales': true,
-        'Evidencias de asesorias y atención a alumnos': true
-      }
-    }
+        'Evidencias de asesorias y atención a alumnos': true,
+      },
+    },
   },
   {
     nombre: 'Carlos Pérez',
@@ -53,10 +53,10 @@ const maestros = ref<Maestro[]>([
         'Evaluación Diagnóstica, resultados y acciones a tomar': true,
         'Carpetas de evidencias': true,
         'Listas de calificaciones parciales': false,
-        'Evidencias de asesorias y atención a alumnos': true
-      }
-    }
-  }
+        'Evidencias de asesorias y atención a alumnos': true,
+      },
+    },
+  },
 ])
 
 // Función para calcular el estado del maestro (completo, parcial, incompleto)
@@ -113,10 +113,7 @@ const estadoClase = (maestro: Maestro): string => {
       <tbody>
         <tr v-for="(maestro, index) in maestros" :key="index">
           <td class="p-3 border">{{ maestro.nombre }}</td>
-          <td 
-            :class="estadoClase(maestro)"
-            class="p-3 border text-center font-bold"
-          >
+          <td :class="estadoClase(maestro)" class="p-3 border text-center font-bold">
             {{ maestroEstado(maestro) }}
           </td>
           <td class="p-3 border">
@@ -174,11 +171,11 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 10px;
   border: 1px solid #e2e8f0;
 }
-
 
 .list-inside {
   list-style-position: inside;

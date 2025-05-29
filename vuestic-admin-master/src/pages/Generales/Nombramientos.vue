@@ -1,72 +1,37 @@
 <template>
-      <!-- Título de la vista -->
-   <h1 class="va-h4 mb-4">Nombramientos</h1>
+  <!-- Título de la vista -->
+  <h1 class="va-h4 mb-4">Nombramientos</h1>
   <div class="p-4">
-    <va-card>     
+    <va-card>
       <va-card-content>
         <!-- Barra de búsqueda y filtros -->
         <div class="flex flex-col md:flex-row gap-4 mb-6">
-          <va-input
-            v-model="searchQuery"
-            placeholder="Buscar nombramientos..."
-            class="flex-grow"
-            clearable
-          >
+          <va-input v-model="searchQuery" placeholder="Buscar nombramientos..." class="flex-grow" clearable>
             <template #prependInner>
               <va-icon name="search" size="small" />
             </template>
           </va-input>
 
-          <va-select
-            v-model="selectedPeriod"
-            label="Periodo"
-            :options="periodOptions"
-            class="min-w-40"
-          />
+          <va-select v-model="selectedPeriod" label="Periodo" :options="periodOptions" class="min-w-40" />
 
-          <va-select
-            v-model="selectedStatus"
-            label="Estado"
-            :options="statusOptions"
-            class="min-w-40"
-          />
+          <va-select v-model="selectedStatus" label="Estado" :options="statusOptions" class="min-w-40" />
         </div>
 
         <!-- Tabla de nombramientos -->
-        <va-data-table
-          :items="filteredAppointments"
-          :columns="columns"
-          :loading="loading"
-          hoverable
-        >
+        <va-data-table :items="filteredAppointments" :columns="columns" :loading="loading" hoverable>
           <template #cell(status)="{ value }">
             <va-badge :text="getStatusText(value)" :color="getStatusColor(value)" />
           </template>
 
           <template #cell(actions)="{ row }">
-            <va-button
-              preset="secondary"
-              size="small"
-              icon="info"
-              @click="openDetails(row)"
-              class="mr-2"
-            />
-            <va-button
-              preset="secondary"
-              size="small"
-              icon="download"
-              @click="downloadAppointment(row)"
-            />
+            <va-button preset="secondary" size="small" icon="info" @click="openDetails(row)" class="mr-2" />
+            <va-button preset="secondary" size="small" icon="download" @click="downloadAppointment(row)" />
           </template>
         </va-data-table>
 
         <!-- Paginación -->
         <div class="flex justify-center mt-4">
-          <va-pagination
-            v-model="currentPage"
-            :pages="totalPages"
-            :visible-pages="5"
-          />
+          <va-pagination v-model="currentPage" :pages="totalPages" :visible-pages="5" />
         </div>
       </va-card-content>
     </va-card>
@@ -134,9 +99,9 @@ const appointments = ref([
     period: '2023-2024',
     schedule: [
       { day: 'Lunes', time: '08:00 - 10:00' },
-      { day: 'Miércoles', time: '10:00 - 12:00' }
+      { day: 'Miércoles', time: '10:00 - 12:00' },
     ],
-    status: 'active'
+    status: 'active',
   },
   {
     id: 2,
@@ -146,9 +111,9 @@ const appointments = ref([
     period: '2023-2024',
     schedule: [
       { day: 'Martes', time: '14:00 - 16:00' },
-      { day: 'Jueves', time: '16:00 - 18:00' }
+      { day: 'Jueves', time: '16:00 - 18:00' },
     ],
-    status: 'active'
+    status: 'active',
   },
   {
     id: 3,
@@ -156,11 +121,9 @@ const appointments = ref([
     course: 'Química Orgánica',
     group: 'C-302',
     period: '2022-2023',
-    schedule: [
-      { day: 'Viernes', time: '09:00 - 11:00' }
-    ],
-    status: 'finished'
-  }
+    schedule: [{ day: 'Viernes', time: '09:00 - 11:00' }],
+    status: 'finished',
+  },
 ])
 
 const searchQuery = ref('')
@@ -192,7 +155,7 @@ const columns = [
   { key: 'group', label: 'Grupo', sortable: true },
   { key: 'period', label: 'Periodo', sortable: true },
   { key: 'status', label: 'Estado', sortable: true },
-  { key: 'actions', label: 'Acciones', width: '120px' }
+  { key: 'actions', label: 'Acciones', width: '120px' },
 ]
 
 // Datos filtrados
@@ -201,18 +164,18 @@ const filteredAppointments = computed(() => {
 
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
-    result = result.filter(appointment =>
-      appointment.course.toLowerCase().includes(query) ||
-      appointment.code.toLowerCase().includes(query)
+    result = result.filter(
+      (appointment) =>
+        appointment.course.toLowerCase().includes(query) || appointment.code.toLowerCase().includes(query),
     )
   }
 
   if (selectedPeriod.value !== 'all') {
-    result = result.filter(appointment => appointment.period === selectedPeriod.value)
+    result = result.filter((appointment) => appointment.period === selectedPeriod.value)
   }
 
   if (selectedStatus.value !== 'all') {
-    result = result.filter(appointment => appointment.status === selectedStatus.value)
+    result = result.filter((appointment) => appointment.status === selectedStatus.value)
   }
 
   return result
@@ -233,7 +196,7 @@ const getStatusColor = (status: string) => {
   const colors: Record<string, string> = {
     active: 'success',
     finished: 'info',
-    pending: 'warning'
+    pending: 'warning',
   }
   return colors[status] || 'primary'
 }
@@ -242,7 +205,7 @@ const getStatusText = (status: string) => {
   const texts: Record<string, string> = {
     active: 'Activo',
     finished: 'Finalizado',
-    pending: 'Pendiente'
+    pending: 'Pendiente',
   }
   return texts[status] || status
 }

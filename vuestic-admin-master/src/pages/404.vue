@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 import NotFoundImage from '../components/NotFoundImage.vue'
 </script>
 

@@ -44,7 +44,9 @@
           <td class="px-4 py-2">{{ d.nombre_maestro || 'N/A' }}</td>
           <td class="px-4 py-2 space-x-2">
             <button @click="editarDepartamento(d)" class="text-blue-600 hover:underline">Editar</button>
-            <button @click="borrarDepartamento(d.id_departamento)" class="text-red-600 hover:underline">Eliminar</button>
+            <button @click="borrarDepartamento(d.id_departamento)" class="text-red-600 hover:underline">
+              Eliminar
+            </button>
           </td>
         </tr>
       </tbody>
@@ -61,7 +63,7 @@ const form = ref({
   id_departamento: '',
   nombre: '',
   abreviacion: '',
-  maestro_id: ''
+  maestro_id: '',
 })
 const editando = ref(false)
 const idEditando = ref(null)
@@ -112,7 +114,7 @@ const resetForm = () => {
     id_departamento: '',
     nombre: '',
     abreviacion: '',
-    maestro_id: ''
+    maestro_id: '',
   }
   editando.value = false
   idEditando.value = null

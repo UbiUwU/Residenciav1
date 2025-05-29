@@ -14,7 +14,7 @@ const columns = defineVaDataTableColumns([
 
 const props = defineProps({
   maestros: {
-    type: Array as PropType<any[]> ,
+    type: Array as PropType<any[]>,
     required: true,
   },
   loading: {
@@ -38,7 +38,7 @@ const filteredMaestros = computed(() =>
       maestro.apellidopaterno?.toLowerCase().includes(query) ||
       maestro.apellidomaterno?.toLowerCase().includes(query)
     )
-  })
+  }),
 )
 
 const verMaestro = (tarjeta: number) => {
@@ -79,43 +79,25 @@ const onUserSaved = () => {
   // Aquí iría la lógica de guardado del nuevo usuario
   console.log('Usuario guardado:', userToCreate.value)
   doShowUserFormModal.value = false
-  
+
   // Muestra un mensaje de éxito utilizando notify()
   useToast().notify({
-  message: 'Usuario creado con éxito',
-  color: 'success',
-})
-
+    message: 'Usuario creado con éxito',
+    color: 'success',
+  })
 }
 </script>
 
 <template>
   <div class="mb-4 flex justify-between items-center">
-    <VaInput
-      v-model="search"
-      placeholder="Buscar por nombre..."
-      clearable
-      prepend-inner-icon="search"
-      class="mr-4"
-    />
+    <VaInput v-model="search" placeholder="Buscar por nombre..." clearable prepend-inner-icon="search" class="mr-4" />
 
-    <VaButton
-  color="success"
-  icon="add"
-  size="small"
-  @click="addUser"
-  class="w-auto sm:w-full text-sm sm:text-base"
->
-  <span class="hidden sm:inline">Añadir Maestro</span>
-</VaButton>
-
+    <VaButton color="success" icon="add" size="small" @click="addUser" class="w-auto sm:w-full text-sm sm:text-base">
+      <span class="hidden sm:inline">Añadir Maestro</span>
+    </VaButton>
   </div>
 
-  <VaDataTable
-    :columns="columns"
-    :items="filteredMaestros"
-    :loading="loading"
-  >
+  <VaDataTable :columns="columns" :items="filteredMaestros" :loading="loading">
     <template #cell(acciones)="{ rowData }">
       <VaButton
         color="primary"
@@ -129,14 +111,7 @@ const onUserSaved = () => {
   </VaDataTable>
 
   <!-- Modal de Crear Usuario -->
-  <VaModal
-    v-model="doShowUserFormModal"
-    size="small"
-    mobile-fullscreen
-    close-button
-    stateful
-    hide-default-actions
-  >
+  <VaModal v-model="doShowUserFormModal" size="small" mobile-fullscreen close-button stateful hide-default-actions>
     <h1 class="va-h5 mb-4">Añadir Usuario</h1>
     <form @submit.prevent="onUserSaved">
       <VaInput v-model="userToCreate.tarjeta" label="Tarjeta" />

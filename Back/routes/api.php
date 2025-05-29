@@ -97,7 +97,7 @@ Route::get('/plantillas/{id}', [PlantillaController::class, 'show']);
 Route::post('/plantillas', [PlantillaController::class, 'store']);
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum'); // O usa tu middleware de autenticación
+Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 
 Route::get('/horarios/{maestro_id}', [HorarioMaestroController::class, 'index']);
 Route::post('/horarios', [HorarioMaestroController::class, 'store']);
@@ -251,16 +251,40 @@ Route::delete('/proyecto/{id}', [ProyectoController::class, 'destroy']);
 use App\Http\Controllers\EvaluacionController;
 
 Route::prefix('evaluacion')->group(function () {
-    Route::post('/', [EvaluacionController::class, 'store']);     
-    Route::put('/{id}', [EvaluacionController::class, 'update']);   
-    Route::delete('/{id}', [EvaluacionController::class, 'destroy']); 
+    Route::post('/', [EvaluacionController::class, 'store']);
+    Route::put('/{id}', [EvaluacionController::class, 'update']);
+    Route::delete('/{id}', [EvaluacionController::class, 'destroy']);
 });
 
 use App\Http\Controllers\FuenteInformacionController;
 
 Route::prefix('fuente')->group(function () {
-    Route::post('/', [FuenteInformacionController::class, 'store']);     
-    Route::put('/{id}', [FuenteInformacionController::class, 'update']);    
+    Route::post('/', [FuenteInformacionController::class, 'store']);
+    Route::put('/{id}', [FuenteInformacionController::class, 'update']);
     Route::delete('/{id}', [FuenteInformacionController::class, 'destroy']);
+
+});
+
+use App\Http\Controllers\TemaController;
+
+Route::post('/tema', [TemaController::class, 'store']);
+Route::put('/tema/{id}', [TemaController::class, 'update']);
+Route::delete('/tema/{id}', [TemaController::class, 'destroy']);
+Route::get('/tema', [TemaController::class, 'index']);
+Route::get('/tema/{id}', [TemaController::class, 'show']);
+Route::get('/temaSub/{claveAsignatura}', [TemaController::class, 'obtenerTemasYSubtemasPorAsignatura']);
+
+use App\Http\Controllers\SubtemaController;
+
+Route::post('/subtema', [SubtemaController::class, 'store']);
+Route::put('/subtema/{id}', [SubtemaController::class, 'update']);
+Route::delete('/subtema/{id}', [SubtemaController::class, 'destroy']);
+
+use App\Http\Controllers\CompetenciaTemaController;
+
+Route::prefix('actividades')->group(function () {
+    Route::post('/', [CompetenciaTemaController::class, 'store']);
+    Route::put('/', [CompetenciaTemaController::class, 'update']);
+    Route::delete('/{id}', [CompetenciaTemaController::class, 'destroy']);
 
 });

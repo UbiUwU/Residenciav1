@@ -261,5 +261,3 @@ export default {
     return apiClient.delete(`/carreras/${clave}`);
   }
 }
-
-

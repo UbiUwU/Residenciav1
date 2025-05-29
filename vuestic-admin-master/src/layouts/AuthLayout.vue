@@ -1,20 +1,10 @@
 <template>
   <VaLayout v-if="breakpoint.lgUp" class="h-screen bg-[var(--va-background-secondary)]">
     <template #left>
-      <RouterLink
-        class="h-full relative block overflow-hidden"
-        style="width: 35vw"
-        to="/"
-        aria-label="Visit homepage"
-      >
+      <RouterLink class="h-full relative block overflow-hidden" style="width: 35vw" to="/" aria-label="Visit homepage">
         <!-- Imagen de fondo que cubre todo el espacio -->
-        <img 
-          src="../img/Login.jpg" 
-          alt="Background" 
-          class="absolute inset-0 w-full h-full object-cover"
-        />
+        <img src="../img/Login.jpg" alt="Background" class="absolute inset-0 w-full h-full object-cover" />
         <!-- Logo/Marca opcional centrado sobre la imagen -->
-        
       </RouterLink>
     </template>
     <template #content>
