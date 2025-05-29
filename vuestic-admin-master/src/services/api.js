@@ -232,6 +232,11 @@ export default {
     return apiClient.get(`/asignaturas/complete/${clave}`)
   },
 
+  getAsignaturaByTarjetaCompleta(clave) {
+    return apiClient.get(`/asignaturas/maestro/${clave}`)
+  },
+
+
   // Obtener todas las carreras
   getCarreras() {
     return apiClient.get('/carreras');

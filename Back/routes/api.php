@@ -218,6 +218,8 @@ Route::prefix('asignaturas')->group(function () {
     Route::get('/complete/{clave}', [AsignaturaController::class, 'getByClaveComplete']);
     Route::put('/{clave}', [AsignaturaController::class, 'update']);
     Route::delete('/{clave}', [AsignaturaController::class, 'destroy']);
+    Route::get('/maestro/{clave}', [AsignaturaController::class, 'getByTarjetaComplete']);
+
 
     // Rutas adicionales
     Route::get('/carrera/{claveCarrera}', [AsignaturaController::class, 'getByCarrera']);
