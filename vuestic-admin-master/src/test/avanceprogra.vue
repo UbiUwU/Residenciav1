@@ -11,15 +11,17 @@
 
     <div v-if="asignaturaSeleccionada">
       <h2>{{ asignaturaSeleccionada.asignatura.Nombre }}</h2>
-      <p><strong>Caracterización:</strong> {{ asignaturaSeleccionada.presentacion?.Caracterizacion || 'No disponible' }}</p>
+      <p>
+        <strong>Caracterización:</strong> {{ asignaturaSeleccionada.presentacion?.Caracterizacion || 'No disponible' }}
+      </p>
       <p><strong>Créditos:</strong> {{ asignaturaSeleccionada.asignatura.Creditos }}</p>
       <p>
         <strong>SATCA:</strong>
-        Teóricas: {{ asignaturaSeleccionada.asignatura.Teoricas || 'N/A' }},
-        Prácticas: {{ asignaturaSeleccionada.asignatura.Practicas || 'N/A' }}
+        Teóricas: {{ asignaturaSeleccionada.asignatura.Teoricas || 'N/A' }}, Prácticas:
+        {{ asignaturaSeleccionada.asignatura.Practicas || 'N/A' }}
       </p>
 
-      <div v-for="tema in asignaturaSeleccionada.temas" :key="tema.id_Tema" style="margin-top: 1em;">
+      <div v-for="tema in asignaturaSeleccionada.temas" :key="tema.id_Tema" style="margin-top: 1em">
         <h3>Tema {{ tema.Numero }}: {{ tema.Nombre }}</h3>
         <ul>
           <li v-for="subtema in tema.subtemas" :key="subtema.id_Subtema">

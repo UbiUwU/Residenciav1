@@ -2,8 +2,7 @@
   <div class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-6 min-h-[36px] leading-5">
     <p class="font-bold w-[200px]">Name</p>
     <div class="flex-1">
-      <div class="max-w-[748px]">
-      </div>
+      <div class="max-w-[748px]"></div>
     </div>
     <VaButton :style="buttonStyles" class="w-fit h-fit" preset="primary" @click="emits('openNameModal')">
       Edit
@@ -13,8 +12,7 @@
   <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 min-h-[36px] leading-5">
     <p class="font-bold w-[200px]">Email</p>
     <div class="flex-1">
-      <div class="max-w-[748px]">
-      </div>
+      <div class="max-w-[748px]"></div>
     </div>
   </div>
   <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 min-h-[36px] leading-5">
@@ -56,9 +54,7 @@ import { computed } from 'vue'
 
 import { useToast } from 'vuestic-ui'
 
-
 import { buttonStyles } from '../styles'
-
 
 const { init } = useToast()
 

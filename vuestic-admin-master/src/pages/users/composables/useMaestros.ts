@@ -19,7 +19,7 @@ export function useMaestros() {
       isLoading.value = false
     }
   }
-  
+
   // Ejecutar automáticamente para obtener los datos al cargar el componente
   fetchMaestros()
 

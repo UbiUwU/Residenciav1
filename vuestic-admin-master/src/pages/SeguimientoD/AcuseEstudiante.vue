@@ -1,6 +1,6 @@
 <template>
- <!-- Título de la vista -->
-    <h1 class="va-h4 mb-4">Acuse del estudiante</h1>
+  <!-- Título de la vista -->
+  <h1 class="va-h4 mb-4">Acuse del estudiante</h1>
   <div class="acuse-estudiante">
     <!-- Encabezado institucional -->
     <va-card>
@@ -16,7 +16,9 @@
           <va-card-content class="format-info">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>Nombre del formato: Acuse del estudiante.</div>
-              <div>Sistema Integral de Gestión: ISO 9001:2015 8.1, 8.5.1, 8.5.2, 8.5.6, 8.6 14001:2015 ISO 45001:2018</div>
+              <div>
+                Sistema Integral de Gestión: ISO 9001:2015 8.1, 8.5.1, 8.5.2, 8.5.6, 8.6 14001:2015 ISO 45001:2018
+              </div>
               <div class="text-right">Página 1 de 23</div>
             </div>
           </va-card-content>
@@ -28,13 +30,13 @@
     <va-card class="mt-4">
       <va-card-content>
         <p class="declaration-text">
-          Recibimos del Profesor(a): 
+          Recibimos del Profesor(a):
           <va-select
             v-model="profesorSeleccionado"
             :options="profesores"
             placeholder="Seleccione profesor"
             class="inline-select"
-          /> 
+          />
           al inicio del presente semestre y de forma presencial:
         </p>
 
@@ -43,12 +45,16 @@
             <va-checkbox v-model="documentosRecibidos.programaEstudios" label="Programa de estudios" />
           </li>
           <li>
-            <va-checkbox v-model="documentosRecibidos.planeacionCurso" label="Planeación del Curso y Avance Programático de la asignatura que imparte en nuestro grupo" />
+            <va-checkbox
+              v-model="documentosRecibidos.planeacionCurso"
+              label="Planeación del Curso y Avance Programático de la asignatura que imparte en nuestro grupo"
+            />
           </li>
         </ul>
 
         <p class="declaration-text mt-4">
-          Asimismo, nos señaló los criterios de evaluación de acuerdo con el Lineamiento para el Proceso de Evaluación y Acreditación de Asignaturas.
+          Asimismo, nos señaló los criterios de evaluación de acuerdo con el Lineamiento para el Proceso de Evaluación y
+          Acreditación de Asignaturas.
         </p>
       </va-card-content>
     </va-card>
@@ -81,19 +87,11 @@
                 <td>
                   <va-input v-model="asignatura.representante" placeholder="Nombre del representante" />
                   <div class="firma-placeholder mt-2" @click="abrirModalFirma(index)">
-                    {{
-                      asignatura.firma 
-                        ? 'Firma registrada' 
-                        : 'Haga clic para firmar'
-                    }}
+                    {{ asignatura.firma ? 'Firma registrada' : 'Haga clic para firmar' }}
                   </div>
                 </td>
                 <td>
-                  <va-date-input 
-                    v-model="asignatura.fecha" 
-                    placeholder="Seleccione fecha"
-                    :max-date="new Date()"
-                  />
+                  <va-date-input v-model="asignatura.fecha" placeholder="Seleccione fecha" :max-date="new Date()" />
                 </td>
               </tr>
             </tbody>
@@ -101,11 +99,7 @@
         </div>
 
         <div class="flex justify-end mt-4">
-          <va-button 
-            preset="plain" 
-            size="small" 
-            @click="agregarAsignatura"
-          >
+          <va-button preset="plain" size="small" @click="agregarAsignatura">
             <va-icon name="add" class="mr-2" />
             Agregar otra asignatura
           </va-button>
@@ -136,10 +130,10 @@
       <template #header>
         <h3 class="va-h5">Registrar firma digital</h3>
       </template>
-      
+
       <div class="firma-modal-content">
         <div class="firma-container">
-          <canvas 
+          <canvas
             ref="firmaCanvas"
             @mousedown="iniciarFirma"
             @mousemove="dibujarFirma"
@@ -150,14 +144,10 @@
             @touchend="terminarFirma"
           ></canvas>
         </div>
-        
+
         <div class="flex justify-between mt-4">
-          <va-button preset="plain" @click="limpiarFirma">
-            Limpiar Firma
-          </va-button>
-          <va-button @click="guardarFirma">
-            Guardar Firma
-          </va-button>
+          <va-button preset="plain" @click="limpiarFirma"> Limpiar Firma </va-button>
+          <va-button @click="guardarFirma"> Guardar Firma </va-button>
         </div>
       </div>
     </va-modal>
@@ -169,21 +159,38 @@ import { ref, nextTick } from 'vue'
 
 // Datos del formulario
 const profesorSeleccionado = ref('')
-const profesores = ref([
-  'ZARINA MARYELA BASULTO ÁLVAREZ',
-  'JUAN PÉREZ MARTÍNEZ',
-  'MARÍA GONZÁLEZ LÓPEZ'
-])
+const profesores = ref(['ZARINA MARYELA BASULTO ÁLVAREZ', 'JUAN PÉREZ MARTÍNEZ', 'MARÍA GONZÁLEZ LÓPEZ'])
 
 const documentosRecibidos = ref({
   programaEstudios: false,
-  planeacionCurso: false
+  planeacionCurso: false,
 })
 
 const asignaturas = ref([
-  { clave: 'SCC-1005', grupo: 'I3A', materia: 'CULTURA EMPRESARIAL', representante: '', firma: null, fecha: '01/09/2023' },
-  { clave: 'SCC-1005', grupo: 'I3B', materia: 'CULTURA EMPRESARIAL', representante: '', firma: null, fecha: '30/08/2023' },
-  { clave: 'TID-1010', grupo: 'K9U', materia: 'DESARROLLO DE EMPRENDEDORES', representante: '', firma: null, fecha: '30/08/2023' }
+  {
+    clave: 'SCC-1005',
+    grupo: 'I3A',
+    materia: 'CULTURA EMPRESARIAL',
+    representante: '',
+    firma: null,
+    fecha: '01/09/2023',
+  },
+  {
+    clave: 'SCC-1005',
+    grupo: 'I3B',
+    materia: 'CULTURA EMPRESARIAL',
+    representante: '',
+    firma: null,
+    fecha: '30/08/2023',
+  },
+  {
+    clave: 'TID-1010',
+    grupo: 'K9U',
+    materia: 'DESARROLLO DE EMPRENDEDORES',
+    representante: '',
+    firma: null,
+    fecha: '30/08/2023',
+  },
 ])
 
 // Lógica para firma digital
@@ -196,7 +203,7 @@ const ctx = ref(null)
 const abrirModalFirma = (index) => {
   asignaturaAFirmar.value = index
   showModalFirma.value = true
-  
+
   nextTick(() => {
     const canvas = firmaCanvas.value
     canvas.width = canvas.offsetWidth
@@ -214,19 +221,19 @@ const iniciarFirma = (e) => {
   const rect = canvas.getBoundingClientRect()
   const x = (e.clientX || e.touches[0].clientX) - rect.left
   const y = (e.clientY || e.touches[0].clientY) - rect.top
-  
+
   ctx.value.beginPath()
   ctx.value.moveTo(x, y)
 }
 
 const dibujarFirma = (e) => {
   if (!isFirmando.value) return
-  
+
   const canvas = firmaCanvas.value
   const rect = canvas.getBoundingClientRect()
   const x = (e.clientX || e.touches[0].clientX) - rect.left
   const y = (e.clientY || e.touches[0].clientY) - rect.top
-  
+
   ctx.value.lineTo(x, y)
   ctx.value.stroke()
 }
@@ -254,7 +261,7 @@ const agregarAsignatura = () => {
     materia: '',
     representante: '',
     firma: null,
-    fecha: ''
+    fecha: '',
   })
 }
 
@@ -262,12 +269,12 @@ const limpiarFormulario = () => {
   profesorSeleccionado.value = ''
   documentosRecibidos.value = {
     programaEstudios: false,
-    planeacionCurso: false
+    planeacionCurso: false,
   }
-  asignaturas.value = asignaturas.value.map(a => ({
+  asignaturas.value = asignaturas.value.map((a) => ({
     ...a,
     representante: '',
-    firma: null
+    firma: null,
   }))
 }
 
@@ -275,9 +282,9 @@ const guardarAcuse = () => {
   console.log('Acuse guardado:', {
     profesor: profesorSeleccionado.value,
     documentos: documentosRecibidos.value,
-    asignaturas: asignaturas.value
+    asignaturas: asignaturas.value,
   })
-  
+
   // Aquí iría la lógica para guardar en base de datos
 }
 
@@ -330,7 +337,7 @@ const generarPDF = () => {
   border-collapse: collapse;
 }
 
-.asignaturas-table th, 
+.asignaturas-table th,
 .asignaturas-table td {
   border: 1px solid var(--va-background-border);
   padding: 0.75rem;
@@ -379,7 +386,7 @@ const generarPDF = () => {
     grid-template-columns: 1fr;
     gap: 0.5rem;
   }
-  
+
   .inline-select {
     width: 200px;
   }

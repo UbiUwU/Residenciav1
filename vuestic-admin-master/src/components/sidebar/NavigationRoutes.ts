@@ -19,8 +19,6 @@ export default {
       },
     },
 
-   
-
     //Rutas para generales
     {
       name: 'Generales',
@@ -37,7 +35,6 @@ export default {
           name: 'Nombramientos',
           displayName: 'Nombramientos',
         },
-        
       ],
     },
 
@@ -58,11 +55,10 @@ export default {
           name: 'Constancias',
           displayName: 'Constancias',
         },
-        
       ],
     },
 
-    //Rutas para S.I.G 
+    //Rutas para S.I.G
     {
       name: 'sig',
       displayName: 'S.I.G',
@@ -89,25 +85,24 @@ export default {
         {
           name: 'CarpetaEvidencias',
           displayName: 'Carpeta Evidencias',
-        },  
+        },
         {
           name: 'Asesorias',
           displayName: 'Asesorias',
         },
-        
       ],
     },
-//Rutas para "Projectos Individuales"
+    //Rutas para "Projectos Individuales"
     {
-          name: 'projects',
-          displayName: 'Projectos individuales',
-          meta: {
-            icon: 'folder_shared',
-          },
-        },
+      name: 'projects',
+      displayName: 'Projectos individuales',
+      meta: {
+        icon: 'folder_shared',
+      },
+    },
 
-////Rutas para "Liberacion de actividades"
-     {
+    ////Rutas para "Liberacion de actividades"
+    {
       name: 'Liberacion',
       displayName: '🛠️Liberacion de actividades',
       meta: {
@@ -129,7 +124,7 @@ export default {
         {
           name: 'LiberacionActividadesA',
           displayName: 'Liberacion Academica',
-        },      
+        },
       ],
     },
 
@@ -140,10 +135,9 @@ export default {
         icon: 'group',
       },
     },
-   
 
     //Rutas para la seccion de pagos (que no se plenea usar)
-   /*  {
+    /*  {
       name: 'payments',
       displayName: 'menu.payments',
       meta: {
@@ -164,7 +158,6 @@ export default {
         },
       ],
     }, */
-    
 
     {
       name: 'faq',

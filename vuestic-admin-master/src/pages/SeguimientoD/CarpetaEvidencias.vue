@@ -1,20 +1,19 @@
 <template>
-       <!-- Título de la vista -->
-   <h1 class="va-h4 mb-4">Mis evidencias</h1>
+  <!-- Título de la vista -->
+  <h1 class="va-h4 mb-4">Mis evidencias</h1>
   <div class="evidencias-container">
     <va-card>
       <va-card-title class="flex justify-between items-center">
-       
         <va-breadcrumbs>
           <va-breadcrumbs-item label="Inicio" to="/" />
           <va-breadcrumbs-item label="Evidencias" active />
         </va-breadcrumbs>
       </va-card-title>
-      
+
       <va-card-content>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <va-card 
-            v-for="materia in materias" 
+          <va-card
+            v-for="materia in materias"
             :key="materia.id"
             class="materia-card"
             @click="navigateToMateria(materia.id)"
@@ -22,9 +21,7 @@
             <va-card-content class="text-center">
               <va-icon name="folder" size="4rem" color="var(--va-primary)" />
               <h3 class="va-h5 mt-4">{{ materia.nombre }}</h3>
-              <p class="text-sm text-gray-500">
-                {{ materia.archivosCount }} archivos
-              </p>
+              <p class="text-sm text-gray-500">{{ materia.archivosCount }} archivos</p>
             </va-card-content>
           </va-card>
         </div>
@@ -61,7 +58,9 @@ const navigateToMateria = (materiaId) => {
 
 .materia-card {
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .materia-card:hover {
