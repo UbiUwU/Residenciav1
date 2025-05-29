@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\CompetenciaController;
+use App\Http\Controllers\PracticaController;
+use App\Http\Controllers\ProyectoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AsignaturaController;
+use App\Http\Controllers\AsignaturaController;
 use App\Http\Controllers\Api\MaestroController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\HorarioMaestroController;
@@ -28,6 +31,8 @@ use App\Http\Controllers\PlantillaController;
 use App\Http\Controllers\Api\AlumnoController;
 use App\Http\Controllers\Api\AulaController;
 use App\Http\Controllers\EventoCalendarioController;
+use App\Http\Controllers\PresentacionController;
+use App\Http\Controllers\DisenoController;
 
 
 Route::prefix('maestros')->group(function () {
@@ -38,10 +43,6 @@ Route::prefix('maestros')->group(function () {
     Route::delete('/{id}', [MaestroController::class, 'destroy']); // Eliminar
 });
 
-Route::prefix('asignaturas')->group(function () {
-    Route::get('/', [AsignaturaController::class, 'index']); // Todas las asignaturas
-    Route::get('/{clave}', [AsignaturaController::class, 'show']); // Una asignatura por clave
-});
 
 Route::get('/alumnos', [AlumnoController::class, 'index']);
 Route::get('/alumnos/{numeroControl}', [AlumnoController::class, 'show']);
@@ -203,4 +204,63 @@ Route::prefix('eventos')->group(function () {
     Route::get('/{id}', [EventoCalendarioController::class, 'show']);
     Route::put('/{id}', [EventoCalendarioController::class, 'update']);
     Route::delete('/{id}', [EventoCalendarioController::class, 'destroy']);
+});
+
+
+
+
+//En preceso para terminar para las asignaturas
+
+Route::prefix('asignaturas')->group(function () {
+    Route::get('/', [AsignaturaController::class, 'index']);
+    Route::post('/', [AsignaturaController::class, 'store']);
+    Route::get('/{clave}', [AsignaturaController::class, 'show']);
+    Route::get('/complete/{clave}', [AsignaturaController::class, 'getByClaveComplete']);
+    Route::put('/{clave}', [AsignaturaController::class, 'update']);
+    Route::delete('/{clave}', [AsignaturaController::class, 'destroy']);
+
+    // Rutas adicionales
+    Route::get('/carrera/{claveCarrera}', [AsignaturaController::class, 'getByCarrera']);
+    Route::get('/carrera/{claveCarrera}/semestre/{semestre}', [AsignaturaController::class, 'getByCarreraAndSemestre']);
+});
+
+Route::prefix('presentacion')->group(function () {
+    Route::post('/', [PresentacionController::class, 'store']);
+    Route::put('/{id}', [PresentacionController::class, 'update']);
+    Route::delete('/{id}', [PresentacionController::class, 'destroy']);
+});
+
+Route::post('/diseno', [DisenoController::class, 'store']);
+Route::put('/diseno/{id}', [DisenoController::class, 'update']);
+Route::delete('/diseno/{id}', [DisenoController::class, 'destroy']);
+Route::put('/diseno/{id}/participantes', [DisenoController::class, 'updateParticipantes']);
+Route::delete('/diseno/{id}/participante/{participante_id}', [DisenoController::class, 'eliminarParticipante']);
+
+Route::post('/competencias', [CompetenciaController::class, 'store']);
+Route::put('/competencias/{id}', [CompetenciaController::class, 'update']);
+Route::delete('/competencias/{id}', [CompetenciaController::class, 'destroy']);
+
+Route::post('/practicas', [PracticaController::class, 'store']);
+Route::put('/practicas/{id}', [PracticaController::class, 'update']);
+Route::delete('/practicas/{id}', [PracticaController::class, 'destroy']);
+
+Route::post('/proyecto', [ProyectoController::class, 'store']);
+Route::put('/proyecto/{id}', [ProyectoController::class, 'update']);
+Route::delete('/proyecto/{id}', [ProyectoController::class, 'destroy']);
+
+use App\Http\Controllers\EvaluacionController;
+
+Route::prefix('evaluacion')->group(function () {
+    Route::post('/', [EvaluacionController::class, 'store']);     
+    Route::put('/{id}', [EvaluacionController::class, 'update']);   
+    Route::delete('/{id}', [EvaluacionController::class, 'destroy']); 
+});
+
+use App\Http\Controllers\FuenteInformacionController;
+
+Route::prefix('fuente')->group(function () {
+    Route::post('/', [FuenteInformacionController::class, 'store']);     
+    Route::put('/{id}', [FuenteInformacionController::class, 'update']);    
+    Route::delete('/{id}', [FuenteInformacionController::class, 'destroy']);
+
 });

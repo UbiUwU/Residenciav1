@@ -1,55 +1,56 @@
-// stores/auth-store.ts
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import router from '../router'
 import api from '../services/api'
+import { useRouter } from 'vue-router'
 
-interface User {
-  idusuario: number
+interface MaestroData {
+  tarjeta: number
+  nombre: string
+  apellidopaterno: string
+  apellidomaterno: string
   correo: string
-  token: string
-  idrol: number
-  nombre?: string
-  avatar?: string
-  fecha_registro?: string
+  rfc: string
+  escolaridad_licenciatura: string
+  estado_licenciatura: string
+  // otros campos si los tienes
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<User | null>(null)
-  const isAuthenticated = ref(false)
+  const user = ref<{
+    user_type: string
+    data: MaestroData | null
+    token?: string
+  } | null>(null)
+  
+  const token = ref<string | null>(null)
+  const router = useRouter()
 
-  function login(userData: User, rememberMe: boolean) {
-    user.value = userData
-    isAuthenticated.value = true
-
-    if (rememberMe) {
-      localStorage.setItem('authToken', userData.token)
-      localStorage.setItem('userData', JSON.stringify(userData))
-    } else {
-      sessionStorage.setItem('authToken', userData.token)
-      sessionStorage.setItem('userData', JSON.stringify(userData))
-    }
-  }
-
-  async function fetchUserProfile() {
+  const login = async (authData: { token: string }, keepLoggedIn: boolean) => {
+    token.value = authData.token
+    
+    const storage = keepLoggedIn ? localStorage : sessionStorage
+    storage.setItem('authToken', authData.token)
+    
     try {
-      const response = await api.get('/user/profile')
-      if (response.data.success) {
-        user.value = { ...user.value, ...response.data.data }
+      const userResponse = await api.getUserData()
+
+      if (userResponse.data.user_type === 'maestro') {
+        user.value = {
+          user_type: 'maestro',
+          data: userResponse.data.data,
+          token: authData.token
+        }
+        router.push({ name: 'maestro-dashboard' })
       }
     } catch (error) {
-      console.error('Error fetching user profile:', error)
+      console.error('Error obteniendo datos de usuario:', error)
+      throw error
     }
   }
-
-  // Resto de las funciones...
 
   return {
     user,
-    isAuthenticated,
-    login,
-    logout,
-    initialize,
-    fetchUserProfile,
+    token,
+    login
   }
 })

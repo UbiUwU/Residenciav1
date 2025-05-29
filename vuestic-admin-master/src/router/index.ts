@@ -167,6 +167,13 @@ const routes: Array<RouteRecordRaw> = [
         component: AsignaturaDetail,
         props: true,
       },
+
+      {
+        path: '/asignaturas/complete/:clave',
+        name: 'AsignaturaCompleta',
+        component: () => import('../test/asignaturas2.vue'),
+      },
+
       {
         name: 'settings',
         path: 'settings',
