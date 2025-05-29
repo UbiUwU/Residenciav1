@@ -13,14 +13,18 @@ export interface Maestro {
   Escolaridad_Doctorado: string;
   Estado_Doctorado: string;
   Id_Departamento: string;
+  Nombre_Departamento: string;
+  Abreviacion_Departamento: string;
 }
 
 export interface Usuario {
-  id: string
-  nombre: string
-  email: string
-  rol: string
+  id: string;
+  nombre: string;
+  email: string;
+  rol: string; // nombre del rol
+  idrol: string; // nuevo campo
 }
+
 
 export interface AuthData {
   token: string
