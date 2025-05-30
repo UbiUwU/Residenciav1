@@ -135,6 +135,8 @@ export default {
         icon: 'group',
       },
     },
+  ]
+}
 
     //Rutas para la seccion de pagos (que no se plenea usar)
     /*  {
@@ -188,3 +190,4 @@ export default {
     },
   ] as INavigationRoute[],
 }
+*/
