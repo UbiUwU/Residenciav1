@@ -9,6 +9,7 @@
         "php": "^8.2",
         "ext-pdo_pgsql": "*",
         "ext-pgsql": "*",
+        "dedoc/scramble": "^0.12.20",
         "laravel/framework": "^11.31",
         "laravel/sanctum": "*",
         "laravel/tinker": "^2.9"

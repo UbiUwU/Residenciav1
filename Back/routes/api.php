@@ -219,7 +219,7 @@ Route::prefix('asignaturas')->group(function () {
     Route::put('/{clave}', [AsignaturaController::class, 'update']);
     Route::delete('/{clave}', [AsignaturaController::class, 'destroy']);
     Route::get('/maestro/{clave}', [AsignaturaController::class, 'getByTarjetaComplete']);
-
+    Route::get('/grupos/{clave}', [AsignaturaController::class, 'getDetalleGruposByTarjeta']);
 
     // Rutas adicionales
     Route::get('/carrera/{claveCarrera}', [AsignaturaController::class, 'getByCarrera']);
@@ -290,3 +290,9 @@ Route::prefix('actividades')->group(function () {
     Route::delete('/{id}', [CompetenciaTemaController::class, 'destroy']);
 
 });
+
+
+use App\Http\Controllers\CalificacionUnidadController;
+
+Route::post('/calificaciones', [CalificacionUnidadController::class, 'store']);
+Route::get('/calificaciones/reporte/{tarjeta}', [CalificacionUnidadController::class, 'getDetalleGruposPorCarrera']);

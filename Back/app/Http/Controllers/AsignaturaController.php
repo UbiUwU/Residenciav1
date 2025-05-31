@@ -50,7 +50,7 @@ class AsignaturaController extends Controller
     {
         // Obtener asignaturas por carrera y semestre
         $asignaturas = DB::select(
-            'SELECT * FROM get_asignaturas_by_carrera_and_semestre(CAST(? AS varchar), CAST(? AS smallint))', 
+            'SELECT * FROM get_asignaturas_by_carrera_and_semestre(CAST(? AS varchar), CAST(? AS smallint))',
             [$claveCarrera, $semestre]
         );
         return response()->json($asignaturas);
@@ -133,7 +133,7 @@ class AsignaturaController extends Controller
     {
         // Eliminar asignatura
         $result = DB::select('SELECT delete_asignatura(CAST(? AS varchar)) AS result', [$clave]);
-        
+
         if (strpos($result[0]->result, 'Error') !== false) {
             return response()->json(['message' => $result[0]->result], 404);
         }
@@ -142,21 +142,38 @@ class AsignaturaController extends Controller
     }
 
     public function getByTarjetaComplete($clave)
-{
-    // Validar que la tarjeta sea un número positivo
-    if (!is_numeric($clave) || $clave <= 0) {
-        return response()->json(['message' => 'Tarjeta inválida'], 400);
+    {
+        // Validar que la tarjeta sea un número positivo
+        if (!is_numeric($clave) || $clave <= 0) {
+            return response()->json(['message' => 'Tarjeta inválida'], 400);
+        }
+
+        // Obtener todas las asignaturas completas asociadas a la tarjeta (maestro)
+        $asignaturas = DB::select('SELECT * FROM get_asignaturas_by_tarjeta_complete(CAST(? AS bigint))', [$clave]);
+
+        if (empty($asignaturas)) {
+            return response()->json(['message' => 'No se encontraron asignaturas para esta tarjeta'], 404);
+        }
+
+        $json = $asignaturas[0]->get_asignaturas_by_tarjeta_complete;
+        return response()->json(json_decode($json));
     }
+    public function getDetalleGruposByTarjeta($clave)
+    {
+        // Validar que la tarjeta sea un número positivo
+        if (!is_numeric($clave) || $clave <= 0) {
+            return response()->json(['message' => 'Tarjeta inválida'], 400);
+        }
 
-    // Obtener todas las asignaturas completas asociadas a la tarjeta (maestro)
-    $asignaturas = DB::select('SELECT * FROM get_asignaturas_by_tarjeta_complete(CAST(? AS bigint))', [$clave]);
+        // Ejecutar la función PostgreSQL
+        $detalles = DB::select('SELECT * FROM get_Detalle_Grupos__Para_Calificaciones_By_Tarjeta(CAST(? AS bigint))', [$clave]);
 
-    if (empty($asignaturas)) {
-        return response()->json(['message' => 'No se encontraron asignaturas para esta tarjeta'], 404);
+        if (empty($detalles)) {
+            return response()->json(['message' => 'No se encontraron datos para esta tarjeta'], 404);
+        }
+
+        $json = $detalles[0]->get_detalle_grupos__para_calificaciones_by_tarjeta;
+        return response()->json(json_decode($json));
     }
-
-    $json = $asignaturas[0]->get_asignaturas_by_tarjeta_complete;
-    return response()->json(json_decode($json));
-}
 
 }

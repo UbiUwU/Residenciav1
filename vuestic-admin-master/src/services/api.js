@@ -239,6 +239,18 @@ export default {
   getAsignaturaByTarjetaCompleta(clave) {
     return apiClient.get(`/asignaturas/maestro/${clave}`)
   },
+  ///////
+   getDetalleGruposByTarjeta(clave) {
+    return apiClient.get(`/asignaturas/grupos/${clave}`)
+  },
+
+  crearCalificaciones(data) {
+    return apiClient.post('/calificaciones', data)
+  },
+
+   getDetalleGruposPorCarreraByTarjeta(clave) {
+    return apiClient.get(`/calificaciones/reporte/${clave}`)
+  },
 
 
   // Obtener todas las carreras
