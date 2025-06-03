@@ -296,3 +296,11 @@ use App\Http\Controllers\CalificacionUnidadController;
 
 Route::post('/calificaciones', [CalificacionUnidadController::class, 'store']);
 Route::get('/calificaciones/reporte/{tarjeta}', [CalificacionUnidadController::class, 'getDetalleGruposPorCarrera']);
+
+use App\Http\Controllers\InstrumentacionController;
+
+Route::post('/instrumentacion', [InstrumentacionController::class, 'crearInstrumentacion']);
+Route::post('/instrumentacion/detalle/agregar', [InstrumentacionController::class, 'agregarDetalle']);
+Route::get('/instrumentacion/{tarjeta}', [InstrumentacionController::class, 'obtenerPorTarjeta']);
+Route::put('/instrumentacion/detalle/{id}', [InstrumentacionController::class, 'actualizarDetalle']);
+Route::put('/instrumentacion/{id}', [InstrumentacionController::class, 'actualizarInstrumentacion']);
