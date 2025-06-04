@@ -55,26 +55,24 @@ const tarjeta = route.params.tarjeta
 const fetchAsignaturas = async () => {
   try {
     loading.value = true
-    const response = await api.getAsignaturasPorMaestro(tarjeta)
+    const response = await api.getAsignaturaByTarjetaCompleta(tarjeta)
 
     console.log('DATA RECIBIDA:', response.data)
 
     const data = response.data
 
-    // Verifica si data es un arreglo
-    if (Array.isArray(data)) {
-      asignaturas.value = [
-        ...new Map(data.map(a => [a.ClaveAsignatura, a])).values()
-      ]
-    } 
-    // Verifica si es un objeto que contiene la propiedad "asignaturas"
-    else if (data && Array.isArray(data.asignaturas)) {
-      asignaturas.value = [
-        ...new Map(data.asignaturas.map(a => [a.ClaveAsignatura, a])).values()
-      ]
-    } 
-    else {
-      throw new Error('Formato inesperado en la respuesta del servidor')
+    if (Array.isArray(data) && data.length > 0) {
+      // Transformar los datos al formato esperado
+      asignaturas.value = data.map(item => ({
+        ClaveAsignatura: item.informacionbasica.clave,
+        NombreAsignatura: item.informacionbasica.nombre,
+        Creditos: item.informacionbasica.creditos,
+        Satca_Teoricas: item.informacionbasica.satca.teoricas,
+        Satca_Practicas: item.informacionbasica.satca.practicas,
+        Satca_Total: item.informacionbasica.satca.total
+      }))
+    } else {
+      asignaturas.value = []  // No hay asignaturas
     }
   } catch (err) {
     error.value = 'Error al cargar las asignaturas: ' + (err.response?.data?.error || err.message)
@@ -83,6 +81,7 @@ const fetchAsignaturas = async () => {
     loading.value = false
   }
 }
+
 
 
 
@@ -98,6 +97,7 @@ const verPDF = () => {
 onMounted(() => {
   fetchAsignaturas()
 })
+
 </script>
 
 <style scoped>

@@ -45,6 +45,11 @@ const verMaestro = (tarjeta: number) => {
   router.push({ name: 'materiasMaestro', params: { tarjeta } })
 }
 
+const generarReporteFinal = (tarjeta: number) => {
+  router.push({ name: 'reporteFinalMaestro', params: { tarjeta } })
+}
+
+
 
 const addUser = () => {
   // Abre el modal para agregar un nuevo usuario
@@ -107,6 +112,15 @@ const onUserSaved = () => {
       >
         Ver maestro
       </VaButton>
+      <VaButton
+      color="info"
+      icon="description"
+      size="small"
+      @click="generarReporteFinal(rowData.tarjeta)"
+      class="ml-2"
+    >
+      Reporte Final
+    </VaButton>
     </template>
   </VaDataTable>
 
