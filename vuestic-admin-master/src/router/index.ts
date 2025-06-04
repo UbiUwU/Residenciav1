@@ -14,12 +14,13 @@ import perfil from '../test/perfil.vue'
 import visualizarhorario from '../test/visualizarhorario.vue'
 import maestro from '../test/maestro.vue'
 import usuarios from '../test/usuarios.vue'
-import Plantilla from '../pages/Plantilla/PlantillaAdmin.vue'
+import Plantilla from '../test/plantillas.vue'
 import roles from '../test/roles.vue'
 import avance from '../test/avanceprogra.vue'
 import periodos from '../test/periodos.vue'
 import eventosmdestino from '../test/tiposeventos_Destino.vue'
 import horaraio2 from '../test/HorarioMaestro.vue'
+
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
 
@@ -131,6 +132,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/eventosmdestino',
         name: 'eventosmdestino',
         component: eventosmdestino,
+      },
+      {
+        path: '/Plantilla',
+        name: 'Plantilla',
+        component: Plantilla,
       },
       {
         path: '/periodos',

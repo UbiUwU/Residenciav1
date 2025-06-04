@@ -74,7 +74,7 @@ export default {
     return apiClient.delete(`/horarios/${id}`)
   },
 
-    getAsignaturasPorMaestro(tarjeta) {
+  getAsignaturasPorMaestro(tarjeta) {
     return apiClient.get(`/asignaturas/maestro/${tarjeta}`)
   },
 
@@ -240,7 +240,7 @@ export default {
     return apiClient.get(`/asignaturas/maestro/${clave}`)
   },
   ///////
-   getDetalleGruposByTarjeta(clave) {
+  getDetalleGruposByTarjeta(clave) {
     return apiClient.get(`/asignaturas/grupos/${clave}`)
   },
 
@@ -248,7 +248,7 @@ export default {
     return apiClient.post('/calificaciones', data)
   },
 
-   getDetalleGruposPorCarreraByTarjeta(clave) {
+  getDetalleGruposPorCarreraByTarjeta(clave) {
     return apiClient.get(`/calificaciones/reporte/${clave}`)
   },
 
@@ -276,5 +276,57 @@ export default {
   // Eliminar una carrera
   deleteCarrera(clave) {
     return apiClient.delete(`/carreras/${clave}`);
-  }
+  },
+
+    // Plantillas
+  // Listar todas las plantillas
+  getPlantillas() {
+    return apiClient.get('/plantillas')
+  },
+
+  // Obtener una plantilla por ID
+  getPlantilla(id) {
+    return apiClient.get(`/plantillas/${id}`)
+  },
+
+  // Crear una plantilla con archivo (docx)
+  crearPlantilla(data) {
+    // data = { nombre, descripcion, tipo, archivo (File) }
+    const formData = new FormData()
+    formData.append('nombre', data.nombre)
+    if (data.descripcion) formData.append('descripcion', data.descripcion)
+    formData.append('tipo', data.tipo)
+    formData.append('archivo', data.archivo)
+
+    return apiClient.post('/plantillas', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+  },
+
+  // Actualizar datos de plantilla (sin archivo)
+  actualizarPlantilla(id, data) {
+    // data puede incluir: nombre, descripcion, tipo, estado
+    return apiClient.put(`/plantillas/${id}`, data)
+  },
+
+  // Cambiar estado solo
+  cambiarEstadoPlantilla(id, estado) {
+    return apiClient.patch(`/plantillas/${id}/estado`, { estado })
+  },
+
+  // Reemplazar archivo docx de plantilla
+  reemplazarArchivoPlantilla(id, archivo) {
+    const formData = new FormData()
+    formData.append('archivo', archivo)
+    return apiClient.post(`/plantillas/${id}/archivo`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+  },
+
+  // Descargar archivo docx (retorna blob)
+  descargarArchivoPlantilla(id) {
+    return apiClient.get(`/plantillas/${id}/descargar`, {
+      responseType: 'blob',
+    })
+  },
 }

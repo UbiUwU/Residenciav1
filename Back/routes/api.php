@@ -93,9 +93,14 @@ Route::prefix('carreras')->group(function () {
     Route::delete('/{clave}', [CarreraController::class, 'destroy']);
 });
 
+
 Route::get('/plantillas', [PlantillaController::class, 'index']);
 Route::get('/plantillas/{id}', [PlantillaController::class, 'show']);
 Route::post('/plantillas', [PlantillaController::class, 'store']);
+Route::put('/plantillas/{id}', [PlantillaController::class, 'update']);
+Route::patch('/plantillas/{id}/estado', [PlantillaController::class, 'updateEstado']);
+Route::post('/plantillas/{id}/archivo', [PlantillaController::class, 'updateArchivo']);
+Route::get('/plantillas/{id}/descargar', [PlantillaController::class, 'descargarArchivo']);
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
@@ -298,13 +303,13 @@ use App\Http\Controllers\CalificacionUnidadController;
 Route::post('/calificaciones', [CalificacionUnidadController::class, 'store']);
 Route::get('/calificaciones/reporte/{tarjeta}', [CalificacionUnidadController::class, 'getDetalleGruposPorCarrera']);
 
-use App\Http\Controllers\InstrumentacionController;
+use App\Http\Controllers\InstrumentacionController;//Me quivoque de nombre, es para el avanece programatico
 
-Route::post('/instrumentacion', [InstrumentacionController::class, 'crearInstrumentacion']);
-Route::post('/instrumentacion/detalle/agregar', [InstrumentacionController::class, 'agregarDetalle']);
-Route::get('/instrumentacion/{tarjeta}', [InstrumentacionController::class, 'obtenerPorTarjeta']);
-Route::put('/instrumentacion/detalle/{id}', [InstrumentacionController::class, 'actualizarDetalle']);
-Route::put('/instrumentacion/{id}', [InstrumentacionController::class, 'actualizarInstrumentacion']);
+Route::post('/avance', [InstrumentacionController::class, 'crearInstrumentacion']);
+Route::post('/avance/detalle/agregar', [InstrumentacionController::class, 'agregarDetalle']);
+Route::get('/avance/{tarjeta}', [InstrumentacionController::class, 'obtenerPorTarjeta']);
+Route::put('/avance/detalle/{id}', [InstrumentacionController::class, 'actualizarDetalle']);
+Route::put('/avance/{id}', [InstrumentacionController::class, 'actualizarInstrumentacion']);
 
 
 Route::post('/comisiones', [ComisionController::class, 'store']);
