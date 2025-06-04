@@ -58,9 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['plantilla'])) {
 }
 
 // Obtener plantillas registradas
-$plantillas = getAll("SELECT id, nombre, descripcion, archivo, 
-                      TO_CHAR(created_at, 'DD/MM/YYYY HH24:MI') as fecha_creacion 
-                      FROM plantillas ORDER BY created_at DESC");
+$plantillas = getAll("SELECT id, nombre, descripcion, archivo, estado, TO_CHAR(creado_en, 'DD/MM/YYYY HH24:MI') as fecha_creacion FROM plantillas ORDER BY id DESC");
+
 ?>
 
 <!DOCTYPE html>

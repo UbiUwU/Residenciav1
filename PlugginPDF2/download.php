@@ -10,19 +10,22 @@ header('Content-Type: text/html; charset=utf-8');
 
 // Obtener el ID de la plantilla desde el GET
 $plantilla_id = $_GET['id'] ?? null;
+$tipo_plantilla = $_GET['tipo'] ?? null;
 
-if (!$plantilla_id) {
-    die("Error: No se recibió el ID de la plantilla");
+if (!$plantilla_id || !$tipo_plantilla) {
+    die("Error: Se requiere tanto el ID como el tipo de plantilla");
 }
 
 try {
-    // 1. Obtener la plantilla desde la base de datos
-    $plantilla = getOne("SELECT * FROM plantillas WHERE id = ?", [$plantilla_id]);
-    
-    if (!$plantilla) {
-        die("Error: No se encontró la plantilla con ID $plantilla_id");
-    }
+    // Consulta con tipo_plantilla
+    $plantilla = getOne(
+        "SELECT * FROM plantillas WHERE id = ? AND tipo_plantilla = ?",
+        [$plantilla_id, $tipo_plantilla]
+    );
 
+    if (!$plantilla) {
+        die("Error: No se encontró la plantilla con ID $plantilla_id y tipo $tipo_plantilla");
+    }
     // Verificar y construir la ruta correcta
     $ruta_plantilla = 'doc/' . $plantilla['archivo'];
     
