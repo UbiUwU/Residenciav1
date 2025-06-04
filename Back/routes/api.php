@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ComisionController;
 use App\Http\Controllers\CompetenciaController;
 use App\Http\Controllers\PracticaController;
 use App\Http\Controllers\ProyectoController;
@@ -296,3 +297,19 @@ use App\Http\Controllers\CalificacionUnidadController;
 
 Route::post('/calificaciones', [CalificacionUnidadController::class, 'store']);
 Route::get('/calificaciones/reporte/{tarjeta}', [CalificacionUnidadController::class, 'getDetalleGruposPorCarrera']);
+
+use App\Http\Controllers\InstrumentacionController;
+
+Route::post('/instrumentacion', [InstrumentacionController::class, 'crearInstrumentacion']);
+Route::post('/instrumentacion/detalle/agregar', [InstrumentacionController::class, 'agregarDetalle']);
+Route::get('/instrumentacion/{tarjeta}', [InstrumentacionController::class, 'obtenerPorTarjeta']);
+Route::put('/instrumentacion/detalle/{id}', [InstrumentacionController::class, 'actualizarDetalle']);
+Route::put('/instrumentacion/{id}', [InstrumentacionController::class, 'actualizarInstrumentacion']);
+
+
+Route::post('/comisiones', [ComisionController::class, 'store']);
+Route::put('/comisiones/{id}', [ComisionController::class, 'update']);
+Route::delete('/comisiones/{id}', [ComisionController::class, 'destroy']);
+Route::get('/comisiones', [ComisionController::class, 'index']);
+Route::get('/comisiones/maestro/{tarjeta}', [ComisionController::class, 'getByMaestro']);
+
