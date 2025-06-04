@@ -72,15 +72,16 @@ export default {
         },
         {
           name: 'InstrumendacionDidactica',
-          displayName: '🛠️ Instrumentación Didáctica', // Emoji de construcción
+          displayName: 'Instrumentación Didáctica', // Emoji de construcción
         },
         {
           name: 'AcuseEstudiante',
           displayName: 'Acuse Estudiante',
         },
+        //testeo de paginas "asignaturas" "maestro" "periodos" "departamentos"
         {
-          name: 'EvaluacionDiagnostica',
-          displayName: '🛠️Evaluacion Diagnostica',
+          name: 'asignaturas',
+          displayName: '🛠️Asignaturas',
         },
         {
           name: 'CarpetaEvidencias',
@@ -129,37 +130,45 @@ export default {
     },
 
     {
-      name: 'Usuarios',
+      name: 'users',
       displayName: 'menu.users',
       meta: {
         icon: 'group',
       },
     },
-  ]
-}
+    {
+      name: 'comisionar',
+      displayName: 'Comisionar',
+      meta: {
+        icon: 'group',
+      },
+    },
+
+    
 
     //Rutas para la seccion de pagos (que no se plenea usar)
     /*  {
       name: 'payments',
       displayName: 'menu.payments',
       meta: {
-        icon: 'folder_shared',
+        icon: 'credit_card',
       },
-    },
-    {
-      name: 'HorarioMaestro',
-      displayName: 'Horario',
-      meta: {
-        icon: 'timer',
-      },
-    },
-    {
-      name: 'Asignaturas',
-      displayName: 'Asignatura',
-      meta: {
-        icon: 'timer',
-      },
-    },
+      children: [
+        {
+          name: 'payment-methods',
+          displayName: 'menu.payment-methods',
+        },
+        {
+          name: 'pricing-plans',
+          displayName: 'menu.pricing-plans',
+        },
+        {
+          name: 'billing',
+          displayName: 'menu.billing',
+        },
+      ],
+    }, */
+
     {
       name: 'faq',
       displayName: 'menu.faq',
@@ -190,4 +199,3 @@ export default {
     },
   ] as INavigationRoute[],
 }
-*/
