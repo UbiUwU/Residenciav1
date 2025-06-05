@@ -32,12 +32,25 @@ const handleRegresar = () => {
 onMounted(() => {
   fetchAsignaturas()
 })
+
+const generarReportePDF = () => {
+  // Cambia el puerto si es necesario (normalmente 80 o 8080)
+  const url = `http://localhost/Inicio%20de%20sesion/PlugginPDF2//download.php?id=${tarjeta}&tipo=reporte_final`;
+  window.open(url, '_blank');
+}
 </script>
 
 <template>
    <div class="boton-regresar">
     <button @click="handleRegresar">
       ← Regresar
+    </button>
+  </div>
+
+   <!-- Nuevo botón para generar PDF -->
+  <div class="boton-generar-pdf">
+    <button @click="generarReportePDF">
+      Generar Reporte PDF
     </button>
   </div>
 
@@ -329,5 +342,30 @@ td {
 
 .boton-regresar button:hover {
   background-color: #1e45cc;
+}
+
+/* Nuevos estilos para el botón de PDF */
+.boton-generar-pdf {
+  position: sticky;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+.boton-generar-pdf button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.boton-generar-pdf button:hover {
+  background-color: #218838;
 }
 </style>
