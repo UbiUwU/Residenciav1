@@ -35,7 +35,7 @@ onMounted(() => {
 
 const generarReportePDF = () => {
   // Cambia el puerto si es necesario (normalmente 80 o 8080)
-  const url = `http://localhost/Inicio%20de%20sesion/PlugginPDF2//download.php?id=${tarjeta}&tipo=reporte_final`;
+  const url = `http://localhost/Inicio%20de%20sesion/PlugginPDF2//download.php?tarjeta=${tarjeta}&tipo=reporte_final`;
   window.open(url, '_blank');
 }
 </script>
