@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
+
 class InventarioController extends Controller
 {
     // 1. Verificar si el equipo existe
