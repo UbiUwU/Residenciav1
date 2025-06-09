@@ -7,7 +7,6 @@ use App\Http\Controllers\ProyectoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AsignaturaController;
 use App\Http\Controllers\Api\MaestroController;
-use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\HorarioMaestroController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\UsuarioController;
@@ -89,10 +88,6 @@ Route::put('/plantillas/{id}', [PlantillaController::class, 'update']);
 Route::patch('/plantillas/{id}/estado', [PlantillaController::class, 'updateEstado']);
 Route::post('/plantillas/{id}/archivo', [PlantillaController::class, 'updateArchivo']);
 Route::get('/plantillas/{id}/descargar', [PlantillaController::class, 'descargarArchivo']);
-
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
-Route::post('/cambiar-contrasena', [AuthController::class, 'changePassword']);
 
 Route::get('/horarios/{maestro_id}', [HorarioMaestroController::class, 'index']);
 Route::post('/horarios', [HorarioMaestroController::class, 'store']);
@@ -354,3 +349,8 @@ Route::prefix('inventario')->group(function () {
     Route::put('/equipo/{inventario}/liberar', [InventarioController::class, 'liberarEquipo']);
 });
 
+use App\Http\Controllers\Api\AuthController;
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
+Route::post('/cambiar-contrasena', [AuthController::class, 'changePassword']);
