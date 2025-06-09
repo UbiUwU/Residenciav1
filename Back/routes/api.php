@@ -4,7 +4,6 @@ use App\Http\Controllers\ComisionController;
 use App\Http\Controllers\CompetenciaController;
 use App\Http\Controllers\PracticaController;
 use App\Http\Controllers\ProyectoController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AsignaturaController;
 use App\Http\Controllers\Api\MaestroController;
@@ -13,12 +12,9 @@ use App\Http\Controllers\HorarioMaestroController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\ProgramaCursoController;
 use App\Http\Controllers\PeriodoEscolarController;
 use App\Http\Controllers\TipoEventoController;
 use App\Http\Controllers\PublicoDestinoController;
-use App\Http\Controllers\ApiAlumnoller;
-use App\Http\Controllers\Api\Aulatroller;
 use App\Http\Controllers\Api\BitacoraController;
 use App\Http\Controllers\CargaAcademicaController;
 use App\Http\Controllers\CarreraController;
@@ -29,7 +25,6 @@ use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\Api\ReservacionAlumnoController;
 use App\Http\Controllers\Api\ReservacionMaestroController;
 use App\Http\Controllers\PlantillaController;
-use App\Http\Controllers\Api\AlumnoController;
 use App\Http\Controllers\Api\AulaController;
 use App\Http\Controllers\EventoCalendarioController;
 use App\Http\Controllers\PresentacionController;
@@ -43,13 +38,6 @@ Route::prefix('maestros')->group(function () {
     Route::put('/{id}', [MaestroController::class, 'update']); // Actualizar
     Route::delete('/{id}', [MaestroController::class, 'destroy']); // Eliminar
 });
-
-
-Route::get('/alumnos', [AlumnoController::class, 'index']);
-Route::get('/alumnos/{numeroControl}', [AlumnoController::class, 'show']);
-Route::post('/alumnos', [AlumnoController::class, 'store']);
-Route::put('/alumnos/{numeroControl}', [AlumnoController::class, 'update']);
-Route::delete('/alumnos/{numeroControl}', [AlumnoController::class, 'destroy']);
 
 Route::get('/aulas', [AulaController::class, 'getAllAulas']);
 Route::get('/aulas/{claveAula}', [AulaController::class, 'getAulaById']);
@@ -104,6 +92,7 @@ Route::get('/plantillas/{id}/descargar', [PlantillaController::class, 'descargar
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
+Route::post('/cambiar-contrasena', [AuthController::class, 'changePassword']);
 
 Route::get('/horarios/{maestro_id}', [HorarioMaestroController::class, 'index']);
 Route::post('/horarios', [HorarioMaestroController::class, 'store']);
@@ -317,4 +306,51 @@ Route::put('/comisiones/{id}', [ComisionController::class, 'update']);
 Route::delete('/comisiones/{id}', [ComisionController::class, 'destroy']);
 Route::get('/comisiones', [ComisionController::class, 'index']);
 Route::get('/comisiones/maestro/{tarjeta}', [ComisionController::class, 'getByMaestro']);
+
+//Esta zona es de la zona movil.
+use App\Http\Controllers\Api\MaestroMController;
+
+Route::prefix('maestrom')->group(function () {
+    Route::get('/horario/{tarjeta}', [MaestroMController::class, 'getHorario']);
+    Route::post('/tiene-reservacion', [MaestroMController::class, 'tieneReservacion']);
+    Route::post('/reservacion-actual', [MaestroMController::class, 'getReservacionActual']);
+    Route::post('/aula-disponible', [MaestroMController::class, 'aulaDisponible']);
+    Route::post('/reservar', [MaestroMController::class, 'reservarAula']);
+    Route::delete('/eliminar-reservacion', [MaestroMController::class, 'eliminarReservacion']);
+    Route::get('/verificar-aula/{clave_aula}', [MaestroMController::class, 'verificarAula']);
+    Route::post('/bitacora', [MaestroMController::class, 'registrarBitacora']);
+});
+
+use App\Http\Controllers\Api\AlumnoController;
+
+Route::prefix('alumno')->group(function () {
+    Route::get('/horario/{numeroControl}', [AlumnoController::class, 'getHorario']);
+    Route::post('/registrar', [AlumnoController::class, 'registrarAlumno']);
+    Route::post('/cambiar-contrasena', [AlumnoController::class, 'cambiarContrasena']);
+    Route::get('/computadoras', [AlumnoController::class, 'computadorasDisponibles']);
+    Route::post('/reservacion/activa', [AlumnoController::class, 'tieneReservacionActiva']);
+    Route::post('/reservacion/hoy', [AlumnoController::class, 'yaReservoHoy']);
+    Route::post('/reservaciones', [AlumnoController::class, 'reservacionesActivas']);
+    Route::post('/reservar', [AlumnoController::class, 'reservarComputadora']);
+    Route::put('/extender-reserva', [AlumnoController::class, 'extenderReserva']);
+    Route::delete('/cancelar-reserva', [AlumnoController::class, 'cancelarReserva']);
+    Route::post('/bitacora', [AlumnoController::class, 'registrarBitacora']);
+
+
+    Route::get('/', [AlumnoController::class, 'index']);
+    Route::get('/{numeroControl}', [AlumnoController::class, 'show']);
+    Route::post('/', [AlumnoController::class, 'store']);
+    Route::put('/{numeroControl}', [AlumnoController::class, 'update']);
+    Route::delete('/{numeroControl}', [AlumnoController::class, 'destroy']);
+
+});
+
+use App\Http\Controllers\Api\InventarioController;
+
+Route::prefix('inventario')->group(function () {
+    Route::get('/equipo/{num_inventario}/verificar', [InventarioController::class, 'verificarEquipo']);
+    Route::put('/equipo/{inventario}/reservado', [InventarioController::class, 'marcarReservado']);
+    Route::put('/equipo/{inventario}/ocupado', [InventarioController::class, 'marcarOcupado']);
+    Route::put('/equipo/{inventario}/liberar', [InventarioController::class, 'liberarEquipo']);
+});
 

@@ -117,5 +117,66 @@ class AuthController extends Controller
             ], 500);
         }
     }
+    /**
+     * Cambio de contraseña por correo
+     */
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'correo' => 'required|email',
+            'password' => 'required|string|min:6'
+        ]);
+
+        try {
+            // 1. Obtener idusuario e idrol del usuario a partir de su correo
+            $userData = DB::select(
+                "SELECT idusuario, idrol FROM usuarios WHERE correo = ?",
+                [$request->input('correo')]
+            );
+
+            if (empty($userData)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Usuario no encontrado'
+                ], 404);
+            }
+
+            $idusuario = $userData[0]->idusuario;
+            $idrol = $userData[0]->idrol;
+
+            // 2. Ejecutar la función de actualización de usuario
+            $updateResult = DB::select(
+                "SELECT * FROM public.update_usuario(?, ?, ?, ?)",
+                [
+                    $idusuario,
+                    $request->input('correo'),
+                    $request->input('password'),
+                    $idrol
+                ]
+            );
+
+            // Puedes checar aquí si update_usuario devuelve algún indicador de éxito
+            // Por ejemplo, si devuelve la fila actualizada o un booleano
+            if (empty($updateResult)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se pudo actualizar la contraseña'
+                ], 500);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Contraseña actualizada correctamente'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error en el servidor al cambiar contraseña',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
 }

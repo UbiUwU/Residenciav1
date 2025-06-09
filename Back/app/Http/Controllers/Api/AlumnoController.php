@@ -151,4 +151,210 @@ class AlumnoController extends Controller
             ], 500);
         }
     }
+
+    // 1. Ver horario del alumno
+    public function getHorario($numeroControl)
+    {
+        $horario = DB::select("SELECT * FROM public.get_horario_alumno(?)", [$numeroControl]);
+        return response()->json($horario);
+    }
+
+    // 2. Registrar usuario y alumno
+    public function registrarAlumno(Request $request)
+    {
+        $request->validate([
+            'correo' => 'required|email',
+            'password' => 'required|string',
+            'numerocontrol' => 'required',
+            'nombre' => 'required',
+            'apellido_paterno' => 'required',
+            'apellido_materno' => 'required',
+            'clavecarrera' => 'required'
+        ]);
+
+        $userExists = DB::select("SELECT idusuario FROM usuarios WHERE correo = ? LIMIT 1", [$request->correo]);
+
+        if (!empty($userExists)) {
+            return response()->json(['success' => false, 'message' => 'Correo ya registrado'], 409);
+        }
+
+        $nuevoUsuario = DB::select("SELECT * FROM insert_usuario(?, ?, 1)", [
+            $request->correo,
+            $request->password
+        ]);
+
+        $idUsuario = $nuevoUsuario[0]->idusuario;
+
+        DB::select("SELECT * FROM insert_alumno(?, ?, ?, ?, ?, ?)", [
+            $request->numerocontrol,
+            $request->nombre,
+            $request->apellido_paterno,
+            $request->apellido_materno,
+            $idUsuario,
+            $request->clavecarrera
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Alumno registrado correctamente']);
+    }
+
+    // 3. Cambiar contraseña
+    public function cambiarContrasena(Request $request)
+    {
+        $request->validate([
+            'correo' => 'required|email',
+            'password' => 'required|string'
+        ]);
+
+        $usuario = DB::select("SELECT idusuario, idrol FROM usuarios WHERE correo = ?", [$request->correo]);
+
+        if (empty($usuario)) {
+            return response()->json(['success' => false, 'message' => 'Usuario no encontrado'], 404);
+        }
+
+        $idusuario = $usuario[0]->idusuario;
+        $idrol = $usuario[0]->idrol;
+
+        DB::select("SELECT * FROM update_usuario(?, ?, ?, ?)", [
+            $idusuario,
+            $request->correo,
+            $request->password,
+            $idrol
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Contraseña actualizada']);
+    }
+
+    // 4. Ver computadoras disponibles
+    public function computadorasDisponibles()
+    {
+        $computadoras = DB::select("SELECT numeroinventario, claveaula, marca, estado FROM computadora ORDER BY claveaula, estado, numeroinventario");
+        return response()->json($computadoras);
+    }
+
+    // 5. Ver si ya tiene una reservación activa
+    public function tieneReservacionActiva(Request $request)
+    {
+        $request->validate([
+            'control' => 'required',
+            'fecha' => 'required|date'
+        ]);
+
+        $reservas = DB::select("SELECT * FROM reservacionalumnos WHERE numerocontrol = ? AND fechareservacion >= ?", [
+            $request->control,
+            $request->fecha
+        ]);
+
+        return response()->json(['reservas' => $reservas]);
+    }
+
+    // 6. Ver si ya reservó un equipo hoy
+    public function yaReservoHoy(Request $request)
+    {
+        $request->validate([
+            'control' => 'required',
+            'inventario' => 'required',
+            'fecha' => 'required|date'
+        ]);
+
+        $existe = DB::select("
+            SELECT 1 FROM reservacionalumnos 
+            WHERE numerocontrol = ? AND numeroinventario = ? AND fechareservacion = ?
+            LIMIT 1", [$request->control, $request->inventario, $request->fecha]);
+
+        return response()->json(['reservado' => !empty($existe)]);
+    }
+
+    // 7. Ver sus reservaciones activas
+    public function reservacionesActivas(Request $request)
+    {
+        $request->validate([
+            'control' => 'required',
+            'fecha' => 'required|date'
+        ]);
+
+        $reservas = DB::select("
+            SELECT ra.numeroinventario, ra.horainicio, ra.horafin, 
+                   c.marca, c.claveaula, ra.fechareservacion
+            FROM reservacionalumnos ra
+            JOIN computadora c ON ra.numeroinventario = c.numeroinventario
+            WHERE ra.numerocontrol = ? AND ra.fechareservacion = ?",
+            [$request->control, $request->fecha]
+        );
+
+        return response()->json($reservas);
+    }
+
+    // 8. Insertar reservación
+    public function reservarComputadora(Request $request)
+    {
+        $request->validate([
+            'numerocontrol' => 'required',
+            'numeroinventario' => 'required',
+            'fechareservacion' => 'required|date',
+            'horainicio' => 'required',
+            'horafin' => 'required'
+        ]);
+
+        DB::select("SELECT insert_reservacion_alumno(?, ?, ?, ?, ?)", [
+            $request->numerocontrol,
+            $request->numeroinventario,
+            $request->fechareservacion,
+            $request->horainicio,
+            $request->horafin
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Computadora reservada']);
+    }
+
+    // 9. Extender tiempo de uso
+    public function extenderReserva(Request $request)
+    {
+        $request->validate([
+            'inventario' => 'required',
+            'horas' => 'required|integer',
+            'minutos' => 'required|integer'
+        ]);
+
+        DB::update("
+            UPDATE reservacionalumnos 
+            SET horafin = horafin + INTERVAL '? hours' + INTERVAL '? minutes'
+            WHERE numeroinventario = ?",
+            [$request->horas, $request->minutos, $request->inventario]
+        );
+
+        return response()->json(['success' => true, 'message' => 'Reserva extendida']);
+    }
+
+    // 10. Cancelar reserva
+    public function cancelarReserva(Request $request)
+    {
+        $request->validate([
+            'control' => 'required',
+            'inventario' => 'required'
+        ]);
+
+        DB::delete("
+            DELETE FROM reservacionalumnos 
+            WHERE numerocontrol = ? AND numeroinventario = ?",
+            [$request->control, $request->inventario]
+        );
+
+        return response()->json(['success' => true, 'message' => 'Reservación cancelada']);
+    }
+
+    // 11. Registrar en bitácora
+    public function registrarBitacora(Request $request)
+    {
+        $request->validate([
+            'numerocontrol' => 'required',
+            'numeroinventario' => 'required'
+        ]);
+
+        DB::select("SELECT * FROM insert_bitacora_alumno(?, ?)", [
+            $request->numerocontrol,
+            $request->numeroinventario
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Bitácora registrada']);
+    }
 }
