@@ -21,6 +21,8 @@ import periodos from '../test/periodos.vue'
 import eventosmdestino from '../test/tiposeventos_Destino.vue'
 import horaraio2 from '../test/HorarioMaestro.vue'
 
+import reporte from '../test/reportefinal.vue'
+
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
 
@@ -73,6 +75,13 @@ const routes: Array<RouteRecordRaw> = [
         component: periodos,
       },
       {
+  path: '/reporte',
+  name: 'reporte',
+  component: reporte,
+  meta: { requiresAuth: false }, // <-- indica que no necesita autenticación
+},
+
+      {
         path: '/avance',
         name: 'avance',
         component: avance,
@@ -92,6 +101,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'maestro',
         component: maestro,
       },
+      
       {
         path: '/usuarios',
         name: 'usuarios',
@@ -214,6 +224,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '',
         redirect: { name: 'login' },
       },
+      
     ],
   },
   {

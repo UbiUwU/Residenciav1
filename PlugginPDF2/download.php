@@ -3,7 +3,7 @@ require_once 'includes/db.php';
 require_once 'pdf.php';
 require_once 'tbs_3152/tbs_class.php';
 require_once 'tbs_plugin_opentbs_1.12.0/tbs_plugin_opentbs.php';
-require_once 'data_repository.php'; // Función obtenerDatosDesdeFuncion()
+require_once 'data_repository.php'; 
 
 header('Content-Type: text/html; charset=utf-8');
 

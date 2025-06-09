@@ -28,15 +28,31 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            $maestro = DB::select("SELECT * FROM get_maestro_by_idusuario(?)", [$result[0]->idusuario]);
+            $user = $result[0];
+            $idusuario = $user->idusuario;
+            $tipo = $user->tipousuario ?? null; // Asegúrate que la función devuelva esto
+
+            $extraData = null;
+
+            if ($tipo === 'maestro') {
+                $maestro = DB::select("SELECT * FROM get_maestro_by_idusuario(?)", [$idusuario]);
+                $extraData = !empty($maestro) ? $maestro[0] : null;
+            } elseif ($tipo === 'alumno') {
+                $alumno = DB::select("
+                SELECT a.*, u.correo 
+                FROM alumnos a
+                JOIN usuarios u ON a.idusuario = u.idusuario 
+                WHERE u.idusuario = ?", [$idusuario]);
+                $extraData = !empty($alumno) ? $alumno[0] : null;
+            }
 
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'user' => $result[0],
-                    'maestro' => !empty($maestro) ? $maestro[0] : null
+                    'user' => $user,
+                    'detalle' => $extraData
                 ],
-                'token' => $result[0]->token
+                'token' => $user->token
             ]);
 
         } catch (\Exception $e) {
@@ -47,12 +63,12 @@ class AuthController extends Controller
             ], 500);
         }
     }
-    
+
     public function me(Request $request)
     {
         try {
             $token = $request->bearerToken();
-            
+
             if (!$token) {
                 return response()->json([
                     'success' => false,
@@ -61,7 +77,7 @@ class AuthController extends Controller
             }
 
             $user = DB::select("SELECT * FROM usuarios WHERE token = ?", [$token]);
-            
+
             if (empty($user)) {
                 return response()->json([
                     'success' => false,
@@ -69,13 +85,27 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            $maestro = DB::select("SELECT * FROM get_maestro_by_idusuario(?)", [$user[0]->idusuario]);
+            $usuario = $user[0];
+            $tipo = $usuario->tipousuario ?? null;
+            $detalle = null;
+
+            if ($tipo === 'maestro') {
+                $maestro = DB::select("SELECT * FROM get_maestro_by_idusuario(?)", [$usuario->idusuario]);
+                $detalle = !empty($maestro) ? $maestro[0] : null;
+            } elseif ($tipo === 'alumno') {
+                $alumno = DB::select("
+                SELECT a.*, u.correo 
+                FROM alumnos a
+                JOIN usuarios u ON a.idusuario = u.idusuario 
+                WHERE u.idusuario = ?", [$usuario->idusuario]);
+                $detalle = !empty($alumno) ? $alumno[0] : null;
+            }
 
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'user' => $user[0],
-                    'maestro' => !empty($maestro) ? $maestro[0] : null
+                    'user' => $usuario,
+                    'detalle' => $detalle
                 ]
             ]);
 
@@ -87,4 +117,5 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
 }
