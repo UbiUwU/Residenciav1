@@ -34,10 +34,10 @@ class AuthController extends Controller
 
             $extraData = null;
 
-            if ($tipo === 'maestro') {
+            if ($tipo === 'Maestro') {
                 $maestro = DB::select("SELECT * FROM get_maestro_by_idusuario(?)", [$idusuario]);
                 $extraData = !empty($maestro) ? $maestro[0] : null;
-            } elseif ($tipo === 'alumno') {
+            } elseif ($tipo === 'Alumno') {
                 $alumno = DB::select("
                 SELECT a.*, u.correo 
                 FROM alumnos a
@@ -89,10 +89,10 @@ class AuthController extends Controller
             $tipo = $usuario->tipousuario ?? null;
             $detalle = null;
 
-            if ($tipo === 'maestro') {
+            if ($tipo === 'Maestro') {
                 $maestro = DB::select("SELECT * FROM get_maestro_by_idusuario(?)", [$usuario->idusuario]);
                 $detalle = !empty($maestro) ? $maestro[0] : null;
-            } elseif ($tipo === 'alumno') {
+            } elseif ($tipo === 'Alumno') {
                 $alumno = DB::select("
                 SELECT a.*, u.correo 
                 FROM alumnos a
