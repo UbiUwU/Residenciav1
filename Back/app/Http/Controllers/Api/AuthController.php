@@ -30,14 +30,14 @@ class AuthController extends Controller
 
             $user = $result[0];
             $idusuario = $user->idusuario;
-            $tipo = $user->tipousuario ?? null; // Asegúrate que la función devuelva esto
+            $tipo = $user->idrol ?? null; // Asegúrate que la función devuelva esto
 
             $extraData = null;
 
-            if ($tipo === 'Maestro') {
+            if ($tipo == '2') {
                 $maestro = DB::select("SELECT * FROM get_maestro_by_idusuario(?)", [$idusuario]);
                 $extraData = !empty($maestro) ? $maestro[0] : null;
-            } elseif ($tipo === 'Alumno') {
+            } elseif ($tipo == '1') {
                 $alumno = DB::select("
                 SELECT a.*, u.correo 
                 FROM alumnos a
