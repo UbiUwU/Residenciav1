@@ -95,27 +95,6 @@ export default {
     return apiClient.get(`/departamentos/${id}`)
   },
 
-  // Usuarios
-  getUsuarios() {
-    return apiClient.get('/usuarios')
-  },
-
-  getUsuario(id) {
-    return apiClient.get(`/usuarios/${id}`)
-  },
-
-  crearUsuario(data) {
-    return apiClient.post('/usuarios', data)
-  },
-
-  actualizarUsuario(id, data) {
-    return apiClient.put(`/usuarios/${id}`, data)
-  },
-
-  eliminarUsuario(id) {
-    return apiClient.delete(`/usuarios/${id}`)
-  },
-
   // Métodos para roles
   getRoles() {
     return apiClient.get('/roles')
@@ -148,58 +127,6 @@ export default {
 
   eliminarPeriodo(id) {
     return apiClient.delete(`/periodos-escolares/${id}`)
-  },
-
-  // Tipos de evento
-  getTiposEvento() {
-    return apiClient.get('/tipos-evento')
-  },
-
-  crearTipoEvento(data) {
-    return apiClient.post('/tipos-evento', data)
-  },
-
-  actualizarTipoEvento(id, data) {
-    return apiClient.put(`/tipos-evento/${id}`, data)
-  },
-
-  eliminarTipoEvento(id) {
-    return apiClient.delete(`/tipos-evento/${id}`)
-  },
-
-  // Público destino
-  getPublicosDestino() {
-    return apiClient.get('/publicos-destino')
-  },
-
-  crearPublicoDestino(data) {
-    return apiClient.post('/publicos-destino', data)
-  },
-
-  actualizarPublicoDestino(id, data) {
-    return apiClient.put(`/publicos-destino/${id}`, data)
-  },
-
-  eliminarPublicoDestino(id) {
-    return apiClient.delete(`/publicos-destino/${id}`)
-  },
-
-  getEventos() {
-    return apiClient.get('/eventos')
-  },
-  // Crear un nuevo evento
-  crearEvento(data) {
-    return apiClient.post('/eventos', data)
-  },
-
-  // Actualizar un evento
-  actualizarEvento(id, data) {
-    return apiClient.put(`/eventos/${id}`, data)
-  },
-
-  // Eliminar un evento
-  eliminarEvento(id) {
-    return apiClient.delete(`/eventos/${id}`)
   },
 
   // Obtener todas las asignaturas
@@ -276,57 +203,5 @@ export default {
   // Eliminar una carrera
   deleteCarrera(clave) {
     return apiClient.delete(`/carreras/${clave}`);
-  },
-
-    // Plantillas
-  // Listar todas las plantillas
-  getPlantillas() {
-    return apiClient.get('/plantillas')
-  },
-
-  // Obtener una plantilla por ID
-  getPlantilla(id) {
-    return apiClient.get(`/plantillas/${id}`)
-  },
-
-  // Crear una plantilla con archivo (docx)
-  crearPlantilla(data) {
-    // data = { nombre, descripcion, tipo, archivo (File) }
-    const formData = new FormData()
-    formData.append('nombre', data.nombre)
-    if (data.descripcion) formData.append('descripcion', data.descripcion)
-    formData.append('tipo', data.tipo)
-    formData.append('archivo', data.archivo)
-
-    return apiClient.post('/plantillas', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
-  },
-
-  // Actualizar datos de plantilla (sin archivo)
-  actualizarPlantilla(id, data) {
-    // data puede incluir: nombre, descripcion, tipo, estado
-    return apiClient.put(`/plantillas/${id}`, data)
-  },
-
-  // Cambiar estado solo
-  cambiarEstadoPlantilla(id, estado) {
-    return apiClient.patch(`/plantillas/${id}/estado`, { estado })
-  },
-
-  // Reemplazar archivo docx de plantilla
-  reemplazarArchivoPlantilla(id, archivo) {
-    const formData = new FormData()
-    formData.append('archivo', archivo)
-    return apiClient.post(`/plantillas/${id}/archivo`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
-  },
-
-  // Descargar archivo docx (retorna blob)
-  descargarArchivoPlantilla(id) {
-    return apiClient.get(`/plantillas/${id}/descargar`, {
-      responseType: 'blob',
-    })
   },
 }
