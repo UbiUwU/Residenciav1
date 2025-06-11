@@ -10,10 +10,31 @@ class MaestroMController extends Controller
 {
     // 1. Obtener horario del maestro
     public function getHorario($tarjeta)
-    {
-        $horario = DB::select("SELECT * FROM public.get_horario_maestro(?)", [$tarjeta]);
-        return response()->json($horario);
+{
+    $result = DB::select("SELECT * FROM public.get_horario_maestro(?)", [$tarjeta]);
+
+    if (empty($result)) {
+        return response()->json([]);
     }
+
+    $jsonString = $result[0]->get_horario_maestro ?? null;
+
+    if ($jsonString === null) {
+        return response()->json([]);
+    }
+
+    $horario = json_decode($jsonString, true); // <-- decodificamos el string JSON
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return response()->json([
+            'error' => 'No se pudo decodificar el horario',
+            'detalle' => json_last_error_msg()
+        ], 500);
+    }
+
+    return response()->json($horario);
+}
+
 
     // 2. Verificar si ya tiene aula reservada hoy
     public function tieneReservacion(Request $request)
