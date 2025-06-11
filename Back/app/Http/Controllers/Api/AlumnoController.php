@@ -154,10 +154,34 @@ class AlumnoController extends Controller
 
     // 1. Ver horario del alumno
     public function getHorario($numeroControl)
-    {
-        $horario = DB::select("SELECT * FROM public.get_horario_alumno(?)", [$numeroControl]);
-        return response()->json($horario);
+{
+    $result = DB::select("SELECT * FROM public.get_horario_alumno(?)", [$numeroControl]);
+
+    if (empty($result)) {
+        return response()->json([]);
     }
+
+    // Supongamos que la función devuelve un solo registro con un campo JSON en texto
+    $jsonString = $result[0]->get_horario_alumno ?? null;
+
+    if ($jsonString === null) {
+        return response()->json([]);
+    }
+
+    // Decodificar el JSON para obtener un array PHP
+    $horarioArray = json_decode($jsonString, true);
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return response()->json([
+            'error' => 'Error al decodificar JSON del horario',
+            'message' => json_last_error_msg(),
+        ], 500);
+    }
+
+    // Retornar el JSON ya decodificado para mejor visualización
+    return response()->json($horarioArray);
+}
+
 
     // 2. Registrar usuario y alumno
     public function registrarAlumno(Request $request)
