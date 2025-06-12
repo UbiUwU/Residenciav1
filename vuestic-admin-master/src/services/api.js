@@ -57,23 +57,6 @@ export default {
     return apiClient.delete(`/maestros/${id}`)
   },
 
-  // Horarios de Maestros /horarios/{maestro_id}
-  getHorariosDeMaestro(maestroId) {
-    return apiClient.get(`/horarios/${maestroId}`)
-  },
-
-  createHorarioMaestro(data) {
-    return apiClient.post('/horarios', data)
-  },
-
-  updateHorarioMaestro(id, data) {
-    return apiClient.put(`/horarios/${id}`, data)
-  },
-
-  deleteHorarioMaestro(id) {
-    return apiClient.delete(`/horarios/${id}`)
-  },
-
   getAsignaturasPorMaestro(tarjeta) {
     return apiClient.get(`/asignaturas/maestro/${tarjeta}`)
   },

@@ -7,8 +7,6 @@ use App\Http\Controllers\ProyectoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AsignaturaController;
 use App\Http\Controllers\Api\MaestroController;
-use App\Http\Controllers\HorarioMaestroController;
-use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PeriodoEscolarController;
 use App\Http\Controllers\CarreraController;
@@ -41,19 +39,6 @@ Route::prefix('carreras')->group(function () {
     Route::post('/', [CarreraController::class, 'store']);
     Route::put('/{clave}', [CarreraController::class, 'update']);
     Route::delete('/{clave}', [CarreraController::class, 'destroy']);
-});
-
-Route::get('/horarios/{maestro_id}', [HorarioMaestroController::class, 'index']);
-Route::post('/horarios', [HorarioMaestroController::class, 'store']);
-Route::put('/horarios/{id}', [HorarioMaestroController::class, 'update']);
-Route::delete('/horarios/{id}', [HorarioMaestroController::class, 'destroy']);
-
-Route::prefix('departamentos')->group(function () {
-    Route::get('/', [DepartamentoController::class, 'index']);
-    Route::get('/{id}', [DepartamentoController::class, 'show']);
-    Route::post('/', [DepartamentoController::class, 'store']);
-    Route::put('/{id}', [DepartamentoController::class, 'update']);
-    Route::delete('/{id}', [DepartamentoController::class, 'destroy']);
 });
 
 Route::get('/roles', [RoleController::class, 'index']);
@@ -117,7 +102,7 @@ Route::prefix('presentacion')->group(function () {
 Route::post('/diseno', [DisenoController::class, 'store']);
 Route::put('/diseno/{id}', [DisenoController::class, 'update']);
 Route::delete('/diseno/{id}', [DisenoController::class, 'destroy']);
-Route::put('/diseno/{id}/participantes', [DisenoController::class, 'updateParticipantes']);
+Route::put('/diseno/participantes/{id}', [DisenoController::class, 'updateParticipantes']);
 Route::delete('/diseno/{id}/participante/{participante_id}', [DisenoController::class, 'eliminarParticipante']);
 
 Route::post('/competencias', [CompetenciaController::class, 'store']);
