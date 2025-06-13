@@ -207,7 +207,8 @@ class AlumnoController extends Controller
             $request->password
         ]);
 
-        $idUsuario = $nuevoUsuario[0]->idusuario;
+        $idUsuario = $nuevoUsuario[0]->insert_usuario;
+
 
         DB::select("SELECT * FROM insert_alumno(?, ?, ?, ?, ?, ?)", [
             $request->numerocontrol,
