@@ -1,92 +1,116 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Models\Plantilla;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // Asegúrate de importar DB
+use Illuminate\Support\Facades\Storage;
 
 class PlantillaController extends Controller
 {
-    // Método para crear una plantilla
-    public function store(Request $request)
-    {
-        // Validación de datos
-        $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'nullable|string',
-            'archivo' => 'required|file|mimes:docx|max:10240',
-        ]);
-
-        // Subir el archivo
-        if ($request->hasFile('archivo')) {
-            $path = $request->file('archivo')->store('plantillas', 'public');
-        }
-
-        // Insertar en la base de datos usando DB facade
-        $plantilla = DB::table('plantillas')->insertGetId([
-            'nombre' => $validated['nombre'],
-            'descripcion' => $validated['descripcion'],
-            'archivo' => $path,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        return response()->json(['message' => 'Plantilla creada correctamente', 'id' => $plantilla], 201);
-    }
-
-    // Método para obtener todas las plantillas
     public function index()
     {
-        $plantillas = DB::table('plantillas')->get();
-        return response()->json($plantillas);
+        return Plantilla::all();
     }
 
-    // Método para editar una plantilla
-    public function update(Request $request, $id)
+    public function store(Request $request)
     {
-        // Validación de datos
-        $validated = $request->validate([
+        $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
-            'archivo' => 'nullable|file|mimes:docx|max:10240',
+            'tipo' => 'required|in:avance,instrumentacion,reporte_final',
+            'archivo' => 'required|file|mimes:docx|max:5120',
         ]);
 
-        $updateData = [
-            'nombre' => $validated['nombre'],
-            'descripcion' => $validated['descripcion'],
-            'updated_at' => now(),
-        ];
+        $file = $request->file('archivo');
+        $filename = uniqid() . '_' . preg_replace('/[^A-Za-z0-9.\-]/', '_', $file->getClientOriginalName());
+        $file->storeAs('plantillas', $filename, 'public');
 
-        // Si se subió un nuevo archivo
-        if ($request->hasFile('archivo')) {
-            $path = $request->file('archivo')->store('plantillas', 'public');
-            $updateData['archivo'] = $path;
-        }
+        $plantilla = Plantilla::create([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'archivo' => $filename,
+            'tipo' => $request->tipo,
+            'estado' => 'activo',
+        ]);
 
-        // Actualizar la plantilla en la base de datos
-        DB::table('plantillas')->where('id', $id)->update($updateData);
-
-        return response()->json(['message' => 'Plantilla actualizada correctamente']);
+        return response()->json([
+            'mensaje' => 'Plantilla subida exitosamente',
+            'plantilla' => $plantilla
+        ], 201);
     }
 
-    // Método para eliminar una plantilla
-    public function destroy($id)
+    public function show($id)
     {
-        // Obtener la plantilla para eliminar el archivo
-        $plantilla = DB::table('plantillas')->where('id', $id)->first();
+        return Plantilla::findOrFail($id);
+    }
 
-        if ($plantilla) {
-            // Eliminar el archivo de la carpeta pública
-            if (file_exists(public_path('storage/' . $plantilla->archivo))) {
-                unlink(public_path('storage/' . $plantilla->archivo));
-            }
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nombre' => 'sometimes|required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'tipo' => 'sometimes|required|in:avance,instrumentacion,reporte_final',
+            'estado' => 'sometimes|required|in:activo,en_uso,inactivo',
+        ]);
 
-            // Eliminar el registro de la base de datos
-            DB::table('plantillas')->where('id', $id)->delete();
+        $plantilla = Plantilla::findOrFail($id);
+        $plantilla->fill($request->only(['nombre', 'descripcion', 'tipo', 'estado']));
+        $plantilla->save();
 
-            return response()->json(['message' => 'Plantilla eliminada correctamente']);
+        return response()->json([
+            'mensaje' => 'Plantilla actualizada correctamente.',
+            'plantilla' => $plantilla
+        ]);
+    }
+
+    public function updateEstado(Request $request, $id)
+    {
+        $request->validate([
+            'estado' => 'required|in:activo,en_uso,inactivo',
+        ]);
+
+        $plantilla = Plantilla::findOrFail($id);
+        $plantilla->estado = $request->estado;
+        $plantilla->save();
+
+        return response()->json(['mensaje' => 'Estado actualizado.']);
+    }
+
+    public function updateArchivo(Request $request, $id)
+    {
+        $request->validate([
+            'archivo' => 'required|file|mimes:docx|max:5120',
+        ]);
+
+        $plantilla = Plantilla::findOrFail($id);
+
+        $file = $request->file('archivo');
+        $filename = uniqid() . '_' . preg_replace('/[^A-Za-z0-9.\-]/', '_', $file->getClientOriginalName());
+        $file->storeAs('plantillas', $filename, 'public');
+
+        // Opcional: borrar archivo anterior
+        if ($plantilla->archivo && Storage::disk('public')->exists('plantillas/' . $plantilla->archivo)) {
+            Storage::disk('public')->delete('plantillas/' . $plantilla->archivo);
         }
 
-        return response()->json(['message' => 'Plantilla no encontrada'], 404);
+        $plantilla->archivo = $filename;
+        $plantilla->save();
+
+        return response()->json([
+            'mensaje' => 'Archivo actualizado correctamente.',
+            'archivo' => $filename
+        ]);
+    }
+
+    public function descargarArchivo($id)
+    {
+        $plantilla = Plantilla::findOrFail($id);
+        $ruta = storage_path('app/public/plantillas/' . $plantilla->archivo);
+
+        if (!file_exists($ruta)) {
+            return response()->json(['mensaje' => 'Archivo no encontrado.'], 404);
+        }
+
+        return response()->download($ruta, $plantilla->archivo);
     }
 }

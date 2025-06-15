@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import axios from 'axios'
+import apiClient from '../../../services/api.js' // Ajusta la ruta según la estructura de tu proyecto
 
 export function useMaestros() {
   const maestros = ref<any[]>([])
@@ -10,7 +10,7 @@ export function useMaestros() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/maestros')
+      const response = await apiClient.getMaestros()
       // Accede a los datos dentro de la clave 'data'
       maestros.value = response.data.data
     } catch (err) {

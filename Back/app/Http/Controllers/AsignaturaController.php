@@ -50,7 +50,7 @@ class AsignaturaController extends Controller
     {
         // Obtener asignaturas por carrera y semestre
         $asignaturas = DB::select(
-            'SELECT * FROM get_asignaturas_by_carrera_and_semestre(CAST(? AS varchar), CAST(? AS smallint))', 
+            'SELECT * FROM get_asignaturas_by_carrera_and_semestre(CAST(? AS varchar), CAST(? AS smallint))',
             [$claveCarrera, $semestre]
         );
         return response()->json($asignaturas);
@@ -133,7 +133,7 @@ class AsignaturaController extends Controller
     {
         // Eliminar asignatura
         $result = DB::select('SELECT delete_asignatura(CAST(? AS varchar)) AS result', [$clave]);
-        
+
         if (strpos($result[0]->result, 'Error') !== false) {
             return response()->json(['message' => $result[0]->result], 404);
         }
