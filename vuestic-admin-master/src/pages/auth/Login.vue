@@ -27,7 +27,7 @@
       >
         <template #appendInner>
           <VaIcon
-            :name="isPasswordVisible.value ? 'mso-visibility_off' : 'mso-visibility'"
+            
             class="cursor-pointer"
             color="secondary"
           />
@@ -90,13 +90,13 @@ const submit = async () => {
         formData.keepLoggedIn,
       )
 
-      init({ message: "You've successfully logged in", color: 'success' })
+      init({ message: "Inicio de sesion exitoso", color: 'success' })
       push({ name: 'dashboard' })
     } else {
       init({ message: response.data.message || 'Login failed', color: 'danger' })
     }
   } catch (error) {
-    init({ message: 'An error occurred during login', color: 'danger' })
+    init({ message: 'Correo o contraseña inválidos', color: 'danger' })
     console.error('Login error:', error)
   } finally {
     loading.value = false

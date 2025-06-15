@@ -37,11 +37,11 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const materias = ref([
-  { id: 1, nombre: 'Taller de Base de Datos', archivosCount: 5 },
-  { id: 2, nombre: 'Tópicos de Programación', archivosCount: 3 },
-  { id: 3, nombre: 'Fundamentos de Programación', archivosCount: 8 },
-  { id: 4, nombre: 'Cultura Empresarial', archivosCount: 2 },
-  { id: 5, nombre: 'Ingeniería de Software', archivosCount: 4 },
+  { id: 1, nombre: 'Taller de Base de Datos', archivosCount: 0 },
+  { id: 2, nombre: 'Tópicos de Programación', archivosCount: 0 },
+  { id: 3, nombre: 'Fundamentos de Programación', archivosCount: 0 },
+  { id: 4, nombre: 'Cultura Empresarial', archivosCount: 0 },
+  { id: 5, nombre: 'Ingeniería de Software', archivosCount: 0 },
 ])
 
 const navigateToMateria = (materiaId) => {

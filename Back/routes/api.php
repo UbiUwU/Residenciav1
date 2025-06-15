@@ -208,9 +208,7 @@ Route::prefix('eventos')->group(function () {
 
 
 
-
-//En preceso para terminar para las asignaturas
-
+    //Rutas para los datos generales de la materia
 Route::prefix('asignaturas')->group(function () {
     Route::get('/', [AsignaturaController::class, 'index']);
     Route::post('/', [AsignaturaController::class, 'store']);
@@ -218,10 +216,14 @@ Route::prefix('asignaturas')->group(function () {
     Route::get('/complete/{clave}', [AsignaturaController::class, 'getByClaveComplete']);
     Route::put('/{clave}', [AsignaturaController::class, 'update']);
     Route::delete('/{clave}', [AsignaturaController::class, 'destroy']);
+    //Reporte
+    Route::get('/asignaturas/generate-pdf', [AsignaturaController::class, 'generatePDF']);
 
     // Rutas adicionales
     Route::get('/carrera/{claveCarrera}', [AsignaturaController::class, 'getByCarrera']);
     Route::get('/carrera/{claveCarrera}/semestre/{semestre}', [AsignaturaController::class, 'getByCarreraAndSemestre']);
+
+   
 });
 
 Route::prefix('presentacion')->group(function () {

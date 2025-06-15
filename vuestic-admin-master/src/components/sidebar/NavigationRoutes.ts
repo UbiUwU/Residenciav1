@@ -72,15 +72,16 @@ export default {
         },
         {
           name: 'InstrumendacionDidactica',
-          displayName: '🛠️ Instrumentación Didáctica', // Emoji de construcción
+          displayName: 'Instrumentación Didáctica', // Emoji de construcción
         },
         {
           name: 'AcuseEstudiante',
           displayName: 'Acuse Estudiante',
         },
+        //testeo de paginas "asignaturas" "maestro" "periodos" "departamentos"
         {
-          name: 'EvaluacionDiagnostica',
-          displayName: '🛠️Evaluacion Diagnostica',
+          name: 'asignaturas',
+          displayName: 'Asignaturas',
         },
         {
           name: 'CarpetaEvidencias',
@@ -128,13 +129,7 @@ export default {
       ],
     },
 
-    {
-      name: 'Usuarios',
-      displayName: 'menu.users',
-      meta: {
-        icon: 'group',
-      },
-    },
+   
 
     //Rutas para la seccion de pagos (que no se plenea usar)
     /*  {

@@ -130,8 +130,8 @@ const { init } = useToast()
 // Estado
 const loading = ref(true)
 const commissions = ref<any[]>([])
-const selectedStatus = ref('all')
-const selectedEventType = ref('all')
+const selectedStatus = ref('Todos')
+const selectedEventType = ref('Todos')
 const dateRange = ref()
 const currentPage = ref(1)
 const itemsPerPage = 10
@@ -140,7 +140,7 @@ const selectedCommission = ref<any>(null)
 
 // Opciones de filtros
 const statusOptions = [
-  { text: 'Todos', value: 'all' },
+  { text: 'Todos', value: 'Todos' },
   { text: 'Pendiente', value: 'pending' },
   { text: 'Confirmado', value: 'confirmed' },
   { text: 'Completado', value: 'completed' },
@@ -148,7 +148,7 @@ const statusOptions = [
 ]
 
 const eventTypeOptions = [
-  { text: 'Todos', value: 'all' },
+  { text: 'Todos', value: 'Todos' },
   { text: 'Jurado de congreso', value: 'jurado_congreso' },
   { text: 'Evento Titulación', value: 'evento_titulacion' },
   { text: 'Conferencia', value: 'conferencia' },
@@ -173,7 +173,7 @@ const sampleCommissions = [
     id: 1,
     eventName: 'Jurado de Congreso de Residencias Profesionales',
     eventType: 'jurado_congreso',
-    eventDate: '2025-05-29',
+    eventDate: '2025-06-05',
     eventTime: '09:00 - 14:00',
     location: 'Auditorio Principal - Edificio A',
     responsible: 'Dra. María González',
@@ -200,7 +200,7 @@ const sampleCommissions = [
     id: 3,
     eventName: 'Conferencia Internacional de Inteligencia Artificial',
     eventType: 'conferencia',
-    eventDate: '2025-11-20',
+    eventDate: '2025-06-09',
     eventTime: '10:00 - 12:00',
     location: 'Sala de Conferencias - Edificio B',
     responsible: 'Dr. Carlos Ruiz',
@@ -229,12 +229,12 @@ const filteredCommissions = computed(() => {
   let result = commissions.value
 
   // Filtrar por estado
-  if (selectedStatus.value !== 'all') {
+  if (selectedStatus.value !== 'Todos') {
     result = result.filter((commission) => commission.status === selectedStatus.value)
   }
 
   // Filtrar por tipo de evento
-  if (selectedEventType.value !== 'all') {
+  if (selectedEventType.value !== 'Todos') {
     result = result.filter((commission) => commission.eventType === selectedEventType.value)
   }
 

@@ -19,7 +19,7 @@
 
           <va-select v-model="viewType" :options="viewOptions" class="min-w-40" />
 
-          <va-select v-model="selectedCampus" label="Campus" :options="campusOptions" class="min-w-40" />
+          <va-select v-model="selectedCampus" label="Horario completo" :options="campusOptions" class="min-w-40" />
         </div>
 
         <!-- Vista de semana -->
@@ -171,7 +171,7 @@ const viewOptions = [
   { text: 'Vista Día', value: 'day' },
 ]
 
-const selectedCampus = ref('main')
+const selectedCampus = ref('TECNM ')
 const campusOptions = [
   { text: 'Campus Principal', value: 'main' },
   { text: 'Campus Norte', value: 'north' },

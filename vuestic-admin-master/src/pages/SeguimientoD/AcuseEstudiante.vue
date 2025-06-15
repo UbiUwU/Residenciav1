@@ -9,7 +9,7 @@
           <h1 class="va-h4">INSTITUTO TECNOLÓGICO DE CHETUMAL</h1>
           <h2 class="va-h6">SUBDIRECCIÓN ACADÉMICA</h2>
           <h3 class="va-subtitle">DEPARTAMENTO DE: SISTEMAS Y COMPUTACIÓN</h3>
-          <p class="periodo-escolar">PERIODO ESCOLAR: AGOSTO-DICIEMBRE 2023</p>
+          <p class="periodo-escolar">PERIODO ESCOLAR: ENERO-JUNIO 2025</p>
         </div>
 
         <va-card class="mt-4" color="secondary">
@@ -19,7 +19,7 @@
               <div>
                 Sistema Integral de Gestión: ISO 9001:2015 8.1, 8.5.1, 8.5.2, 8.5.6, 8.6 14001:2015 ISO 45001:2018
               </div>
-              <div class="text-right">Página 1 de 23</div>
+              <div class="text-right">Página 1 de 1</div>
             </div>
           </va-card-content>
         </va-card>
@@ -59,7 +59,19 @@
       </va-card-content>
     </va-card>
 
-    <!-- Tabla de asignaturas -->
+    <!-- Selector de grupo -->
+    <va-card class="mt-4">
+      <va-card-content>
+        <va-select
+          v-model="grupoSeleccionado"
+          label="Seleccionar Grupo"
+          :options="gruposDisponibles"
+          @update:modelValue="cargarEstudiantesPorGrupo"
+        />
+      </va-card-content>
+    </va-card>
+
+    <!-- Tabla de asignaturas y estudiantes -->
     <va-card class="mt-4">
       <va-card-content>
         <div class="overflow-x-auto">
@@ -69,40 +81,44 @@
                 <th>CLAVE</th>
                 <th>GRUPO</th>
                 <th>MATERIA</th>
-                <th>NOMBRE Y FIRMA DEL REPRESENTANTE</th>
+                <th>NOMBRE DEL ESTUDIANTE</th>
+                <th>NÚMERO DE CONTROL</th>
+                <th>FIRMA</th>
                 <th>FECHA</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(asignatura, index) in asignaturas" :key="index">
+              <tr v-for="(estudiante, index) in estudiantes" :key="index">
                 <td>
-                  <va-input v-model="asignatura.clave" placeholder="Ej. SCC-1005" />
+                  <va-input v-model="estudiante.clave" readonly />
                 </td>
                 <td>
-                  <va-input v-model="asignatura.grupo" placeholder="Ej. I3A" />
+                  <va-input v-model="estudiante.grupo" readonly />
                 </td>
                 <td>
-                  <va-input v-model="asignatura.materia" placeholder="Ej. CULTURA EMPRESARIAL" />
+                  <va-input v-model="estudiante.materia" readonly />
                 </td>
                 <td>
-                  <va-input v-model="asignatura.representante" placeholder="Nombre del representante" />
-                  <div class="firma-placeholder mt-2" @click="abrirModalFirma(index)">
-                    {{ asignatura.firma ? 'Firma registrada' : 'Haga clic para firmar' }}
+                  <va-input v-model="estudiante.nombre" readonly />
+                </td>
+                <td>
+                  <va-input v-model="estudiante.numeroControl" readonly />
+                </td>
+                <td>
+                  <div class="firma-placeholder">
+                    <!-- Espacio para firma física -->
                   </div>
                 </td>
                 <td>
-                  <va-date-input v-model="asignatura.fecha" placeholder="Seleccione fecha" :max-date="new Date()" />
+                  <va-date-input 
+                    v-model="estudiante.fecha" 
+                    placeholder="Seleccione fecha" 
+                    :max-date="new Date()" 
+                  />
                 </td>
               </tr>
             </tbody>
           </table>
-        </div>
-
-        <div class="flex justify-end mt-4">
-          <va-button preset="plain" size="small" @click="agregarAsignatura">
-            <va-icon name="add" class="mr-2" />
-            Agregar otra asignatura
-          </va-button>
         </div>
       </va-card-content>
     </va-card>
@@ -124,173 +140,87 @@
         </va-button>
       </div>
     </div>
-
-    <!-- Modal para firma digital -->
-    <va-modal v-model="showModalFirma" hide-default-actions>
-      <template #header>
-        <h3 class="va-h5">Registrar firma digital</h3>
-      </template>
-
-      <div class="firma-modal-content">
-        <div class="firma-container">
-          <canvas
-            ref="firmaCanvas"
-            @mousedown="iniciarFirma"
-            @mousemove="dibujarFirma"
-            @mouseup="terminarFirma"
-            @mouseleave="terminarFirma"
-            @touchstart="iniciarFirma"
-            @touchmove="dibujarFirma"
-            @touchend="terminarFirma"
-          ></canvas>
-        </div>
-
-        <div class="flex justify-between mt-4">
-          <va-button preset="plain" @click="limpiarFirma"> Limpiar Firma </va-button>
-          <va-button @click="guardarFirma"> Guardar Firma </va-button>
-        </div>
-      </div>
-    </va-modal>
   </div>
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref } from 'vue'
+import html2pdf from 'html2pdf.js'
+
+// Datos de ejemplo para estudiantes por grupo
+const estudiantesPorGrupo = {
+  'I3A': [
+    { clave: 'SCC-1005', grupo: 'I3A', materia: 'CULTURA EMPRESARIAL', nombre: 'JUAN PÉREZ LÓPEZ', numeroControl: '20230001' },
+    { clave: 'SCC-1005', grupo: 'I3A', materia: 'CULTURA EMPRESARIAL', nombre: 'MARÍA GARCÍA HERNÁNDEZ', numeroControl: '20230002' },
+    { clave: 'SCC-1005', grupo: 'I3A', materia: 'CULTURA EMPRESARIAL', nombre: 'CARLOS SÁNCHEZ MARTÍNEZ', numeroControl: '20230003' }
+  ],
+  'I3B': [
+    { clave: 'SCC-1005', grupo: 'I3B', materia: 'CULTURA EMPRESARIAL', nombre: 'ANA RODRÍGUEZ GÓMEZ', numeroControl: '20230004' },
+    { clave: 'SCC-1005', grupo: 'I3B', materia: 'CULTURA EMPRESARIAL', nombre: 'LUIS HERNÁNDEZ DÍAZ', numeroControl: '20230005' },
+    { clave: 'SCC-1005', grupo: 'I3B', materia: 'CULTURA EMPRESARIAL', nombre: 'SOFÍA RAMÍREZ CASTRO', numeroControl: '20230006' }
+  ],
+  'K9U': [
+    { clave: 'TID-1010', grupo: 'K9U', materia: 'DESARROLLO DE EMPRENDEDORES', nombre: 'PEDRO GONZÁLEZ VARGAS', numeroControl: '20230007' },
+    { clave: 'TID-1010', grupo: 'K9U', materia: 'DESARROLLO DE EMPRENDEDORES', nombre: 'LAURA MORALES SANTIAGO', numeroControl: '20230008' },
+    { clave: 'TID-1010', grupo: 'K9U', materia: 'DESARROLLO DE EMPRENDEDORES', nombre: 'JORGE TORRES FLORES', numeroControl: '20230009' }
+  ]
+}
 
 // Datos del formulario
 const profesorSeleccionado = ref('')
 const profesores = ref(['ZARINA MARYELA BASULTO ÁLVAREZ', 'JUAN PÉREZ MARTÍNEZ', 'MARÍA GONZÁLEZ LÓPEZ'])
+const grupoSeleccionado = ref('')
+const gruposDisponibles = ref(['I3A', 'I3B', 'K9U'])
+const estudiantes = ref([])
 
 const documentosRecibidos = ref({
   programaEstudios: false,
   planeacionCurso: false,
 })
 
-const asignaturas = ref([
-  {
-    clave: 'SCC-1005',
-    grupo: 'I3A',
-    materia: 'CULTURA EMPRESARIAL',
-    representante: '',
-    firma: null,
-    fecha: '01/09/2023',
-  },
-  {
-    clave: 'SCC-1005',
-    grupo: 'I3B',
-    materia: 'CULTURA EMPRESARIAL',
-    representante: '',
-    firma: null,
-    fecha: '30/08/2023',
-  },
-  {
-    clave: 'TID-1010',
-    grupo: 'K9U',
-    materia: 'DESARROLLO DE EMPRENDEDORES',
-    representante: '',
-    firma: null,
-    fecha: '30/08/2023',
-  },
-])
-
-// Lógica para firma digital
-const showModalFirma = ref(false)
-const firmaCanvas = ref(null)
-const isFirmando = ref(false)
-const asignaturaAFirmar = ref(null)
-const ctx = ref(null)
-
-const abrirModalFirma = (index) => {
-  asignaturaAFirmar.value = index
-  showModalFirma.value = true
-
-  nextTick(() => {
-    const canvas = firmaCanvas.value
-    canvas.width = canvas.offsetWidth
-    canvas.height = canvas.offsetHeight
-    ctx.value = canvas.getContext('2d')
-    ctx.value.lineWidth = 2
-    ctx.value.lineCap = 'round'
-    ctx.value.strokeStyle = '#000'
-  })
-}
-
-const iniciarFirma = (e) => {
-  isFirmando.value = true
-  const canvas = firmaCanvas.value
-  const rect = canvas.getBoundingClientRect()
-  const x = (e.clientX || e.touches[0].clientX) - rect.left
-  const y = (e.clientY || e.touches[0].clientY) - rect.top
-
-  ctx.value.beginPath()
-  ctx.value.moveTo(x, y)
-}
-
-const dibujarFirma = (e) => {
-  if (!isFirmando.value) return
-
-  const canvas = firmaCanvas.value
-  const rect = canvas.getBoundingClientRect()
-  const x = (e.clientX || e.touches[0].clientX) - rect.left
-  const y = (e.clientY || e.touches[0].clientY) - rect.top
-
-  ctx.value.lineTo(x, y)
-  ctx.value.stroke()
-}
-
-const terminarFirma = () => {
-  isFirmando.value = false
-}
-
-const limpiarFirma = () => {
-  const canvas = firmaCanvas.value
-  ctx.value.clearRect(0, 0, canvas.width, canvas.height)
-}
-
-const guardarFirma = () => {
-  const canvas = firmaCanvas.value
-  asignaturas.value[asignaturaAFirmar.value].firma = canvas.toDataURL()
-  showModalFirma.value = false
+// Cargar estudiantes según el grupo seleccionado
+const cargarEstudiantesPorGrupo = () => {
+  if (grupoSeleccionado.value && estudiantesPorGrupo[grupoSeleccionado.value]) {
+    estudiantes.value = estudiantesPorGrupo[grupoSeleccionado.value].map(est => ({
+      ...est,
+      fecha: new Date().toISOString().split('T')[0] // Fecha actual por defecto
+    }))
+  } else {
+    estudiantes.value = []
+  }
 }
 
 // Funciones del formulario
-const agregarAsignatura = () => {
-  asignaturas.value.push({
-    clave: '',
-    grupo: '',
-    materia: '',
-    representante: '',
-    firma: null,
-    fecha: '',
-  })
-}
-
 const limpiarFormulario = () => {
   profesorSeleccionado.value = ''
+  grupoSeleccionado.value = ''
   documentosRecibidos.value = {
     programaEstudios: false,
     planeacionCurso: false,
   }
-  asignaturas.value = asignaturas.value.map((a) => ({
-    ...a,
-    representante: '',
-    firma: null,
-  }))
+  estudiantes.value = []
 }
 
 const guardarAcuse = () => {
   console.log('Acuse guardado:', {
     profesor: profesorSeleccionado.value,
+    grupo: grupoSeleccionado.value,
     documentos: documentosRecibidos.value,
-    asignaturas: asignaturas.value,
+    estudiantes: estudiantes.value,
   })
-
-  // Aquí iría la lógica para guardar en base de datos
 }
 
 const generarPDF = () => {
-  console.log('Generando PDF...')
-  // Aquí iría la lógica para generar el PDF
+  const element = document.querySelector('.acuse-estudiante')
+  const opt = {
+    margin: 10,
+    filename: `Acuse_Estudiante_${grupoSeleccionado.value || 'grupo'}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  }
+
+  html2pdf().from(element).set(opt).save()
 }
 </script>
 
@@ -335,50 +265,27 @@ const generarPDF = () => {
 
 .asignaturas-table {
   border-collapse: collapse;
+  width: 100%;
 }
 
 .asignaturas-table th,
 .asignaturas-table td {
   border: 1px solid var(--va-background-border);
-  padding: 0.75rem;
+  padding: 0.5rem;
   text-align: center;
 }
 
 .asignaturas-table th {
   background-color: var(--va-background-element);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .firma-placeholder {
   border: 1px dashed var(--va-background-border);
-  padding: 0.5rem;
-  cursor: pointer;
-  border-radius: 4px;
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.firma-placeholder:hover {
-  background-color: var(--va-background-primary);
-}
-
-.firma-modal-content {
-  padding: 1rem;
-}
-
-.firma-container {
-  border: 1px solid var(--va-background-border);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.firma-container canvas {
-  width: 100%;
-  height: 200px;
-  background-color: white;
-  display: block;
+  height: 50px;
+  width: 150px;
+  margin: 0 auto;
 }
 
 @media (max-width: 768px) {
@@ -389,6 +296,10 @@ const generarPDF = () => {
 
   .inline-select {
     width: 200px;
+  }
+
+  .asignaturas-table {
+    font-size: 0.8rem;
   }
 }
 </style>

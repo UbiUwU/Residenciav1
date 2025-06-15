@@ -18,7 +18,7 @@
         </div>
 
         <!-- Lista de constancias -->
-        <va-data-table :items="filteredCertificates" :columns="columns" :loading="loading" hoverable>
+        <va-data-table :items="paginatedCertificates" :columns="columns" :loading="loading" hoverable>
           <template #cell(status)="{ value }">
             <va-badge :text="value" :color="getStatusColor(value)" />
           </template>
@@ -40,33 +40,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useToast } from 'vuestic-ui'
 
 const { init } = useToast()
 
 // Estado
-const loading = ref(true)
-const certificates = ref<any[]>([])
-const selectedYear = ref(new Date().getFullYear().toString())
-const selectedEventType = ref('all')
+const loading = ref(false)
+const selectedYear = ref('2025') // 2025 seleccionado por defecto
+const selectedEventType = ref('Todos')
 const searchQuery = ref('')
 const currentPage = ref(1)
 const itemsPerPage = 8
 
 // Opciones
 const yearOptions = [
+  { text: 'Todos', value: '' },
+  { text: '2025', value: '2025' }, // Añadido 2025 como primera opción
+  { text: '2024', value: '2024' },
   { text: '2023', value: '2023' },
   { text: '2022', value: '2022' },
   { text: '2021', value: '2021' },
 ]
 
 const eventTypeOptions = [
-  { text: 'Todos', value: 'all' },
+  { text: 'Todos', value: 'Todos' },
   { text: 'Jurado de congreso', value: 'jurado_congreso' },
   { text: 'Evento Titulación', value: 'evento_titulacion' },
   { text: 'Conferencia', value: 'conferencia' },
   { text: 'Reunión Académica', value: 'reunion_academica' },
+  { text: 'Taller', value: 'taller' },
+  { text: 'Evaluación', value: 'evaluacion' },
+  { text: 'Seminario', value: 'seminario' },
+  { text: 'Diplomado', value: 'diplomado' },
+  { text: 'Foro', value: 'foro' },
+  { text: 'Revisión de Artículos', value: 'revision_articulos' },
 ]
 
 // Columnas
@@ -79,69 +87,65 @@ const columns = [
   { key: 'download', label: 'Constancia', width: '150px' },
 ]
 
-// Datos de ejemplo
 const sampleCertificates = [
   {
     id: 1,
     eventName: 'Jurado de Congreso de Residencias Profesionales',
     eventType: 'jurado_congreso',
-    eventDate: '2023-11-15',
-    issueDate: '2023-11-18',
+    eventDate: '2025-06-05',
+    issueDate: '2025-06-06',
     status: 'disponible',
     pdfUrl: '/certificados/jurado-congreso.pdf',
-    reference: 'DOC-2023-11-001',
+    reference: 'DOC-2024-05-001',
   },
   {
     id: 2,
-    eventName: 'Ceremonia de Titulación Generación 2023-2',
+    eventName: 'Ceremonia de Titulación Generación 2024-1',
     eventType: 'evento_titulacion',
-    eventDate: '2023-12-10',
-    issueDate: '2023-12-12',
+    eventDate: '2025-04-10',
+    issueDate: '2025-04-12',
     status: 'disponible',
     pdfUrl: '/certificados/ceremonia-titulacion.pdf',
-    reference: 'DOC-2023-12-005',
+    reference: 'DOC-2024-06-005',
   },
   {
-    id: 3,
-    eventName: 'Conferencia Internacional de Inteligencia Artificial',
-    eventType: 'conferencia',
-    eventDate: '2023-11-20',
-    issueDate: '2023-11-22',
-    status: 'pendiente',
-    pdfUrl: '',
-    reference: 'DOC-2023-11-008',
-  },
-  {
-    id: 4,
-    eventName: 'Reunión de Actualización Curricular',
-    eventType: 'reunion_academica',
-    eventDate: '2023-11-05',
-    issueDate: '2023-11-08',
+    id: 22,
+    eventName: 'Revisión de Artículos para Academia Journal',
+    eventType: 'revision_articulos',
+    eventDate: '2025-04-15',
+    issueDate: '2025-04-30',
     status: 'disponible',
-    pdfUrl: '/certificados/reunion-curricular.pdf',
-    reference: 'DOC-2023-11-003',
+    pdfUrl: '/certificados/academia-journal-constancia.pdf',
+    reference: 'DOC-2024-04-105',
+    description: 'Constancia por participación como revisor de artículos científicos para la edición Q2 2024 de Academia Journal.'
   },
 ]
 
 // Computed
 const filteredCertificates = computed(() => {
-  let result = certificates.value
+  let result = sampleCertificates.map(cert => ({
+    ...cert,
+    status: getStatusText(cert.status),
+    eventDate: formatDate(cert.eventDate),
+    issueDate: formatDate(cert.issueDate)
+  }))
 
-  // Filtrar por año
+  // Filtro por año
   if (selectedYear.value) {
-    result = result.filter((cert) => cert.issueDate.startsWith(selectedYear.value))
+    result = result.filter((cert) => cert.issueDate.includes(selectedYear.value))
   }
 
-  // Filtrar por tipo de evento
-  if (selectedEventType.value !== 'all') {
+  // Filtro por tipo de evento
+  if (selectedEventType.value !== 'Todos') {
     result = result.filter((cert) => cert.eventType === selectedEventType.value)
   }
 
-  // Filtrar por búsqueda
+  // Filtro por búsqueda
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     result = result.filter(
-      (cert) => cert.eventName.toLowerCase().includes(query) || cert.reference.toLowerCase().includes(query),
+      (cert) => cert.eventName.toLowerCase().includes(query) || 
+               cert.reference.toLowerCase().includes(query)
     )
   }
 
@@ -158,25 +162,7 @@ const paginatedCertificates = computed(() => {
   return filteredCertificates.value.slice(start, end)
 })
 
-// Métodos
-const loadCertificates = async () => {
-  loading.value = true
-  try {
-    // Simular llamada API
-    await new Promise((resolve) => setTimeout(resolve, 800))
-    certificates.value = sampleCertificates.map((cert) => ({
-      ...cert,
-      statusText: getStatusText(cert.status),
-      eventDateFormatted: formatDate(cert.eventDate),
-      issueDateFormatted: formatDate(cert.issueDate),
-    }))
-  } catch (error) {
-    init({ message: 'Error al cargar constancias', color: 'danger' })
-  } finally {
-    loading.value = false
-  }
-}
-
+// Funciones auxiliares
 const formatDate = (dateString: string) => {
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' }
   return new Date(dateString).toLocaleDateString('es-ES', options)
@@ -201,7 +187,7 @@ const getStatusText = (status: string) => {
 }
 
 const downloadCertificate = (certificate: any) => {
-  if (certificate.status !== 'disponible') {
+  if (certificate.status !== 'Disponible') {
     init({
       message: 'Esta constancia no está disponible para descarga',
       color: 'warning',
@@ -223,7 +209,7 @@ const downloadCertificate = (certificate: any) => {
     link.click()
     document.body.removeChild(link)
 
-    // Mostrar alerta después de descargar
+    // Mensaje adicional
     setTimeout(() => {
       init({
         message: 'Por favor recaba las firmas correspondientes',
@@ -234,11 +220,6 @@ const downloadCertificate = (certificate: any) => {
     }, 1000)
   }, 1000)
 }
-
-// Inicialización
-onMounted(() => {
-  loadCertificates()
-})
 </script>
 
 <style scoped>
