@@ -87,13 +87,11 @@ Route::prefix('asignaturas')->group(function () {
     Route::get('/{clave}', [AsignaturaController::class, 'show']);
     Route::put('/{clave}', [AsignaturaController::class, 'update']);
     Route::delete('/{clave}', [AsignaturaController::class, 'destroy']);
+    Route::get('/maestro/{clave}', [AsignaturaController::class, 'getByTarjetaComplete']);
+    Route::get('/grupos/{clave}', [AsignaturaController::class, 'getDetalleGruposByTarjeta']);
+    Route::get('/complete/{clave}', [AsignaturaController::class, 'getByClaveComplete']);
     //Reporte
     Route::get('/asignaturas/generate-pdf', [AsignaturaController::class, 'generatePDF']);
-
-    // Rutas adicionales
-    Route::get('/carrera/{claveCarrera}', [AsignaturaController::class, 'getByCarrera']);
-    Route::get('/carrera/{claveCarrera}/semestre/{semestre}', [AsignaturaController::class, 'getByCarreraAndSemestre']);
-
    
 });
 
