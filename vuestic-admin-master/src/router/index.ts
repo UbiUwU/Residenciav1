@@ -14,7 +14,15 @@ import perfil from '../test/perfil.vue'
 import visualizarhorario from '../test/visualizarhorario.vue'
 import maestro from '../test/maestro.vue'
 import usuarios from '../test/usuarios.vue'
-import Plantilla from '../pages/Plantilla/PlantillaAdmin.vue'
+import Plantilla from '../test/plantillas.vue'
+import roles from '../test/roles.vue'
+import avance from '../test/avanceprogra.vue'
+import periodos from '../test/periodos.vue'
+import eventosmdestino from '../test/tiposeventos_Destino.vue'
+import horaraio2 from '../test/HorarioMaestro.vue'
+
+import reporte from '../test/reportefinal.vue'
+
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
 
@@ -52,6 +60,33 @@ const routes: Array<RouteRecordRaw> = [
         component: perfil,
       },
       {
+        path: '/eventosmdestino',
+        name: 'eventosmdestino',
+        component: eventosmdestino,
+      },
+      {
+        path: '/Plantilla',
+        name: 'Plantilla',
+        component: Plantilla,
+      },
+      {
+        path: '/periodos',
+        name: 'periodos',
+        component: periodos,
+      },
+      {
+  path: '/reporte',
+  name: 'reporte',
+  component: reporte,
+  meta: { requiresAuth: false }, // <-- indica que no necesita autenticación
+},
+
+      {
+        path: '/avance',
+        name: 'avance',
+        component: avance,
+      },
+      {
         path: '/departamento',
         name: 'departamento',
         component: departamento,
@@ -66,6 +101,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'maestro',
         component: maestro,
       },
+      
       {
         path: '/usuarios',
         name: 'usuarios',
@@ -188,6 +224,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '',
         redirect: { name: 'login' },
       },
+      
     ],
   },
   {

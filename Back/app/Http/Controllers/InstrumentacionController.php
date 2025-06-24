@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+//Es avance programatico
 class InstrumentacionController extends Controller
 {
     public function crearInstrumentacion(Request $request)

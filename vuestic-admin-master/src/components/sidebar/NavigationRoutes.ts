@@ -81,7 +81,7 @@ export default {
         //testeo de paginas "asignaturas" "maestro" "periodos" "departamentos"
         {
           name: 'asignaturas',
-          displayName: '🛠️Asignaturas',
+          displayName: 'Asignaturas',
         },
         {
           name: 'CarpetaEvidencias',
@@ -129,6 +129,7 @@ export default {
       ],
     },
 
+<<<<<<< HEAD
     {
       name: 'users',
       displayName: 'Maestros',
@@ -145,6 +146,9 @@ export default {
     },
 
     
+=======
+   
+>>>>>>> 1121e1a282c957e6a8c87465aa7c99ec2aa45c50
 
     //Rutas para la seccion de pagos (que no se plenea usar)
     /*  {

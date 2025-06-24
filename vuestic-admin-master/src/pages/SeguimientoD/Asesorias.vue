@@ -1,125 +1,5 @@
-<template>
-  <!-- Título de la vista -->
-  <h1 class="va-h4 mb-4">Formato de asesorias</h1>
-  <div class="asesoria-ceal-container">
-    <!-- Selección inicial de grupo y materia -->
-    <va-card class="mb-4">
-      <va-card-title>Selección de Grupo y Materia</va-card-title>
-      <va-card-content>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <va-select
-            v-model="grupoSeleccionado"
-            :options="gruposDisponibles"
-            label="Grupo"
-            placeholder="Seleccione un grupo"
-          />
-          <va-select
-            v-model="materiaSeleccionada"
-            :options="materiasDisponibles"
-            label="Materia"
-            placeholder="Seleccione una materia"
-            :disabled="!grupoSeleccionado"
-          />
-          <va-button @click="cargarFormato" :disabled="!materiaSeleccionada" class="self-end">
-            Cargar Formato
-          </va-button>
-        </div>
-      </va-card-content>
-    </va-card>
-
-    <!-- Formato de Asesoría (visible solo después de seleccionar) -->
-    <va-card v-if="mostrarFormato">
-      <va-card-content>
-        <!-- Encabezado del formato -->
-        <div class="text-center mb-6" id="encabezado-pdf">
-          <h1 class="va-h4">Asesorías del</h1>
-          <h2 class="va-h5">Semestre Enero-Junio</h2>
-          <h3 class="va-h6">2025</h3>
-        </div>
-
-        <!-- Información del docente -->
-        <div class="docente-info mb-6">
-          <h4 class="va-subtitle">Nombre del Docente/Instructor:</h4>
-          <va-input
-            v-model="docenteNombre"
-            placeholder="Ej: Dr. Carlos Eduardo Azueta León"
-            class="text-center font-bold"
-          />
-        </div>
-
-        <!-- Tabla de asesorías -->
-        <div class="overflow-x-auto" id="tabla-asesorias">
-          <table class="w-full asesorias-table">
-            <thead>
-              <tr>
-                <th>No.</th>
-                <th>No. Control</th>
-                <th>Nombre</th>
-                <th>Carrera</th>
-                <th>Asignatura/Tema</th>
-                <th class="firma-header">Firma</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(asesoria, index) in asesorias" :key="index">
-                <td>{{ index + 1 }}</td>
-                <td>
-                  <va-input v-model="asesoria.numeroControl" placeholder="Número de control" />
-                </td>
-                <td>
-                  <va-input v-model="asesoria.nombreEstudiante" placeholder="Nombre completo" />
-                </td>
-                <td>
-                  <va-input v-model="asesoria.carrera" :placeholder="carreraGrupo" />
-                </td>
-                <td>
-                  <va-input v-model="asesoria.tema" :placeholder="materiaSeleccionada" />
-                </td>
-                <td>
-                  <div class="firma-placeholder">
-                    <!-- Espacio para firma física -->
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Controles para agregar filas -->
-        <div class="flex justify-between mt-4">
-          <va-button preset="plain" size="small" @click="agregarAsesoria">
-            <va-icon name="add" class="mr-2" />
-            Agregar otra asesoría
-          </va-button>
-
-          <va-button @click="eliminarUltima" preset="plain" size="small" :disabled="asesorias.length <= 1">
-            <va-icon name="delete" class="mr-2" />
-            Eliminar última
-          </va-button>
-        </div>
-
-        <!-- Botones de acción final -->
-        <div class="flex justify-end gap-4 mt-6">
-          <va-button preset="secondary" @click="limpiarFormulario">
-            <va-icon name="delete" class="mr-2" />
-            Limpiar
-          </va-button>
-          <va-button @click="guardarAsesorias">
-            <va-icon name="save" class="mr-2" />
-            Guardar Asesorías
-          </va-button>
-          <va-button preset="secondary" @click="generarPDF">
-            <va-icon name="picture_as_pdf" class="mr-2" />
-            Generar PDF
-          </va-button>
-        </div>
-      </va-card-content>
-    </va-card>
-  </div>
-</template>
-
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import html2pdf from 'html2pdf.js'
 
 // Datos de selección inicial
@@ -156,9 +36,47 @@ const carreraGrupo = computed(() => {
     : 'LICENCIATURA EN INFORMÁTICA'
 })
 
+// Lista de 13 alumnos precargados
+const listaAlumnos = ref([
+  { numeroControl: '20230001', nombreEstudiante: 'LÓPEZ HERNÁNDEZ JUAN CARLOS' },
+  { numeroControl: '20230002', nombreEstudiante: 'MARTÍNEZ GARCÍA MARÍA FERNANDA' },
+  { numeroControl: '20230003', nombreEstudiante: 'RODRÍGUEZ PÉREZ LUIS ALBERTO' },
+  { numeroControl: '20230004', nombreEstudiante: 'GÓMEZ SÁNCHEZ ANA KAREN' },
+  { numeroControl: '20230005', nombreEstudiante: 'HERNÁNDEZ CRUZ JOSÉ MANUEL' },
+  { numeroControl: '20230006', nombreEstudiante: 'DÍAZ FLORES PATRICIA ELIZABETH' },
+  { numeroControl: '20230007', nombreEstudiante: 'MORALES VARGAS CARLOS EDUARDO' },
+  { numeroControl: '20230008', nombreEstudiante: 'CASTRO ORTIZ LAURA ISABEL' },
+  { numeroControl: '20230009', nombreEstudiante: 'ORTIZ RAMÍREZ MIGUEL ÁNGEL' },
+  { numeroControl: '20230010', nombreEstudiante: 'SALAZAR GUTIÉRREZ SOFÍA GUADALUPE' },
+  { numeroControl: '20230011', nombreEstudiante: 'TORRES MENDOZA JORGE ALBERTO' },
+  { numeroControl: '20230012', nombreEstudiante: 'VÁZQUEZ RUIZ ADRIANA LUCERO' },
+  { numeroControl: '20230013', nombreEstudiante: 'FLORES CASTILLO DAVID ALEJANDRO' }
+])
+
+// Función para precargar alumnos
+const precargarAlumnos = () => {
+  asesorias.value = listaAlumnos.value.map(alumno => ({
+    numeroControl: alumno.numeroControl,
+    nombreEstudiante: alumno.nombreEstudiante,
+    carrera: carreraGrupo.value,
+    tema: materiaSeleccionada.value
+  }))
+}
+
+// Watcher para detectar cuando se selecciona una materia
+watch(materiaSeleccionada, (newVal) => {
+  if (newVal) {
+    // Pequeño retraso para que la UI tenga tiempo de actualizarse
+    setTimeout(() => {
+      precargarAlumnos()
+    }, 100)
+  }
+})
+
 // Funciones para manejar el formato
 const cargarFormato = () => {
   mostrarFormato.value = true
+  precargarAlumnos() // Precargar alumnos al cargar el formato
 }
 
 const agregarAsesoria = () => {
@@ -300,54 +218,3 @@ const generarPDF = () => {
   html2pdf().from(element).set(opt).save()
 }
 </script>
-
-<style scoped>
-.asesoria-ceal-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.docente-info {
-  text-align: center;
-}
-
-.asesorias-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.asesorias-table th,
-.asesorias-table td {
-  border: 1px solid var(--va-background-border);
-  padding: 0.75rem;
-  text-align: center;
-}
-
-.asesorias-table th {
-  background-color: var(--va-background-element);
-  font-weight: 600;
-}
-
-.firma-placeholder {
-  border: 1px dashed var(--va-background-border);
-  padding: 0.5rem;
-  height: 40px;
-  min-width: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-}
-
-.firma-header {
-  width: 80px;
-}
-
-@media (max-width: 768px) {
-  .asesorias-table {
-    display: block;
-    overflow-x: auto;
-  }
-}
-</style>

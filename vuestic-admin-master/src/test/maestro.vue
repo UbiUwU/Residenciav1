@@ -61,7 +61,6 @@
             <label>Rol</label>
             <select v-model="form.id_rol" class="w-full p-2 border rounded" required>
               <option value="2">Maestro</option>
-              <!-- Add other role options as needed -->
             </select>
           </div>
         </div>
@@ -98,10 +97,7 @@
           <div class="mb-2">
             <label>Departamento</label>
             <select v-model="form.id_departamento" class="w-full p-2 border rounded" required>
-              <option disabled value="">Seleccione un departamento</option>
-              <option v-for="d in departamentos" :key="d.id_departamento" :value="d.id_departamento">
-                {{ d.nombre }}
-              </option>
+              <option value="1">Sistemas y Computación</option>
             </select>
           </div>
         </div>
@@ -178,7 +174,7 @@ import { ref, onMounted } from 'vue'
 import api from '../services/api'
 
 const maestros = ref([])
-const departamentos = ref([])
+const departamentos = ref([{ id_departamento: 1, nombre: 'Sistemas y Computación' }]) // Solo un departamento
 const mostrarFormulario = ref(false)
 const editando = ref(false)
 
@@ -194,7 +190,7 @@ const form = ref({
   apellidopaterno: '',
   apellidomaterno: '',
   rfc: '',
-  id_departamento: '',
+  id_departamento: 1, // Default department
 
   // Education fields
   escolaridad_licenciatura: '',
@@ -207,20 +203,38 @@ const form = ref({
   estado_doctorado: 'C',
 })
 
-// Obtener datos iniciales
+
 onMounted(() => {
   cargarMaestros()
-  cargarDepartamentos()
 })
 
 const cargarMaestros = async () => {
   const { data } = await api.getMaestros()
-  maestros.value = data.data
-}
-
-const cargarDepartamentos = async () => {
-  const { data } = await api.getDepartamentos()
-  departamentos.value = data
+  
+  
+  maestros.value = data.data.map(maestro => {
+   
+    maestro.nombre_departamento = 'Sistemas y Computación'
+    maestro.id_departamento = 1
+    
+  
+    if (!maestro.correo) {
+      const nombre = maestro.nombre.toLowerCase().split(' ')[0]
+      const apellido = maestro.apellidopaterno.toLowerCase()
+      maestro.correo = `${nombre}.${apellido}@tecnm.mx`
+      
+      
+      let counter = 1
+      let tempEmail = maestro.correo
+      while (maestros.value.some(m => m.correo === tempEmail)) {
+        tempEmail = `${nombre}.${apellido}${counter}@tecnm.mx`
+        counter++
+      }
+      maestro.correo = tempEmail
+    }
+    
+    return maestro
+  })
 }
 
 const abrirFormulario = () => {
@@ -230,7 +244,6 @@ const abrirFormulario = () => {
 }
 
 const editarMaestro = (maestro) => {
-  // Map the teacher data to the form
   form.value = {
     ...form.value,
     tarjeta: maestro.tarjeta,
@@ -238,7 +251,7 @@ const editarMaestro = (maestro) => {
     apellidopaterno: maestro.apellidopaterno,
     apellidomaterno: maestro.apellidomaterno,
     rfc: maestro.rfc,
-    id_departamento: maestro.id_departamento,
+    id_departamento: 1, 
     escolaridad_licenciatura: maestro.escolaridad_licenciatura,
     estado_licenciatura: maestro.estado_licenciatura,
     escolaridad_especializacion: maestro.escolaridad_especializacion,
@@ -255,12 +268,25 @@ const editarMaestro = (maestro) => {
 
 const guardarMaestro = async () => {
   try {
+   
+    if (!editando.value && !form.value.correo) {
+      const nombre = form.value.nombre.toLowerCase().split(' ')[0]
+      const apellido = form.value.apellidopaterno.toLowerCase()
+      form.value.correo = `${nombre}.${apellido}@tecnm.mx`
+      
+      // Verificar si el correo ya existe
+      let counter = 1
+      let tempEmail = form.value.correo
+      while (maestros.value.some(m => m.correo === tempEmail)) {
+        tempEmail = `${nombre}.${apellido}${counter}@tecnm.mx`
+        counter++
+      }
+      form.value.correo = tempEmail
+    }
+    
     if (editando.value) {
-      // For editing, we might want to create a separate API endpoint
-      // that doesn't require password and only updates teacher data
       await api.actualizarMaestro(form.value.tarjeta, form.value)
     } else {
-      // For creation, send all data
       await api.crearMaestro(form.value)
     }
     await cargarMaestros()
@@ -284,20 +310,15 @@ const cancelar = () => {
 
 const resetForm = () => {
   form.value = {
-    // User fields
     correo: '',
     password: '',
     id_rol: 2,
-
-    // Teacher fields
     tarjeta: '',
     nombre: '',
     apellidopaterno: '',
     apellidomaterno: '',
     rfc: '',
-    id_departamento: '',
-
-    // Education fields
+    id_departamento: 1,
     escolaridad_licenciatura: '',
     estado_licenciatura: 'C',
     escolaridad_especializacion: '',

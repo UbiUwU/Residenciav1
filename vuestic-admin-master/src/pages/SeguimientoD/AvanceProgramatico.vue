@@ -1,270 +1,595 @@
 <template>
   <!-- Título de la vista -->
-  <h1 class="va-h4 mb-4">Formulario de Avance Programático</h1>
-  <div class="avance-programatico">
-    <!-- Sección 1: Caracterización -->
-    <va-card class="mt-4">
-      <va-card-title class="flex items-center">
-        <va-icon name="description" class="mr-2" />
-        <span>1. Caracterización de la asignatura</span>
-      </va-card-title>
-      <va-card-content>
-        <va-input
-          v-model="caracterizacion"
-          type="textarea"
-          label="Caracterización de la asignatura"
-          placeholder="Ingrese la caracterización aquí..."
-          autosize
-          class="mb-4"
-        />
-      </va-card-content>
-    </va-card>
-
-    <!-- Sección 2: Intención didáctica -->
-    <va-card class="mt-4">
-      <va-card-title class="flex items-center">
-        <va-icon name="school" class="mr-2" />
-        <span>2. Intención didáctica</span>
-      </va-card-title>
-      <va-card-content>
-        <va-input
-          v-model="intencionDidactica"
-          type="textarea"
-          label="Intención didáctica"
-          placeholder="Ingrese la intención didáctica aquí..."
-          autosize
-          class="mb-4"
-        />
-      </va-card-content>
-    </va-card>
-
-    <!-- Sección 3: Competencia -->
-    <va-card class="mt-4">
-      <va-card-title class="flex items-center">
-        <va-icon name="workspace_premium" class="mr-2" />
-        <span>3. Competencia de la asignatura</span>
-      </va-card-title>
-      <va-card-content>
-        <va-input
-          v-model="competenciaAsignatura"
-          type="textarea"
-          label="Competencia de la asignatura"
-          placeholder="Ingrese la competencia aquí..."
-          autosize
-          class="mb-4"
-        />
-      </va-card-content>
-    </va-card>
-
-    <!-- Sección 4: Competencias específicas -->
-    <va-card class="mt-4">
-      <va-card-title class="flex items-center">
-        <va-icon name="analytics" class="mr-2" />
-        <span>4. Análisis por competencias específicas</span>
-      </va-card-title>
-      <va-card-content>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <va-select v-model="competenciaSeleccionada" :options="competencias" label="Seleccione una competencia" />
-          <va-input
-            v-model="descripcionCompetencia"
-            label="Descripción de la competencia"
-            placeholder="Ingrese la descripción"
-          />
-        </div>
-
-        <va-card class="mb-4">
-          <va-card-content>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <va-input
-                v-model="temasSubtemas"
-                type="textarea"
-                label="Temas y subtemas"
-                placeholder="Ingrese temas y subtemas"
-                autosize
-              />
-              <va-input
-                v-model="actividadesAprendizaje"
-                type="textarea"
-                label="Actividades de aprendizaje"
-                placeholder="Ingrese actividades"
-                autosize
-              />
-              <va-input
-                v-model="actividadesEnsenanza"
-                type="textarea"
-                label="Actividades de enseñanza"
-                placeholder="Ingrese actividades"
-                autosize
-              />
+  <h1 class="va-h4 mb-4">Formulario de Avance Programatico</h1>
+  
+  <!-- Encabezado institucional -->
+  <va-card class="mb-4">
+    <va-card-content class="text-center">
+      <h1 class="va-h3">INSTITUTO TECNOLÓGICO DE CHETUMAL</h1>
+      <h2 class="va-h5">SUBDIRECCIÓN ACADÉMICA</h2>
+      <h3 class="va-h6">DEPARTAMENTO: 
+        <va-input v-model="departamento" placeholder="Nombre del departamento" class="d-inline" readonly />
+      </h3>
+      <h3 class="va-h6">PLANEACIÓN DEL CURSO Y AVANCE PROGRAMÁTICO DEL PERIODO: 
+        <va-input v-model="periodo" placeholder="Ej. ENE-JUN 2023" class="d-inline" />
+      </h3>
+    </va-card-content>
+  </va-card>
+  
+  <!-- Datos básicos del curso -->
+  <va-card class="mb-4">
+    <va-card-content>
+      <!-- Selector de asignatura -->
+      <div class="mb-6">
+        <va-select
+          v-model="asignaturaSeleccionada"
+          label="Seleccionar Asignatura"
+          :options="opcionesAsignaturas"
+          :loading="cargandoAsignaturas"
+          searchable
+          clearable
+          @update:modelValue="cargarDatosAsignatura"
+        >
+          <template #content="{ text }">
+            <div class="flex justify-between">
+              <span>{{ text }}</span>
+              <span class="text-gray-500 ml-2" v-if="asignaturaSeleccionada">
+                ({{ asignaturaSeleccionada.creditos }} créditos)
+              </span>
             </div>
-          </va-card-content>
-        </va-card>
+          </template>
+        </va-select>
+      </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <va-input
-            v-model="desarrolloCompetencias"
-            type="textarea"
-            label="Desarrollo de competencias genéricas"
-            placeholder="Ingrese el desarrollo"
-            autosize
-          />
-          <va-input
-            v-model="horasPracticasTeoricas"
-            type="textarea"
-            label="Horas-Prácticas-Teóricas"
-            placeholder="Ingrese las horas"
-            autosize
-          />
-        </div>
-      </va-card-content>
-    </va-card>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <va-input v-model="materia" label="MATERIA" readonly />
+        <va-input v-model="horasTeoricas" label="HT" type="number" readonly />
+        <va-input v-model="horasPracticas" label="HP" type="number" readonly />
+        <va-input v-model="creditos" label="CR" type="number" readonly />
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <va-input v-model="grupo" label="GRUPO" />
+        <va-input v-model="carrera" label="CARRERA" readonly />
+        <va-input v-model="aula" label="AULA" />
+      </div>
+      
+      <va-input 
+        v-model="profesor" 
+        label="PROFESOR(A)" 
+        class="mb-4"
+        readonly
+      />
+      
+      <va-input
+        v-model="competenciaAsignatura"
+        type="textarea"
+        label="COMPETENCIA ESPECÍFICA DE LA ASIGNATURA:"
+        autosize
+        class="mb-4"
+        readonly
+      />
+      
+      <va-input
+        v-model="numTemas"
+        label="No. DE TEMAS:"
+        type="number"
+        readonly
+      />
+    </va-card-content>
+  </va-card>
 
-    <!-- Sección 5: Fuentes de información -->
-    <va-card class="mt-4">
-      <va-card-title class="flex items-center">
-        <va-icon name="menu_book" class="mr-2" />
-        <span>5. Fuentes de información y apoyos didácticos</span>
-      </va-card-title>
-      <va-card-content>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <va-input
-            v-model="fuentesInformacion"
-            type="textarea"
-            label="Fuentes de información"
-            placeholder="Ingrese fuentes de información"
-            autosize
-          />
-          <va-input
-            v-model="apoyosDidacticos"
-            type="textarea"
-            label="Apoyos didácticos"
-            placeholder="Ingrese apoyos didácticos"
-            autosize
-          />
-        </div>
-      </va-card-content>
-    </va-card>
-
-    <!-- Sección 6: Calendarización -->
-    <va-card class="mt-4">
-      <va-card-title class="flex items-center">
-        <va-icon name="calendar_today" class="mr-2" />
-        <span>6. Calendarización de evaluación en semanas</span>
-      </va-card-title>
-      <va-card-content>
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead>
-              <tr>
-                <th class="text-left p-2">Semanas</th>
-                <th v-for="semana in semanas" :key="semana" class="text-center p-2">
-                  {{ semana }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="font-semibold p-2">TP</td>
-                <td v-for="(semana, index) in semanas" :key="`TP-${index}`" class="p-2">
-                  <va-input v-model="tpSemana[index]" :placeholder="`TP${semana}`" class="w-full" />
-                </td>
-              </tr>
-              <tr>
-                <td class="font-semibold p-2">TR</td>
-                <td v-for="(semana, index) in semanas" :key="`TR-${index}`" class="p-2">
-                  <va-input v-model="trSemana[index]" :placeholder="`TR${semana}`" class="w-full" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </va-card-content>
-    </va-card>
-
-    <!-- Botones de acción -->
-    <div class="flex justify-end gap-4 mt-6">
-      <va-button preset="secondary" @click="guardarFormulario">
-        <va-icon name="save" class="mr-2" />
-        Guardar
+  <!-- Tabla principal de programación -->
+  <va-card>
+    <va-card-content>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr>
+              <th class="text-left p-2 border">Temas</th>
+              <th class="text-left p-2 border">Subtemas</th>
+              <th class="text-center p-2 border" colspan="2">Fechas (Periodo)</th>
+              <th class="text-center p-2 border" colspan="2">Evaluación</th>
+              <th class="text-center p-2 border">% de aprobación</th>
+              <th class="text-center p-2 border">Firma Docente</th>
+              <th class="text-center p-2 border">Firma Jefe Académico</th>
+              <th class="text-center p-2 border">Observaciones</th>
+            </tr>
+            <tr>
+              <th colspan="2"></th>
+              <th class="text-center p-2 border">Programado</th>
+              <th class="text-center p-2 border">Real</th>
+              <th class="text-center p-2 border">Programada</th>
+              <th class="text-center p-2 border">Real</th>
+              <th colspan="4"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(tema, index) in temas" :key="index">
+              <td class="p-2 border">
+                <va-input v-model="tema.nombre" placeholder="Tema" class="w-full" readonly />
+              </td>
+              <td class="p-2 border">
+                <va-input v-model="tema.subtemas" placeholder="Subtemas" class="w-full" readonly />
+              </td>
+              <td class="p-2 border">
+                <va-date-input v-model="tema.fechaProgramada" placeholder="Programado" class="w-full" />
+              </td>
+              <td class="p-2 border">
+                <va-date-input v-model="tema.fechaReal" placeholder="Real" class="w-full" />
+              </td>
+              <td class="p-2 border">
+                <va-input v-model="tema.evaluacionProgramada" placeholder="Evaluación prog." class="w-full" readonly />
+              </td>
+              <td class="p-2 border">
+                <va-input v-model="tema.evaluacionReal" placeholder="Evaluación real" class="w-full" readonly />
+              </td>
+              <td class="p-2 border">
+                <va-input v-model="tema.porcentajeAprobacion" placeholder="%" type="number" class="w-full" readonly />
+              </td>
+              <td class="p-2 border"></td>
+              <td class="p-2 border"></td>
+              <td class="p-2 border">
+                <va-input v-model="tema.observaciones" placeholder="Observaciones" class="w-full" readonly />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <va-button 
+        @click="agregarTema" 
+        class="mt-4"
+        preset="secondary"
+        disabled
+      >
+        <va-icon name="add" class="mr-2" />
+        Agregar tema
       </va-button>
-      <va-button @click="enviarFormulario">
-        <va-icon name="send" class="mr-2" />
-        Enviar
-      </va-button>
-    </div>
+    </va-card-content>
+  </va-card>
+
+  <!-- Fechas de seguimiento -->
+  <va-card class="mt-4">
+    <va-card-content>
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <va-date-input 
+          v-model="fechaEntregaProgramacion" 
+          label="Fecha de entrega de programación" 
+          class="mb-4"
+        />
+        <va-date-input 
+          v-model="seguimiento1.fecha" 
+          :label="`Seguimiento 1 (${periodo})`" 
+        />
+        <va-date-input 
+          v-model="seguimiento2.fecha" 
+          :label="`Seguimiento 2 (${periodo})`" 
+        />
+        <va-date-input 
+          v-model="seguimiento3.fecha" 
+          :label="`Seguimiento 3 (${periodo})`" 
+        />
+        <va-date-input 
+          v-model="seguimiento4.fecha" 
+          :label="`Seguimiento 4 (${periodo})`" 
+        />
+      </div>
+    </va-card-content>
+  </va-card>
+
+  <!-- Firmas y validación -->
+  <va-card class="mt-4">
+    <va-card-content>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <va-input 
+            v-model="firmaDocente" 
+            label="Firma del Docente" 
+            class="mb-4"
+            readonly
+          />
+          <va-input 
+            v-model="firmaJefeAcademico" 
+            label="Vo.Bo. del Jefe(a) de Departamento" 
+            readonly
+          />
+        </div>
+        <va-input
+          v-model="observacionesGenerales"
+          type="textarea"
+          label="Observaciones generales"
+          autosize
+          readonly
+        />
+      </div>
+    </va-card-content>
+  </va-card>
+
+  <!-- Botones de acción -->
+  <div class="flex justify-end gap-4 mt-6">
+    <va-button preset="secondary" @click="guardarBorrador">
+      <va-icon name="save" class="mr-2" />
+      Guardar borrador
+    </va-button>
+    <va-button @click="imprimirFormulario">
+      <va-icon name="print" class="mr-2" />
+      Imprimir
+    </va-button>
+    <va-button preset="primary" @click="enviarFormulario">
+      <va-icon name="send" class="mr-2" />
+      Enviar
+    </va-button>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import api from '../../services/api'
 
-// Datos del formulario
-const caracterizacion = ref('')
-const intencionDidactica = ref('')
+// Datos de ejemplo para asignaturas (simulando respuesta de API)
+const asignaturasEjemplo = [
+  {
+    claveasignatura: "ITC-101",
+    nombreasignatura: "Programación Estructurada",
+    satca_teoricas: 3,
+    satca_practicas: 2,
+    creditos: 5,
+    clavecarrera: "ING-SIS",
+    competencias: [
+      {
+        tipo: "ESPECÍFICA",
+        descripcion: "Diseña y desarrolla algoritmos eficientes utilizando estructuras de control básicas y técnicas de programación estructurada, aplicando principios de modularidad y reutilización de código."
+      },
+      {
+        tipo: "ESPECÍFICA",
+        descripcion: "Implementa soluciones de software en lenguaje C, aplicando buenas prácticas de programación, manejo de memoria y estructuras de datos básicas para resolver problemas computacionales."
+      }
+    ],
+    temas: [
+      {
+        nombre: "Fundamentos de programación",
+        subtemas: "Algoritmos, pseudocódigo, diagramas de flujo, herramientas de desarrollo",
+        evaluacionProgramada: "Examen teórico-práctico",
+        evaluacionReal: "",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      },
+      {
+        nombre: "Estructuras de control",
+        subtemas: "Secuenciales, condicionales (if-else, switch), ciclos (for, while, do-while)",
+        evaluacionProgramada: "Práctica calificada",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      },
+      {
+        nombre: "Funciones y modularidad",
+        subtemas: "Definición de funciones, paso de parámetros, alcance de variables, recursividad",
+        evaluacionProgramada: "Proyecto modular",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      },
+      {
+        nombre: "Arreglos y cadenas",
+        subtemas: "Arreglos unidimensionales y multidimensionales, manejo de cadenas, funciones de string.h",
+        evaluacionProgramada: "Examen parcial",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      },
+      {
+        nombre: "Estructuras y archivos",
+        subtemas: "Tipos de datos definidos por el usuario, manejo de archivos binarios y de texto",
+        evaluacionProgramada: "Proyecto final",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      }
+    ],
+    departamento: "Sistemas y Computación"
+  },
+  {
+    claveasignatura: "AEF-1031",
+    nombreasignatura: "Fund. de Bases de Datos",
+    satca_teoricas: 2,
+    satca_practicas: 3,
+    creditos: 5,
+    clavecarrera: "ISIC",
+    competencias: [
+      {
+        tipo: "ESPECÍFICA",
+        descripcion: "Diseña modelos conceptuales y lógicos de bases de datos aplicando técnicas de normalización y considerando los requerimientos del negocio para garantizar la integridad y consistencia de los datos."
+      },
+      {
+        tipo: "ESPECÍFICA",
+        descripcion: "Implementa bases de datos relacionales utilizando sistemas gestores como MySQL o PostgreSQL, desarrollando consultas SQL complejas, procedimientos almacenados y triggers para aplicaciones empresariales."
+      }
+    ],
+    temas: [
+      {
+        nombre: "Fundamentos de bases de datos",
+        subtemas: "Conceptos básicos, modelos de datos, arquitectura ANSI/SPARC, SGBD",
+        evaluacionProgramada: "Examen teórico",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      },
+      {
+        nombre: "Modelado conceptual",
+        subtemas: "Modelo Entidad-Relación, diagramas ER, restricciones de integridad",
+        evaluacionProgramada: "Práctica de modelado",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      },
+      {
+        nombre: "Modelo relacional",
+        subtemas: "Estructuras relacionales, álgebra relacional, normalización (1FN a 5FN)",
+        evaluacionProgramada: "Examen parcial",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      },
+      {
+        nombre: "SQL básico y avanzado",
+        subtemas: "DDL, DML, consultas complejas, vistas, índices",
+        evaluacionProgramada: "Práctica en laboratorio",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      },
+      {
+        nombre: "Diseño físico e implementación",
+        subtemas: "Procedimientos almacenados, triggers, transacciones, seguridad",
+        evaluacionProgramada: "Proyecto final",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      }
+    ],
+    departamento: "Sistemas y Computación"
+  },
+  {
+    claveasignatura: "ITC-305",
+    nombreasignatura: "Redes de Computadoras",
+    satca_teoricas: 4,
+    satca_practicas: 1,
+    creditos: 5,
+    clavecarrera: "ING-TICS",
+    competencias: [
+      {
+        tipo: "ESPECÍFICA",
+        descripcion: "Diseña e implementa redes de computadoras considerando estándares y protocolos actuales, evaluando requerimientos de ancho de banda, latencia y seguridad para garantizar la conectividad y calidad de servicio."
+      },
+      {
+        tipo: "ESPECÍFICA",
+        descripcion: "Configura dispositivos de red como switches, routers y firewalls aplicando protocolos de enrutamiento y mecanismos de seguridad para construir infraestructuras de red escalables y seguras."
+      }
+    ],
+    temas: [
+      {
+        nombre: "Introducción a redes",
+        subtemas: "Conceptos básicos, modelos OSI y TCP/IP, topologías, medios de transmisión",
+        evaluacionProgramada: "Examen teórico",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      },
+      {
+        nombre: "Capa física y de enlace",
+        subtemas: "Codificación de datos, Ethernet, switches, protocolos MAC",
+        evaluacionProgramada: "Práctica de laboratorio",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      },
+      {
+        nombre: "Capa de red",
+        subtemas: "Direccionamiento IP, enrutamiento estático y dinámico, protocolos RIP, OSPF",
+        evaluacionProgramada: "Examen parcial",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      },
+      {
+        nombre: "Capas de transporte y aplicación",
+        subtemas: "TCP/UDP, DNS, HTTP, FTP, protocolos de seguridad",
+        evaluacionProgramada: "Práctica configuraciones",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      },
+      {
+        nombre: "Seguridad en redes",
+        subtemas: "Firewalls, VPN, detección de intrusos, redes privadas virtuales",
+        evaluacionProgramada: "Proyecto final",
+        porcentajeAprobacion: 0,
+        observaciones: ""
+      }
+    ],
+    departamento: "Tecnologías de la Información"
+  }
+]
+
+// Estado para las asignaturas
+const asignaturaSeleccionada = ref<any>(null)
+const opcionesAsignaturas = ref<any[]>([])
+const cargandoAsignaturas = ref(false)
+
+// Datos institucionales
+const departamento = ref('')
+const periodo = ref('')
+
+// Datos del curso (algunos se autocompletarán)
+const materia = ref('')
+const horasTeoricas = ref(0)
+const horasPracticas = ref(0)
+const creditos = ref(0)
+const grupo = ref('')
+const aula = ref('')
+const carrera = ref('')
+const profesor = ref('Dr. Carlos Eduardo Azueta León')
 const competenciaAsignatura = ref('')
-const competencias = ref(['Competencia 1', 'Competencia 2', 'Competencia 3'])
-const competenciaSeleccionada = ref(competencias.value[0])
-const descripcionCompetencia = ref('')
-const temasSubtemas = ref('')
-const actividadesAprendizaje = ref('')
-const actividadesEnsenanza = ref('')
-const desarrolloCompetencias = ref('')
-const horasPracticasTeoricas = ref('')
-const fuentesInformacion = ref('')
-const apoyosDidacticos = ref('')
-const semanas = ref(Array.from({ length: 17 }, (_, i) => i + 1))
-const tpSemana = ref(Array(17).fill(''))
-const trSemana = ref(Array(17).fill(''))
+const numTemas = ref(0)
 
-// Funciones para guardar y enviar
-const guardarFormulario = () => {
-  console.log('Formulario guardado:', {
-    caracterizacion: caracterizacion.value,
-    intencionDidactica: intencionDidactica.value,
-    competenciaAsignatura: competenciaAsignatura.value,
-    competenciaSeleccionada: competenciaSeleccionada.value,
-    descripcionCompetencia: descripcionCompetencia.value,
-    temasSubtemas: temasSubtemas.value,
-    actividadesAprendizaje: actividadesAprendizaje.value,
-    actividadesEnsenanza: actividadesEnsenanza.value,
-    desarrolloCompetencias: desarrolloCompetencias.value,
-    horasPracticasTeoricas: horasPracticasTeoricas.value,
-    fuentesInformacion: fuentesInformacion.value,
-    apoyosDidacticos: apoyosDidacticos.value,
-    tpSemana: tpSemana.value,
-    trSemana: trSemana.value,
+// Tabla de temas
+const temas = ref([
+  { 
+    nombre: '', 
+    subtemas: '', 
+    fechaProgramada: null, 
+    fechaReal: null, 
+    evaluacionProgramada: '', 
+    evaluacionReal: '', 
+    porcentajeAprobacion: 0, 
+    observaciones: '' 
+  }
+])
+
+// Fechas de seguimiento
+const fechaEntregaProgramacion = ref(null)
+const seguimiento1 = ref({ fecha: null, completado: false })
+const seguimiento2 = ref({ fecha: null, completado: false })
+const seguimiento3 = ref({ fecha: null, completado: false })
+const seguimiento4 = ref({ fecha: null, completado: false })
+
+// Firmas y validación
+const firmaDocente = ref('Dr. Carlos Eduardo Azueta León')
+const firmaJefeAcademico = ref('')
+const observacionesGenerales = ref('')
+
+// Cargar asignaturas al montar el componente
+onMounted(() => {
+  cargarAsignaturas()
+})
+
+// Función para cargar las asignaturas disponibles (ahora con datos simulados)
+const cargarAsignaturas = async () => {
+  cargandoAsignaturas.value = true
+  try {
+    // Simulamos un retraso de red
+    await new Promise(resolve => setTimeout(resolve, 800))
+    
+    // Usamos los datos de ejemplo en lugar de la API
+    opcionesAsignaturas.value = asignaturasEjemplo.map(asignatura => ({
+      text: `${asignatura.claveasignatura} - ${asignatura.nombreasignatura}`,
+      value: asignatura.claveasignatura,
+      ...asignatura 
+    }))
+  } catch (error) {
+    console.error('Error al cargar asignaturas:', error)
+  } finally {
+    cargandoAsignaturas.value = false
+  }
+}
+
+// Función para cargar los datos cuando se selecciona una asignatura
+const cargarDatosAsignatura = (asignatura: any) => {
+  if (!asignatura) {
+    limpiarDatosAsignatura()
+    return
+  }
+
+  // Autocompletar campos con datos de la asignatura
+  materia.value = asignatura.nombreasignatura || ''
+  horasTeoricas.value = asignatura.satca_teoricas || 0
+  horasPracticas.value = asignatura.satca_practicas || 0
+  creditos.value = asignatura.creditos || 0
+  carrera.value = asignatura.clavecarrera || ''
+  departamento.value = asignatura.departamento || ''
+  
+  // Establecer valores por defecto para grupo y aula
+  grupo.value = '1' // Grupo por defecto
+  aula.value = 'LAB-1' // Aula por defecto
+  
+  // Competencias específicas
+  if (asignatura.competencias && asignatura.competencias.length) {
+    competenciaAsignatura.value = asignatura.competencias
+      .filter((comp: any) => comp.tipo === 'ESPECÍFICA')
+      .map((comp: any) => `• ${comp.descripcion}`)
+      .join('\n')
+  } else {
+    competenciaAsignatura.value = '• Competencias no definidas en el programa'
+  }
+  
+  // Temas de la asignatura (siempre 5 temas)
+  if (asignatura.temas && asignatura.temas.length) {
+    temas.value = asignatura.temas.map((tema: any) => ({
+      ...tema,
+      fechaProgramada: null, // El docente llenará esto
+      fechaReal: null,       // El docente llenará esto
+      evaluacionReal: '',    // El docente llenará esto
+    }))
+    numTemas.value = asignatura.temas.length
+  } else {
+    // Si no hay temas definidos, creamos 5 temas genéricos
+    temas.value = Array.from({ length: 5 }, (_, i) => ({
+      nombre: `Tema ${i + 1}`,
+      subtemas: `Subtema A, Subtema B, Subtema C`,
+      fechaProgramada: null,
+      fechaReal: null,
+      evaluacionProgramada: i === 4 ? 'Proyecto final' : `Evaluación ${i + 1}`,
+      evaluacionReal: '',
+      porcentajeAprobacion: 0,
+      observaciones: ''
+    }))
+    numTemas.value = 5
+  }
+}
+
+// Función para limpiar los datos cuando no hay asignatura seleccionada
+const limpiarDatosAsignatura = () => {
+  materia.value = ''
+  horasTeoricas.value = 0
+  horasPracticas.value = 0
+  creditos.value = 0
+  carrera.value = ''
+  departamento.value = ''
+  grupo.value = ''
+  aula.value = ''
+  competenciaAsignatura.value = ''
+  temas.value = [{
+    nombre: '', 
+    subtemas: '', 
+    fechaProgramada: null, 
+    fechaReal: null, 
+    evaluacionProgramada: '', 
+    evaluacionReal: '', 
+    porcentajeAprobacion: 0, 
+    observaciones: '' 
+  }]
+  numTemas.value = 0
+}
+
+// Funciones existentes del formulario
+const agregarTema = () => {
+  temas.value.push({ 
+    nombre: '', 
+    subtemas: '', 
+    fechaProgramada: null, 
+    fechaReal: null, 
+    evaluacionProgramada: '', 
+    evaluacionReal: '', 
+    porcentajeAprobacion: 0, 
+    observaciones: '' 
   })
+}
 
-  // Aquí iría la lógica real de guardado
+const guardarBorrador = () => {
+  console.log('Borrador guardado:', {
+    departamento: departamento.value,
+    periodo: periodo.value,
+    materia: materia.value,
+    // ... otros campos
+  })
+}
+
+const imprimirFormulario = () => {
+  window.print()
 }
 
 const enviarFormulario = () => {
   console.log('Formulario enviado:', {
-    caracterizacion: caracterizacion.value,
-    intencionDidactica: intencionDidactica.value,
-    competenciaAsignatura: competenciaAsignatura.value,
-    competenciaSeleccionada: competenciaSeleccionada.value,
-    descripcionCompetencia: descripcionCompetencia.value,
-    temasSubtemas: temasSubtemas.value,
-    actividadesAprendizaje: actividadesAprendizaje.value,
-    actividadesEnsenanza: actividadesEnsenanza.value,
-    desarrolloCompetencias: desarrolloCompetencias.value,
-    horasPracticasTeoricas: horasPracticasTeoricas.value,
-    fuentesInformacion: fuentesInformacion.value,
-    apoyosDidacticos: apoyosDidacticos.value,
-    tpSemana: tpSemana.value,
-    trSemana: trSemana.value,
+    departamento: departamento.value,
+    periodo: periodo.value,
+    materia: materia.value,
+    // ... otros campos
   })
-
-  // Aquí iría la lógica real de envío
 }
 </script>
 
 <style scoped>
-.avance-programatico {
-  padding: 1rem;
-  max-width: 1400px;
-  margin: 0 auto;
+.border {
+  border: 1px solid var(--va-background-border);
 }
 
 table {
@@ -272,24 +597,15 @@ table {
   border-collapse: collapse;
 }
 
-th,
-td {
-  border: 1px solid var(--va-background-border);
+th, td {
   padding: 0.5rem;
-  text-align: center;
-}
-
-th {
-  background-color: var(--va-background-element);
-  font-weight: 600;
 }
 
 @media (max-width: 768px) {
-  .grid-cols-3,
-  .grid-cols-2 {
+  .grid-cols-5, .grid-cols-2 {
     grid-template-columns: 1fr;
   }
-
+  
   table {
     display: block;
     overflow-x: auto;

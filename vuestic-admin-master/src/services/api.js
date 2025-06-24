@@ -65,24 +65,7 @@ export default {
     return apiClient.delete(`/maestros/${id}`)
   },
 
-  // Horarios de Maestros /horarios/{maestro_id}
-  getHorariosDeMaestro(maestroId) {
-    return apiClient.get(`/horarios/${maestroId}`)
-  },
-
-  createHorarioMaestro(data) {
-    return apiClient.post('/horarios', data)
-  },
-
-  updateHorarioMaestro(id, data) {
-    return apiClient.put(`/horarios/${id}`, data)
-  },
-
-  deleteHorarioMaestro(id) {
-    return apiClient.delete(`/horarios/${id}`)
-  },
-
-    getAsignaturasPorMaestro(tarjeta) {
+  getAsignaturasPorMaestro(tarjeta) {
     return apiClient.get(`/asignaturas/maestro/${tarjeta}`)
   },
 
@@ -101,27 +84,6 @@ export default {
   },
   obtenerDepartamento(id) {
     return apiClient.get(`/departamentos/${id}`)
-  },
-
-  // Usuarios
-  getUsuarios() {
-    return apiClient.get('/usuarios')
-  },
-
-  getUsuario(id) {
-    return apiClient.get(`/usuarios/${id}`)
-  },
-
-  crearUsuario(data) {
-    return apiClient.post('/usuarios', data)
-  },
-
-  actualizarUsuario(id, data) {
-    return apiClient.put(`/usuarios/${id}`, data)
-  },
-
-  eliminarUsuario(id) {
-    return apiClient.delete(`/usuarios/${id}`)
   },
 
   // Métodos para roles
@@ -156,58 +118,6 @@ export default {
 
   eliminarPeriodo(id) {
     return apiClient.delete(`/periodos-escolares/${id}`)
-  },
-
-  // Tipos de evento
-  getTiposEvento() {
-    return apiClient.get('/tipos-evento')
-  },
-
-  crearTipoEvento(data) {
-    return apiClient.post('/tipos-evento', data)
-  },
-
-  actualizarTipoEvento(id, data) {
-    return apiClient.put(`/tipos-evento/${id}`, data)
-  },
-
-  eliminarTipoEvento(id) {
-    return apiClient.delete(`/tipos-evento/${id}`)
-  },
-
-  // Público destino
-  getPublicosDestino() {
-    return apiClient.get('/publicos-destino')
-  },
-
-  crearPublicoDestino(data) {
-    return apiClient.post('/publicos-destino', data)
-  },
-
-  actualizarPublicoDestino(id, data) {
-    return apiClient.put(`/publicos-destino/${id}`, data)
-  },
-
-  eliminarPublicoDestino(id) {
-    return apiClient.delete(`/publicos-destino/${id}`)
-  },
-
-  getEventos() {
-    return apiClient.get('/eventos')
-  },
-  // Crear un nuevo evento
-  crearEvento(data) {
-    return apiClient.post('/eventos', data)
-  },
-
-  // Actualizar un evento
-  actualizarEvento(id, data) {
-    return apiClient.put(`/eventos/${id}`, data)
-  },
-
-  // Eliminar un evento
-  eliminarEvento(id) {
-    return apiClient.delete(`/eventos/${id}`)
   },
 
   // Obtener todas las asignaturas
@@ -248,7 +158,7 @@ export default {
     return apiClient.get(`/asignaturas/maestro/${clave}`)
   },
   ///////
-   getDetalleGruposByTarjeta(clave) {
+  getDetalleGruposByTarjeta(clave) {
     return apiClient.get(`/asignaturas/grupos/${clave}`)
   },
 
@@ -256,7 +166,7 @@ export default {
     return apiClient.post('/calificaciones', data)
   },
 
-   getDetalleGruposPorCarreraByTarjeta(clave) {
+  getDetalleGruposPorCarreraByTarjeta(clave) {
     return apiClient.get(`/calificaciones/reporte/${clave}`)
   },
 
@@ -284,5 +194,5 @@ export default {
   // Eliminar una carrera
   deleteCarrera(clave) {
     return apiClient.delete(`/carreras/${clave}`);
-  }
+  },
 }

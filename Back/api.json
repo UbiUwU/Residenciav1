@@ -10,7 +10,660 @@
         }
     ],
     "paths": {
-        "/alumnos": {
+        "/alumno/horario/{numeroControl}": {
+            "get": {
+                "operationId": "alumno.getHorario",
+                "tags": [
+                    "Alumno"
+                ],
+                "parameters": [
+                    {
+                        "name": "numeroControl",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/alumno/registrar": {
+            "post": {
+                "operationId": "alumno.registrarAlumno",
+                "tags": [
+                    "Alumno"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "correo": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "numerocontrol": {
+                                        "type": "string"
+                                    },
+                                    "nombre": {
+                                        "type": "string"
+                                    },
+                                    "apellido_paterno": {
+                                        "type": "string"
+                                    },
+                                    "apellido_materno": {
+                                        "type": "string"
+                                    },
+                                    "clavecarrera": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "correo",
+                                    "password",
+                                    "numerocontrol",
+                                    "nombre",
+                                    "apellido_paterno",
+                                    "apellido_materno",
+                                    "clavecarrera"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Alumno registrado correctamente"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "success",
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Correo ya registrado"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "success",
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/alumno/cambiar-contrasena": {
+            "post": {
+                "operationId": "alumno.cambiarContrasena",
+                "tags": [
+                    "Alumno"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "correo": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "correo",
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Contrase\u00f1a actualizada"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "success",
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Usuario no encontrado"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "success",
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/alumno/computadoras": {
+            "get": {
+                "operationId": "alumno.computadorasDisponibles",
+                "tags": [
+                    "Alumno"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/alumno/reservacion/activa": {
+            "post": {
+                "operationId": "alumno.tieneReservacionActiva",
+                "tags": [
+                    "Alumno"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "control": {
+                                        "type": "string"
+                                    },
+                                    "fecha": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    }
+                                },
+                                "required": [
+                                    "control",
+                                    "fecha"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "reservas": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "reservas"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/alumno/reservacion/hoy": {
+            "post": {
+                "operationId": "alumno.yaReservoHoy",
+                "tags": [
+                    "Alumno"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "control": {
+                                        "type": "string"
+                                    },
+                                    "inventario": {
+                                        "type": "string"
+                                    },
+                                    "fecha": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    }
+                                },
+                                "required": [
+                                    "control",
+                                    "inventario",
+                                    "fecha"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "reservado": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": [
+                                        "reservado"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/alumno/reservaciones": {
+            "post": {
+                "operationId": "alumno.reservacionesActivas",
+                "tags": [
+                    "Alumno"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "control": {
+                                        "type": "string"
+                                    },
+                                    "fecha": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    }
+                                },
+                                "required": [
+                                    "control",
+                                    "fecha"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/alumno/reservar": {
+            "post": {
+                "operationId": "alumno.reservarComputadora",
+                "tags": [
+                    "Alumno"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "numerocontrol": {
+                                        "type": "string"
+                                    },
+                                    "numeroinventario": {
+                                        "type": "string"
+                                    },
+                                    "fechareservacion": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "horainicio": {
+                                        "type": "string"
+                                    },
+                                    "horafin": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "numerocontrol",
+                                    "numeroinventario",
+                                    "fechareservacion",
+                                    "horainicio",
+                                    "horafin"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Computadora reservada"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "success",
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/alumno/extender-reserva": {
+            "put": {
+                "operationId": "alumno.extenderReserva",
+                "tags": [
+                    "Alumno"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "inventario": {
+                                        "type": "string"
+                                    },
+                                    "horas": {
+                                        "type": "integer"
+                                    },
+                                    "minutos": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "required": [
+                                    "inventario",
+                                    "horas",
+                                    "minutos"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Reserva extendida"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "success",
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/alumno/cancelar-reserva": {
+            "delete": {
+                "operationId": "alumno.cancelarReserva",
+                "tags": [
+                    "Alumno"
+                ],
+                "parameters": [
+                    {
+                        "name": "control",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "inventario",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Reservaci\u00f3n cancelada"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "success",
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/alumno/bitacora": {
+            "post": {
+                "operationId": "alumno.registrarBitacora",
+                "tags": [
+                    "Alumno"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "numerocontrol": {
+                                        "type": "string"
+                                    },
+                                    "numeroinventario": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "numerocontrol",
+                                    "numeroinventario"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Bit\u00e1cora registrada"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "success",
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/alumno": {
             "get": {
                 "operationId": "alumno.index",
                 "tags": [
@@ -164,7 +817,7 @@
                 }
             }
         },
-        "/alumnos/{numeroControl}": {
+        "/alumno/{numeroControl}": {
             "get": {
                 "operationId": "alumno.show",
                 "tags": [
@@ -877,6 +1530,78 @@
                 }
             }
         },
+        "/asignaturas/grupos/{clave}": {
+            "get": {
+                "operationId": "asignatura.getDetalleGruposByTarjeta",
+                "tags": [
+                    "Asignatura"
+                ],
+                "parameters": [
+                    {
+                        "name": "clave",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "No se encontraron datos para esta tarjeta"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Tarjeta inv\u00e1lida"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/asignaturas/carrera/{claveCarrera}": {
             "get": {
                 "operationId": "asignatura.getByCarrera",
@@ -1020,7 +1745,7 @@
                                                 "user": {
                                                     "type": "string"
                                                 },
-                                                "maestro": {
+                                                "detalle": {
                                                     "type": [
                                                         "string",
                                                         "null"
@@ -1029,7 +1754,7 @@
                                             },
                                             "required": [
                                                 "user",
-                                                "maestro"
+                                                "detalle"
                                             ]
                                         },
                                         "token": {
@@ -1128,7 +1853,7 @@
                                                 "user": {
                                                     "type": "string"
                                                 },
-                                                "maestro": {
+                                                "detalle": {
                                                     "type": [
                                                         "string",
                                                         "null"
@@ -1137,7 +1862,7 @@
                                             },
                                             "required": [
                                                 "user",
-                                                "maestro"
+                                                "detalle"
                                             ]
                                         }
                                     },
@@ -1151,6 +1876,145 @@
                     },
                     "401": {
                         "$ref": "#/components/responses/AuthenticationException"
+                    }
+                }
+            }
+        },
+        "/cambiar-contrasena": {
+            "post": {
+                "operationId": "auth.changePassword",
+                "summary": "Cambio de contrase\u00f1a por correo",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "correo": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 6
+                                    }
+                                },
+                                "required": [
+                                    "correo",
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "500": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "Error en el servidor al cambiar contrase\u00f1a"
+                                                    ]
+                                                },
+                                                "error": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "success",
+                                                "message",
+                                                "error"
+                                            ]
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "No se pudo actualizar la contrase\u00f1a"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "success",
+                                                "message"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Contrase\u00f1a actualizada correctamente"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "success",
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Usuario no encontrado"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "success",
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
                     }
                 }
             }
@@ -1592,6 +2456,92 @@
                             "application/json": {
                                 "schema": {
                                     "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/calificaciones/reporte/{tarjeta}": {
+            "get": {
+                "operationId": "calificacionUnidad.getDetalleGruposPorCarrera",
+                "tags": [
+                    "CalificacionUnidad"
+                ],
+                "parameters": [
+                    {
+                        "name": "tarjeta",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "error"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Sin resultados"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "message"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "error"
+                                            ]
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Tarjeta inv\u00e1lida"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "status",
+                                        "message"
+                                    ]
                                 }
                             }
                         }
@@ -2253,6 +3203,294 @@
                                     },
                                     "required": [
                                         "message"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/comisiones": {
+            "post": {
+                "operationId": "comision.store",
+                "tags": [
+                    "Comision"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "eventName": {
+                                        "type": "string",
+                                        "maxLength": 100
+                                    },
+                                    "eventDate": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "maxLength": 30
+                                    },
+                                    "eventType": {
+                                        "type": "object",
+                                        "properties": {
+                                            "value": {
+                                                "type": "string",
+                                                "maxLength": 50
+                                            }
+                                        },
+                                        "required": [
+                                            "value"
+                                        ]
+                                    },
+                                    "selectedMaestro": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "value": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "required": [
+                                                "value"
+                                            ]
+                                        },
+                                        "minItems": 1
+                                    }
+                                },
+                                "required": [
+                                    "eventName",
+                                    "eventDate",
+                                    "status",
+                                    "selectedMaestro"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "errors"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "operationId": "comision.index",
+                "tags": [
+                    "Comision"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "minItems": 0,
+                                            "maxItems": 0,
+                                            "additionalItems": false
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/comisiones/{id}": {
+            "put": {
+                "operationId": "comision.update",
+                "tags": [
+                    "Comision"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nombre_evento": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "tipo_evento": {
+                                        "type": "string",
+                                        "maxLength": 100
+                                    },
+                                    "fecha_evento": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "estatus": {
+                                        "type": "string",
+                                        "maxLength": 20
+                                    },
+                                    "tarjetas_maestros": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "minimum": 1
+                                        },
+                                        "minItems": 1
+                                    }
+                                },
+                                "required": [
+                                    "nombre_evento",
+                                    "tipo_evento",
+                                    "fecha_evento",
+                                    "estatus",
+                                    "tarjetas_maestros"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "errors"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "comision.destroy",
+                "tags": [
+                    "Comision"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/comisiones/maestro/{tarjeta}": {
+            "get": {
+                "operationId": "comision.getByMaestro",
+                "tags": [
+                    "Comision"
+                ],
+                "parameters": [
+                    {
+                        "name": "tarjeta",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "anyOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "minItems": 0,
+                                            "maxItems": 0,
+                                            "additionalItems": false
+                                        }
                                     ]
                                 }
                             }
@@ -5557,6 +6795,337 @@
                 }
             }
         },
+        "/avance": {
+            "post": {
+                "operationId": "instrumentacion.crearInstrumentacion",
+                "tags": [
+                    "Instrumentacion"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "clave_asignatura": {
+                                        "type": "string"
+                                    },
+                                    "tarjeta": {
+                                        "type": "integer"
+                                    },
+                                    "periodo": {
+                                        "type": "string"
+                                    },
+                                    "firma_profesor": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    },
+                                    "firma_jefe": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "clave_asignatura",
+                                    "tarjeta",
+                                    "periodo"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/avance/detalle/agregar": {
+            "post": {
+                "operationId": "instrumentacion.agregarDetalle",
+                "tags": [
+                    "Instrumentacion"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id_instrumentacion": {
+                                        "type": "integer"
+                                    },
+                                    "id_tema": {
+                                        "type": "integer"
+                                    },
+                                    "fecha_programada_inicio": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    },
+                                    "fecha_programada_fin": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    },
+                                    "evaluacion_programada_inicio": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    },
+                                    "evaluacion_programada_fin": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    },
+                                    "porcentaje": {
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "minimum": 0,
+                                        "maximum": 100
+                                    },
+                                    "observaciones": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "id_instrumentacion",
+                                    "id_tema"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/avance/{tarjeta}": {
+            "get": {
+                "operationId": "instrumentacion.obtenerPorTarjeta",
+                "tags": [
+                    "Instrumentacion"
+                ],
+                "parameters": [
+                    {
+                        "name": "tarjeta",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/avance/detalle/{id}": {
+            "put": {
+                "operationId": "instrumentacion.actualizarDetalle",
+                "tags": [
+                    "Instrumentacion"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "fecha_programada_inicio": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    },
+                                    "fecha_programada_fin": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    },
+                                    "evaluacion_programada_inicio": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    },
+                                    "evaluacion_programada_fin": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "format": "date-time"
+                                    },
+                                    "porcentaje": {
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "minimum": 0,
+                                        "maximum": 100
+                                    },
+                                    "observaciones": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/avance/{id}": {
+            "put": {
+                "operationId": "instrumentacion.actualizarInstrumentacion",
+                "tags": [
+                    "Instrumentacion"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "firma_profesor": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    },
+                                    "firma_jefe": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    },
+                                    "estado": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ],
+                                        "enum": [
+                                            "Borrador",
+                                            "Aprobado",
+                                            "Finalizado"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
         "/maestros": {
             "get": {
                 "operationId": "maestro.index",
@@ -6478,15 +8047,24 @@
                                             "null"
                                         ]
                                     },
+                                    "tipo": {
+                                        "type": "string",
+                                        "enum": [
+                                            "avance",
+                                            "instrumentacion",
+                                            "reporte_final"
+                                        ]
+                                    },
                                     "archivo": {
                                         "type": "string",
                                         "format": "binary",
                                         "contentMediaType": "application/octet-stream",
-                                        "maxLength": 10240
+                                        "maxLength": 5120
                                     }
                                 },
                                 "required": [
                                     "nombre",
+                                    "tipo",
                                     "archivo"
                                 ]
                             }
@@ -6501,19 +8079,19 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "message": {
+                                        "mensaje": {
                                             "type": "string",
                                             "enum": [
-                                                "Plantilla creada correctamente"
+                                                "Plantilla subida exitosamente"
                                             ]
                                         },
-                                        "id": {
+                                        "plantilla": {
                                             "type": "string"
                                         }
                                     },
                                     "required": [
-                                        "message",
-                                        "id"
+                                        "mensaje",
+                                        "plantilla"
                                     ]
                                 }
                             }
@@ -6521,6 +8099,306 @@
                     },
                     "422": {
                         "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/plantillas/{id}": {
+            "get": {
+                "operationId": "plantilla.show",
+                "tags": [
+                    "Plantilla"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "operationId": "plantilla.update",
+                "tags": [
+                    "Plantilla"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nombre": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "descripcion": {
+                                        "type": [
+                                            "string",
+                                            "null"
+                                        ]
+                                    },
+                                    "tipo": {
+                                        "type": "string",
+                                        "enum": [
+                                            "avance",
+                                            "instrumentacion",
+                                            "reporte_final"
+                                        ]
+                                    },
+                                    "estado": {
+                                        "type": "string",
+                                        "enum": [
+                                            "activo",
+                                            "en_uso",
+                                            "inactivo"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "mensaje": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Plantilla actualizada correctamente."
+                                            ]
+                                        },
+                                        "plantilla": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "mensaje",
+                                        "plantilla"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/plantillas/{id}/estado": {
+            "patch": {
+                "operationId": "plantilla.updateEstado",
+                "tags": [
+                    "Plantilla"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "estado": {
+                                        "type": "string",
+                                        "enum": [
+                                            "activo",
+                                            "en_uso",
+                                            "inactivo"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "estado"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "mensaje": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Estado actualizado."
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "mensaje"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/plantillas/{id}/archivo": {
+            "post": {
+                "operationId": "plantilla.updateArchivo",
+                "tags": [
+                    "Plantilla"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "archivo": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "contentMediaType": "application/octet-stream",
+                                        "maxLength": 5120
+                                    }
+                                },
+                                "required": [
+                                    "archivo"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "mensaje": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Archivo actualizado correctamente."
+                                            ]
+                                        },
+                                        "archivo": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "mensaje",
+                                        "archivo"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationException"
+                    }
+                }
+            }
+        },
+        "/plantillas/{id}/descargar": {
+            "get": {
+                "operationId": "plantilla.descargarArchivo",
+                "tags": [
+                    "Plantilla"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "mensaje": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Archivo no encontrado."
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "mensaje"
+                                    ]
+                                }
+                            }
+                        }
                     }
                 }
             }
