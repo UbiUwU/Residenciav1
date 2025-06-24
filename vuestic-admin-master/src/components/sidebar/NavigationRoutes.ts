@@ -131,7 +131,7 @@ export default {
 
     {
       name: 'users',
-      displayName: 'menu.users',
+      displayName: 'Maestros',
       meta: {
         icon: 'group',
       },

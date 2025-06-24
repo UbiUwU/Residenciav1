@@ -49,6 +49,14 @@ export default {
     return apiClient.post('/maestros', data)
   },
 
+  crearComision(data) {
+    return apiClient.post('/comisiones', data)
+  },
+
+  getComisiones() {
+    return apiClient.get('/comisiones')
+  },
+
   actualizarMaestro(id, data) {
     return apiClient.put(`/maestros/${id}`, data)
   },

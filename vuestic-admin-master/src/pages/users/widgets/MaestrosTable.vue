@@ -96,10 +96,6 @@ const onUserSaved = () => {
 <template>
   <div class="mb-4 flex justify-between items-center">
     <VaInput v-model="search" placeholder="Buscar por nombre..." clearable prepend-inner-icon="search" class="mr-4" />
-
-    <VaButton color="success" icon="add" size="small" @click="addUser" class="w-auto sm:w-full text-sm sm:text-base">
-      <span class="hidden sm:inline">Añadir Maestro</span>
-    </VaButton>
   </div>
 
   <VaDataTable :columns="columns" :items="filteredMaestros" :loading="loading">

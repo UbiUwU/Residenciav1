@@ -124,7 +124,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/comisiones',
         name: 'comisiones',
-        component: () => import('../pages/Comisiones/Comisiones.vue')
+        component: () => import('../pages/SeguimientoD/AvanceProgramatico.vue')
       },
       {
         name: 'Asignaturas',

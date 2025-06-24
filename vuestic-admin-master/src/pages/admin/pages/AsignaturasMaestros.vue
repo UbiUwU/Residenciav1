@@ -1,4 +1,10 @@
 <template>
+  <div class="boton-regresar">
+    <button @click="handleRegresar">
+      ← Regresar
+    </button>
+  </div>
+
    <div class="asignaturas-container">
   <h1 class="va-text-primary">Asignaturas del maestro</h1>
 
@@ -82,9 +88,9 @@ const fetchAsignaturas = async () => {
   }
 }
 
-
-
-
+const handleRegresar = () => {
+  window.history.back()  // o router.back() si usas Vue Router
+}
 const detalleAbierto = ref(null)
 
 const toggleDetalle = (clave) => {
@@ -173,4 +179,25 @@ h1 {
   background-color: #2980b9;
 }
 
+.boton-regresar {
+  position: sticky;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+}
+
+.boton-regresar button {
+  background-color: #2a5dff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.boton-regresar button:hover {
+  background-color: #1e45cc;
+}
 </style>
