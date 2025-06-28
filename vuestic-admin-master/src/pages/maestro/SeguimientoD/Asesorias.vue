@@ -1,3 +1,121 @@
+<template>
+  <va-card>
+    <va-card-title>Registro de Asesorías Académicas</va-card-title>
+    <va-card-content>
+      <!-- Selección de grupo y materia -->
+      <div class="row">
+        <div class="flex md6">
+          <va-select
+            v-model="grupoSeleccionado"
+            label="Seleccione el grupo"
+            :options="gruposDisponibles"
+            clearable
+            class="mb-4"
+          />
+        </div>
+        <div class="flex md6">
+          <va-select
+            v-model="materiaSeleccionada"
+            label="Seleccione la materia"
+            :options="materiasDisponibles"
+            :disabled="!grupoSeleccionado"
+            clearable
+            class="mb-4"
+          />
+        </div>
+      </div>
+
+      <!-- Botón para cargar el formato -->
+      <div class="flex justify-center mb-6">
+        <va-button
+          :disabled="!materiaSeleccionada"
+          @click="cargarFormato"
+        >
+          Cargar Formato
+        </va-button>
+      </div>
+
+      <!-- Formulario de asesorías -->
+      <div v-if="mostrarFormato">
+        <va-card>
+          <va-card-title>Formato de Asesorías</va-card-title>
+          <va-card-content>
+            <va-input
+              v-model="docenteNombre"
+              label="Nombre del docente/instructor"
+              class="mb-4"
+            />
+
+            <div class="flex gap-2 mb-4">
+              <va-button @click="agregarAsesoria">
+                <va-icon name="add" class="mr-2" />
+                Agregar fila
+              </va-button>
+              <va-button color="danger" @click="eliminarUltima">
+                <va-icon name="delete" class="mr-2" />
+                Eliminar última
+              </va-button>
+              <va-button color="warning" @click="precargarAlumnos">
+                <va-icon name="group" class="mr-2" />
+                Precargar alumnos
+              </va-button>
+            </div>
+
+            <!-- Tabla de asesorías -->
+            <div id="encabezado-pdf" class="text-center mb-4">
+              <h3>INSTITUTO TECNOLÓGICO SUPERIOR DE XALAPA</h3>
+              <h4>REGISTRO DE ASESORÍAS ACADÉMICAS</h4>
+            </div>
+
+            <div id="tabla-asesorias">
+              <va-data-table
+                :items="asesorias"
+                :columns="columnasTabla"
+                striped
+                hoverable
+              >
+                <template #cell(numeroControl)="{ rowIndex }">
+                  <va-input v-model="asesorias[rowIndex].numeroControl" />
+                </template>
+                <template #cell(nombreEstudiante)="{ rowIndex }">
+                  <va-input v-model="asesorias[rowIndex].nombreEstudiante" />
+                </template>
+                <template #cell(carrera)="{ rowIndex }">
+                  <va-input v-model="asesorias[rowIndex].carrera" />
+                </template>
+                <template #cell(tema)="{ rowIndex }">
+                  <va-input v-model="asesorias[rowIndex].tema" />
+                </template>
+                <template #cell(firma)="{ rowIndex }">
+                  <div class="firma-placeholder"></div>
+                </template>
+              </va-data-table>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="flex justify-between mt-6">
+              <va-button color="danger" @click="limpiarFormulario">
+                <va-icon name="delete" class="mr-2" />
+                Limpiar formulario
+              </va-button>
+              <div class="flex gap-2">
+                <va-button color="success" @click="guardarAsesorias">
+                  <va-icon name="save" class="mr-2" />
+                  Guardar
+                </va-button>
+                <va-button color="primary" @click="generarPDF">
+                  <va-icon name="picture_as_pdf" class="mr-2" />
+                  Generar PDF
+                </va-button>
+              </div>
+            </div>
+          </va-card-content>
+        </va-card>
+      </div>
+    </va-card-content>
+  </va-card>
+</template>
+
 <script setup>
 import { ref, computed, watch } from 'vue'
 import html2pdf from 'html2pdf.js'
@@ -6,6 +124,15 @@ import html2pdf from 'html2pdf.js'
 const grupoSeleccionado = ref('')
 const materiaSeleccionada = ref('')
 const mostrarFormato = ref(false)
+
+// Columnas para la tabla de asesorías
+const columnasTabla = [
+  { key: 'numeroControl', label: 'No. Control', sortable: true },
+  { key: 'nombreEstudiante', label: 'Nombre del Estudiante', sortable: true },
+  { key: 'carrera', label: 'Carrera', sortable: true },
+  { key: 'tema', label: 'Tema/Actividad', sortable: true },
+  { key: 'firma', label: 'Firma', className: 'firma-header' }
+]
 
 // Datos simulados - en una aplicación real vendrían de una API
 const gruposDisponibles = ref(['I3A', 'I3B', 'I5C', 'K9U', 'L2D'])
@@ -105,6 +232,11 @@ const guardarAsesorias = () => {
     materia: materiaSeleccionada.value,
     docente: docenteNombre.value,
     asesorias: asesorias.value,
+  })
+  // Mostrar notificación de éxito
+  vaToast.init({
+    message: 'Asesorías guardadas correctamente',
+    color: 'success'
   })
 }
 
@@ -216,5 +348,44 @@ const generarPDF = () => {
 
   // Generar el PDF
   html2pdf().from(element).set(opt).save()
+  
+  // Mostrar notificación
+  vaToast.init({
+    message: 'PDF generado con éxito',
+    color: 'success'
+  })
 }
 </script>
+
+<style scoped>
+.firma-placeholder {
+  border: 1px dashed #ccc;
+  height: 30px;
+  width: 80px;
+  margin: 0 auto;
+}
+
+/* Estilos responsivos */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -0.5rem;
+}
+
+.flex {
+  flex: 1;
+  padding: 0 0.5rem;
+}
+
+.md6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+@media (max-width: 768px) {
+  .md6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+</style>

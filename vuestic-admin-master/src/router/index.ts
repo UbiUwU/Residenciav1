@@ -1,12 +1,15 @@
 /* eslint-disable prettier/prettier */
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { useAuthStore } from '../services/auth' // Importa tu store de autenticación
+import { useAuthStore } from '../services/auth'
+import { ROLES } from '../constants/roles' // Importación de roles
 
+// Layouts
 import AuthLayout from '../layouts/AuthLayout.vue'
 import AppLayout from '../layouts/AppLayout.vue'
-//Todo lo que sea test es para pruebas
+import RouteViewComponent from '../layouts/RouterBypass.vue'
+
+// Componentes de prueba
 import Asignaturas from '../test/Asignaturas.vue'
-import AsignaturasMaestro from '../pages/admin/pages/AsignaturasMaestros.vue'
 import AsignaturaDetail from '../test/AsignaturaDetail.vue'
 import departamento from '../test/departamentos.vue'
 import InHorarioMaestro from '../test/IngresarHorario.vue'
@@ -14,188 +17,24 @@ import perfil from '../test/perfil.vue'
 import visualizarhorario from '../test/visualizarhorario.vue'
 import maestro from '../test/maestro.vue'
 import usuarios from '../test/usuarios.vue'
-import Plantilla from '../test/plantillas.vue'
 import roles from '../test/roles.vue'
 import avance from '../test/avanceprogra.vue'
 import periodos from '../test/periodos.vue'
 import eventosmdestino from '../test/tiposeventos_Destino.vue'
 import horaraio2 from '../test/HorarioMaestro.vue'
 
-import reporte from '../test/reportefinal.vue'
-
-
-import RouteViewComponent from '../layouts/RouterBypass.vue'
-
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/:pathMatch(.*)*',
-    redirect: { name: 'dashboard' },
+    redirect: (to) => {
+      const authStore = useAuthStore()
+      return authStore.isAdmin ? 
+        { name: 'dashboard' } : 
+        { name: 'dashboard-teacher' }
+    },
   },
-  {
-    name: 'admin',
-    path: '/',
-    component: AppLayout,
-    redirect: { name: 'dashboard' },
-    meta: { requiresAuth: true }, // Indica que esta ruta requiere autenticación
-    children: [
-      {
-        name: 'dashboard',
-        path: 'dashboard',
-        component: () => import('../pages/admin/dashboard/Dashboard.vue'),
-        meta: { requiresAuth: true }, // Requiere autenticación
-      },
-      {
-        path: '/asignaturas',
-        name: 'asignaturas',
-        component: Asignaturas,
-      },
-      {
-        path: '/horario',
-        name: 'horario',
-        component: visualizarhorario,
-      },
-      {
-        path: '/perfil',
-        name: 'perfil',
-        component: perfil,
-      },
-      {
-        path: '/eventosmdestino',
-        name: 'eventosmdestino',
-        component: eventosmdestino,
-      },
-      {
-        path: '/Plantilla',
-        name: 'Plantilla',
-        component: Plantilla,
-      },
-      {
-        path: '/periodos',
-        name: 'periodos',
-        component: periodos,
-      },
-      {
-  path: '/reporte',
-  name: 'reporte',
-  component: reporte,
-  meta: { requiresAuth: false }, // <-- indica que no necesita autenticación
-},
-
-      {
-        path: '/avance',
-        name: 'avance',
-        component: avance,
-      },
-      {
-        path: '/departamento',
-        name: 'departamento',
-        component: departamento,
-      },
-      {
-        path: '/InHorario',
-        name: 'HorarioMaestro',
-        component: InHorarioMaestro,
-      },
-      {
-        path: '/maestro',
-        name: 'maestro',
-        component: maestro,
-      },
-      
-      {
-        path: '/usuarios',
-        name: 'usuarios',
-        component: usuarios,
-      },
-      {
-        path: '/asignaturas/:clave',
-        name: 'asignatura',
-        component: AsignaturaDetail,
-        props: true,
-      },
-      {
-        name: 'settings',
-        path: 'settings',
-        component: () => import('../pages/settings/Settings.vue'),
-        meta: { requiresAuth: true },
-      },
-      {
-        name: 'preferences',
-        path: 'preferences',
-        component: () => import('../pages/preferences/Preferences.vue'),
-        meta: { requiresAuth: true },
-      },
-      {
-        name: 'users',
-        path: 'users',
-        component: () => import('../pages/users/PaginaUsuarios.vue'),
-        meta: { requiresAuth: true },
-      },
-      {
-        name: 'projects',
-        path: 'projects',
-        component: () => import('../pages/projects/ProjectsPage.vue'),
-      },
-      {
-        path: '/asignaturas/maestro/:tarjeta',
-        name: 'materiasMaestro',
-        component: () => import('../pages/admin/pages/AsignaturasMaestros.vue')
-      },
-      {
-        path: '/pdf',
-        name: 'pdf',
-        component: () => import('../pages/admin/pages/AsignaturaDetail.vue')
-      },
-      {
-        path: '/reporte/:tarjeta',
-        name: 'reporteFinalMaestro',
-        component: () => import('../pages/admin/pages/ReporteFinal.vue'),
-        props: true, // para que la prop tarjeta llegue como prop al componente
-      },
-      {
-        path: '/Comisionar',
-        name: 'comisionar',
-        component: () => import('../pages/admin/pages/Comisionar.vue'),
-      },
-      {
-        path: '/comisiones',
-        name: 'comisiones',
-        component: () => import('../pages/Comisiones/Comisiones.vue')
-      },
-      {
-        name: 'Asignaturas',
-        path: 'Asignaturas',
-        component: Asignaturas,
-      },
-      {
-        name: 'payments',
-        path: '/payments',
-        component: RouteViewComponent,
-        children: [
-          {
-            name: 'payment-methods',
-            path: 'payment-methods',
-            component: () => import('../pages/payments/PaymentsPage.vue'),
-          },
-          {
-            name: 'billing',
-            path: 'billing',
-            component: () => import('../pages/billing/BillingPage.vue'),
-          },
-          {
-            name: 'pricing-plans',
-            path: 'pricing-plans',
-            component: () => import('../pages/pricing-plans/PricingPlans.vue'),
-          },
-        ],
-      },
-      {
-        name: 'faq',
-        path: '/faq',
-        component: () => import('../pages/faq/FaqPage.vue'),
-      },
-    ],
-  },
+  
+  // Rutas públicas de autenticación
   {
     path: '/auth',
     component: AuthLayout,
@@ -203,52 +42,324 @@ const routes: Array<RouteRecordRaw> = [
       {
         name: 'login',
         path: 'login',
-        component: () => import('../pages/auth/Login.vue'),
+        component: () => import('../pages/auth/Login.vue')
       },
       {
         name: 'signup',
         path: 'signup',
-        component: () => import('../pages/auth/Signup.vue'),
+        component: () => import('../pages/auth/Signup.vue')
       },
       {
         name: 'recover-password',
         path: 'recover-password',
-        component: () => import('../pages/auth/RecoverPassword.vue'),
+        component: () => import('../pages/auth/RecoverPassword.vue')
       },
       {
         name: 'recover-password-email',
         path: 'recover-password-email',
-        component: () => import('../pages/auth/CheckTheEmail.vue'),
+        component: () => import('../pages/auth/CheckTheEmail.vue')
       },
       {
         path: '',
-        redirect: { name: 'login' },
+        redirect: { name: 'login' }
+      },
+    ]
+  },
+
+  // Rutas compartidas para ambos roles
+  {
+    path: '/',
+    component: AppLayout,
+    meta: { requiresAuth: true },
+    children: [
+      // FAQ (puede ser pública o requerir autenticación)
+      {
+        name: 'faq',
+        path: 'faq',
+        component: () => import('../pages/faq/FaqPage.vue'),
+        meta: { requiresAuth: false } // Opcional: hacerla pública
       },
       
-    ],
+      // Otras rutas compartidas que requieren autenticación
+      {
+        name: 'settings',
+        path: 'settings',
+        component: () => import('../pages/settings/Settings.vue')
+      },
+      {
+        name: 'preferences',
+        path: 'preferences',
+        component: () => import('../pages/preferences/Preferences.vue')
+      },
+     
+    ]
+  },
+
+  // Área de Administrador
+  {
+    name: 'admin',
+    path: '/admin',
+    component: AppLayout,
+    redirect: { name: 'dashboard' },
+    meta: { requiresAuth: true, allowedRoles: [ROLES.ADMIN] },
+    children: [
+      {
+        name: 'dashboard',
+        path: 'dashboard',
+        component: () => import('../pages/admin/dashboard/Dashboard.vue')
+      },
+      {
+        name: 'Comisionar',
+        path: 'Comisionar',
+        component: () => import('../pages/admin/pages/Comisionar.vue')
+      },
+      {
+        name: 'admin-usuarios',
+        path: 'usuarios',
+        component: usuarios
+      },
+      {
+        name: 'admin-departamentos',
+        path: 'departamentos',
+        component: departamento
+      },
+      {
+        name: 'admin-roles',
+        path: 'roles',
+        component: roles
+      },
+      {
+        name: 'admin-periodos',
+        path: 'periodos',
+        component: periodos
+      },
+      {
+        name: 'admin-maestros',
+        path: 'maestros',
+        component: maestro
+      }
+    ]
+  },
+
+  // Área de Maestro
+  {
+    name: 'teacher',
+    path: '/teacher',
+    component: AppLayout,
+    redirect: { name: 'dashboard-teacher' },
+    meta: { requiresAuth: true, allowedRoles: [ROLES.TEACHER] },
+    children: [
+      {
+        name: 'dashboard-teacher',
+        path: 'dashboard-teacher',
+        component: () => import('../pages/maestro/dashboard/Dashboard.vue')
+      },
+      {
+        name: 'Nombramientos',
+        path: 'Nombramientos',
+        component: () => import('../pages/maestro/Generales/Nombramientos.vue')
+      },
+      {
+        name: 'Horario',
+        path: 'Horario',
+        component: () => import('../pages/maestro/Generales/Horario.vue')
+      },
+      {
+        name: 'comisiones',
+        path: 'comisiones',
+        component: () => import('../pages/maestro/Comisiones/Comisiones.vue')
+      },
+      {
+        name: 'constancias',
+        path: 'constancias',
+        component: () => import('../pages/maestro/Comisiones/Constancias.vue')
+      },
+      {
+        name: 'avance-Programatico',
+        path: 'avance-Programatico',
+        component: () => import('../pages/maestro/SeguimientoD/AvanceProgramatico.vue')
+      },
+      {
+        name: 'asesorias',
+        path: 'asesorias',
+        component: () => import('../pages/maestro/SeguimientoD/Asesorias.vue')
+      },
+      {
+        name: 'carpeta-evidencias',
+        path: 'carpeta-evidencias',
+        component: () => import('../pages/maestro/SeguimientoD/CarpetaEvidencias.vue')
+      },
+      {
+        name: 'instrumentacion-didactica',
+        path: 'instrumentacion-didactica',
+        component: () => import('../pages/maestro/SeguimientoD/InstrumentacionDidactica.vue')
+      },
+      {
+        name: 'materia-evidencias',
+        path: 'materia-evidencias',
+        component: () => import('../pages/maestro/SeguimientoD/MateriaEvidenciasView.vue')
+      },
+      {
+        name: 'acuse-estudiante',
+        path: 'acuse-estudiante',
+        component: () => import('../pages/maestro/SeguimientoD/AcuseEstudiante.vue')
+      }
+    ]
+  },
+
+  // Seguimiento Docente (Teacher)
+  {
+    path: '/seguimiento',
+    component: RouteViewComponent,
+    meta: { requiresAuth: true, allowedRoles: [ROLES.TEACHER] },
+    children: [
+      {
+        name: 'evaluacion-diagnostica',
+        path: 'evaluacion-diagnostica',
+        component: () => import('../pages/maestro/SeguimientoD/EvaluacionDiagnostica.vue')
+      },
+      {
+        name: 'calificaciones-parciales',
+        path: 'calificaciones-parciales',
+        component: () => import('../pages/maestro/SeguimientoD/CalificacionesParciales.vue')
+      }
+    ]
+  },
+
+  // Liberación de actividades (Teacher)
+  {
+    path: '/liberacion',
+    component: RouteViewComponent,
+    meta: { requiresAuth: true, allowedRoles: [ROLES.TEACHER] },
+    children: [
+      {
+        name: 'reporte-final',
+        path: 'reporte-final',
+        component: () => import('../pages/maestro/Liberacion/ReporteFinal.vue')
+      },
+      {
+        name: 'actas-calificaciones',
+        path: 'actas-calificaciones',
+        component: () => import('../pages/maestro/Liberacion/ActasCalificaciones.vue')
+      },
+      {
+        name: 'liberacion-actividades-d',
+        path: 'liberacion-actividades-d',
+        component: () => import('../pages/maestro/Liberacion/LiberacionActividadesD.vue')
+      },
+      {
+        name: 'liberacion-actividades-a',
+        path: 'liberacion-actividades-a',
+        component: () => import('../pages/maestro/Liberacion/LiberacionActividadesA.vue')
+      }
+    ]
+  },
+
+  // Rutas de prueba (solo desarrollo)
+  ...(process.env.NODE_ENV === 'development' ? [
+    {
+      path: '/test',
+      component: AppLayout,
+      children: [
+        {
+          path: 'asignaturas',
+          name: 'asignaturas',
+          component: Asignaturas
+        },
+        {
+          path: 'asignaturas/:clave',
+          name: 'asignatura-detail',
+          component: AsignaturaDetail,
+          props: true
+        },
+        {
+          path: 'asignaturas/complete/:clave',
+          name: 'asignatura-completa',
+          component: () => import('../test/asignaturas2.vue')
+        },
+        {
+          path: 'visualizar-horario',
+          name: 'visualizar-horario',
+          component: visualizarhorario
+        },
+        {
+          path: 'ingresar-horario',
+          name: 'ingresar-horario',
+          component: InHorarioMaestro
+        },
+        {
+          path: 'eventos-destino',
+          name: 'eventos-destino',
+          component: eventosmdestino
+        },
+        {
+          path: 'avance',
+          name: 'avance',
+          component: avance
+        },
+        {
+          path: 'horario-maestro',
+          name: 'horario-maestro',
+          component: horaraio2
+        }
+      ]
+    }
+  ] : []),
+
+  // Rutas de error
+  {
+    name: 'unauthorized',
+    path: '/unauthorized',
+    component: () => import('../pages/404.vue')
   },
   {
     name: '404',
     path: '/404',
-    component: () => import('../pages/404.vue'),
-  },
+    component: () => import('../pages/404.vue')
+  }
 ]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  }
 })
 
-// **Guarda de navegación para redirigir a usuarios no autenticados**
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
-  const isAuthenticated = authStore.isAuthenticated
-
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next({ name: 'login' }) // Redirige al login si no está autenticado
-  } else {
-    next() // Permite la navegación si está autenticado o la ruta no necesita autenticación
+  
+  // No aplicar redirección para rutas públicas
+  if (!to.meta.requiresAuth) {
+    return next()
   }
+
+  // Si no está autenticado, redirigir a login
+  if (!authStore.isAuthenticated) {
+    return next({ name: 'login', query: { redirect: to.fullPath } })
+  }
+
+  // Verificar roles solo si la ruta los requiere
+  if (to.meta.allowedRoles) {
+    if (!authStore.userRole) {
+      // Intentar restaurar sesión si no hay rol
+      if (authStore.restoreSession()) {
+        return next(to.fullPath) // Reintentar navegación
+      }
+      return next({ name: 'login' })
+    }
+    
+    if (!to.meta.allowedRoles.includes(authStore.userRole)) {
+      return next({ name: 'unauthorized' })
+    }
+  }
+
+  next()
 })
 
 export default router

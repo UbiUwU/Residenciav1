@@ -4,16 +4,8 @@
       <template #anchor>
         <VaButton preset="secondary" color="textPrimary">
           <span class="profile-dropdown__anchor min-w-max">
-<<<<<<< HEAD
             <slot />
-            
-            
-            
-            <VaAvatar :size="32" color="warning">
-              <VaIcon name="person" />
-            </VaAvatar>
-           
-=======
+
             <VaAvatar :size="32" color="warning">
               <VaIcon name="person" />
             </VaAvatar>
@@ -98,16 +90,8 @@ withDefaults(
             to: 'settings',
             icon: 'mso-settings',
           },
-          {
-            name: 'billing',
-            to: 'billing',
-            icon: 'mso-receipt_long',
-          },
-          {
-            name: 'projects',
-            to: 'projects',
-            icon: 'mso-favorite',
-          },
+          
+          
         ],
       },
       {
