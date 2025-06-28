@@ -195,9 +195,9 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/maestro/SeguimientoD/InstrumentacionDidactica.vue')
       },
       {
-        name: 'materia-evidencias',
-        path: 'materia-evidencias',
-        component: () => import('../pages/maestro/SeguimientoD/MateriaEvidenciasView.vue')
+        path: '/comisiones',
+        name: 'comisiones',
+        component: () => import('../pages/Comisiones/Comisiones.vue')
       },
       {
         name: 'acuse-estudiante',

@@ -80,32 +80,6 @@ Route::prefix('horarios')->group(function () {
     Route::delete('/{clave_horario}', [HorarioController::class, 'destroy']);
 });
 
-Route::prefix('reservaciones')->group(function () {
-    Route::get('/', [ReservacionAlumnoController::class, 'index']);      // Listar todas
-    Route::post('/', [ReservacionAlumnoController::class, 'store']);     // Crear nueva
-    Route::get('/{id}', [ReservacionAlumnoController::class, 'show']);   // Obtener una
-    Route::put('/{id}', [ReservacionAlumnoController::class, 'update']); // Actualizar
-    Route::delete('/{id}', [ReservacionAlumnoController::class, 'destroy']); // Eliminar
-});
-
-Route::prefix('reservaciones-maestro')->group(function () {
-    Route::get('/', [ReservacionMaestroController::class, 'index']);       // Listar todas
-    Route::post('/', [ReservacionMaestroController::class, 'store']);      // Crear nueva
-    Route::get('/{id}', [ReservacionMaestroController::class, 'show']);    // Obtener una
-    Route::put('/{id}', [ReservacionMaestroController::class, 'update']);  // Actualizar
-    Route::delete('/{id}', [ReservacionMaestroController::class, 'destroy']); // Eliminar
-});
-
-Route::prefix('eventos')->group(function () {
-    Route::get('/', [EventoCalendarioController::class, 'index']);
-    Route::post('/', [EventoCalendarioController::class, 'store']);
-    Route::get('/{id}', [EventoCalendarioController::class, 'show']);
-    Route::put('/{id}', [EventoCalendarioController::class, 'update']);
-    Route::delete('/{id}', [EventoCalendarioController::class, 'destroy']);
-});
-
-
-
     //Rutas para los datos generales de la materia
 Route::prefix('asignaturas')->group(function () {
     Route::get('/', [AsignaturaController::class, 'index']);
@@ -113,13 +87,11 @@ Route::prefix('asignaturas')->group(function () {
     Route::get('/{clave}', [AsignaturaController::class, 'show']);
     Route::put('/{clave}', [AsignaturaController::class, 'update']);
     Route::delete('/{clave}', [AsignaturaController::class, 'destroy']);
+    Route::get('/maestro/{clave}', [AsignaturaController::class, 'getByTarjetaComplete']);
+    Route::get('/grupos/{clave}', [AsignaturaController::class, 'getDetalleGruposByTarjeta']);
+    Route::get('/complete/{clave}', [AsignaturaController::class, 'getByClaveComplete']);
     //Reporte
     Route::get('/asignaturas/generate-pdf', [AsignaturaController::class, 'generatePDF']);
-
-    // Rutas adicionales
-    Route::get('/carrera/{claveCarrera}', [AsignaturaController::class, 'getByCarrera']);
-    Route::get('/carrera/{claveCarrera}/semestre/{semestre}', [AsignaturaController::class, 'getByCarreraAndSemestre']);
-
    
 });
 
@@ -221,6 +193,8 @@ Route::prefix('maestrom')->group(function () {
     Route::delete('/eliminar-reservacion', [MaestroMController::class, 'eliminarReservacion']);
     Route::get('/verificar-aula/{clave_aula}', [MaestroMController::class, 'verificarAula']);
     Route::post('/bitacora', [MaestroMController::class, 'registrarBitacora']);
+    Route::get('/aulas', [MaestroMController::class, 'getAulas']);
+    Route::get('/edificios', [MaestroMController::class, 'getEdificios']);
 });
 
 use App\Http\Controllers\Api\AlumnoController;
