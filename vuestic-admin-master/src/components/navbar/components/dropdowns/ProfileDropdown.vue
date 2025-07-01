@@ -4,17 +4,8 @@
       <template #anchor>
         <VaButton preset="secondary" color="textPrimary">
           <span class="profile-dropdown__anchor min-w-max">
-<<<<<<< HEAD
             <slot />
-            
-            
-            
-            <VaAvatar :size="32" color="warning">
-              <VaIcon name="person" />
-            </VaAvatar>
-           
-=======
-            <VaAvatar :size="32" color="warning">
+             <VaAvatar :size="32" color="warning">
               <VaIcon name="person" />
             </VaAvatar>
           </span>
