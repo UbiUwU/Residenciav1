@@ -1,4 +1,4 @@
-import { useUsers } from '../../users/composables/useUsers'
+import { useUsers } from '../../admin/users/composables/useUsers'
 import { Project } from '../types'
 
 export function useProjectUsers() {

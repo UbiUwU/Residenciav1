@@ -5,12 +5,8 @@
         <VaButton preset="secondary" color="textPrimary">
           <span class="profile-dropdown__anchor min-w-max">
             <slot />
-<<<<<<< HEAD
              <VaAvatar :size="32" color="warning">
-=======
 
-            <VaAvatar :size="32" color="warning">
->>>>>>> 2d5ab0bf2c56682cc7d287c4d4ed3d4bf06de7fe
               <VaIcon name="person" />
             </VaAvatar>
           </span>

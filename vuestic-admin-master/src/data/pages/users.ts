@@ -1,4 +1,4 @@
-import { User } from '../../pages/users/types'
+import { User } from '../../pages/admin/users/types'
 import api from '../../services/api'
 
 export type Pagination = {

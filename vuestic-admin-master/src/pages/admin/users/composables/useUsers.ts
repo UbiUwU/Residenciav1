@@ -1,8 +1,8 @@
 import { Ref, ref, unref, watch, computed } from 'vue'
 import { v4 as uuid } from 'uuid'
-import type { Filters, Pagination, Sorting } from '../../../data/pages/users'
+import type { Filters, Pagination, Sorting } from '../../../../data/pages/users'
 import { User } from '../types'
-import { useUsersStore } from '../../../stores/users'
+import { useUsersStore } from '../../../../stores/users'
 
 const makePaginationRef = () => ref<Pagination>({ page: 1, perPage: 10, total: 0 })
 const makeSortingRef = () => ref<Sorting>({ sortBy: 'fullname', sortingOrder: null })

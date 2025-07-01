@@ -1,4 +1,4 @@
-import { User } from '../users/types'
+import { User } from '../admin/users/types'
 
 export type UUID = `${string}-${string}-${string}-${string}-${string}`
 

@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import apiClient from '../../../services/api.js' // Ajusta la ruta según la estructura de tu proyecto
+import apiClient from '../../../../services/api.js' // Ajusta la ruta según la estructura de tu proyecto
 
 export function useMaestros() {
   const maestros = ref<any[]>([])

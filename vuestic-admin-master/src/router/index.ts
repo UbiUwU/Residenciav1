@@ -15,7 +15,7 @@ import departamento from '../test/departamentos.vue'
 import InHorarioMaestro from '../test/IngresarHorario.vue'
 import perfil from '../test/perfil.vue'
 import visualizarhorario from '../test/visualizarhorario.vue'
-import maestro from '../test/maestro.vue'
+import maestro from '../pages/admin/pages/PaginaUsuarios.vue'
 import usuarios from '../test/usuarios.vue'
 import roles from '../test/roles.vue'
 import avance from '../test/avanceprogra.vue'
@@ -137,7 +137,14 @@ const routes: Array<RouteRecordRaw> = [
         name: 'admin-maestros',
         path: 'maestros',
         component: maestro
-      }
+      },
+      {
+        name: 'users',
+        path: 'users',
+        component: () => import('../pages/admin/pages/PaginaUsuarios.vue'),
+        meta: { requiresAuth: true },
+      },
+      
     ]
   },
 
@@ -194,11 +201,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'instrumentacion-didactica',
         component: () => import('../pages/maestro/SeguimientoD/InstrumentacionDidactica.vue')
       },
-      {
-        path: '/comisiones',
-        name: 'comisiones',
-        component: () => import('../pages/Comisiones/Comisiones.vue')
-      },
+
       {
         name: 'acuse-estudiante',
         path: 'acuse-estudiante',
