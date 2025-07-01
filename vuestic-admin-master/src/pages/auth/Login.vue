@@ -27,7 +27,6 @@
       >
         <template #appendInner>
           <VaIcon
-            
             class="cursor-pointer"
             color="secondary"
           />
@@ -59,6 +58,7 @@ import { useForm, useToast } from 'vuestic-ui'
 import { validators } from '../../services/utils'
 import api from '../../services/api'
 import { useAuthStore } from '../../services/auth'
+import { ROLES } from '../../constants/roles' // Ruta correcta
 
 const { validate } = useForm('form')
 const { push } = useRouter()
@@ -81,7 +81,8 @@ const submit = async () => {
     const response = await api.login(formData.email, formData.password)
 
     if (response.data.success) {
-      authStore.login(
+      // Realiza el login y obtén el rol del usuario
+      const userRole = await authStore.login(
         {
           token: response.data.token,
           user: response.data.data.user,
@@ -90,10 +91,26 @@ const submit = async () => {
         formData.keepLoggedIn,
       )
 
-      init({ message: "Inicio de sesion exitoso", color: 'success' })
-      push({ name: 'dashboard' })
+      init({ message: "Inicio de sesión exitoso", color: 'success' })
+
+      // Redirección basada en el rol del usuario
+      switch (userRole) {
+        case ROLES.ADMIN:
+          push({ name: 'dashboard' })
+          break
+        case ROLES.TEACHER:
+          push({ name: 'dashboard-teacher' })
+          break
+        default:
+          // Si el rol no está definido, redirige a una página genérica
+          push({ name: 'dashboard' })
+          init({ 
+            message: 'Tu cuenta no tiene un rol asignado', 
+            color: 'warning' 
+          })
+      }
     } else {
-      init({ message: response.data.message || 'Login failed', color: 'danger' })
+      init({ message: response.data.message || 'Error en el inicio de sesión', color: 'danger' })
     }
   } catch (error) {
     init({ message: 'Correo o contraseña inválidos', color: 'danger' })
