@@ -129,8 +129,21 @@ export default {
       ],
     },
 
-   
-
+    {
+      name: 'users',
+      displayName: 'Maestros',
+      meta: {
+        icon: 'group',
+      },
+    },
+    {
+      name: 'comisionar',
+      displayName: 'Comisionar',
+      meta: {
+        icon: 'group',
+      },
+    },
+    
     //Rutas para la seccion de pagos (que no se plenea usar)
     /*  {
       name: 'payments',
