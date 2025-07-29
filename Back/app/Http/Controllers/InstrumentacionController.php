@@ -19,8 +19,7 @@ class InstrumentacionController extends Controller
         $result = DB::select('SELECT crear_instrumentacion(?, ?, ?, ?, ?) AS result', [
             $data['clave_asignatura'],
             $data['tarjeta'],
-            $data['periodo'],
-            $data['firma_profesor'],
+            $data['periodo'],            $data['firma_profesor'],
             $data['firma_jefe'],
         ]);
 

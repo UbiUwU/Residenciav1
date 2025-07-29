@@ -3,6 +3,8 @@
  * data_repository.php
  * 
  * Aquí se procesan los datos para los reportes según tipo y tarjeta.
+ * 
+ * Aqui se debe poner la informacion para la creacion de los pdfs
  */
 
 function obtenerDatosDesdeFuncion(PDO $conn, string $tipo_plantilla, ?int $tarjeta): array
@@ -194,7 +196,6 @@ function obtenerDatosReporteFinal(PDO $conn, int $tarjeta): array
     ];
     
 }
-
 
 
 /**
