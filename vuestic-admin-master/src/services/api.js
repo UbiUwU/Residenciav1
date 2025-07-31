@@ -29,7 +29,7 @@ export default {
       password: password,
     })
   },
-  //Meotodo de inicio de sesión con ID del usuario que se obtiene al iniciar sesión
+  //Metodo de inicio de sesión con ID del usuario que se obtiene al iniciar sesión
   getUserData() {
     return apiClient.get('/me')
   },

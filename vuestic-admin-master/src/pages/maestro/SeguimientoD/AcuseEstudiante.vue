@@ -168,7 +168,7 @@ const estudiantesPorGrupo = {
 
 // Datos del formulario
 const profesorSeleccionado = ref('')
-const profesores = ref(['ZARINA MARYELA BASULTO ÁLVAREZ', 'JUAN PÉREZ MARTÍNEZ', 'MARÍA GONZÁLEZ LÓPEZ'])
+const profesores = ref(['ZARINA MARYELA BASULTO ÁLVAREZ', 'CARLOS EDUARDO AZUETA LEÓN', 'MARÍA GONZÁLEZ LÓPEZ'])
 const grupoSeleccionado = ref('')
 const gruposDisponibles = ref(['I3A', 'I3B', 'K9U'])
 const estudiantes = ref([])

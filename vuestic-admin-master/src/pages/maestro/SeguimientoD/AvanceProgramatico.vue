@@ -11,7 +11,7 @@
         <va-input v-model="departamento" placeholder="Nombre del departamento" class="d-inline" readonly />
       </h3>
       <h3 class="va-h6">PLANEACIÓN DEL CURSO Y AVANCE PROGRAMÁTICO DEL PERIODO: 
-        <va-input v-model="periodo" placeholder="Ej. ENE-JUN 2023" class="d-inline" />
+        <va-input v-model="periodo" placeholder="Ej. ENE-JUN 2025" class="d-inline" />
       </h3>
     </va-card-content>
   </va-card>

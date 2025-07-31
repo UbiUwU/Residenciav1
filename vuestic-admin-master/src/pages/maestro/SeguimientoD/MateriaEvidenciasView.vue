@@ -53,7 +53,7 @@ import FileUploader from './components/FileUploader.vue'
 const router = useRouter()
 const route = useRoute()
 
-// Datos de ejemplo (en una app real vendrían de una API)
+
 const materias = ref([
   { id: 1, nombre: 'Taller de Base de Datos', archivos: [] },
   { id: 2, nombre: 'Tópicos de Programación', archivos: [] },
@@ -62,7 +62,7 @@ const materias = ref([
   { id: 5, nombre: 'Ingeniería de Software', archivos: [] },
 ])
 
-// Simulación de archivos existentes
+
 const archivosEjemplo = [
   { id: 1, materiaId: 1, nombre: 'Práctica 1 - Modelo ER.pdf', tipo: 'pdf', fecha: '2023-05-15', size: '2.4 MB' },
   { id: 2, materiaId: 1, nombre: 'Documentación SQL.docx', tipo: 'word', fecha: '2023-05-20', size: '1.8 MB' },
@@ -104,11 +104,11 @@ const handleFileUploaded = (nuevoArchivo) => {
 }
 
 const descargarArchivo = (archivo) => {
-  // En una app real, aquí iría la lógica para descargar el archivo
+
   console.log('Descargando:', archivo.nombre)
-  // Simulación de descarga
+
   const link = document.createElement('a')
-  link.href = '#' // URL real del archivo
+  link.href = '#'
   link.download = archivo.nombre
   link.click()
 }

@@ -55,15 +55,12 @@
                 <va-icon name="delete" class="mr-2" />
                 Eliminar última
               </va-button>
-              <va-button color="warning" @click="precargarAlumnos">
-                <va-icon name="group" class="mr-2" />
-                Precargar alumnos
-              </va-button>
+             
             </div>
 
             <!-- Tabla de asesorías -->
             <div id="encabezado-pdf" class="text-center mb-4">
-              <h3>INSTITUTO TECNOLÓGICO SUPERIOR DE XALAPA</h3>
+              <h3>INSTITUTO TECNOLÓGICO DE CHETUMAL</h3>
               <h4>REGISTRO DE ASESORÍAS ACADÉMICAS</h4>
             </div>
 

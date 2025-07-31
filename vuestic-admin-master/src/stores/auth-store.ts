@@ -12,7 +12,7 @@ interface MaestroData {
   rfc: string
   escolaridad_licenciatura: string
   estado_licenciatura: string
-  // otros campos si los tienes
+  
 }
 
 export const useAuthStore = defineStore('auth', () => {
