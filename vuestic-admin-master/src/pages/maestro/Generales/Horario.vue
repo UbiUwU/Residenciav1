@@ -218,9 +218,9 @@ const courses = ref([
     code: 'IS-301',
     name: 'Bases de Datos',
     credits: 6,
-    teacher: 'Dr. Carlos Ruiz',
-    teacherShort: 'C. Ruiz',
-    teacherEmail: 'cruiz@universidad.edu',
+    teacher: 'Dr. Carlos Eduardo Azueta Leon',
+    teacherShort: 'Dr. Azueta',
+    teacherEmail: 'carlos.al@chetumal.tecnm.mx',
     classroom: 'Aula B-205',
     schedule: [
       { day: 'Lunes', time: '10:00-11:30' },

@@ -11,28 +11,36 @@ export const useAuthStore = defineStore('auth', () => {
   const maestro = ref<Maestro | null>(null)
   const router = useRouter()
 
-  // Computed properties
+  // Constantes correspondientes a cada rol
   const isAuthenticated = computed(() => !!token.value)
   const userRole = computed(() => user.value?.idrol || null)
   const isAdmin = computed(() => userRole.value === ROLES.ADMIN)
   const isTeacher = computed(() => userRole.value === ROLES.TEACHER)
+  const isSuper = computed(() => userRole.value === ROLES.SUPER)
 
   // Carga los datos del almacenamiento local o de sesión
   const loadFromStorage = () => {
-    const stored = localStorage.getItem('userData') || sessionStorage.getItem('userData')
+  const stored = localStorage.getItem('userData') || sessionStorage.getItem('userData')
 
-    if (stored) {
-      try {
-        const { token: storedToken, user: storedUser, maestro: storedMaestro } = JSON.parse(stored)
-        token.value = storedToken
-        user.value = storedUser
-        maestro.value = storedMaestro
-      } catch (error) {
-        console.error('Error al cargar datos de almacenamiento:', error)
-        logout()
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored)
+      token.value = parsed.token
+      user.value = parsed.user
+
+      // Solo cargar maestro si el rol es teacher
+      if (parsed.user.idrol === ROLES.TEACHER) {
+        maestro.value = parsed.maestro
+      } else {
+        maestro.value = null
       }
+    } catch (error) {
+      console.error('Error al cargar datos de almacenamiento:', error)
+      logout()
     }
   }
+}
+
 
   // Restaurar sesión existente
   const restoreSession = () => {
@@ -42,14 +50,15 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Guardar sesión en localStorage o sessionStorage
   const persistSession = (data: AuthData, keepLoggedIn: boolean) => {
-    const storage = keepLoggedIn ? localStorage : sessionStorage
-    const payload = JSON.stringify({
-      token: data.token,
-      user: data.user,
-      maestro: data.maestro,
-    })
-    storage.setItem('userData', payload)
-  }
+  const storage = keepLoggedIn ? localStorage : sessionStorage
+  const payload = JSON.stringify({
+    token: data.token,
+    user: data.user,
+    maestro: data.user.idrol === ROLES.TEACHER ? data.maestro : null,
+  })
+  storage.setItem('userData', payload)
+}
+
 
   // Iniciar sesión (versión mejorada)
   const login = async (authData: AuthData, keepLoggedIn: boolean) => {
@@ -74,6 +83,9 @@ export const useAuthStore = defineStore('auth', () => {
         break
       case ROLES.TEACHER:
         router.push({ name: 'dashboard-teacher' })
+        break
+       case ROLES.SUPER:
+        router.push({ name: 'dashboard-super' })
         break
       default:
         router.push({ name: 'dashboard' })
@@ -105,6 +117,7 @@ export const useAuthStore = defineStore('auth', () => {
     userRole,
     isAdmin,
     isTeacher,
+    isSuper,
     initialize,
     restoreSession,
     login,          // Versión que retorna el rol

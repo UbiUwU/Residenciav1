@@ -58,7 +58,7 @@ import { useForm, useToast } from 'vuestic-ui'
 import { validators } from '../../services/utils'
 import api from '../../services/api'
 import { useAuthStore } from '../../services/auth'
-import { ROLES } from '../../constants/roles' // Ruta correcta
+import { ROLES } from '../../constants/roles' 
 
 const { validate } = useForm('form')
 const { push } = useRouter()
@@ -101,9 +101,13 @@ const submit = async () => {
         case ROLES.TEACHER:
           push({ name: 'dashboard-teacher' })
           break
+          //Rol de SuperUsuario agregado
+        case ROLES.SUPER:
+          push({ name: 'dashboard-super' })
+          break
         default:
           // Si el rol no está definido, redirige a una página genérica
-          push({ name: 'dashboard' })
+          push({ name: '404' })
           init({ 
             message: 'Tu cuenta no tiene un rol asignado', 
             color: 'warning' 

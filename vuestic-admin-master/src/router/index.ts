@@ -97,6 +97,56 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
 
+  //Area de SuperUsuario
+  
+  {
+    name: 'super',
+    path: '/super',
+    component: AppLayout,
+    redirect: { name: 'dashboard-super' },
+    meta: { requiresAuth: true, allowedRoles: [ROLES.SUPER] },
+    children: [
+      {
+        name: 'dashboard-super',
+        path: 'dashboard-super',
+        component: () => import('../pages/super/Dashboard/Dashboard.vue')
+      },
+      
+       {
+        name: 'admin-reporte',
+        path: 'admin-reporte',
+        component: () => import('../pages/admin/pages/ReporteFinal.vue')
+      },
+      {
+        name: 'admin-usuarios',
+        path: 'usuarios',
+        component: usuarios
+      },
+      {
+        name: 'admin-departamentos',
+        path: 'departamentos',
+        component: departamento
+      },
+      {
+        name: 'admin-roles',
+        path: 'roles',
+        component: roles
+      },
+      
+      {
+        name: 'admin-periodos',
+        path: 'periodos',
+        component: periodos
+      },
+      {
+        name: 'admin-maestros',
+        path: 'maestros',
+        component: maestro
+      }
+    ]
+  },
+
+
   // Área de Administrador
   {
     name: 'admin',
@@ -154,8 +204,12 @@ const routes: Array<RouteRecordRaw> = [
         path: '/pdf/:tarjeta/:tipo',
         name: 'pdf',
         component: PDFView,
+      },
+      {
+        name: 'admin-reporte',
+        path: 'admin-reporte',
+        component: () => import('../pages/admin/pages/ReporteFinal.vue')
       }
-      
     ]
   },
 
@@ -170,7 +224,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         name: 'dashboard-teacher',
         path: 'dashboard-teacher',
-        component: () => import('../pages/maestro/dashboard/Dashboard.vue')
+        component: () => import('../pages/maestro/dashboard/dashboard.vue')
       },
       {
         name: 'Nombramientos',
@@ -207,12 +261,17 @@ const routes: Array<RouteRecordRaw> = [
         path: 'carpeta-evidencias',
         component: () => import('../pages/maestro/SeguimientoD/CarpetaEvidencias.vue')
       },
+       {
+        name: 'MateriaEvidenciasView',
+        path: 'MateriaEvidenciasView',
+        component: () => import('../pages/maestro/SeguimientoD/MateriaEvidenciasView.vue')
+      },
       {
         name: 'instrumentacion-didactica',
         path: 'instrumentacion-didactica',
         component: () => import('../pages/maestro/SeguimientoD/InstrumentacionDidactica.vue')
       },
-
+      
       {
         name: 'acuse-estudiante',
         path: 'acuse-estudiante',

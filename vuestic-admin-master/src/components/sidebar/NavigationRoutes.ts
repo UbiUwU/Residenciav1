@@ -130,22 +130,6 @@ export default {
     },
 
     {
-      name: 'users',
-      displayName: 'Maestros',
-      meta: {
-        icon: 'group',
-      },
-    },
-    {
-      name: 'comisionar',
-      displayName: 'Comisionar',
-      meta: {
-        icon: 'group',
-      },
-    },
-    
-
-    {
       name: 'faq',
       displayName: 'menu.faq',
       meta: {

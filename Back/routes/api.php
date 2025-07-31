@@ -16,7 +16,11 @@ use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\Api\AulaController;
 use App\Http\Controllers\PresentacionController;
 use App\Http\Controllers\DisenoController;
+use App\Http\Controllers\AvanceController;
 
+Route::get('avance', [AvanceController::class, 'obtenerAvancesCompletos']);
+Route::post('/avance', [AvanceController::class, 'crear']);
+Route::put('/avance/{id}', [AvanceController::class, 'actualizarAvance']);
 
 Route::prefix('maestros')->group(function () {
     Route::get('/', [MaestroController::class, 'index']); // Listar todos
@@ -24,6 +28,7 @@ Route::prefix('maestros')->group(function () {
     Route::get('/{id}', [MaestroController::class, 'show']); // Mostrar uno
     Route::put('/{id}', [MaestroController::class, 'update']); // Actualizar
     Route::delete('/{id}', [MaestroController::class, 'destroy']); // Eliminar
+    Route::get('/ListaM/{tarjeta}', [MaestroController::class, 'ListaM']);
 });
 
 Route::get('/aulas', [AulaController::class, 'getAllAulas']);
@@ -165,15 +170,6 @@ use App\Http\Controllers\CalificacionUnidadController;
 
 Route::post('/calificaciones', [CalificacionUnidadController::class, 'store']);
 Route::get('/calificaciones/reporte/{tarjeta}', [CalificacionUnidadController::class, 'getDetalleGruposPorCarrera']);
-
-use App\Http\Controllers\InstrumentacionController;//Me quivoque de nombre, es para el avanece programatico
-
-Route::post('/avance', [InstrumentacionController::class, 'crearInstrumentacion']);
-Route::post('/avance/detalle/agregar', [InstrumentacionController::class, 'agregarDetalle']);
-Route::get('/avance/{tarjeta}', [InstrumentacionController::class, 'obtenerPorTarjeta']);
-Route::put('/avance/detalle/{id}', [InstrumentacionController::class, 'actualizarDetalle']);
-Route::put('/avance/{id}', [InstrumentacionController::class, 'actualizarInstrumentacion']);
-
 
 Route::post('/comisiones', [ComisionController::class, 'store']);
 Route::put('/comisiones/{id}', [ComisionController::class, 'update']);

@@ -39,7 +39,7 @@ const handleFilesAdded = (newFiles) => {
 }
 
 const uploadFiles = () => {
-  // Simulación de subida de archivos
+  
   files.value.forEach((file) => {
     setTimeout(() => {
       init({

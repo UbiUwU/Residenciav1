@@ -62,7 +62,7 @@ export const teacherRoutes: INavigationRoute[] = [
     children: [
       {
         name: 'avance-Programatico',
-        displayName: 'Avance Programatico',
+        displayName: 'Avance Programático',
         meta: { allowedRoles: [2] }
       },
       {
@@ -82,7 +82,7 @@ export const teacherRoutes: INavigationRoute[] = [
       },
       {
         name: 'carpeta-evidencias',
-        displayName: 'Carpeta Evidencias',
+        displayName: 'Carpeta de Evidencias',
         meta: { allowedRoles: [2] }
       }
     ]

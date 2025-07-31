@@ -1,5 +1,6 @@
 <?php
 // Función para convertir un archivo de Word a PDF
+//No es necesario hacer cambios en esta función, ya que se mantiene la funcionalidad original
 function createPDF($filename) {
     $docx_path = "doc/{$filename}.docx";
     $pdf_path = "pdf/{$filename}.pdf";

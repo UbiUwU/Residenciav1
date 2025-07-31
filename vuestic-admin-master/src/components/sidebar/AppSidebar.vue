@@ -13,12 +13,20 @@
     :minimized="minimized"
     @update:visible="$emit('update:visible', $event)"
   />
+   <SuperSidebar
+    v-else-if="authStore.isSuper"
+    :visible="visible"
+    :mobile="mobile"
+    :minimized="minimized"
+    @update:visible="$emit('update:visible', $event)"
+  />
 </template>
 
 <script setup lang="ts">
 import { useAuthStore } from '../../services/auth'
 import TeacherSidebar from './TeacherSidebar.vue'
 import AdminSidebar from './AdminSidebar.vue'
+import SuperSidebar from './SuperSidebar.vue'
 
 defineProps({
   visible: { type: Boolean, default: true },

@@ -63,7 +63,7 @@ const form = ref({
   id_departamento: '',
   nombre: '',
   abreviacion: '',
-  maestro_id: '',
+ 
 })
 const editando = ref(false)
 const idEditando = ref(null)
@@ -114,7 +114,7 @@ const resetForm = () => {
     id_departamento: '',
     nombre: '',
     abreviacion: '',
-    maestro_id: '',
+ 
   }
   editando.value = false
   idEditando.value = null

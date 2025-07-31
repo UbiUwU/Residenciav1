@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
 
 class MaestroController extends Controller
 {
@@ -205,5 +206,48 @@ class MaestroController extends Controller
             'success' => true,
             'message' => $message
         ]);
+    }
+
+    /**
+     * Obtener la información detallada de un maestro a partir de su tarjeta
+     *
+     * @param int $tarjeta
+     * @return JsonResponse
+     */
+    public function ListaM(int $tarjeta): JsonResponse
+    {
+        try {
+            if (!is_numeric($tarjeta) || intval($tarjeta) <= 0) {
+                return response()->json([
+                    'error' => 'Tarjeta inválida. Debe ser un número positivo.'
+                ], 400);
+            }
+
+            // Ejecutar la función y darle alias al resultado
+            $result = DB::select("SELECT Get_datos_Asignatura_Maestro(?) AS datos", [$tarjeta]);
+
+            if (empty($result) || !isset($result[0]->datos)) {
+                return response()->json([
+                    'mensaje' => 'No se encontró información del maestro.'
+                ], 404);
+            }
+
+            // Decodificar el JSON
+            $info = json_decode($result[0]->datos, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return response()->json([
+                    'error' => 'Error al decodificar JSON',
+                    'detalle' => json_last_error_msg()
+                ], 500);
+            }
+
+            return response()->json($info);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'error' => 'Error interno del servidor',
+                'detalle' => $e->getMessage()
+            ], 500);
+        }
     }
 }
