@@ -1,0 +1,20 @@
+# Variables de entorno - NO SUBIR AL REPOSITORIO
+.env
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Dependencias (si usas Composer)
+/vendor/
+
+# Archivos de configuración específicos del IDE
+.vscode/
+.idea/

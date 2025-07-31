@@ -22,8 +22,6 @@ Route::get('avance', [AvanceController::class, 'obtenerAvancesCompletos']);
 Route::post('/avance', [AvanceController::class, 'crear']);
 Route::put('/avance/{id}', [AvanceController::class, 'actualizarAvance']);
 
-
-
 Route::prefix('maestros')->group(function () {
     Route::get('/', [MaestroController::class, 'index']); // Listar todos
     Route::post('/', [MaestroController::class, 'store']); // Crear nuevo
