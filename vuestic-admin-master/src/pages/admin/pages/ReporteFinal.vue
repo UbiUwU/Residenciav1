@@ -110,6 +110,10 @@ onMounted(() => {
 
 const generarReportePDF = () => {
   const url = `http://localhost/Inicio%20de%20sesion/PlugginPDF2//download.php?tarjeta=${tarjeta}&tipo=reporte_final`;
+
+  // URL configurable desde variables de entorno
+  const pdfBaseUrl = import.meta.env.VITE_PDF_BASE_URL || 'http://localhost/Inicio%20de%20sesion/PlugginPDF2';
+  const url = `${pdfBaseUrl}/download.php?tarjeta=${tarjeta}&tipo=reporte_final`;
   window.open(url, '_blank');
 }
 </script>
