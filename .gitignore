@@ -1,2 +1,30 @@
+# Variables de entorno - NO SUBIR AL REPOSITORIO
 Back/.env
-Back/.env
+Back/.env.backup
+Back/.env.production
+Back/.env.local
+
+# Archivos de configuración específicos por entorno
+*/.env
+*/.env.backup
+*/.env.production
+*/.env.local
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Dependencias
+node_modules/
+vendor/
+
+# Archivos de configuración del IDE
+.vscode/
+.idea/
+*.swp
+*.swo
