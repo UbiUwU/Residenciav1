@@ -11,25 +11,32 @@ use Illuminate\Support\Facades\Validator;
 class AvanceController extends Controller
 {
     public function obtenerAvancesCompletos(Request $request)
-    {
-        $tarjeta = $request->query('tarjeta');
+{
+    $tarjeta = $request->query('tarjeta');
 
-        $resultados = DB::select(
-            'SELECT * FROM obtener_avances_completos(?)',
-            [$tarjeta]
-        );
+    $resultados = DB::select(
+        'SELECT * FROM obtener_avances_completos(?)',
+        [$tarjeta]
+    );
 
-        // Convertir cada resultado a array y decodificar 'detalles'
-        $respuesta = array_map(function ($item) {
-            $item = (array) $item;
-            if (isset($item['detalles'])) {
-                $item['detalles'] = json_decode($item['detalles']);
-            }
-            return $item;
-        }, $resultados);
+    // Convertir cada resultado a array y decodificar los campos JSON necesarios
+    $respuesta = array_map(function ($item) {
+        $item = (array) $item;
 
-        return response()->json($respuesta);
-    }
+        // Decodificar campos JSON si existen
+        if (isset($item['detalles'])) {
+            $item['detalles'] = json_decode($item['detalles'], true);
+        }
+        if (isset($item['presentacion'])) {
+            $item['presentacion'] = json_decode($item['presentacion'], true);
+        }
+
+        return $item;
+    }, $resultados);
+
+    return response()->json($respuesta);
+}
+
     public function crear(Request $request)
     {
         $validator = Validator::make($request->all(), [
