@@ -144,28 +144,6 @@ export default {
       },
     },
     
-    //Rutas para la seccion de pagos (que no se plenea usar)
-    /*  {
-      name: 'payments',
-      displayName: 'menu.payments',
-      meta: {
-        icon: 'credit_card',
-      },
-      children: [
-        {
-          name: 'payment-methods',
-          displayName: 'menu.payment-methods',
-        },
-        {
-          name: 'pricing-plans',
-          displayName: 'menu.pricing-plans',
-        },
-        {
-          name: 'billing',
-          displayName: 'menu.billing',
-        },
-      ],
-    }, */
 
     {
       name: 'faq',

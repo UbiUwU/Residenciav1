@@ -13,8 +13,10 @@ import Asignaturas from '../test/Asignaturas.vue'
 import AsignaturaDetail from '../test/AsignaturaDetail.vue'
 import departamento from '../test/departamentos.vue'
 import InHorarioMaestro from '../test/IngresarHorario.vue'
-import perfil from '../test/perfil.vue'
+import MateriasMaestroPage from '../pages/admin/pages/AsignaturasMaestros.vue'
+import reporteFinal from '../pages/admin/pages/ReporteFinal.vue'
 import visualizarhorario from '../test/visualizarhorario.vue'
+import PDFView from '../pages/admin/pages/AsignaturaDetail.vue'
 import maestro from '../pages/admin/pages/PaginaUsuarios.vue'
 import usuarios from '../test/usuarios.vue'
 import roles from '../test/roles.vue'
@@ -139,11 +141,20 @@ const routes: Array<RouteRecordRaw> = [
         component: maestro
       },
       {
-        name: 'users',
-        path: 'users',
-        component: () => import('../pages/admin/pages/PaginaUsuarios.vue'),
-        meta: { requiresAuth: true },
+        path: '/materiasMaestro/:tarjeta',
+        name: 'materiasMaestro',
+        component: MateriasMaestroPage,
       },
+      {
+        path: '/reporte-final/:tarjeta',
+        name: 'reporteFinal',
+        component: reporteFinal,
+      },
+      {
+        path: '/pdf/:tarjeta/:tipo',
+        name: 'pdf',
+        component: PDFView,
+      }
       
     ]
   },

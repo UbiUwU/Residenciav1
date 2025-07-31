@@ -71,9 +71,16 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
+
+const tarjeta = route.params.tarjeta
+const tipo = route.params.tipo
+
+console.log('Tarjeta:', tarjeta)
+console.log('Tipo:', tipo)
 const mostrarObservaciones = ref(false)
 const observaciones = ref('')
 
