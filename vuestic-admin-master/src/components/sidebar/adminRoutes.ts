@@ -24,7 +24,16 @@ export const adminRoutes: INavigationRoute[] = [
         displayName: 'Comisionar',
         meta: { allowedRoles: [3] }
       },
-      
+      {
+        name: 'admin-maestros',
+        displayName: 'Maestros',
+        meta: { allowedRoles: [3] }
+      },
+      {
+        name: 'admin-periodos',
+        displayName: 'Periodos',
+        meta: { allowedRoles: [3] }
+      },
       {
         name: 'admin-reporte',
         displayName: 'Reporte Final',

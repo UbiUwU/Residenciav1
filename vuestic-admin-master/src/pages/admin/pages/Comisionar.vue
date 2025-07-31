@@ -60,13 +60,11 @@
         </form>
       </va-card-content>
     </va-card>
-
-    
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useToast } from 'vuestic-ui'
 import api from '../../../services/api.js'
 
@@ -90,8 +88,6 @@ const fetchComisiones = async () => {
   loadingCommissions.value = true
   try {
     const response = await api.getComisiones()
-    // Si tu API devuelve el mismo formato que el JSON que pasaste,
-    // no necesitas transformar nada
     comisiones.value = response.data
   } catch (err) {
     error.value = err as Error
@@ -136,13 +132,14 @@ const submitForm = async () => {
     }
 
     const eventTypeText = form.value.eventType.trim()
+
     const selectedMaestroValues = form.value.selectedMaestro.map(item =>
-      typeof item === 'string' ? item : item.value
+      typeof item === 'object' && item.value ? item.value : item
     )
 
     const payload = {
       eventName: form.value.eventName,
-      eventType: { value: eventTypeText },
+      eventType: { value: eventTypeText }, // Backend espera objeto
       eventDate: form.value.eventDate,
       status: form.value.status,
       selectedMaestro: selectedMaestroValues.map(value => ({ value }))
@@ -167,45 +164,5 @@ const resetForm = () => {
     status: 'Pendiente',
     selectedMaestro: []
   }
-}
-
-// Paginación
-const currentPage = ref(1)
-const itemsPerPage = 5
-
-const paginatedCommissions = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage
-  return comisiones.value.slice(start, start + itemsPerPage)
-})
-
-const totalPages = computed(() =>
-  Math.ceil(comisiones.value.length / itemsPerPage)
-)
-
-// Columnas
-const columns = [
-  { key: 'maestros', label: 'Maestros' },
-  { key: 'nombre_evento', label: 'Evento' },
-  { key: 'tipo_evento', label: 'Tipo de Evento' },
-  { key: 'fecha_evento', label: 'Fecha' },
-  { key: 'estatus', label: 'Estado' },
-  { key: 'actions', label: 'Acciones' },
-]
-
-// Función para color
-const getStatusColor = (status: string) => {
-  switch (status.toLowerCase()) {
-    case 'pendiente':
-      return 'orange'
-    case 'completado':
-      return 'green'
-    default:
-      return 'gray'
-  }
-}
-
-// Función para ver detalles
-const viewDetails = (row: any) => {
-  alert(`Detalles del evento: ${row.nombre_evento}`)
 }
 </script>

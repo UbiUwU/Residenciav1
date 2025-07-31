@@ -166,7 +166,12 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/admin/pages/Comisionar.vue')
       },
       {
-        name: 'admin-usuarios',
+        name: 'admin-maestros',
+        path: 'usuarios',
+        component: usuarios
+      },
+      {
+        name: 'admin-maestros',
         path: 'usuarios',
         component: usuarios
       },
