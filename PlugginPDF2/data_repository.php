@@ -3,9 +3,11 @@
  * data_repository.php
  * 
  * Aquí se procesan los datos para los reportes según tipo y tarjeta.
+ * 
+ * Aqui se debe poner la informacion para la creacion de los pdfs
  */
 
-function obtenerDatosDesdeFuncion(PDO $conn, string $tipo_plantilla, ?int $tarjeta): array
+function obtenerDatosDesdeFuncion(PDO $conn, string $tipo_plantilla, ?int $tarjeta, ?int $id_avance = null): array
 {
     if (!$tarjeta) {
         throw new Exception("Se requiere la tarjeta para obtener datos.");
@@ -15,7 +17,7 @@ function obtenerDatosDesdeFuncion(PDO $conn, string $tipo_plantilla, ?int $tarje
         case 'reporte_final':
             return obtenerDatosReporteFinal($conn, $tarjeta);
         case 'avance':
-            return obtenerDatosAvance($conn, $tarjeta);
+            return obtenerDatosAvance($conn, $tarjeta, $id_avance);
         // Aquí puedes agregar más tipos y funciones
         default:
             throw new Exception("Tipo de plantilla no soportado: $tipo_plantilla");
@@ -40,7 +42,7 @@ function obtenerDatosReporteFinal(PDO $conn, int $tarjeta): array
     } else {
         $nombreCompleto = 'Desconocido';
     }
-    
+
 
     // Obtener datos de calificaciones
     $sql = "SELECT public.get_detalle_grupos_calificacion_por_carrera(:tarjeta) AS resultado";
@@ -88,7 +90,7 @@ function obtenerDatosReporteFinal(PDO $conn, int $tarjeta): array
             $asignatura['periodo'] = null;
         }
 
-        
+
         foreach ($asignatura['aulas_grupos_periodos'] as &$agp) {
             $gruposAsignatura++;
             $resumen['periodo'] = $datos['asignaturas'][0]['aulas_grupos_periodos'][0]['periodo'] ?? 'Sin periodo';
@@ -192,17 +194,70 @@ function obtenerDatosReporteFinal(PDO $conn, int $tarjeta): array
         'maestro_nombre' => $nombreCompleto,
         'asignaturas' => $asignaturas,
     ];
-    
+
 }
 
-
-
-/**
- * Ejemplo básico para obtener datos avance (puedes adaptar)
- */
-function obtenerDatosAvance(PDO $conn, int $tarjeta): array
+function obtenerDatosAvance(PDO $conn, int $tarjeta, ?int $id_avance): array
 {
-    // Aquí llamarías otra función SQL similar y procesas
-    // Por ahora devolvemos arreglo vacío para ejemplo
-    return [];
+    $sql = "SELECT * FROM obtener_avances_completos(:tarjeta)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':tarjeta', $tarjeta, PDO::PARAM_INT);
+    $stmt->execute();
+    $avances = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (empty($avances)) {
+        return [];
+    }
+
+    // Si se especificó un id_avance, filtra ese avance
+    if ($id_avance !== null) {
+        foreach ($avances as $avance) {
+            if ((int) $avance['avance_id'] == (int) $id_avance) {
+                return procesarAvance($avance); // Tu lógica que separa resumen y detalles
+            }
+        }
+        return []; // No se encontró el id_avance solicitado
+    }
+
+    // Si no se especificó id_avance, usa el primero
+    return procesarAvance($avances[0]);
 }
+function procesarAvance(array $avance): array
+{
+    // Procesar datos del resumen
+    $resumen = [
+        'nombre_profesor' => $avance['nombre_profesor'],
+        'nombre_asignatura' => $avance['nombre_asignatura'],
+        'periodo' => $avance['periodo'],
+        'fecha_creacion' => $avance['fecha_creacion'],
+        'estado' => $avance['estado'],
+        'version' => $avance['version'],
+        'cantidad_temas' => $avance['cantidad_temas'],
+        'temas_completados' => $avance['temas_completados'],
+        'porcentaje_total' => $avance['porcentaje_total'],
+        'porcentaje_completado' => $avance['porcentaje_completado'],
+        'fecha_inicio_programada' => $avance['fecha_inicio_programada'],
+        'fecha_fin_programada' => $avance['fecha_fin_programada'],
+        'dias_restantes' => $avance['dias_restantes'],
+        'firma_profesor' => $avance['firma_profesor'],
+        'firma_jefe_carrera' => $avance['firma_jefe_carrera'],
+        // Nuevos campos de asignatura
+        'creditos' => $avance['creditos'] ?? null,
+        'satca_practicas' => $avance['satca_practicas'] ?? null,
+        'satca_teoricas' => $avance['satca_teoricas'] ?? null,
+        'satca_total' => $avance['satca_total'] ?? null,
+        'presentacion' => isset($avance['presentacion']) ? json_decode($avance['presentacion'], true) : null,
+        // Nuevos campos de horario
+        'clave_aula' => $avance['clave_aula'] ?? null,
+        'clave_grupo' => $avance['clave_grupo'] ?? null,
+    ];
+
+    // Procesar detalles (JSON → arreglo PHP)
+    $detalles = json_decode($avance['detalles'], true) ?? [];
+
+    return [
+        'resumen' => $resumen,
+        'detalles' => $detalles,
+    ];
+}
+

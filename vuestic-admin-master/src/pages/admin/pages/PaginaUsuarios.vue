@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import MaestrosTable from './widgets/MaestrosTable.vue'
-import { useMaestros } from './composables/useMaestros'
+import MaestrosTable from '../users/widgets/MaestrosTable.vue'
+import { useMaestros } from '../users/composables/useMaestros'
 import { useToast } from 'vuestic-ui'
 import { watchEffect } from 'vue'
 

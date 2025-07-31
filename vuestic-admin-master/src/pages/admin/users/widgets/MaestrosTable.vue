@@ -51,11 +51,6 @@ const generarReporteFinal = (tarjeta: number) => {
 
 
 
-const addUser = () => {
-  // Abre el modal para agregar un nuevo usuario
-  doShowUserFormModal.value = true
-}
-
 const userToCreate = ref({
   tarjeta: '',
   nombre: '',

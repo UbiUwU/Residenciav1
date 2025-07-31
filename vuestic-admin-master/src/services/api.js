@@ -195,4 +195,27 @@ export default {
   deleteCarrera(clave) {
     return apiClient.delete(`/carreras/${clave}`);
   },
+
+
+  //Avance programático
+  //Obtener las materias de los maestros para realizar el avance
+  
+  getListaM(tarjeta) {
+    return apiClient.get(`/ListaM/${tarjeta}`)
+  },
+    // Obtener todos los avances completos
+  getAvancesCompletos() {
+    return apiClient.get('/avance')
+  },
+
+  // Crear un nuevo avance
+  crearAvance(data) {
+    return apiClient.post('/avance', data)
+  },
+
+  // Actualizar un avance existente
+  actualizarAvance(id, data) {
+    return apiClient.put(`/avance/${id}`, data)
+  },
+
 }
