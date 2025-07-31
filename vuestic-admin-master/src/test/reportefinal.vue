@@ -56,7 +56,9 @@ const reporte = ref([
  */
 const generarReportePDF = async () => {
     try {
-        const response = await fetch('http://localhost/Inicio%20de%20sesion/PlugginPDF2/download2.php', {
+        // URL configurable desde variables de entorno
+        const pdfBaseUrl = import.meta.env.VITE_PDF_BASE_URL || 'http://localhost/Inicio%20de%20sesion/PlugginPDF2';
+        const response = await fetch(`${pdfBaseUrl}/download2.php`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -34,8 +34,9 @@ onMounted(() => {
 })
 
 const generarReportePDF = () => {
-  // Cambia el puerto si es necesario (normalmente 80 o 8080)
-  const url = `http://localhost/Inicio%20de%20sesion/PlugginPDF2//download.php?tarjeta=${tarjeta}&tipo=reporte_final`;
+  // URL configurable desde variables de entorno
+  const pdfBaseUrl = import.meta.env.VITE_PDF_BASE_URL || 'http://localhost/Inicio%20de%20sesion/PlugginPDF2';
+  const url = `${pdfBaseUrl}/download.php?tarjeta=${tarjeta}&tipo=reporte_final`;
   window.open(url, '_blank');
 }
 </script>
