@@ -35,8 +35,13 @@
             <VaButton type="submit" color="primary"> Guardar </VaButton>
           </div>
         </form>
+<<<<<<< HEAD
       </VaCardContent>
     </VaCard>
+=======
+      </va-card-content>
+    </va-card>
+>>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
   </div>
 </template>
 
@@ -65,8 +70,6 @@ const fetchComisiones = async () => {
   loadingCommissions.value = true
   try {
     const response = await api.getComisiones()
-    // Si tu API devuelve el mismo formato que el JSON que pasaste,
-    // no necesitas transformar nada
     comisiones.value = response.data
   } catch (err) {
     error.value = err as Error
@@ -111,13 +114,19 @@ const submitForm = async () => {
     }
 
     const eventTypeText = form.value.eventType.trim()
+<<<<<<< HEAD
     const selectedMaestroValues = form.value.selectedMaestro.map((item) =>
       typeof item === 'string' ? item : item.value,
+=======
+
+    const selectedMaestroValues = form.value.selectedMaestro.map(item =>
+      typeof item === 'object' && item.value ? item.value : item
+>>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
     )
 
     const payload = {
       eventName: form.value.eventName,
-      eventType: { value: eventTypeText },
+      eventType: { value: eventTypeText }, // Backend espera objeto
       eventDate: form.value.eventDate,
       status: form.value.status,
       selectedMaestro: selectedMaestroValues.map((value) => ({ value })),

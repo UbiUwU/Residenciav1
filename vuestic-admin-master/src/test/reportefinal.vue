@@ -52,6 +52,7 @@ const reporte = ref([
  * Función que envía el JSON al backend y recibe un PDF
  */
 const generarReportePDF = async () => {
+<<<<<<< HEAD
   try {
     const response = await fetch('http://localhost/Inicio%20de%20sesion/PlugginPDF2/download2.php', {
       method: 'POST',
@@ -63,6 +64,21 @@ const generarReportePDF = async () => {
         datos: reporte.value, // Asegúrate que reporte.value tenga la estructura adecuada
       }),
     })
+=======
+    try {
+        // URL configurable desde variables de entorno
+        const pdfBaseUrl = import.meta.env.VITE_PDF_BASE_URL || 'http://localhost/Inicio%20de%20sesion/PlugginPDF2';
+        const response = await fetch(`${pdfBaseUrl}/download2.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                tipo: 'reporte_final',
+                datos: reporte.value  // Asegúrate que reporte.value tenga la estructura adecuada
+            })
+        });
+>>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
 
     if (!response.ok) {
       throw new Error('Error al generar el documento PDF')

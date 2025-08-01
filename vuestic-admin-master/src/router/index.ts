@@ -13,7 +13,13 @@ import Asignaturas from '../test/Asignaturas.vue'
 import AsignaturaDetail from '../test/AsignaturaDetail.vue'
 import departamento from '../test/departamentos.vue'
 import InHorarioMaestro from '../test/IngresarHorario.vue'
+<<<<<<< HEAD
+=======
+import MateriasMaestroPage from '../pages/admin/pages/AsignaturasMaestros.vue'
+import reporteFinal from '../pages/admin/pages/ReporteFinal.vue'
+>>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
 import visualizarhorario from '../test/visualizarhorario.vue'
+import PDFView from '../pages/admin/pages/AsignaturaDetail.vue'
 import maestro from '../pages/admin/pages/PaginaUsuarios.vue'
 import usuarios from '../test/usuarios.vue'
 import roles from '../test/roles.vue'
@@ -176,11 +182,64 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/admin/pages/Comisionar.vue'),
       },
       {
+<<<<<<< HEAD
         name: 'admin-reporte',
         path: 'admin-reporte',
         component: () => import('../pages/admin/pages/ReporteFinal.vue'),
       },
     ],
+=======
+        name: 'admin-maestros',
+        path: 'usuarios',
+        component: usuarios
+      },
+      {
+        name: 'admin-maestros',
+        path: 'usuarios',
+        component: usuarios
+      },
+      {
+        name: 'admin-departamentos',
+        path: 'departamentos',
+        component: departamento
+      },
+      {
+        name: 'admin-roles',
+        path: 'roles',
+        component: roles
+      },
+      {
+        name: 'admin-periodos',
+        path: 'periodos',
+        component: periodos
+      },
+      {
+        name: 'admin-maestros',
+        path: 'maestros',
+        component: maestro
+      },
+      {
+        path: '/materiasMaestro/:tarjeta',
+        name: 'materiasMaestro',
+        component: MateriasMaestroPage,
+      },
+      {
+        path: '/reporte-final/:tarjeta',
+        name: 'reporteFinal',
+        component: reporteFinal,
+      },
+      {
+        path: '/pdf/:tarjeta/:tipo',
+        name: 'pdf',
+        component: PDFView,
+      },
+      {
+        name: 'admin-reporte',
+        path: 'admin-reporte',
+        component: () => import('../pages/admin/pages/ReporteFinal.vue')
+      }
+    ]
+>>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
   },
 
   // Área de Maestro
