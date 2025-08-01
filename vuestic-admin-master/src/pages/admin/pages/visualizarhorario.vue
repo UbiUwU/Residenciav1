@@ -10,9 +10,9 @@
         <div class="dia-header">{{ dia }}</div>
         <div v-for="horario in horariosPorDia(dia)" :key="horario.id" class="bloque-horario">
           <div class="hora">{{ formatHora(horario.hora_inicio) }} - {{ formatHora(horario.hora_fin) }}</div>
-          <button @click="eliminarHorario(horario.id)" class="eliminar-btn">×</button>
+          <button class="eliminar-btn" @click="eliminarHorario(horario.id)">×</button>
         </div>
-        <button @click="abrirModal(dia)" class="agregar-btn">+ Agregar horario</button>
+        <button class="agregar-btn" @click="abrirModal(dia)">+ Agregar horario</button>
       </div>
     </div>
 
@@ -23,16 +23,16 @@
         <div class="time-pickers">
           <div>
             <label>Hora inicio:</label>
-            <input type="time" v-model="nuevoHorario.hora_inicio" required>
+            <input v-model="nuevoHorario.hora_inicio" type="time" required />
           </div>
           <div>
             <label>Hora fin:</label>
-            <input type="time" v-model="nuevoHorario.hora_fin" required>
+            <input v-model="nuevoHorario.hora_fin" type="time" required />
           </div>
         </div>
         <div class="modal-actions">
-          <button @click="guardarHorario" class="guardar-btn">Guardar</button>
-          <button @click="cerrarModal" class="cancelar-btn">Cancelar</button>
+          <button class="guardar-btn" @click="guardarHorario">Guardar</button>
+          <button class="cancelar-btn" @click="cerrarModal">Cancelar</button>
         </div>
       </div>
     </div>
@@ -53,12 +53,12 @@ export default {
     const horarios = ref([])
     const mostrarModal = ref(false)
     const diaSeleccionado = ref('')
-    
+
     const nuevoHorario = ref({
       maestro_id: maestro.tarjeta,
       dia_semana: '',
       hora_inicio: '',
-      hora_fin: ''
+      hora_fin: '',
     })
 
     const cargarHorarios = async () => {
@@ -71,7 +71,7 @@ export default {
     }
 
     const horariosPorDia = (dia) => {
-      return horarios.value.filter(h => h.dia_semana === dia)
+      return horarios.value.filter((h) => h.dia_semana === dia)
     }
 
     const formatHora = (hora) => {
@@ -90,7 +90,7 @@ export default {
         maestro_id: maestro.tarjeta,
         dia_semana: '',
         hora_inicio: '',
-        hora_fin: ''
+        hora_fin: '',
       }
     }
 
@@ -131,9 +131,9 @@ export default {
       abrirModal,
       cerrarModal,
       guardarHorario,
-      eliminarHorario
+      eliminarHorario,
     }
-  }
+  },
 }
 </script>
 
@@ -160,7 +160,7 @@ export default {
   background: #f8f9fa;
   border-radius: 8px;
   padding: 15px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .dia-header {
@@ -180,7 +180,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .hora {
@@ -227,7 +227,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;

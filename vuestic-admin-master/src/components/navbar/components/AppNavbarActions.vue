@@ -1,6 +1,5 @@
 <template>
   <div class="app-navbar-actions">
-    
     <NotificationDropdown class="app-navbar-actions__item" />
     <ProfileDropdown class="app-navbar-actions__item app-navbar-actions__item--profile mr-1" />
   </div>
@@ -13,9 +12,6 @@ import NotificationDropdown from './dropdowns/NotificationDropdown.vue'
 defineProps({
   isMobile: { type: Boolean, default: false },
 })
-
-import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
 </script>
 
 <style lang="scss">

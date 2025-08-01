@@ -1,46 +1,35 @@
 <template>
   <div class="boton-regresar">
-    <button @click="handleRegresar">
-      ← Regresar
-    </button>
+    <button @click="handleRegresar">← Regresar</button>
   </div>
 
-   <div class="asignaturas-container">
-  <h1 class="va-text-primary">Asignaturas del maestro</h1>
+  <div class="asignaturas-container">
+    <h1 class="va-text-primary">Asignaturas del maestro</h1>
 
     <div v-if="loading" class="loading">Cargando asignaturas...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
 
-    <div v-else-if="asignaturas.length === 0" class="no-data">
-      Este maestro no tiene asignaturas registradas.
-    </div>
+    <div v-else-if="asignaturas.length === 0" class="no-data">Este maestro no tiene asignaturas registradas.</div>
 
     <div v-else class="asignaturas-grid">
-      <div
-  v-for="asignatura in asignaturas"
-  :key="asignatura.ClaveAsignatura"
-  class="asignatura-card"
->
-  <div @click="toggleDetalle(asignatura.ClaveAsignatura)">
-    <h3>{{ asignatura.ClaveAsignatura }} - {{ asignatura.NombreAsignatura }}</h3>
-    <div class="asignatura-info">
-      <span>Créditos: {{ asignatura.Creditos }}</span>
-      <span>
-        SATCA: {{ asignatura.Satca_Total }}
-        (T:{{ asignatura.Satca_Teoricas }}, P:{{ asignatura.Satca_Practicas }})
-      </span>
-    </div>
-  </div>
+      <div v-for="asignatura in asignaturas" :key="asignatura.ClaveAsignatura" class="asignatura-card">
+        <div @click="toggleDetalle(asignatura.ClaveAsignatura)">
+          <h3>{{ asignatura.ClaveAsignatura }} - {{ asignatura.NombreAsignatura }}</h3>
+          <div class="asignatura-info">
+            <span>Créditos: {{ asignatura.Creditos }}</span>
+            <span>
+              SATCA: {{ asignatura.Satca_Total }} (T:{{ asignatura.Satca_Teoricas }}, P:{{
+                asignatura.Satca_Practicas
+              }})
+            </span>
+          </div>
+        </div>
 
-<div v-if="detalleAbierto === asignatura.ClaveAsignatura" class="submenu">
-    <button @click="verPDF()">
-      Instrumentación Didáctica
-    </button>
-    <button @click="verPDF(asignatura.ClaveAsignatura, 'avance')">
-      Avance Programático
-    </button>
-  </div>
-</div>
+        <div v-if="detalleAbierto === asignatura.ClaveAsignatura" class="submenu">
+          <button @click="verPDF()">Instrumentación Didáctica</button>
+          <button @click="verPDF(asignatura.ClaveAsignatura, 'avance')">Avance Programático</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -69,16 +58,16 @@ const fetchAsignaturas = async () => {
 
     if (Array.isArray(data) && data.length > 0) {
       // Transformar los datos al formato esperado
-      asignaturas.value = data.map(item => ({
+      asignaturas.value = data.map((item) => ({
         ClaveAsignatura: item.informacionbasica.clave,
         NombreAsignatura: item.informacionbasica.nombre,
         Creditos: item.informacionbasica.creditos,
         Satca_Teoricas: item.informacionbasica.satca.teoricas,
         Satca_Practicas: item.informacionbasica.satca.practicas,
-        Satca_Total: item.informacionbasica.satca.total
+        Satca_Total: item.informacionbasica.satca.total,
       }))
     } else {
-      asignaturas.value = []  // No hay asignaturas
+      asignaturas.value = [] // No hay asignaturas
     }
   } catch (err) {
     error.value = 'Error al cargar las asignaturas: ' + (err.response?.data?.error || err.message)
@@ -89,7 +78,7 @@ const fetchAsignaturas = async () => {
 }
 
 const handleRegresar = () => {
-  window.history.back()  // o router.back() si usas Vue Router
+  window.history.back() // o router.back() si usas Vue Router
 }
 const detalleAbierto = ref(null)
 
@@ -98,16 +87,14 @@ const toggleDetalle = (clave) => {
 }
 
 const verPDF = () => {
-    router.push({ name: 'pdf'})
+  router.push({ name: 'pdf' })
 }
 onMounted(() => {
   fetchAsignaturas()
 })
-
 </script>
 
 <style scoped>
-
 .asignaturas-container {
   padding: 20px;
   max-width: 1200px;
@@ -131,7 +118,9 @@ h1 {
   border-radius: 8px;
   padding: 15px;
   box-shadow: var(--va-box-shadow);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .asignatura-card:hover {

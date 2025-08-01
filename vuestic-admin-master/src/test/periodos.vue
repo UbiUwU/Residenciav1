@@ -1,66 +1,40 @@
 <template>
-  <va-card class="periodos-container">
-    <va-card-title class="header-container">
+  <VaCard class="periodos-container">
+    <VaCardTitle class="header-container">
       <h1 class="va-h1 title-text">Gestión de Períodos Escolares</h1>
-      <va-button 
-        color="primary" 
-        icon="add" 
-        @click="mostrarModalCrear"
-        class="add-button"
-      >
-        Nuevo Período
-      </va-button>
-    </va-card-title>
+      <VaButton color="primary" icon="add" class="add-button" @click="mostrarModalCrear"> Nuevo Período </VaButton>
+    </VaCardTitle>
 
-    <va-card-content class="content-container">
+    <VaCardContent class="content-container">
       <!-- Tabla de períodos con mejor estilo -->
-      <va-data-table 
-        :items="periodos" 
-        :columns="columnas" 
-        :loading="cargando"
-        striped
-        hoverable
-        class="periodos-table"
-      >
+      <VaDataTable :items="periodos" :columns="columnas" :loading="cargando" striped hoverable class="periodos-table">
         <template #cell(fecha_inicio)="{ value }">
           {{ formatDate(value) }}
         </template>
-        
+
         <template #cell(fecha_fin)="{ value }">
           {{ formatDate(value) }}
         </template>
-        
+
         <template #cell(actions)="{ row }">
           <div class="actions-container">
-            <va-button 
-              size="small" 
-              color="info" 
-              icon="edit" 
-              class="action-button"
-              @click="mostrarModalEditar(row)" 
-            />
-            <va-button 
-              size="small" 
-              color="danger" 
-              icon="delete" 
-              class="action-button"
-              @click="confirmarEliminar(row)" 
-            />
+            <VaButton size="small" color="info" icon="edit" class="action-button" @click="mostrarModalEditar(row)" />
+            <VaButton size="small" color="danger" icon="delete" class="action-button" @click="confirmarEliminar(row)" />
           </div>
         </template>
-      </va-data-table>
+      </VaDataTable>
 
       <!-- Modal para crear/editar con mejor diseño -->
-      <va-modal 
-        v-model="mostrarModal" 
-        :title="modalTitulo" 
-        size="small" 
+      <VaModal
+        v-model="mostrarModal"
+        :title="modalTitulo"
+        size="small"
         hide-default-actions
         class="periodo-modal"
         :message="modalMensaje"
       >
-        <va-form @submit.prevent="guardarPeriodo" class="modal-form">
-          <va-input
+        <VaForm class="modal-form" @submit.prevent="guardarPeriodo">
+          <VaInput
             v-model="form.codigoperiodo"
             label="Código del Período"
             class="mb-4"
@@ -68,7 +42,7 @@
             placeholder="Ej: 2023-A"
           />
 
-          <va-date-input
+          <VaDateInput
             v-model="form.fecha_inicio"
             label="Fecha de Inicio"
             class="mb-4"
@@ -76,7 +50,7 @@
             placeholder="Seleccione fecha"
           />
 
-          <va-date-input
+          <VaDateInput
             v-model="form.fecha_fin"
             label="Fecha de Fin"
             class="mb-4"
@@ -88,27 +62,17 @@
           />
 
           <div class="modal-actions">
-            <va-button 
-              type="button" 
-              color="secondary" 
-              @click="mostrarModal = false"
-              class="cancel-button"
-            >
+            <VaButton type="button" color="secondary" class="cancel-button" @click="mostrarModal = false">
               Cancelar
-            </va-button>
-            <va-button 
-              type="submit" 
-              color="primary"
-              class="save-button"
-              :disabled="!formValid"
-            >
+            </VaButton>
+            <VaButton type="submit" color="primary" class="save-button" :disabled="!formValid">
               {{ esEdicion ? 'Actualizar' : 'Guardar' }}
-            </va-button>
+            </VaButton>
           </div>
-        </va-form>
-      </va-modal>
-    </va-card-content>
-  </va-card>
+        </VaForm>
+      </VaModal>
+    </VaCardContent>
+  </VaCard>
 </template>
 
 <script setup>
@@ -132,16 +96,16 @@ const form = ref({
 })
 
 // Computed para título del modal
-const modalTitulo = computed(() => 
-  esEdicion.value ? 'Editar Período Escolar' : 'Nuevo Período Escolar'
-)
+const modalTitulo = computed(() => (esEdicion.value ? 'Editar Período Escolar' : 'Nuevo Período Escolar'))
 
 // Computed para validación del formulario
 const formValid = computed(() => {
-  return form.value.codigoperiodo && 
-         form.value.fecha_inicio && 
-         form.value.fecha_fin &&
-         form.value.fecha_fin >= form.value.fecha_inicio
+  return (
+    form.value.codigoperiodo &&
+    form.value.fecha_inicio &&
+    form.value.fecha_fin &&
+    form.value.fecha_fin >= form.value.fecha_inicio
+  )
 })
 
 // Columnas de la tabla

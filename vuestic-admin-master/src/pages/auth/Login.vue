@@ -26,10 +26,7 @@
         @clickAppendInner.stop="isPasswordVisible.value = !isPasswordVisible.value"
       >
         <template #appendInner>
-          <VaIcon
-            class="cursor-pointer"
-            color="secondary"
-          />
+          <VaIcon class="cursor-pointer" color="secondary" />
         </template>
       </VaInput>
     </VaValue>
@@ -58,7 +55,7 @@ import { useForm, useToast } from 'vuestic-ui'
 import { validators } from '../../services/utils'
 import api from '../../services/api'
 import { useAuthStore } from '../../services/auth'
-import { ROLES } from '../../constants/roles' 
+import { ROLES } from '../../constants/roles'
 
 const { validate } = useForm('form')
 const { push } = useRouter()
@@ -91,7 +88,7 @@ const submit = async () => {
         formData.keepLoggedIn,
       )
 
-      init({ message: "Inicio de sesión exitoso", color: 'success' })
+      init({ message: 'Inicio de sesión exitoso', color: 'success' })
 
       // Redirección basada en el rol del usuario
       switch (userRole) {
@@ -101,16 +98,16 @@ const submit = async () => {
         case ROLES.TEACHER:
           push({ name: 'dashboard-teacher' })
           break
-          //Rol de SuperUsuario agregado
+        //Rol de SuperUsuario agregado
         case ROLES.SUPER:
           push({ name: 'dashboard-super' })
           break
         default:
           // Si el rol no está definido, redirige a una página genérica
           push({ name: '404' })
-          init({ 
-            message: 'Tu cuenta no tiene un rol asignado', 
-            color: 'warning' 
+          init({
+            message: 'Tu cuenta no tiene un rol asignado',
+            color: 'warning',
           })
       }
     } else {

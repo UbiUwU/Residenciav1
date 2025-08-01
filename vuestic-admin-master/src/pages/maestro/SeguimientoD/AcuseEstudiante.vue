@@ -3,7 +3,7 @@
   <h1 class="va-h4 mb-4">Acuse del estudiante</h1>
   <div class="acuse-estudiante">
     <!-- Encabezado institucional -->
-    <va-card>
+    <VaCard>
       <div class="institutional-header">
         <div class="text-center">
           <h1 class="va-h4">INSTITUTO TECNOLÓGICO DE CHETUMAL</h1>
@@ -12,8 +12,8 @@
           <p class="periodo-escolar">PERIODO ESCOLAR: ENERO-JUNIO 2025</p>
         </div>
 
-        <va-card class="mt-4" color="secondary">
-          <va-card-content class="format-info">
+        <VaCard class="mt-4" color="secondary">
+          <VaCardContent class="format-info">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>Nombre del formato: Acuse del estudiante.</div>
               <div>
@@ -21,17 +21,17 @@
               </div>
               <div class="text-right">Página 1 de 1</div>
             </div>
-          </va-card-content>
-        </va-card>
+          </VaCardContent>
+        </VaCard>
       </div>
-    </va-card>
+    </VaCard>
 
     <!-- Contenido principal -->
-    <va-card class="mt-4">
-      <va-card-content>
+    <VaCard class="mt-4">
+      <VaCardContent>
         <p class="declaration-text">
           Recibimos del Profesor(a):
-          <va-select
+          <VaSelect
             v-model="profesorSeleccionado"
             :options="profesores"
             placeholder="Seleccione profesor"
@@ -42,10 +42,10 @@
 
         <ul class="document-list">
           <li>
-            <va-checkbox v-model="documentosRecibidos.programaEstudios" label="Programa de estudios" />
+            <VaCheckbox v-model="documentosRecibidos.programaEstudios" label="Programa de estudios" />
           </li>
           <li>
-            <va-checkbox
+            <VaCheckbox
               v-model="documentosRecibidos.planeacionCurso"
               label="Planeación del Curso y Avance Programático de la asignatura que imparte en nuestro grupo"
             />
@@ -56,24 +56,24 @@
           Asimismo, nos señaló los criterios de evaluación de acuerdo con el Lineamiento para el Proceso de Evaluación y
           Acreditación de Asignaturas.
         </p>
-      </va-card-content>
-    </va-card>
+      </VaCardContent>
+    </VaCard>
 
     <!-- Selector de grupo -->
-    <va-card class="mt-4">
-      <va-card-content>
-        <va-select
+    <VaCard class="mt-4">
+      <VaCardContent>
+        <VaSelect
           v-model="grupoSeleccionado"
           label="Seleccionar Grupo"
           :options="gruposDisponibles"
           @update:modelValue="cargarEstudiantesPorGrupo"
         />
-      </va-card-content>
-    </va-card>
+      </VaCardContent>
+    </VaCard>
 
     <!-- Tabla de asignaturas y estudiantes -->
-    <va-card class="mt-4">
-      <va-card-content>
+    <VaCard class="mt-4">
+      <VaCardContent>
         <div class="overflow-x-auto">
           <table class="w-full asignaturas-table">
             <thead>
@@ -90,19 +90,19 @@
             <tbody>
               <tr v-for="(estudiante, index) in estudiantes" :key="index">
                 <td>
-                  <va-input v-model="estudiante.clave" readonly />
+                  <VaInput v-model="estudiante.clave" readonly />
                 </td>
                 <td>
-                  <va-input v-model="estudiante.grupo" readonly />
+                  <VaInput v-model="estudiante.grupo" readonly />
                 </td>
                 <td>
-                  <va-input v-model="estudiante.materia" readonly />
+                  <VaInput v-model="estudiante.materia" readonly />
                 </td>
                 <td>
-                  <va-input v-model="estudiante.nombre" readonly />
+                  <VaInput v-model="estudiante.nombre" readonly />
                 </td>
                 <td>
-                  <va-input v-model="estudiante.numeroControl" readonly />
+                  <VaInput v-model="estudiante.numeroControl" readonly />
                 </td>
                 <td>
                   <div class="firma-placeholder">
@@ -110,34 +110,30 @@
                   </div>
                 </td>
                 <td>
-                  <va-date-input 
-                    v-model="estudiante.fecha" 
-                    placeholder="Seleccione fecha" 
-                    :max-date="new Date()" 
-                  />
+                  <VaDateInput v-model="estudiante.fecha" placeholder="Seleccione fecha" :max-date="new Date()" />
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-      </va-card-content>
-    </va-card>
+      </VaCardContent>
+    </VaCard>
 
     <!-- Botones de acción -->
     <div class="flex justify-between mt-6">
-      <va-button preset="secondary" @click="generarPDF">
-        <va-icon name="picture_as_pdf" class="mr-2" />
+      <VaButton preset="secondary" @click="generarPDF">
+        <VaIcon name="picture_as_pdf" class="mr-2" />
         Generar PDF
-      </va-button>
+      </VaButton>
       <div class="flex gap-4">
-        <va-button preset="secondary" @click="limpiarFormulario">
-          <va-icon name="delete" class="mr-2" />
+        <VaButton preset="secondary" @click="limpiarFormulario">
+          <VaIcon name="delete" class="mr-2" />
           Limpiar
-        </va-button>
-        <va-button @click="guardarAcuse">
-          <va-icon name="save" class="mr-2" />
+        </VaButton>
+        <VaButton @click="guardarAcuse">
+          <VaIcon name="save" class="mr-2" />
           Guardar Acuse
-        </va-button>
+        </VaButton>
       </div>
     </div>
   </div>
@@ -149,21 +145,75 @@ import html2pdf from 'html2pdf.js'
 
 // Datos de ejemplo para estudiantes por grupo
 const estudiantesPorGrupo = {
-  'I3A': [
-    { clave: 'SCC-1005', grupo: 'I3A', materia: 'CULTURA EMPRESARIAL', nombre: 'JUAN PÉREZ LÓPEZ', numeroControl: '20230001' },
-    { clave: 'SCC-1005', grupo: 'I3A', materia: 'CULTURA EMPRESARIAL', nombre: 'MARÍA GARCÍA HERNÁNDEZ', numeroControl: '20230002' },
-    { clave: 'SCC-1005', grupo: 'I3A', materia: 'CULTURA EMPRESARIAL', nombre: 'CARLOS SÁNCHEZ MARTÍNEZ', numeroControl: '20230003' }
+  I3A: [
+    {
+      clave: 'SCC-1005',
+      grupo: 'I3A',
+      materia: 'CULTURA EMPRESARIAL',
+      nombre: 'JUAN PÉREZ LÓPEZ',
+      numeroControl: '20230001',
+    },
+    {
+      clave: 'SCC-1005',
+      grupo: 'I3A',
+      materia: 'CULTURA EMPRESARIAL',
+      nombre: 'MARÍA GARCÍA HERNÁNDEZ',
+      numeroControl: '20230002',
+    },
+    {
+      clave: 'SCC-1005',
+      grupo: 'I3A',
+      materia: 'CULTURA EMPRESARIAL',
+      nombre: 'CARLOS SÁNCHEZ MARTÍNEZ',
+      numeroControl: '20230003',
+    },
   ],
-  'I3B': [
-    { clave: 'SCC-1005', grupo: 'I3B', materia: 'CULTURA EMPRESARIAL', nombre: 'ANA RODRÍGUEZ GÓMEZ', numeroControl: '20230004' },
-    { clave: 'SCC-1005', grupo: 'I3B', materia: 'CULTURA EMPRESARIAL', nombre: 'LUIS HERNÁNDEZ DÍAZ', numeroControl: '20230005' },
-    { clave: 'SCC-1005', grupo: 'I3B', materia: 'CULTURA EMPRESARIAL', nombre: 'SOFÍA RAMÍREZ CASTRO', numeroControl: '20230006' }
+  I3B: [
+    {
+      clave: 'SCC-1005',
+      grupo: 'I3B',
+      materia: 'CULTURA EMPRESARIAL',
+      nombre: 'ANA RODRÍGUEZ GÓMEZ',
+      numeroControl: '20230004',
+    },
+    {
+      clave: 'SCC-1005',
+      grupo: 'I3B',
+      materia: 'CULTURA EMPRESARIAL',
+      nombre: 'LUIS HERNÁNDEZ DÍAZ',
+      numeroControl: '20230005',
+    },
+    {
+      clave: 'SCC-1005',
+      grupo: 'I3B',
+      materia: 'CULTURA EMPRESARIAL',
+      nombre: 'SOFÍA RAMÍREZ CASTRO',
+      numeroControl: '20230006',
+    },
   ],
-  'K9U': [
-    { clave: 'TID-1010', grupo: 'K9U', materia: 'DESARROLLO DE EMPRENDEDORES', nombre: 'PEDRO GONZÁLEZ VARGAS', numeroControl: '20230007' },
-    { clave: 'TID-1010', grupo: 'K9U', materia: 'DESARROLLO DE EMPRENDEDORES', nombre: 'LAURA MORALES SANTIAGO', numeroControl: '20230008' },
-    { clave: 'TID-1010', grupo: 'K9U', materia: 'DESARROLLO DE EMPRENDEDORES', nombre: 'JORGE TORRES FLORES', numeroControl: '20230009' }
-  ]
+  K9U: [
+    {
+      clave: 'TID-1010',
+      grupo: 'K9U',
+      materia: 'DESARROLLO DE EMPRENDEDORES',
+      nombre: 'PEDRO GONZÁLEZ VARGAS',
+      numeroControl: '20230007',
+    },
+    {
+      clave: 'TID-1010',
+      grupo: 'K9U',
+      materia: 'DESARROLLO DE EMPRENDEDORES',
+      nombre: 'LAURA MORALES SANTIAGO',
+      numeroControl: '20230008',
+    },
+    {
+      clave: 'TID-1010',
+      grupo: 'K9U',
+      materia: 'DESARROLLO DE EMPRENDEDORES',
+      nombre: 'JORGE TORRES FLORES',
+      numeroControl: '20230009',
+    },
+  ],
 }
 
 // Datos del formulario
@@ -181,9 +231,9 @@ const documentosRecibidos = ref({
 // Cargar estudiantes según el grupo seleccionado
 const cargarEstudiantesPorGrupo = () => {
   if (grupoSeleccionado.value && estudiantesPorGrupo[grupoSeleccionado.value]) {
-    estudiantes.value = estudiantesPorGrupo[grupoSeleccionado.value].map(est => ({
+    estudiantes.value = estudiantesPorGrupo[grupoSeleccionado.value].map((est) => ({
       ...est,
-      fecha: new Date().toISOString().split('T')[0] // Fecha actual por defecto
+      fecha: new Date().toISOString().split('T')[0], // Fecha actual por defecto
     }))
   } else {
     estudiantes.value = []
@@ -217,7 +267,7 @@ const generarPDF = () => {
     filename: `Acuse_Estudiante_${grupoSeleccionado.value || 'grupo'}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
   }
 
   html2pdf().from(element).set(opt).save()

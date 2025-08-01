@@ -13,7 +13,6 @@ import Asignaturas from '../test/Asignaturas.vue'
 import AsignaturaDetail from '../test/AsignaturaDetail.vue'
 import departamento from '../test/departamentos.vue'
 import InHorarioMaestro from '../test/IngresarHorario.vue'
-import perfil from '../test/perfil.vue'
 import visualizarhorario from '../test/visualizarhorario.vue'
 import maestro from '../pages/admin/pages/PaginaUsuarios.vue'
 import usuarios from '../test/usuarios.vue'
@@ -26,14 +25,12 @@ import horaraio2 from '../test/HorarioMaestro.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/:pathMatch(.*)*',
-    redirect: (to) => {
+    redirect: () => {
       const authStore = useAuthStore()
-      return authStore.isAdmin ? 
-        { name: 'dashboard' } : 
-        { name: 'dashboard-teacher' }
+      return authStore.isAdmin ? { name: 'dashboard' } : { name: 'dashboard-teacher' }
     },
   },
-  
+
   // Rutas públicas de autenticación
   {
     path: '/auth',
@@ -42,28 +39,28 @@ const routes: Array<RouteRecordRaw> = [
       {
         name: 'login',
         path: 'login',
-        component: () => import('../pages/auth/Login.vue')
+        component: () => import('../pages/auth/Login.vue'),
       },
       {
         name: 'signup',
         path: 'signup',
-        component: () => import('../pages/auth/Signup.vue')
+        component: () => import('../pages/auth/Signup.vue'),
       },
       {
         name: 'recover-password',
         path: 'recover-password',
-        component: () => import('../pages/auth/RecoverPassword.vue')
+        component: () => import('../pages/auth/RecoverPassword.vue'),
       },
       {
         name: 'recover-password-email',
         path: 'recover-password-email',
-        component: () => import('../pages/auth/CheckTheEmail.vue')
+        component: () => import('../pages/auth/CheckTheEmail.vue'),
       },
       {
         path: '',
-        redirect: { name: 'login' }
+        redirect: { name: 'login' },
       },
-    ]
+    ],
   },
 
   // Rutas compartidas para ambos roles
@@ -77,26 +74,25 @@ const routes: Array<RouteRecordRaw> = [
         name: 'faq',
         path: 'faq',
         component: () => import('../pages/faq/FaqPage.vue'),
-        meta: { requiresAuth: false } // Opcional: hacerla pública
+        meta: { requiresAuth: false }, // Opcional: hacerla pública
       },
-      
+
       // Otras rutas compartidas que requieren autenticación
       {
         name: 'settings',
         path: 'settings',
-        component: () => import('../pages/settings/Settings.vue')
+        component: () => import('../pages/settings/Settings.vue'),
       },
       {
         name: 'preferences',
         path: 'preferences',
-        component: () => import('../pages/preferences/Preferences.vue')
+        component: () => import('../pages/preferences/Preferences.vue'),
       },
-     
-    ]
+    ],
   },
 
   //Area de SuperUsuario
-  
+
   {
     name: 'super',
     path: '/super',
@@ -107,43 +103,59 @@ const routes: Array<RouteRecordRaw> = [
       {
         name: 'dashboard-super',
         path: 'dashboard-super',
-        component: () => import('../pages/super/Dashboard/Dashboard.vue')
+        component: () => import('../pages/super/Dashboard/Dashboard.vue'),
       },
-      
-       {
+
+      {
         name: 'admin-reporte',
         path: 'admin-reporte',
-        component: () => import('../pages/admin/pages/ReporteFinal.vue')
+        component: () => import('../pages/admin/pages/ReporteFinal.vue'),
+      },
+
+      {
+        path: 'asignaturas',
+        name: 'asignaturas',
+        component: Asignaturas,
+      },
+      {
+        path: 'asignaturas/:clave',
+        name: 'asignatura-detail',
+        component: AsignaturaDetail,
+        props: true,
+      },
+      {
+        path: 'asignaturas/complete/:clave',
+        name: 'asignatura-completa',
+        component: () => import('../test/asignaturas2.vue'),
       },
       {
         name: 'admin-usuarios',
         path: 'usuarios',
-        component: usuarios
+        component: usuarios,
       },
       {
         name: 'admin-departamentos',
         path: 'departamentos',
-        component: departamento
+        component: departamento,
       },
       {
         name: 'admin-roles',
         path: 'roles',
-        component: roles
+        component: roles,
       },
-      
+
       {
         name: 'admin-periodos',
         path: 'periodos',
-        component: periodos
+        component: periodos,
       },
       {
         name: 'admin-maestros',
         path: 'maestros',
-        component: maestro
-      }
-    ]
+        component: maestro,
+      },
+    ],
   },
-
 
   // Área de Administrador
   {
@@ -156,20 +168,19 @@ const routes: Array<RouteRecordRaw> = [
       {
         name: 'dashboard',
         path: 'dashboard',
-        component: () => import('../pages/admin/dashboard/Dashboard.vue')
+        component: () => import('../pages/admin/dashboard/Dashboard.vue'),
       },
       {
         name: 'Comisionar',
         path: 'Comisionar',
-        component: () => import('../pages/admin/pages/Comisionar.vue')
+        component: () => import('../pages/admin/pages/Comisionar.vue'),
       },
-       {
+      {
         name: 'admin-reporte',
         path: 'admin-reporte',
-        component: () => import('../pages/admin/pages/ReporteFinal.vue')
-      }
-     
-    ]
+        component: () => import('../pages/admin/pages/ReporteFinal.vue'),
+      },
+    ],
   },
 
   // Área de Maestro
@@ -183,60 +194,60 @@ const routes: Array<RouteRecordRaw> = [
       {
         name: 'dashboard-teacher',
         path: 'dashboard-teacher',
-        component: () => import('../pages/maestro/dashboard/dashboard.vue')
+        component: () => import('../pages/maestro/dashboard/dashboard.vue'),
       },
       {
         name: 'Nombramientos',
         path: 'Nombramientos',
-        component: () => import('../pages/maestro/Generales/Nombramientos.vue')
+        component: () => import('../pages/maestro/Generales/Nombramientos.vue'),
       },
       {
         name: 'Horario',
         path: 'Horario',
-        component: () => import('../pages/maestro/Generales/Horario.vue')
+        component: () => import('../pages/maestro/Generales/Horario.vue'),
       },
       {
         name: 'comisiones',
         path: 'comisiones',
-        component: () => import('../pages/maestro/Comisiones/Comisiones.vue')
+        component: () => import('../pages/maestro/Comisiones/Comisiones.vue'),
       },
       {
         name: 'constancias',
         path: 'constancias',
-        component: () => import('../pages/maestro/Comisiones/Constancias.vue')
+        component: () => import('../pages/maestro/Comisiones/Constancias.vue'),
       },
       {
         name: 'avance-Programatico',
         path: 'avance-Programatico',
-        component: () => import('../pages/maestro/SeguimientoD/AvanceProgramatico.vue')
+        component: () => import('../pages/maestro/SeguimientoD/AvanceProgramatico.vue'),
       },
       {
         name: 'asesorias',
         path: 'asesorias',
-        component: () => import('../pages/maestro/SeguimientoD/Asesorias.vue')
+        component: () => import('../pages/maestro/SeguimientoD/Asesorias.vue'),
       },
       {
         name: 'carpeta-evidencias',
         path: 'carpeta-evidencias',
-        component: () => import('../pages/maestro/SeguimientoD/CarpetaEvidencias.vue')
+        component: () => import('../pages/maestro/SeguimientoD/CarpetaEvidencias.vue'),
       },
-       {
+      {
         name: 'MateriaEvidenciasView',
         path: 'MateriaEvidenciasView',
-        component: () => import('../pages/maestro/SeguimientoD/MateriaEvidenciasView.vue')
+        component: () => import('../pages/maestro/SeguimientoD/MateriaEvidenciasView.vue'),
       },
       {
         name: 'instrumentacion-didactica',
         path: 'instrumentacion-didactica',
-        component: () => import('../pages/maestro/SeguimientoD/InstrumentacionDidactica.vue')
+        component: () => import('../pages/maestro/SeguimientoD/InstrumentacionDidactica.vue'),
       },
-      
+
       {
         name: 'acuse-estudiante',
         path: 'acuse-estudiante',
-        component: () => import('../pages/maestro/SeguimientoD/AcuseEstudiante.vue')
-      }
-    ]
+        component: () => import('../pages/maestro/SeguimientoD/AcuseEstudiante.vue'),
+      },
+    ],
   },
 
   // Seguimiento Docente (Teacher)
@@ -248,14 +259,14 @@ const routes: Array<RouteRecordRaw> = [
       {
         name: 'evaluacion-diagnostica',
         path: 'evaluacion-diagnostica',
-        component: () => import('../pages/maestro/SeguimientoD/EvaluacionDiagnostica.vue')
+        component: () => import('../pages/maestro/SeguimientoD/EvaluacionDiagnostica.vue'),
       },
       {
         name: 'calificaciones-parciales',
         path: 'calificaciones-parciales',
-        component: () => import('../pages/maestro/SeguimientoD/CalificacionesParciales.vue')
-      }
-    ]
+        component: () => import('../pages/maestro/SeguimientoD/CalificacionesParciales.vue'),
+      },
+    ],
   },
 
   // Liberación de actividades (Teacher)
@@ -267,88 +278,74 @@ const routes: Array<RouteRecordRaw> = [
       {
         name: 'reporte-final',
         path: 'reporte-final',
-        component: () => import('../pages/maestro/Liberacion/ReporteFinal.vue')
+        component: () => import('../pages/maestro/Liberacion/ReporteFinal.vue'),
       },
       {
         name: 'actas-calificaciones',
         path: 'actas-calificaciones',
-        component: () => import('../pages/maestro/Liberacion/ActasCalificaciones.vue')
+        component: () => import('../pages/maestro/Liberacion/ActasCalificaciones.vue'),
       },
       {
         name: 'liberacion-actividades-d',
         path: 'liberacion-actividades-d',
-        component: () => import('../pages/maestro/Liberacion/LiberacionActividadesD.vue')
+        component: () => import('../pages/maestro/Liberacion/LiberacionActividadesD.vue'),
       },
       {
         name: 'liberacion-actividades-a',
         path: 'liberacion-actividades-a',
-        component: () => import('../pages/maestro/Liberacion/LiberacionActividadesA.vue')
-      }
-    ]
+        component: () => import('../pages/maestro/Liberacion/LiberacionActividadesA.vue'),
+      },
+    ],
   },
 
   // Rutas de prueba (solo desarrollo)
-  ...(process.env.NODE_ENV === 'development' ? [
-    {
-      path: '/test',
-      component: AppLayout,
-      children: [
+  ...(process.env.NODE_ENV === 'development'
+    ? [
         {
-          path: 'asignaturas',
-          name: 'asignaturas',
-          component: Asignaturas
+          path: '/test',
+          component: AppLayout,
+          children: [
+            {
+              path: 'visualizar-horario',
+              name: 'visualizar-horario',
+              component: visualizarhorario,
+            },
+            {
+              path: 'ingresar-horario',
+              name: 'ingresar-horario',
+              component: InHorarioMaestro,
+            },
+            {
+              path: 'eventos-destino',
+              name: 'eventos-destino',
+              component: eventosmdestino,
+            },
+            {
+              path: 'avance',
+              name: 'avance',
+              component: avance,
+            },
+            {
+              path: 'horario-maestro',
+              name: 'horario-maestro',
+              component: horaraio2,
+            },
+          ],
         },
-        {
-          path: 'asignaturas/:clave',
-          name: 'asignatura-detail',
-          component: AsignaturaDetail,
-          props: true
-        },
-        {
-          path: 'asignaturas/complete/:clave',
-          name: 'asignatura-completa',
-          component: () => import('../test/asignaturas2.vue')
-        },
-        {
-          path: 'visualizar-horario',
-          name: 'visualizar-horario',
-          component: visualizarhorario
-        },
-        {
-          path: 'ingresar-horario',
-          name: 'ingresar-horario',
-          component: InHorarioMaestro
-        },
-        {
-          path: 'eventos-destino',
-          name: 'eventos-destino',
-          component: eventosmdestino
-        },
-        {
-          path: 'avance',
-          name: 'avance',
-          component: avance
-        },
-        {
-          path: 'horario-maestro',
-          name: 'horario-maestro',
-          component: horaraio2
-        }
       ]
-    }
-  ] : []),
+    : []),
 
   // Rutas de error
   {
     name: 'unauthorized',
     path: '/unauthorized',
-    component: () => import('../pages/404.vue')
+    component: () => import('../pages/404.vue'),
   },
   {
     name: '404',
     path: '/404',
-    component: () => import('../pages/404.vue')
-  }
+    component: () => import('../pages/404.vue'),
+  },
 ]
 
 const router = createRouter({
@@ -360,12 +357,12 @@ const router = createRouter({
     } else {
       return { top: 0 }
     }
-  }
+  },
 })
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
-  
+
   // No aplicar redirección para rutas públicas
   if (!to.meta.requiresAuth) {
     return next()
@@ -385,7 +382,7 @@ router.beforeEach((to, from, next) => {
       }
       return next({ name: 'login' })
     }
-    
+
     if (!to.meta.allowedRoles.includes(authStore.userRole)) {
       return next({ name: 'unauthorized' })
     }

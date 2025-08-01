@@ -1,56 +1,36 @@
 <template>
-  <va-card class="users-container">
-    <va-card-title class="header-container">
+  <VaCard class="users-container">
+    <VaCardTitle class="header-container">
       <h1 class="va-h1 title-text">Gestión de Usuarios</h1>
-      <va-button 
-        color="primary" 
-        icon="add" 
-        @click="mostrarModalCrear"
-        class="add-button"
-      >
-        Nuevo Usuario
-      </va-button>
-    </va-card-title>
+      <VaButton color="primary" icon="add" class="add-button" @click="mostrarModalCrear"> Nuevo Usuario </VaButton>
+    </VaCardTitle>
 
-    <va-card-content class="content-container">
+    <VaCardContent class="content-container">
       <!-- Tabla de usuarios -->
-      <va-data-table 
-        :items="usuarios" 
-        :columns="columnas" 
-        :loading="cargando"
-        striped
-        hoverable
-        class="users-table"
-      >
+      <VaDataTable :items="usuarios" :columns="columnas" :loading="cargando" striped hoverable class="users-table">
         <template #cell(rol)="{ value }">
-          <va-chip :color="getRolColor(value)" size="small">
+          <VaChip :color="getRolColor(value)" size="small">
             {{ getRolNombre(value) }}
-          </va-chip>
+          </VaChip>
         </template>
-        
+
         <template #cell(actions)="{ row }">
           <div class="actions-container">
-            <va-button 
-              size="small" 
-              color="danger" 
-              icon="delete" 
+            <VaButton
+              size="small"
+              color="danger"
+              icon="delete"
               class="action-button"
-              @click="confirmarEliminar(row.idusuario)" 
+              @click="confirmarEliminar(row.idusuario)"
             />
           </div>
         </template>
-      </va-data-table>
+      </VaDataTable>
 
       <!-- Modal para crear nuevo usuario -->
-      <va-modal 
-        v-model="mostrarModal" 
-        title="Nuevo Usuario" 
-        size="small"
-        hide-default-actions
-        class="user-modal"
-      >
-        <va-form @submit.prevent="crearUsuario" class="modal-form">
-          <va-input
+      <VaModal v-model="mostrarModal" title="Nuevo Usuario" size="small" hide-default-actions class="user-modal">
+        <VaForm class="modal-form" @submit.prevent="crearUsuario">
+          <VaInput
             v-model="form.correo"
             label="Correo electrónico"
             type="email"
@@ -58,7 +38,7 @@
             :rules="[(v) => !!v || 'Campo requerido', emailRule]"
           />
 
-          <va-input
+          <VaInput
             v-model="form.password"
             label="Contraseña"
             type="password"
@@ -66,7 +46,7 @@
             :rules="[(v) => !!v || 'Campo requerido', (v) => v.length >= 6 || 'Mínimo 6 caracteres']"
           />
 
-          <va-select
+          <VaSelect
             v-model="form.id_rol"
             label="Rol"
             class="mb-4"
@@ -75,57 +55,33 @@
           />
 
           <div class="modal-actions">
-            <va-button 
-              type="button" 
-              color="secondary" 
-              @click="mostrarModal = false"
-              class="cancel-button"
-            >
+            <VaButton type="button" color="secondary" class="cancel-button" @click="mostrarModal = false">
               Cancelar
-            </va-button>
-            <va-button 
-              type="submit" 
-              color="primary"
-              class="save-button"
-              :disabled="!formValid"
-            >
+            </VaButton>
+            <VaButton type="submit" color="primary" class="save-button" :disabled="!formValid">
               Crear Usuario
-            </va-button>
+            </VaButton>
           </div>
-        </va-form>
-      </va-modal>
+        </VaForm>
+      </VaModal>
 
       <!-- Modal de confirmación para eliminar -->
-      <va-modal
-        v-model="mostrarConfirmacionEliminar"
-        hide-default-actions
-        class="confirm-modal"
-      >
+      <VaModal v-model="mostrarConfirmacionEliminar" hide-default-actions class="confirm-modal">
         <template #header>
           <h3 class="va-h3">Confirmar eliminación</h3>
         </template>
-        
+
         <p>¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.</p>
-        
+
         <template #footer>
           <div class="flex justify-end gap-2">
-            <va-button 
-              color="secondary" 
-              @click="mostrarConfirmacionEliminar = false"
-            >
-              Cancelar
-            </va-button>
-            <va-button 
-              color="danger" 
-              @click="eliminarUsuarioConfirmado"
-            >
-              Eliminar
-            </va-button>
+            <VaButton color="secondary" @click="mostrarConfirmacionEliminar = false"> Cancelar </VaButton>
+            <VaButton color="danger" @click="eliminarUsuarioConfirmado"> Eliminar </VaButton>
           </div>
         </template>
-      </va-modal>
-    </va-card-content>
-  </va-card>
+      </VaModal>
+    </VaCardContent>
+  </VaCard>
 </template>
 
 <script setup>
@@ -146,14 +102,14 @@ const usuarioAEliminar = ref(null)
 const form = ref({
   correo: '',
   password: '',
-  id_rol: 1
+  id_rol: 1,
 })
 
 // Roles disponibles (puedes obtenerlos de la API si es dinámico)
 const rolesOptions = [
   { text: 'Administrador', value: 1 },
   { text: 'Maestro', value: 2 },
-  { text: 'Alumno', value: 3 }
+  { text: 'Alumno', value: 3 },
 ]
 
 // Columnas de la tabla
@@ -161,7 +117,7 @@ const columnas = [
   { key: 'idusuario', label: 'ID', sortable: true, width: '80px' },
   { key: 'correo', label: 'Correo', sortable: true },
   { key: 'rol', label: 'Rol', sortable: true },
-  { key: 'actions', label: 'Acciones', width: '100px' }
+  { key: 'actions', label: 'Acciones', width: '100px' },
 ]
 
 // Reglas de validación
@@ -172,10 +128,7 @@ const emailRule = (value) => {
 
 // Computed
 const formValid = computed(() => {
-  return form.value.correo && 
-         form.value.password && 
-         form.value.password.length >= 6 &&
-         form.value.id_rol
+  return form.value.correo && form.value.password && form.value.password.length >= 6 && form.value.id_rol
 })
 
 // Métodos
@@ -192,7 +145,7 @@ const obtenerUsuarios = async () => {
     console.error('Error al obtener usuarios:', error)
     init({
       message: 'Error al cargar los usuarios',
-      color: 'danger'
+      color: 'danger',
     })
   } finally {
     cargando.value = false
@@ -203,7 +156,7 @@ const mostrarModalCrear = () => {
   form.value = {
     correo: '',
     password: '',
-    id_rol: 1
+    id_rol: 1,
   }
   mostrarModal.value = true
 }
@@ -213,7 +166,7 @@ const crearUsuario = async () => {
     const response = await api.crearUsuario(form.value)
     init({
       message: response.data?.mensaje || 'Usuario creado con éxito',
-      color: 'success'
+      color: 'success',
     })
     mostrarModal.value = false
     await obtenerUsuarios()
@@ -221,7 +174,7 @@ const crearUsuario = async () => {
     console.error('Error al crear usuario:', error)
     init({
       message: error.response?.data?.message || 'Error al crear el usuario',
-      color: 'danger'
+      color: 'danger',
     })
   }
 }
@@ -236,7 +189,7 @@ const eliminarUsuarioConfirmado = async () => {
     const response = await api.eliminarUsuario(usuarioAEliminar.value)
     init({
       message: response.data?.mensaje || 'Usuario eliminado con éxito',
-      color: 'success'
+      color: 'success',
     })
     mostrarConfirmacionEliminar.value = false
     await obtenerUsuarios()
@@ -244,21 +197,21 @@ const eliminarUsuarioConfirmado = async () => {
     console.error('Error al eliminar usuario:', error)
     init({
       message: error.response?.data?.message || 'Error al eliminar el usuario',
-      color: 'danger'
+      color: 'danger',
     })
   }
 }
 
 const getRolNombre = (idRol) => {
-  const rol = rolesOptions.find(r => r.value === idRol)
+  const rol = rolesOptions.find((r) => r.value === idRol)
   return rol ? rol.text : 'Desconocido'
 }
 
 const getRolColor = (idRol) => {
   const colors = {
-    1: 'danger',   // Admin
-    2: 'primary',  // Maestro
-    3: 'info'      // Alumno
+    1: 'danger', // Admin
+    2: 'primary', // Maestro
+    3: 'info', // Alumno
   }
   return colors[idRol] || 'secondary'
 }

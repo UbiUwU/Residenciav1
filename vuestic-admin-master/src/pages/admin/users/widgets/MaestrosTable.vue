@@ -49,8 +49,6 @@ const generarReporteFinal = (tarjeta: number) => {
   router.push({ name: 'reporteFinalMaestro', params: { tarjeta } })
 }
 
-
-
 const userToCreate = ref({
   tarjeta: '',
   nombre: '',
@@ -95,23 +93,12 @@ const onUserSaved = () => {
 
   <VaDataTable :columns="columns" :items="filteredMaestros" :loading="loading">
     <template #cell(acciones)="{ rowData }">
-      <VaButton
-        color="primary"
-        icon="visibility"
-        size="small"
-        @click="verMaestro(rowData.tarjeta)"
-      >
+      <VaButton color="primary" icon="visibility" size="small" @click="verMaestro(rowData.tarjeta)">
         Ver maestro
       </VaButton>
-      <VaButton
-      color="info"
-      icon="description"
-      size="small"
-      @click="generarReporteFinal(rowData.tarjeta)"
-      class="ml-2"
-    >
-      Reporte Final
-    </VaButton>
+      <VaButton color="info" icon="description" size="small" class="ml-2" @click="generarReporteFinal(rowData.tarjeta)">
+        Reporte Final
+      </VaButton>
     </template>
   </VaDataTable>
 

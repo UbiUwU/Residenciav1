@@ -170,40 +170,38 @@ export default {
     return apiClient.get(`/calificaciones/reporte/${clave}`)
   },
 
-
   // Obtener todas las carreras
   getCarreras() {
-    return apiClient.get('/carreras');
+    return apiClient.get('/carreras')
   },
 
   // Obtener una carrera por su clave
   getCarrera(clave) {
-    return apiClient.get(`/carreras/${clave}`);
+    return apiClient.get(`/carreras/${clave}`)
   },
 
   // Crear una nueva carrera
   createCarrera(carreraData) {
-    return apiClient.post('/carreras', carreraData);
+    return apiClient.post('/carreras', carreraData)
   },
 
   // Actualizar una carrera existente
   updateCarrera(clave, carreraData) {
-    return apiClient.put(`/carreras/${clave}`, carreraData);
+    return apiClient.put(`/carreras/${clave}`, carreraData)
   },
 
   // Eliminar una carrera
   deleteCarrera(clave) {
-    return apiClient.delete(`/carreras/${clave}`);
+    return apiClient.delete(`/carreras/${clave}`)
   },
-
 
   //Avance programático
   //Obtener las materias de los maestros para realizar el avance
-  
+
   getListaM(tarjeta) {
     return apiClient.get(`/ListaM/${tarjeta}`)
   },
-    // Obtener todos los avances completos
+  // Obtener todos los avances completos
   getAvancesCompletos() {
     return apiClient.get('/avance')
   },
@@ -217,5 +215,4 @@ export default {
   actualizarAvance(id, data) {
     return apiClient.put(`/avance/${id}`, data)
   },
-
 }

@@ -2,40 +2,40 @@
   <!-- Título de la vista -->
   <h1 class="va-h4 mb-4">Mis Constancias de Cumplimiento</h1>
   <div class="p-4">
-    <va-card>
-      <va-card-content>
+    <VaCard>
+      <VaCardContent>
         <!-- Filtros -->
         <div class="flex flex-wrap gap-4 mb-6">
-          <va-select v-model="selectedYear" label="Año" :options="yearOptions" class="min-w-32" />
+          <VaSelect v-model="selectedYear" label="Año" :options="yearOptions" class="min-w-32" />
 
-          <va-select v-model="selectedEventType" label="Tipo de Evento" :options="eventTypeOptions" class="min-w-48" />
+          <VaSelect v-model="selectedEventType" label="Tipo de Evento" :options="eventTypeOptions" class="min-w-48" />
 
-          <va-input v-model="searchQuery" placeholder="Buscar constancias..." clearable class="flex-grow">
+          <VaInput v-model="searchQuery" placeholder="Buscar constancias..." clearable class="flex-grow">
             <template #prependInner>
-              <va-icon name="search" size="small" />
+              <VaIcon name="search" size="small" />
             </template>
-          </va-input>
+          </VaInput>
         </div>
 
         <!-- Lista de constancias -->
-        <va-data-table :items="paginatedCertificates" :columns="columns" :loading="loading" hoverable>
+        <VaDataTable :items="paginatedCertificates" :columns="columns" :loading="loading" hoverable>
           <template #cell(status)="{ value }">
-            <va-badge :text="value" :color="getStatusColor(value)" />
+            <VaBadge :text="value" :color="getStatusColor(value)" />
           </template>
 
           <template #cell(download)="{ row }">
-            <va-button preset="secondary" size="small" icon="download" @click="downloadCertificate(row)">
+            <VaButton preset="secondary" size="small" icon="download" @click="downloadCertificate(row)">
               Descargar
-            </va-button>
+            </VaButton>
           </template>
-        </va-data-table>
+        </VaDataTable>
 
         <!-- Paginación -->
         <div class="flex justify-center mt-4">
-          <va-pagination v-model="currentPage" :pages="totalPages" :visible-pages="5" />
+          <VaPagination v-model="currentPage" :pages="totalPages" :visible-pages="5" />
         </div>
-      </va-card-content>
-    </va-card>
+      </VaCardContent>
+    </VaCard>
   </div>
 </template>
 
@@ -117,17 +117,18 @@ const sampleCertificates = [
     status: 'disponible',
     pdfUrl: '/certificados/academia-journal-constancia.pdf',
     reference: 'DOC-2024-04-105',
-    description: 'Constancia por participación como revisor de artículos científicos para la edición Q2 2024 de Academia Journal.'
+    description:
+      'Constancia por participación como revisor de artículos científicos para la edición Q2 2024 de Academia Journal.',
   },
 ]
 
 // Computed
 const filteredCertificates = computed(() => {
-  let result = sampleCertificates.map(cert => ({
+  let result = sampleCertificates.map((cert) => ({
     ...cert,
     status: getStatusText(cert.status),
     eventDate: formatDate(cert.eventDate),
-    issueDate: formatDate(cert.issueDate)
+    issueDate: formatDate(cert.issueDate),
   }))
 
   // Filtro por año
@@ -144,8 +145,7 @@ const filteredCertificates = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     result = result.filter(
-      (cert) => cert.eventName.toLowerCase().includes(query) || 
-               cert.reference.toLowerCase().includes(query)
+      (cert) => cert.eventName.toLowerCase().includes(query) || cert.reference.toLowerCase().includes(query),
     )
   }
 

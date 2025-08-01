@@ -1,69 +1,43 @@
 <template>
-  <va-card class="maestros-container">
-    <va-card-title class="header-container">
+  <VaCard class="maestros-container">
+    <VaCardTitle class="header-container">
       <h1 class="va-h1 title-text">Gestión de Maestros</h1>
-      <va-button 
-        color="primary" 
-        icon="add" 
-        @click="abrirFormulario"
-        class="add-button"
-      >
-        Nuevo Maestro
-      </va-button>
-    </va-card-title>
+      <VaButton color="primary" icon="add" class="add-button" @click="abrirFormulario"> Nuevo Maestro </VaButton>
+    </VaCardTitle>
 
-    <va-card-content class="content-container">
+    <VaCardContent class="content-container">
       <!-- Tabla de maestros -->
-      <va-data-table 
-        :items="maestros" 
-        :columns="columnas" 
-        :loading="cargando"
-        striped
-        hoverable
-        class="maestros-table"
-      >
+      <VaDataTable :items="maestros" :columns="columnas" :loading="cargando" striped hoverable class="maestros-table">
         <template #cell(nombre_completo)="{ row }">
           {{ `${row.nombre} ${row.apellidopaterno} ${row.apellidomaterno}` }}
         </template>
-        
+
         <template #cell(actions)="{ row }">
           <div class="actions-container">
-            <va-button 
-              size="small" 
-              color="info" 
-              icon="edit" 
-              class="action-button"
-              @click="editarMaestro(row)" 
-            />
-            <va-button 
-              size="small" 
-              color="danger" 
-              icon="delete" 
-              class="action-button"
-              @click="confirmarEliminar(row)" 
-            />
+            <VaButton size="small" color="info" icon="edit" class="action-button" @click="editarMaestro(row)" />
+            <VaButton size="small" color="danger" icon="delete" class="action-button" @click="confirmarEliminar(row)" />
           </div>
         </template>
-      </va-data-table>
+      </VaDataTable>
 
       <!-- Modal para crear/editar -->
-      <va-modal 
-        v-model="mostrarFormulario" 
-        :title="modalTitulo" 
+      <VaModal
+        v-model="mostrarFormulario"
+        :title="modalTitulo"
         size="large"
         hide-default-actions
         class="maestro-modal"
         maximizable
       >
-        <va-form @submit.prevent="guardarMaestro" class="modal-form">
-          <va-tabs v-model="tabActivo" class="mb-4">
-            <va-tab name="datosUsuario">Datos de Usuario</va-tab>
-            <va-tab name="datosMaestro">Datos del Maestro</va-tab>
-            <va-tab name="escolaridad">Escolaridad</va-tab>
-          </va-tabs>
+        <VaForm class="modal-form" @submit.prevent="guardarMaestro">
+          <VaTabs v-model="tabActivo" class="mb-4">
+            <VaTab name="datosUsuario">Datos de Usuario</VaTab>
+            <VaTab name="datosMaestro">Datos del Maestro</VaTab>
+            <VaTab name="escolaridad">Escolaridad</VaTab>
+          </VaTabs>
 
           <div v-show="tabActivo === 'datosUsuario'">
-            <va-input
+            <VaInput
               v-model="form.correo"
               label="Email"
               type="email"
@@ -71,7 +45,7 @@
               :rules="[(v) => !!v || 'Campo requerido', emailRule]"
             />
 
-            <va-input
+            <VaInput
               v-model="form.password"
               label="Contraseña"
               type="password"
@@ -80,7 +54,7 @@
               :disabled="editando"
             />
 
-            <va-select
+            <VaSelect
               v-model="form.id_rol"
               label="Rol"
               class="mb-4"
@@ -90,7 +64,7 @@
           </div>
 
           <div v-show="tabActivo === 'datosMaestro'">
-            <va-input
+            <VaInput
               v-model="form.tarjeta"
               label="Tarjeta"
               type="number"
@@ -100,19 +74,14 @@
             />
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <va-input
-                v-model="form.nombre"
-                label="Nombre"
-                class="mb-0"
-                :rules="[(v) => !!v || 'Campo requerido']"
-              />
-              <va-input
+              <VaInput v-model="form.nombre" label="Nombre" class="mb-0" :rules="[(v) => !!v || 'Campo requerido']" />
+              <VaInput
                 v-model="form.apellidopaterno"
                 label="Apellido Paterno"
                 class="mb-0"
                 :rules="[(v) => !!v || 'Campo requerido']"
               />
-              <va-input
+              <VaInput
                 v-model="form.apellidomaterno"
                 label="Apellido Materno"
                 class="mb-0"
@@ -120,14 +89,9 @@
               />
             </div>
 
-            <va-input
-              v-model="form.rfc"
-              label="RFC"
-              class="mb-4"
-              :rules="[(v) => !!v || 'Campo requerido']"
-            />
+            <VaInput v-model="form.rfc" label="RFC" class="mb-4" :rules="[(v) => !!v || 'Campo requerido']" />
 
-            <va-select
+            <VaSelect
               v-model="form.id_departamento"
               label="Departamento"
               class="mb-4"
@@ -139,12 +103,8 @@
           <div v-show="tabActivo === 'escolaridad'">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Licenciatura -->
-              <va-input
-                v-model="form.escolaridad_licenciatura"
-                label="Licenciatura"
-                class="mb-4"
-              />
-              <va-select
+              <VaInput v-model="form.escolaridad_licenciatura" label="Licenciatura" class="mb-4" />
+              <VaSelect
                 v-model="form.estado_licenciatura"
                 label="Estado Licenciatura"
                 class="mb-4"
@@ -152,12 +112,8 @@
               />
 
               <!-- Especialización -->
-              <va-input
-                v-model="form.escolaridad_especializacion"
-                label="Especialización"
-                class="mb-4"
-              />
-              <va-select
+              <VaInput v-model="form.escolaridad_especializacion" label="Especialización" class="mb-4" />
+              <VaSelect
                 v-model="form.estado_especializacion"
                 label="Estado Especialización"
                 class="mb-4"
@@ -165,12 +121,8 @@
               />
 
               <!-- Maestría -->
-              <va-input
-                v-model="form.escolaridad_maestria"
-                label="Maestría"
-                class="mb-4"
-              />
-              <va-select
+              <VaInput v-model="form.escolaridad_maestria" label="Maestría" class="mb-4" />
+              <VaSelect
                 v-model="form.estado_maestria"
                 label="Estado Maestría"
                 class="mb-4"
@@ -178,12 +130,8 @@
               />
 
               <!-- Doctorado -->
-              <va-input
-                v-model="form.escolaridad_doctorado"
-                label="Doctorado"
-                class="mb-4"
-              />
-              <va-select
+              <VaInput v-model="form.escolaridad_doctorado" label="Doctorado" class="mb-4" />
+              <VaSelect
                 v-model="form.estado_doctorado"
                 label="Estado Doctorado"
                 class="mb-4"
@@ -193,27 +141,15 @@
           </div>
 
           <div class="modal-actions">
-            <va-button 
-              type="button" 
-              color="secondary" 
-              @click="cancelar"
-              class="cancel-button"
-            >
-              Cancelar
-            </va-button>
-            <va-button 
-              type="submit" 
-              color="primary"
-              class="save-button"
-              :disabled="!formValid"
-            >
+            <VaButton type="button" color="secondary" class="cancel-button" @click="cancelar"> Cancelar </VaButton>
+            <VaButton type="submit" color="primary" class="save-button" :disabled="!formValid">
               {{ editando ? 'Actualizar' : 'Guardar' }}
-            </va-button>
+            </VaButton>
           </div>
-        </va-form>
-      </va-modal>
-    </va-card-content>
-  </va-card>
+        </VaForm>
+      </VaModal>
+    </VaCardContent>
+  </VaCard>
 </template>
 
 <script setup>
@@ -230,17 +166,13 @@ const editando = ref(false)
 const tabActivo = ref('datosUsuario')
 
 // Opciones para selects
-const departamentos = ref([
-  { text: 'Sistemas y Computación', value: 1 }
-])
+const departamentos = ref([{ text: 'Sistemas y Computación', value: 1 }])
 
-const roles = ref([
-  { text: 'Maestro', value: 2 }
-])
+const roles = ref([{ text: 'Maestro', value: 2 }])
 
 const estadosEscolaridad = ref([
   { text: 'Concluida', value: 'C' },
-  { text: 'En curso', value: 'E' }
+  { text: 'En curso', value: 'E' },
 ])
 
 // Formulario
@@ -275,18 +207,18 @@ const columnas = [
 ]
 
 // Computed
-const modalTitulo = computed(() => 
-  editando.value ? 'Editar Maestro' : 'Nuevo Maestro'
-)
+const modalTitulo = computed(() => (editando.value ? 'Editar Maestro' : 'Nuevo Maestro'))
 
 const formValid = computed(() => {
-  return form.value.correo && 
-         (!editando.value || form.value.password.length >= 6) &&
-         form.value.tarjeta &&
-         form.value.nombre &&
-         form.value.apellidopaterno &&
-         form.value.apellidomaterno &&
-         form.value.rfc
+  return (
+    form.value.correo &&
+    (!editando.value || form.value.password.length >= 6) &&
+    form.value.tarjeta &&
+    form.value.nombre &&
+    form.value.apellidopaterno &&
+    form.value.apellidomaterno &&
+    form.value.rfc
+  )
 })
 
 // Reglas de validación
@@ -304,25 +236,25 @@ const cargarMaestros = async () => {
   try {
     cargando.value = true
     const { data } = await api.getMaestros()
-    
-    maestros.value = data.data.map(maestro => {
+
+    maestros.value = data.data.map((maestro) => {
       maestro.nombre_departamento = 'Sistemas y Computación'
       maestro.id_departamento = 1
-      
+
       if (!maestro.correo) {
         const nombre = maestro.nombre.toLowerCase().split(' ')[0]
         const apellido = maestro.apellidopaterno.toLowerCase()
         maestro.correo = `${nombre}.${apellido}@tecnm.mx`
-        
+
         let counter = 1
         let tempEmail = maestro.correo
-        while (maestros.value.some(m => m.correo === tempEmail)) {
+        while (maestros.value.some((m) => m.correo === tempEmail)) {
           tempEmail = `${nombre}.${apellido}${counter}@tecnm.mx`
           counter++
         }
         maestro.correo = tempEmail
       }
-      
+
       return maestro
     })
   } catch (error) {
@@ -373,22 +305,22 @@ const guardarMaestro = async () => {
     if (!formValid.value) {
       throw new Error('Por favor complete todos los campos requeridos')
     }
-    
+
     // Generar email si es nuevo y no tiene
     if (!editando.value && !form.value.correo) {
       const nombre = form.value.nombre.toLowerCase().split(' ')[0]
       const apellido = form.value.apellidopaterno.toLowerCase()
       form.value.correo = `${nombre}.${apellido}@tecnm.mx`
-      
+
       let counter = 1
       let tempEmail = form.value.correo
-      while (maestros.value.some(m => m.correo === tempEmail)) {
+      while (maestros.value.some((m) => m.correo === tempEmail)) {
         tempEmail = `${nombre}.${apellido}${counter}@tecnm.mx`
         counter++
       }
       form.value.correo = tempEmail
     }
-    
+
     if (editando.value) {
       await api.actualizarMaestro(form.value.tarjeta, form.value)
       init({ message: 'Maestro actualizado con éxito', color: 'success' })
@@ -396,7 +328,7 @@ const guardarMaestro = async () => {
       await api.crearMaestro(form.value)
       init({ message: 'Maestro creado con éxito', color: 'success' })
     }
-    
+
     await cargarMaestros()
     cancelar()
   } catch (error) {
@@ -416,9 +348,9 @@ const confirmarEliminar = async (row) => {
       message: `¿Está seguro de eliminar al maestro ${maestro.nombre} ${maestro.apellidopaterno}?`,
       okText: 'Eliminar',
       cancelText: 'Cancelar',
-      color: 'danger'
+      color: 'danger',
     })
-    
+
     if (result) {
       await api.eliminarMaestro(maestro.tarjeta)
       init({ message: 'Maestro eliminado con éxito', color: 'success' })

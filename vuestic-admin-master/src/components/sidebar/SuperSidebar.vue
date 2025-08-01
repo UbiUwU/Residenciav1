@@ -1,17 +1,13 @@
 <template>
-  <VaSidebar 
-    v-model="writableVisible" 
-    :width="sidebarWidth" 
-    :color="color" 
+  <VaSidebar
+    v-model="writableVisible"
+    :width="sidebarWidth"
+    :color="color"
     minimized-width="0"
     class="original-sidebar"
   >
     <VaAccordion v-model="value" multiple>
-      <VaCollapse 
-        v-for="(route, index) in SuperRoutes" 
-        :key="index"
-        class="sidebar-collapse"
-      >
+      <VaCollapse v-for="(route, index) in SuperRoutes" :key="index" class="sidebar-collapse">
         <template #header="{ value: isCollapsed }">
           <VaSidebarItem
             :to="route.children ? undefined : { name: route.name }"
@@ -32,23 +28,14 @@
               />
               <VaSidebarItemTitle class="flex justify-between items-center leading-5 font-semibold sidebar-item-title">
                 {{ $t(route.displayName) }}
-                <VaIcon 
-                  v-if="route.children" 
-                  :name="arrowDirection(isCollapsed)" 
-                  size="20px" 
-                  class="sidebar-arrow"
-                />
+                <VaIcon v-if="route.children" :name="arrowDirection(isCollapsed)" size="20px" class="sidebar-arrow" />
               </VaSidebarItemTitle>
             </VaSidebarItemContent>
           </VaSidebarItem>
         </template>
 
         <template #body>
-          <div 
-            v-for="(childRoute, index2) in route.children" 
-            :key="index2"
-            class="sidebar-subitem-wrapper"
-          >
+          <div v-for="(childRoute, index2) in route.children" :key="index2" class="sidebar-subitem-wrapper">
             <VaSidebarItem
               :to="{ name: childRoute.name }"
               :active="isRouteActive(childRoute.name)"
@@ -75,17 +62,15 @@
 import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useColors } from 'vuestic-ui'
-import { useI18n } from 'vue-i18n'
 import { SuperRoutes } from './SuperRoutes'
 
 const props = defineProps({
   visible: { type: Boolean, default: true },
-  mobile: { type: Boolean, default: false }
+  mobile: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['update:visible'])
 
-const { t } = useI18n()
 const route = useRoute()
 const { getColor, colorToRgba } = useColors()
 
@@ -95,10 +80,10 @@ const value = ref<boolean[]>([])
 // Computed
 const writableVisible = computed({
   get: () => props.visible,
-  set: (v: boolean) => emit('update:visible', v)
+  set: (v: boolean) => emit('update:visible', v),
 })
 
-const sidebarWidth = computed(() => props.mobile ? '100vw' : '280px')
+const sidebarWidth = computed(() => (props.mobile ? '100vw' : '280px'))
 const color = computed(() => getColor('background-secondary'))
 const activeColor = computed(() => colorToRgba(getColor('focus'), 0.1))
 
@@ -110,12 +95,12 @@ const routeHasActiveChild = (route: any) => {
   return route.children.some((child: any) => isRouteActive(child.name))
 }
 
-const iconColor = (route: any) => routeHasActiveChild(route) ? 'primary' : 'secondary'
-const textColor = (route: any) => routeHasActiveChild(route) ? 'primary' : 'textPrimary'
-const arrowDirection = (state: boolean) => state ? 'va-arrow-up' : 'va-arrow-down'
+const iconColor = (route: any) => (routeHasActiveChild(route) ? 'primary' : 'secondary')
+const textColor = (route: any) => (routeHasActiveChild(route) ? 'primary' : 'textPrimary')
+const arrowDirection = (state: boolean) => (state ? 'va-arrow-up' : 'va-arrow-down')
 
 const setActiveExpand = () => {
-  value.value = SuperRoutes.map(route => routeHasActiveChild(route))
+  value.value = SuperRoutes.map((route) => routeHasActiveChild(route))
 }
 
 // Watchers
@@ -165,7 +150,9 @@ watch(() => route.fullPath, setActiveExpand, { immediate: true })
 
     &-arrow {
       color: var(--va-secondary);
-      transition: transform 0.2s ease, color 0.2s ease;
+      transition:
+        transform 0.2s ease,
+        color 0.2s ease;
     }
   }
 }

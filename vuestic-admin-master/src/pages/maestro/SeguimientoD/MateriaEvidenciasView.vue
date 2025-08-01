@@ -1,47 +1,47 @@
 <template>
   <div class="materia-evidencias-container">
-    <va-card>
-      <va-card-title class="flex justify-between items-center">
+    <VaCard>
+      <VaCardTitle class="flex justify-between items-center">
         <div>
-          <va-button preset="plain" icon="arrow_back" @click="router.go(-1)" class="mr-2" />
+          <VaButton preset="plain" icon="arrow_back" class="mr-2" @click="router.go(-1)" />
         </div>
-        <va-breadcrumbs>
-          <va-breadcrumbs-item label="Inicio" to="/" />
-          <va-breadcrumbs-item label="Evidencias" to="/evidencias" />
-          <va-breadcrumbs-item :label="materiaActual.nombre" active />
-        </va-breadcrumbs>
-      </va-card-title>
+        <VaBreadcrumbs>
+          <VaBreadcrumbsItem label="Inicio" to="/" />
+          <VaBreadcrumbsItem label="Evidencias" to="/evidencias" />
+          <VaBreadcrumbsItem :label="materiaActual.nombre" active />
+        </VaBreadcrumbs>
+      </VaCardTitle>
 
-      <va-card-content>
+      <VaCardContent>
         <!-- Componente para subir archivos -->
-        <FileUploader :materia-id="materiaActual.id" @file-uploaded="handleFileUploaded" />
+        <FileUploader :materia-id="materiaActual.id" @fileUploaded="handleFileUploaded" />
 
         <!-- Lista de archivos -->
-        <va-data-table :items="archivos" :columns="columns" class="mt-6">
+        <VaDataTable :items="archivos" :columns="columns" class="mt-6">
           <template #cell(actions)="{ row }">
-            <va-button icon="download" preset="plain" size="small" @click="descargarArchivo(row)" />
-            <va-button
+            <VaButton icon="download" preset="plain" size="small" @click="descargarArchivo(row)" />
+            <VaButton
               icon="delete"
               preset="plain"
               size="small"
               color="danger"
-              @click="confirmarEliminar(row)"
               class="ml-2"
+              @click="confirmarEliminar(row)"
             />
           </template>
-        </va-data-table>
-      </va-card-content>
-    </va-card>
+        </VaDataTable>
+      </VaCardContent>
+    </VaCard>
 
     <!-- Modal de confirmación para eliminar -->
-    <va-modal v-model="showDeleteModal" hide-default-actions>
+    <VaModal v-model="showDeleteModal" hide-default-actions>
       <h3 class="va-h5">¿Eliminar archivo?</h3>
       <p class="my-4">¿Estás seguro de que deseas eliminar {{ archivoToDelete?.nombre }}?</p>
       <div class="flex justify-end gap-4">
-        <va-button preset="plain" @click="showDeleteModal = false"> Cancelar </va-button>
-        <va-button color="danger" @click="eliminarArchivo"> Eliminar </va-button>
+        <VaButton preset="plain" @click="showDeleteModal = false"> Cancelar </VaButton>
+        <VaButton color="danger" @click="eliminarArchivo"> Eliminar </VaButton>
       </div>
-    </va-modal>
+    </VaModal>
   </div>
 </template>
 
@@ -53,7 +53,6 @@ import FileUploader from './components/FileUploader.vue'
 const router = useRouter()
 const route = useRoute()
 
-
 const materias = ref([
   { id: 1, nombre: 'Taller de Base de Datos', archivos: [] },
   { id: 2, nombre: 'Tópicos de Programación', archivos: [] },
@@ -61,7 +60,6 @@ const materias = ref([
   { id: 4, nombre: 'Cultura Empresarial', archivos: [] },
   { id: 5, nombre: 'Ingeniería de Software', archivos: [] },
 ])
-
 
 const archivosEjemplo = [
   { id: 1, materiaId: 1, nombre: 'Práctica 1 - Modelo ER.pdf', tipo: 'pdf', fecha: '2023-05-15', size: '2.4 MB' },
@@ -104,7 +102,6 @@ const handleFileUploaded = (nuevoArchivo) => {
 }
 
 const descargarArchivo = (archivo) => {
-
   console.log('Descargando:', archivo.nombre)
 
   const link = document.createElement('a')

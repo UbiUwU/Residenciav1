@@ -12,25 +12,25 @@ interface MaestroData {
   rfc: string
   escolaridad_licenciatura: string
   estado_licenciatura: string
-  
 }
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<{
     user_type: string
+    correo: string
     data: MaestroData | null
     token?: string
   } | null>(null)
-  
+
   const token = ref<string | null>(null)
   const router = useRouter()
 
   const login = async (authData: { token: string }, keepLoggedIn: boolean) => {
     token.value = authData.token
-    
+
     const storage = keepLoggedIn ? localStorage : sessionStorage
     storage.setItem('authToken', authData.token)
-    
+
     try {
       const userResponse = await api.getUserData()
 
@@ -38,7 +38,7 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = {
           user_type: 'maestro',
           data: userResponse.data.data,
-          token: authData.token
+          token: authData.token,
         }
         router.push({ name: 'maestro-dashboard' })
       }
@@ -51,6 +51,6 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     user,
     token,
-    login
+    login,
   }
 })

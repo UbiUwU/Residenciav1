@@ -2,7 +2,7 @@
   <div class="p-6 max-w-4xl mx-auto">
     <h1 class="text-2xl font-bold mb-4">Gestión de Departamentos</h1>
 
-    <form @submit.prevent="guardarDepartamento" class="mb-6 space-y-4 bg-gray-100 p-4 rounded">
+    <form class="mb-6 space-y-4 bg-gray-100 p-4 rounded" @submit.prevent="guardarDepartamento">
       <div>
         <label class="block">ID Departamento</label>
         <input v-model="form.id_departamento" type="number" class="input" required />
@@ -43,8 +43,8 @@
           <td class="px-4 py-2">{{ d.abreviacion }}</td>
           <td class="px-4 py-2">{{ d.nombre_maestro || 'N/A' }}</td>
           <td class="px-4 py-2 space-x-2">
-            <button @click="editarDepartamento(d)" class="text-blue-600 hover:underline">Editar</button>
-            <button @click="borrarDepartamento(d.id_departamento)" class="text-red-600 hover:underline">
+            <button class="text-blue-600 hover:underline" @click="editarDepartamento(d)">Editar</button>
+            <button class="text-red-600 hover:underline" @click="borrarDepartamento(d.id_departamento)">
               Eliminar
             </button>
           </td>
@@ -63,7 +63,6 @@ const form = ref({
   id_departamento: '',
   nombre: '',
   abreviacion: '',
- 
 })
 const editando = ref(false)
 const idEditando = ref(null)
@@ -114,7 +113,6 @@ const resetForm = () => {
     id_departamento: '',
     nombre: '',
     abreviacion: '',
- 
   }
   editando.value = false
   idEditando.value = null

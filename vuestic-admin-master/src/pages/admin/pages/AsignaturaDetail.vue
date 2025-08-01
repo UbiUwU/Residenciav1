@@ -4,53 +4,48 @@
     <h1 class="va-h4 mb-4 text-center">Instrumentación Didáctica</h1>
 
     <!-- PDF Viewer -->
-    <va-card>
-      <va-card-title class="flex items-center">
-        <va-icon name="picture_as_pdf" class="mr-2" />
+    <VaCard>
+      <VaCardTitle class="flex items-center">
+        <VaIcon name="picture_as_pdf" class="mr-2" />
         <span>Visualizador de documento PDF</span>
-      </va-card-title>
-      <va-card-content>
-        <iframe
-          src="/public/Portada.pdf"
-          width="100%"
-          height="600px"
-          style="border: none"
-        ></iframe>
-      </va-card-content>
-    </va-card>
+      </VaCardTitle>
+      <VaCardContent>
+        <iframe src="/public/Portada.pdf" width="100%" height="600px" style="border: none"></iframe>
+      </VaCardContent>
+    </VaCard>
 
     <!-- Botones de acción -->
-    <va-card class="mt-4">
-      <va-card-content>
+    <VaCard class="mt-4">
+      <VaCardContent>
         <div class="flex justify-center gap-4">
-          <va-button color="secondary" @click="volver">
-            <va-icon name="arrow_back" class="mr-2" />
+          <VaButton color="secondary" @click="volver">
+            <VaIcon name="arrow_back" class="mr-2" />
             Volver
-          </va-button>
-          <va-button color="info" @click="marcarRevisado">
-            <va-icon name="check_circle" class="mr-2" />
+          </VaButton>
+          <VaButton color="info" @click="marcarRevisado">
+            <VaIcon name="check_circle" class="mr-2" />
             Revisado
-          </va-button>
-          <va-button color="success" @click="marcarCorrecto">
-            <va-icon name="check" class="mr-2" />
+          </VaButton>
+          <VaButton color="success" @click="marcarCorrecto">
+            <VaIcon name="check" class="mr-2" />
             Correcto
-          </va-button>
-          <va-button color="warning" @click="toggleObservaciones">
-            <va-icon name="edit_note" class="mr-2" />
+          </VaButton>
+          <VaButton color="warning" @click="toggleObservaciones">
+            <VaIcon name="edit_note" class="mr-2" />
             Enviar para corrección
-          </va-button>
+          </VaButton>
         </div>
-      </va-card-content>
-    </va-card>
+      </VaCardContent>
+    </VaCard>
 
     <!-- Observaciones -->
-    <va-card v-if="mostrarObservaciones" class="mt-4">
-      <va-card-title class="flex items-center">
-        <va-icon name="note" class="mr-2" />
+    <VaCard v-if="mostrarObservaciones" class="mt-4">
+      <VaCardTitle class="flex items-center">
+        <VaIcon name="note" class="mr-2" />
         <span>Observaciones</span>
-      </va-card-title>
-      <va-card-content>
-        <va-input
+      </VaCardTitle>
+      <VaCardContent>
+        <VaInput
           v-model="observaciones"
           type="textarea"
           label="Observaciones"
@@ -59,13 +54,13 @@
           class="mb-4"
         />
         <div class="flex justify-end">
-          <va-button color="warning" @click="enviarCorrecciones">
-            <va-icon name="send" class="mr-2" />
+          <VaButton color="warning" @click="enviarCorrecciones">
+            <VaIcon name="send" class="mr-2" />
             Confirmar envío
-          </va-button>
+          </VaButton>
         </div>
-      </va-card-content>
-    </va-card>
+      </VaCardContent>
+    </VaCard>
   </div>
 </template>
 

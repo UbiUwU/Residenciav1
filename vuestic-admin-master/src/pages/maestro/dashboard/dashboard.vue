@@ -1,234 +1,218 @@
 <template>
   <div class="dashboard-container">
     <!-- Encabezado -->
-    <va-card class="mb-4">
-      <va-card-content class="flex items-center justify-between">
+    <VaCard class="mb-4">
+      <VaCardContent class="flex items-center justify-between">
         <div>
           <h1 class="va-h3">Bienvenido, Profesor {{ nombreProfesor }}</h1>
           <p class="text-gray-500">Resumen de tus actividades académicas</p>
         </div>
         <div class="flex items-center gap-4">
-          <va-select
+          <VaSelect
             v-model="periodoSeleccionado"
             :options="periodosAcademicos"
             label="Período académico"
             class="w-48"
           />
-          <va-button preset="secondary" icon="refresh" @click="actualizarDatos">
-            Actualizar
-          </va-button>
+          <VaButton preset="secondary" icon="refresh" @click="actualizarDatos"> Actualizar </VaButton>
         </div>
-      </va-card-content>
-    </va-card>
+      </VaCardContent>
+    </VaCard>
 
     <!-- Tarjetas resumen prioritarias -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      <va-card color="background-secondary" @click="filtrarPorEstado('Pendiente')">
-        <va-card-content>
+      <VaCard color="background-secondary" @click="filtrarPorEstado('Pendiente')">
+        <VaCardContent>
           <div class="flex items-center justify-between">
             <div>
               <p class="text-gray-500 mb-1">Documentación pendiente</p>
               <h3 class="va-h3">{{ documentosPendientes }}</h3>
             </div>
-            <va-icon name="pending_actions" size="large" color="warning" />
+            <VaIcon name="pending_actions" size="large" color="warning" />
           </div>
-          <va-progress-bar :model-value="porcentajeDocumentacion" color="warning" class="mt-2" />
+          <VaProgressBar :model-value="porcentajeDocumentacion" color="warning" class="mt-2" />
           <p class="text-xs mt-1">{{ documentosCompletados }} de {{ totalDocumentos }} documentos entregados</p>
-        </va-card-content>
-      </va-card>
+        </VaCardContent>
+      </VaCard>
 
-      <va-card color="background-secondary" @click="navegarAEvidencias">
-        <va-card-content>
+      <VaCard color="background-secondary" @click="navegarAEvidencias">
+        <VaCardContent>
           <div class="flex items-center justify-between">
             <div>
               <p class="text-gray-500 mb-1">Carpetas de evidencia</p>
               <h3 class="va-h3">{{ carpetasEvidencia }}</h3>
             </div>
-            <va-icon name="folder" size="large" color="info" />
+            <VaIcon name="folder" size="large" color="info" />
           </div>
           <p class="text-xs mt-2">{{ evidenciasCompletadas }} evidencias completas</p>
-        </va-card-content>
-      </va-card>
+        </VaCardContent>
+      </VaCard>
 
-      <va-card color="background-secondary" @click="filtrarPorEstado('Comision')">
-        <va-card-content>
+      <VaCard color="background-secondary" @click="filtrarPorEstado('Comision')">
+        <VaCardContent>
           <div class="flex items-center justify-between">
             <div>
               <p class="text-gray-500 mb-1">Comisiones activas</p>
               <h3 class="va-h3">{{ comisionesActivas }}</h3>
             </div>
-            <va-icon name="groups" size="large" color="primary" />
+            <VaIcon name="groups" size="large" color="primary" />
           </div>
           <p class="text-xs mt-2">{{ comisionesPendientes }} pendientes de revisión</p>
-        </va-card-content>
-      </va-card>
+        </VaCardContent>
+      </VaCard>
 
-      <va-card color="background-secondary" @click="filtrarPorEstado('Atrasado')">
-        <va-card-content>
+      <VaCard color="background-secondary" @click="filtrarPorEstado('Atrasado')">
+        <VaCardContent>
           <div class="flex items-center justify-between">
             <div>
               <p class="text-gray-500 mb-1">Tareas atrasadas</p>
               <h3 class="va-h3">{{ tareasAtrasadas }}</h3>
             </div>
-            <va-icon name="notification_important" size="large" color="danger" />
+            <VaIcon name="notification_important" size="large" color="danger" />
           </div>
           <p class="text-xs mt-2">Vencen hoy: {{ tareasPorVencerHoy }}</p>
-        </va-card-content>
-      </va-card>
+        </VaCardContent>
+      </VaCard>
     </div>
 
     <!-- Sección principal dividida -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
       <!-- Calendario de entregas -->
       <div class="lg:col-span-1">
-        <va-card>
-          <va-card-title>Próximas entregas</va-card-title>
-          <va-card-content>
+        <VaCard>
+          <VaCardTitle>Próximas entregas</VaCardTitle>
+          <VaCardContent>
             <div class="space-y-4">
-              <div v-for="evento in proximosEventos" :key="evento.id" class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded">
+              <div
+                v-for="evento in proximosEventos"
+                :key="evento.id"
+                class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded"
+              >
                 <div class="flex-shrink-0 mt-1">
-                  <va-icon :name="evento.icono" :color="evento.color" size="small" />
+                  <VaIcon :name="evento.icono" :color="evento.color" size="small" />
                 </div>
                 <div>
                   <p class="font-medium">{{ evento.titulo }}</p>
                   <p class="text-sm text-gray-500">{{ evento.fecha }} - {{ evento.hora }}</p>
-                  <va-badge v-if="evento.urgente" text="Urgente" color="danger" class="mt-1" />
+                  <VaBadge v-if="evento.urgente" text="Urgente" color="danger" class="mt-1" />
                 </div>
               </div>
-              <va-button v-if="proximosEventos.length === 0" preset="plain" icon="event_available" class="w-full">
+              <VaButton v-if="proximosEventos.length === 0" preset="plain" icon="event_available" class="w-full">
                 No hay entregas próximas
-              </va-button>
+              </VaButton>
             </div>
-          </va-card-content>
-        </va-card>
+          </VaCardContent>
+        </VaCard>
 
         <!-- Comisiones activas -->
-        <va-card class="mt-6">
-          <va-card-title>Mis comisiones</va-card-title>
-          <va-card-content>
+        <VaCard class="mt-6">
+          <VaCardTitle>Mis comisiones</VaCardTitle>
+          <VaCardContent>
             <div class="space-y-3">
               <div v-for="comision in comisiones" :key="comision.id" class="p-3 border rounded">
                 <div class="flex justify-between items-start">
                   <p class="font-medium">{{ comision.nombre }}</p>
-                  <va-badge :text="comision.estado" :color="getBadgeColor(comision.estado)" />
+                  <VaBadge :text="comision.estado" :color="getBadgeColor(comision.estado)" />
                 </div>
                 <p class="text-sm text-gray-500 mt-1">{{ comision.descripcion }}</p>
                 <p class="text-xs mt-2">Fecha límite: {{ comision.fechaLimite }}</p>
               </div>
-              <va-button v-if="comisiones.length === 0" preset="plain" icon="groups" class="w-full">
+              <VaButton v-if="comisiones.length === 0" preset="plain" icon="groups" class="w-full">
                 No tienes comisiones asignadas
-              </va-button>
+              </VaButton>
             </div>
-          </va-card-content>
-        </va-card>
+          </VaCardContent>
+        </VaCard>
       </div>
 
       <!-- Contenido principal -->
       <div class="lg:col-span-2">
         <!-- Progreso de asignaturas -->
-        <va-card>
-          <va-card-title>Progreso de mis asignaturas</va-card-title>
-          <va-card-content>
+        <VaCard>
+          <VaCardTitle>Progreso de mis asignaturas</VaCardTitle>
+          <VaCardContent>
             <div class="flex justify-between items-center mb-4">
-              <va-button-toggle
-                v-model="filtroAsignaturas"
-                :options="opcionesFiltroAsignaturas"
-                size="small"
-              />
-              <va-input v-model="busquedaAsignaturas" placeholder="Buscar asignatura..." class="w-48" />
+              <VaButtonToggle v-model="filtroAsignaturas" :options="opcionesFiltroAsignaturas" size="small" />
+              <VaInput v-model="busquedaAsignaturas" placeholder="Buscar asignatura..." class="w-48" />
             </div>
-            
+
             <div class="h-64">
               <canvas ref="progresoAsignaturasChart"></canvas>
             </div>
-            
-            <va-data-table
+
+            <VaDataTable
               :items="asignaturasFiltradas"
               :columns="columnasAsignaturas"
               :per-page="5"
               selectable
               selected-color="primary"
-              @selection-change="seleccionAsignaturaCambiada"
               class="mt-4"
+              @selectionChange="seleccionAsignaturaCambiada"
             >
               <template #cell(estado)="{ value }">
-                <va-badge :text="value" :color="getBadgeColor(value)" />
+                <VaBadge :text="value" :color="getBadgeColor(value)" />
               </template>
 
               <template #cell(acciones)="{ row }">
-                <va-button
+                <VaButton
                   preset="plain"
                   icon="description"
                   size="small"
-                  @click="verDocumentacion(row.id)"
                   class="mr-2"
                   color="info"
+                  @click="verDocumentacion(row.id)"
                 />
-                <va-button
-                  preset="plain"
-                  icon="visibility"
-                  size="small"
-                  @click="verDetalle(row.id)"
-                />
+                <VaButton preset="plain" icon="visibility" size="small" @click="verDetalle(row.id)" />
               </template>
-            </va-data-table>
-          </va-card-content>
-        </va-card>
+            </VaDataTable>
+          </VaCardContent>
+        </VaCard>
 
         <!-- Documentación requerida -->
-        <va-card class="mt-6">
-          <va-card-title>Documentación requerida</va-card-title>
-          <va-card-content>
-            <va-tabs v-model="tabDocumentacion" grow>
+        <VaCard class="mt-6">
+          <VaCardTitle>Documentación requerida</VaCardTitle>
+          <VaCardContent>
+            <VaTabs v-model="tabDocumentacion" grow>
               <template #tabs>
-                <va-tab v-for="tab in tabsDocumentacion" :key="tab.label">
+                <VaTab v-for="tab in tabsDocumentacion" :key="tab.label">
                   {{ tab.label }}
-                </va-tab>
+                </VaTab>
               </template>
-            </va-tabs>
-            
+            </VaTabs>
+
             <div class="mt-4">
-              <va-data-table
-                :items="documentosFiltrados"
-                :columns="columnasDocumentacion"
-                :per-page="5"
-              >
+              <VaDataTable :items="documentosFiltrados" :columns="columnasDocumentacion" :per-page="5">
                 <template #cell(estado)="{ value }">
-                  <va-badge :text="value" :color="getBadgeColor(value)" />
+                  <VaBadge :text="value" :color="getBadgeColor(value)" />
                 </template>
-                
+
                 <template #cell(acciones)="{ row }">
-                  <va-button
+                  <VaButton
                     v-if="row.estado !== 'Completado'"
                     preset="plain"
                     icon="upload"
                     size="small"
-                    @click="subirDocumento(row.id)"
                     color="warning"
                     class="mr-2"
+                    @click="subirDocumento(row.id)"
                   />
-                  <va-button
-                    preset="plain"
-                    icon="visibility"
-                    size="small"
-                    @click="verDocumento(row.id)"
-                  />
+                  <VaButton preset="plain" icon="visibility" size="small" @click="verDocumento(row.id)" />
                 </template>
-              </va-data-table>
+              </VaDataTable>
             </div>
-          </va-card-content>
-        </va-card>
+          </VaCardContent>
+        </VaCard>
       </div>
     </div>
 
     <!-- Alertas y notificaciones urgentes -->
-    <va-card class="mt-6">
-      <va-card-title class="flex items-center">
-        <va-icon name="notifications" class="mr-2" color="danger" />
+    <VaCard class="mt-6">
+      <VaCardTitle class="flex items-center">
+        <VaIcon name="notifications" class="mr-2" color="danger" />
         Alertas urgentes
-      </va-card-title>
-      <va-card-content>
-        <va-alert
+      </VaCardTitle>
+      <VaCardContent>
+        <VaAlert
           v-for="(alert, index) in alertasUrgentes"
           :key="index"
           :color="alert.color"
@@ -237,23 +221,19 @@
           @click="manejarAlerta(alert.accion)"
         >
           <div class="flex items-center">
-            <va-icon :name="alert.icon" class="mr-2" />
+            <VaIcon :name="alert.icon" class="mr-2" />
             {{ alert.message }}
           </div>
           <template #close>
-            <va-button preset="plain" icon="close" size="small" @click.stop="eliminarAlerta(index)" />
+            <VaButton preset="plain" icon="close" size="small" @click.stop="eliminarAlerta(index)" />
           </template>
-        </va-alert>
-        
-        <va-alert
-          v-if="alertasUrgentes.length === 0"
-          color="info"
-          border="left"
-        >
+        </VaAlert>
+
+        <VaAlert v-if="alertasUrgentes.length === 0" color="info" border="left">
           No hay alertas urgentes en este momento
-        </va-alert>
-      </va-card-content>
-    </va-card>
+        </VaAlert>
+      </VaCardContent>
+    </VaCard>
   </div>
 </template>
 
@@ -269,10 +249,7 @@ const nombreProfesor = ref('Carlos Eduardo Azueta Leon')
 
 // Periodos académicos
 const periodoSeleccionado = ref('ENE-JUN 2025')
-const periodosAcademicos = ref([
-  'AGO-DIC 2025',
-  
-])
+const periodosAcademicos = ref(['AGO-DIC 2025'])
 
 // Datos de resumen
 const documentosPendientes = ref(4)
@@ -298,7 +275,7 @@ const proximosEventos = ref([
     hora: '23:59 hrs',
     icono: 'assignment',
     color: 'primary',
-    urgente: false
+    urgente: false,
   },
   {
     id: 2,
@@ -307,7 +284,7 @@ const proximosEventos = ref([
     hora: '10:00 hrs',
     icono: 'folder_open',
     color: 'info',
-    urgente: true
+    urgente: true,
   },
   {
     id: 3,
@@ -316,8 +293,8 @@ const proximosEventos = ref([
     hora: '16:00 hrs',
     icono: 'groups',
     color: 'warning',
-    urgente: false
-  }
+    urgente: false,
+  },
 ])
 
 // Comisiones
@@ -327,15 +304,15 @@ const comisiones = ref([
     nombre: 'Comité de evaluación',
     descripcion: 'Revisión de instrumentos de evaluación',
     estado: 'Activa',
-    fechaLimite: '25/06/2024'
+    fechaLimite: '25/06/2024',
   },
   {
     id: 2,
     nombre: 'Revisión de planes de estudio',
     descripcion: 'Actualización del plan de estudios',
     estado: 'Pendiente',
-    fechaLimite: '30/07/2024'
-  }
+    fechaLimite: '30/07/2024',
+  },
 ])
 
 // Asignaturas
@@ -351,7 +328,7 @@ const asignaturas = ref([
     documentos: 4,
     documentosEntregados: 4,
     evidencias: 3,
-    evidenciasCompletas: 3
+    evidenciasCompletas: 3,
   },
   {
     id: 2,
@@ -364,7 +341,7 @@ const asignaturas = ref([
     documentos: 5,
     documentosEntregados: 3,
     evidencias: 4,
-    evidenciasCompletas: 2
+    evidenciasCompletas: 2,
   },
   {
     id: 3,
@@ -377,7 +354,7 @@ const asignaturas = ref([
     documentos: 3,
     documentosEntregados: 1,
     evidencias: 2,
-    evidenciasCompletas: 0
+    evidenciasCompletas: 0,
   },
   {
     id: 4,
@@ -390,8 +367,8 @@ const asignaturas = ref([
     documentos: 2,
     documentosEntregados: 2,
     evidencias: 2,
-    evidenciasCompletas: 2
-  }
+    evidenciasCompletas: 2,
+  },
 ])
 
 const columnasAsignaturas = ref([
@@ -402,7 +379,7 @@ const columnasAsignaturas = ref([
   { key: 'fechaEntrega', label: 'Fecha entrega', sortable: true },
   { key: 'documentos', label: 'Docs.', sortable: true },
   { key: 'evidencias', label: 'Evid.', sortable: true },
-  { key: 'acciones', label: 'Acciones' }
+  { key: 'acciones', label: 'Acciones' },
 ])
 
 // Filtros para asignaturas
@@ -411,29 +388,30 @@ const opcionesFiltroAsignaturas = ref([
   { label: 'Todas', value: 'todas' },
   { label: 'Completadas', value: 'Completado' },
   { label: 'En progreso', value: 'En progreso' },
-  { label: 'Pendientes', value: 'Pendiente' }
+  { label: 'Pendientes', value: 'Pendiente' },
 ])
 
 const busquedaAsignaturas = ref('')
 
 const asignaturasFiltradas = computed(() => {
   let filtradas = asignaturas.value
-  
+
   // Aplicar filtro por estado
   if (filtroAsignaturas.value !== 'todas') {
-    filtradas = filtradas.filter(a => a.estado === filtroAsignaturas.value)
+    filtradas = filtradas.filter((a) => a.estado === filtroAsignaturas.value)
   }
-  
+
   // Aplicar búsqueda
   if (busquedaAsignaturas.value) {
     const termino = busquedaAsignaturas.value.toLowerCase()
-    filtradas = filtradas.filter(a => 
-      a.nombre.toLowerCase().includes(termino) || 
-      a.clave.toLowerCase().includes(termino) ||
-      a.grupo.toLowerCase().includes(termino)
+    filtradas = filtradas.filter(
+      (a) =>
+        a.nombre.toLowerCase().includes(termino) ||
+        a.clave.toLowerCase().includes(termino) ||
+        a.grupo.toLowerCase().includes(termino),
     )
   }
-  
+
   return filtradas
 })
 
@@ -442,7 +420,7 @@ const tabDocumentacion = ref(0)
 const tabsDocumentacion = ref([
   { label: 'Pendientes', estado: 'Pendiente' },
   { label: 'En revisión', estado: 'En revisión' },
-  { label: 'Completados', estado: 'Completado' }
+  { label: 'Completados', estado: 'Completado' },
 ])
 
 const documentos = ref([
@@ -452,7 +430,7 @@ const documentos = ref([
     asignatura: 'Programación I',
     fechaEntrega: '15/05/2024',
     estado: 'Completado',
-    comentarios: ''
+    comentarios: '',
   },
   {
     id: 2,
@@ -460,7 +438,7 @@ const documentos = ref([
     asignatura: 'Matemáticas I',
     fechaEntrega: '30/05/2024',
     estado: 'Pendiente',
-    comentarios: 'Falta incluir criterios de evaluación'
+    comentarios: 'Falta incluir criterios de evaluación',
   },
   {
     id: 3,
@@ -468,7 +446,7 @@ const documentos = ref([
     asignatura: 'Física I',
     fechaEntrega: '05/06/2024',
     estado: 'Pendiente',
-    comentarios: ''
+    comentarios: '',
   },
   {
     id: 4,
@@ -476,7 +454,7 @@ const documentos = ref([
     asignatura: 'Cultura Empresarial',
     fechaEntrega: '10/05/2024',
     estado: 'Completado',
-    comentarios: 'Aprobado'
+    comentarios: 'Aprobado',
   },
   {
     id: 5,
@@ -484,8 +462,8 @@ const documentos = ref([
     asignatura: 'Programación I',
     fechaEntrega: '15/05/2024',
     estado: 'Completado',
-    comentarios: ''
-  }
+    comentarios: '',
+  },
 ])
 
 const columnasDocumentacion = ref([
@@ -493,12 +471,12 @@ const columnasDocumentacion = ref([
   { key: 'asignatura', label: 'Asignatura', sortable: true },
   { key: 'fechaEntrega', label: 'Fecha entrega', sortable: true },
   { key: 'estado', label: 'Estado', sortable: true },
-  { key: 'acciones', label: 'Acciones' }
+  { key: 'acciones', label: 'Acciones' },
 ])
 
 const documentosFiltrados = computed(() => {
   const estadoFiltro = tabsDocumentacion.value[tabDocumentacion.value].estado
-  return documentos.value.filter(d => d.estado === estadoFiltro)
+  return documentos.value.filter((d) => d.estado === estadoFiltro)
 })
 
 // Alertas urgentes
@@ -507,14 +485,14 @@ const alertasUrgentes = ref([
     message: 'La entrega de rúbricas para Matemáticas I vence en 2 días',
     color: 'danger',
     icon: 'warning',
-    accion: 'verDocumento:2'
+    accion: 'verDocumento:2',
   },
   {
     message: 'Tienes 3 documentos pendientes de revisión',
     color: 'warning',
     icon: 'pending',
-    accion: 'filtrarDocumentos:Pendiente'
-  }
+    accion: 'filtrarDocumentos:Pendiente',
+  },
 ])
 
 // Referencias para gráficos
@@ -523,12 +501,12 @@ const progresoAsignaturasChart = ref(null)
 // Funciones
 const getBadgeColor = (estado) => {
   const estados = {
-    'Completado': 'success',
+    Completado: 'success',
     'En progreso': 'warning',
-    'Pendiente': 'info',
-    'Atrasado': 'danger',
-    'Activa': 'primary',
-    'En revisión': 'info'
+    Pendiente: 'info',
+    Atrasado: 'danger',
+    Activa: 'primary',
+    'En revisión': 'info',
   }
   return estados[estado] || 'primary'
 }
@@ -568,7 +546,7 @@ const manejarAlerta = (accion) => {
   if (tipo === 'verDocumento') {
     verDocumento(parametro)
   } else if (tipo === 'filtrarDocumentos') {
-    tabDocumentacion.value = tabsDocumentacion.value.findIndex(tab => tab.estado === parametro)
+    tabDocumentacion.value = tabsDocumentacion.value.findIndex((tab) => tab.estado === parametro)
   }
 }
 
@@ -591,19 +569,19 @@ onMounted(() => {
   new Chart(progresoAsignaturasChart.value.getContext('2d'), {
     type: 'bar',
     data: {
-      labels: asignaturas.value.map(a => `${a.nombre} (${a.grupo})`),
+      labels: asignaturas.value.map((a) => `${a.nombre} (${a.grupo})`),
       datasets: [
         {
           label: 'Documentación completada',
-          data: asignaturas.value.map(a => (a.documentosEntregados / a.documentos) * 100),
-          backgroundColor: 'rgba(54, 162, 235, 0.7)'
+          data: asignaturas.value.map((a) => (a.documentosEntregados / a.documentos) * 100),
+          backgroundColor: 'rgba(54, 162, 235, 0.7)',
         },
         {
           label: 'Evidencias completadas',
-          data: asignaturas.value.map(a => (a.evidenciasCompletas / a.evidencias) * 100),
-          backgroundColor: 'rgba(75, 192, 192, 0.7)'
-        }
-      ]
+          data: asignaturas.value.map((a) => (a.evidenciasCompletas / a.evidencias) * 100),
+          backgroundColor: 'rgba(75, 192, 192, 0.7)',
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -614,38 +592,42 @@ onMounted(() => {
           max: 100,
           title: {
             display: true,
-            text: 'Porcentaje completado'
-          }
+            text: 'Porcentaje completado',
+          },
         },
         x: {
           title: {
             display: true,
-            text: 'Asignaturas'
-          }
-        }
+            text: 'Asignaturas',
+          },
+        },
       },
       plugins: {
         tooltip: {
           callbacks: {
-            label: function(context) {
+            label: function (context) {
               let label = context.dataset.label || ''
               if (label) {
                 label += ': '
               }
               label += `${Math.round(context.raw)}%`
               return label
-            }
-          }
-        }
-      }
-    }
+            },
+          },
+        },
+      },
+    },
   })
 })
 
 // Actualizar gráficos cuando cambian los datos
-watch(asignaturas, () => {
-  // Lógica para actualizar gráficos cuando cambian los datos
-}, { deep: true })
+watch(
+  asignaturas,
+  () => {
+    // Lógica para actualizar gráficos cuando cambian los datos
+  },
+  { deep: true },
+)
 </script>
 
 <style scoped>
@@ -657,7 +639,9 @@ watch(asignaturas, () => {
 
 .va-card {
   margin-bottom: 1.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .va-card:hover {
@@ -665,7 +649,7 @@ watch(asignaturas, () => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.va-card[color="background-secondary"] {
+.va-card[color='background-secondary'] {
   cursor: pointer;
 }
 

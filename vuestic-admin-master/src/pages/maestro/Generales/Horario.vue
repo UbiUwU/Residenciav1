@@ -2,24 +2,24 @@
   <h1 class="va-h2 mb-2">Horario</h1>
 
   <div class="p-4">
-    <va-card>
-      <va-card-title class="text-xl font-semibold">
-        <va-icon name="calendar_today" class="mr-2" />
+    <VaCard>
+      <VaCardTitle class="text-xl font-semibold">
+        <VaIcon name="calendar_today" class="mr-2" />
         Mi Horario - Ingeniería en Sistemas
-      </va-card-title>
+      </VaCardTitle>
 
-      <va-card-content>
+      <VaCardContent>
         <!-- Controles -->
         <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div class="flex items-center gap-2">
-            <va-button preset="secondary" icon="chevron_left" @click="previousWeek" />
-            <va-button preset="secondary" icon="chevron_right" @click="nextWeek" />
-            <va-button preset="secondary" @click="goToToday"> Hoy </va-button>
+            <VaButton preset="secondary" icon="chevron_left" @click="previousWeek" />
+            <VaButton preset="secondary" icon="chevron_right" @click="nextWeek" />
+            <VaButton preset="secondary" @click="goToToday"> Hoy </VaButton>
           </div>
 
-          <va-select v-model="viewType" :options="viewOptions" class="min-w-40" />
+          <VaSelect v-model="viewType" :options="viewOptions" class="min-w-40" />
 
-          <va-select v-model="selectedCampus" label="Horario completo" :options="campusOptions" class="min-w-40" />
+          <VaSelect v-model="selectedCampus" label="Horario completo" :options="campusOptions" class="min-w-40" />
         </div>
 
         <!-- Vista de semana -->
@@ -76,9 +76,9 @@
               {{ currentDay.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }) }}
             </h3>
             <div class="flex gap-2">
-              <va-button preset="secondary" size="small" icon="add" @click="openAddDialog(currentDay, '08:00')">
+              <VaButton preset="secondary" size="small" icon="add" @click="openAddDialog(currentDay, '08:00')">
                 Agregar
-              </va-button>
+              </VaButton>
             </div>
           </div>
 
@@ -104,11 +104,11 @@
             </div>
           </div>
         </div>
-      </va-card-content>
-    </va-card>
+      </VaCardContent>
+    </VaCard>
 
     <!-- Modal de detalles del curso -->
-    <va-modal
+    <VaModal
       v-model="showCourseModal"
       :title="selectedCourse?.name || 'Detalles del curso'"
       size="medium"
@@ -120,41 +120,41 @@
           <div class="course-title">{{ selectedCourse.name }}</div>
         </div>
 
-        <va-list class="mt-4">
-          <va-list-item>
-            <va-list-item-label class="font-medium">Profesor:</va-list-item-label>
-            <va-list-item-section>
+        <VaList class="mt-4">
+          <VaListItem>
+            <VaListItemLabel class="font-medium">Profesor:</VaListItemLabel>
+            <VaListItemSection>
               {{ selectedCourse.teacher }}
               <div class="text-sm text-gray-600">{{ selectedCourse.teacherEmail }}</div>
-            </va-list-item-section>
-          </va-list-item>
+            </VaListItemSection>
+          </VaListItem>
 
-          <va-list-item>
-            <va-list-item-label class="font-medium">Horario:</va-list-item-label>
-            <va-list-item-section>
+          <VaListItem>
+            <VaListItemLabel class="font-medium">Horario:</VaListItemLabel>
+            <VaListItemSection>
               <div v-for="(session, idx) in selectedCourse.schedule" :key="idx">
                 {{ session.day }} {{ session.time }} ({{ session.classroom }})
               </div>
-            </va-list-item-section>
-          </va-list-item>
+            </VaListItemSection>
+          </VaListItem>
 
-          <va-list-item>
-            <va-list-item-label class="font-medium">Créditos:</va-list-item-label>
-            <va-list-item-section>{{ selectedCourse.credits }}</va-list-item-section>
-          </va-list-item>
-        </va-list>
+          <VaListItem>
+            <VaListItemLabel class="font-medium">Créditos:</VaListItemLabel>
+            <VaListItemSection>{{ selectedCourse.credits }}</VaListItemSection>
+          </VaListItem>
+        </VaList>
 
         <div class="flex justify-end gap-2 mt-4">
-          <va-button preset="secondary" @click="showCourseModal = false"> Cerrar </va-button>
-          <va-button
+          <VaButton preset="secondary" @click="showCourseModal = false"> Cerrar </VaButton>
+          <VaButton
             :href="`mailto:${selectedCourse.teacherEmail}?subject=Consulta sobre ${selectedCourse.name}`"
             icon="email"
           >
             Contactar profesor
-          </va-button>
+          </VaButton>
         </div>
       </div>
-    </va-modal>
+    </VaModal>
   </div>
 </template>
 
