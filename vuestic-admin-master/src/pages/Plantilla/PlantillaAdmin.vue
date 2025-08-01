@@ -5,10 +5,10 @@
       {{ editando ? 'Editar Plantilla' : 'Nueva Plantilla' }}
     </h2>
 
-    <form @submit.prevent="handleSubmit" class="space-y-4">
+    <form class="space-y-4" @submit.prevent="handleSubmit">
       <input v-model="form.nombre" type="text" placeholder="Nombre" class="border p-2 w-full" required />
       <textarea v-model="form.descripcion" placeholder="Descripción" class="border p-2 w-full"></textarea>
-      <input type="file" @change="handleFileChange" class="border p-2 w-full" :required="!editando" />
+      <input type="file" class="border p-2 w-full" :required="!editando" @change="handleFileChange" />
 
       <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
         {{ editando ? 'Actualizar' : 'Subir' }}
@@ -17,8 +17,8 @@
       <button
         v-if="editando"
         type="button"
-        @click="cancelarEdicion"
         class="ml-2 bg-gray-400 text-white px-4 py-2 rounded"
+        @click="cancelarEdicion"
       >
         Cancelar
       </button>
@@ -34,10 +34,10 @@
             <small>{{ plantilla.descripcion || 'Sin descripción' }}</small>
           </div>
           <div class="space-x-2">
-            <button @click="prepararEdicion(plantilla)" class="bg-yellow-400 text-black px-2 py-1 rounded">
+            <button class="bg-yellow-400 text-black px-2 py-1 rounded" @click="prepararEdicion(plantilla)">
               Editar
             </button>
-            <button @click="eliminar(plantilla.id)" class="bg-red-500 text-white px-2 py-1 rounded">Eliminar</button>
+            <button class="bg-red-500 text-white px-2 py-1 rounded" @click="eliminar(plantilla.id)">Eliminar</button>
           </div>
         </li>
       </ul>

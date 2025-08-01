@@ -2,9 +2,7 @@
   <VaCard class="p-4">
     <!-- Título principal -->
     <VaCardTitle>
-      <h1 class="text-2xl font-bold text-center text-secondary uppercase mb-2">
-        Documentos de Maestros
-      </h1>
+      <h1 class="text-2xl font-bold text-center text-secondary uppercase mb-2">Documentos de Maestros</h1>
     </VaCardTitle>
 
     <VaCardContent>
@@ -30,8 +28,8 @@
           v-for="(filtro, index) in filtros"
           :key="index"
           :color="selectedFilter === filtro ? 'primary' : 'secondary'"
-          @click="selectedFilter = filtro"
           size="small"
+          @click="selectedFilter = filtro"
         >
           {{ filtro }}
         </VaButton>
@@ -51,23 +49,14 @@
       <div class="mt-4">
         <h2 class="text-lg font-semibold mb-2">Maestros filtrados:</h2>
         <ul class="divide-y divide-gray-200">
-          <li
-            v-for="maestro in maestrosFiltrados"
-            :key="maestro.id"
-            class="flex justify-between items-center py-2"
-          >
+          <li v-for="maestro in maestrosFiltrados" :key="maestro.id" class="flex justify-between items-center py-2">
             <span>{{ maestro.nombre }}</span>
             <div class="flex items-center gap-2">
               <VaBadge
                 :color="maestro.entrego ? 'success' : 'danger'"
                 :content="maestro.entrego ? 'Entregó' : 'Pendiente'"
               />
-              <VaButton
-                v-if="!maestro.entrego"
-                color="info"
-                size="small"
-                @click="contactarMaestro(maestro)"
-              >
+              <VaButton v-if="!maestro.entrego" color="info" size="small" @click="contactarMaestro(maestro)">
                 Contactar
               </VaButton>
             </div>
@@ -189,7 +178,6 @@ function contactarMaestro(maestro: { id: number; nombre: string }) {
   alert(`¡Contactando al maestro ${maestro.nombre} (ID: ${maestro.id})!`)
 }
 </script>
-
 
 <style scoped>
 .text-secondary {

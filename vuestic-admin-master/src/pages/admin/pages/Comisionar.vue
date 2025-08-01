@@ -1,44 +1,25 @@
 <template>
   <div class="p-4">
-    <va-card>
-      <va-card-title>
+    <VaCard>
+      <VaCardTitle>
         <h2 class="va-h5">Registrar Comisión</h2>
-      </va-card-title>
-      <va-card-content>
-        <form @submit.prevent="submitForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      </VaCardTitle>
+      <VaCardContent>
+        <form class="grid grid-cols-1 md:grid-cols-2 gap-6" @submit.prevent="submitForm">
           <!-- Fecha -->
-          <va-date-input
-            v-model="form.eventDate"
-            label="Fecha del Evento"
-            clearable
-            required
-          />
+          <VaDateInput v-model="form.eventDate" label="Fecha del Evento" clearable required />
 
           <!-- Evento -->
-          <va-input
-            v-model="form.eventName"
-            label="Nombre del Evento"
-            required
-          />
+          <VaInput v-model="form.eventName" label="Nombre del Evento" required />
 
           <!-- Tipo de Evento -->
-          <va-input
-            v-model="form.eventType"
-            label="Tipo de Evento"
-            placeholder="Escribe el tipo de evento"
-            required
-          />
+          <VaInput v-model="form.eventType" label="Tipo de Evento" placeholder="Escribe el tipo de evento" required />
 
           <!-- Estado -->
-          <va-select
-            v-model="form.status"
-            :options="statusOptions"
-            label="Estado"
-            required
-          />
+          <VaSelect v-model="form.status" :options="statusOptions" label="Estado" required />
 
           <!-- Asignar Maestro(s) -->
-          <va-select
+          <VaSelect
             v-model="form.selectedMaestro"
             :options="maestroOptions"
             label="Asignar Maestro(s)"
@@ -50,16 +31,12 @@
 
           <!-- Botones -->
           <div class="col-span-1 md:col-span-2 flex justify-end gap-2 mt-4">
-            <va-button preset="secondary" @click="resetForm">
-              Cancelar
-            </va-button>
-            <va-button type="submit" color="primary">
-              Guardar
-            </va-button>
+            <VaButton preset="secondary" @click="resetForm"> Cancelar </VaButton>
+            <VaButton type="submit" color="primary"> Guardar </VaButton>
           </div>
         </form>
-      </va-card-content>
-    </va-card>
+      </VaCardContent>
+    </VaCard>
   </div>
 </template>
 
@@ -102,10 +79,10 @@ onMounted(() => {
 })
 
 const maestroOptions = computed(() =>
-  maestros.value.map(m => ({
+  maestros.value.map((m) => ({
     text: `${m.nombre} ${m.apellidopaterno} ${m.apellidomaterno}`,
-    value: m.tarjeta
-  }))
+    value: m.tarjeta,
+  })),
 )
 
 const { init } = useToast()
@@ -115,7 +92,7 @@ const form = ref({
   eventName: '',
   eventType: '',
   status: 'Pendiente',
-  selectedMaestro: [] as any[]
+  selectedMaestro: [] as any[],
 })
 
 const statusOptions = [
@@ -133,8 +110,8 @@ const submitForm = async () => {
 
     const eventTypeText = form.value.eventType.trim()
 
-    const selectedMaestroValues = form.value.selectedMaestro.map(item =>
-      typeof item === 'object' && item.value ? item.value : item
+    const selectedMaestroValues = form.value.selectedMaestro.map((item) =>
+      typeof item === 'object' && item.value ? item.value : item,
     )
 
     const payload = {
@@ -142,7 +119,7 @@ const submitForm = async () => {
       eventType: { value: eventTypeText }, // Backend espera objeto
       eventDate: form.value.eventDate,
       status: form.value.status,
-      selectedMaestro: selectedMaestroValues.map(value => ({ value }))
+      selectedMaestro: selectedMaestroValues.map((value) => ({ value })),
     }
 
     await api.crearComision(payload)
@@ -162,7 +139,7 @@ const resetForm = () => {
     eventName: '',
     eventType: '',
     status: 'Pendiente',
-    selectedMaestro: []
+    selectedMaestro: [],
   }
 }
 </script>

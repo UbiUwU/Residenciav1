@@ -24,15 +24,12 @@ export function useMaestrosConAsignaturas() {
             nombre: m.nombre,
             asignaturas: asignaturas.length,
             avance: Math.floor(Math.random() * 100),
-            estado: ['Pendiente', 'En progreso', 'Completado'][
-              Math.floor(Math.random() * 3)
-            ],
+            estado: ['Pendiente', 'En progreso', 'Completado'][Math.floor(Math.random() * 3)],
           }
-        })
+        }),
       )
 
-      maestros.value = maestrosFiltrados.filter(m => m.asignaturas > 0)
-
+      maestros.value = maestrosFiltrados.filter((m) => m.asignaturas > 0)
     } catch (err: any) {
       console.error('Error:', err)
 

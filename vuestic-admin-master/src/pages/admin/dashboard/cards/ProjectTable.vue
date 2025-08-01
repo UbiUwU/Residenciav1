@@ -30,9 +30,9 @@ const maestros = ref<Maestro[]>([
         'Evaluación Diagnóstica, resultados y acciones a tomar': true,
         'Carpetas de evidencias': true,
         'Listas de calificaciones parciales': true,
-        'Evidencias de asesorias y atención a alumnos': true
-      }
-    }
+        'Evidencias de asesorias y atención a alumnos': true,
+      },
+    },
   },
   {
     nombre: 'Carlos Pérez',
@@ -44,10 +44,10 @@ const maestros = ref<Maestro[]>([
         'Evaluación Diagnóstica, resultados y acciones a tomar': true,
         'Carpetas de evidencias': true,
         'Listas de calificaciones parciales': true,
-        'Evidencias de asesorias y atención a alumnos': true
-      }
-    }
-  }
+        'Evidencias de asesorias y atención a alumnos': true,
+      },
+    },
+  },
 ])
 
 // Calcula el estado del maestro (Completo, Parcial o Incompleto)
@@ -86,9 +86,7 @@ const estadoClase = (maestro: Maestro): string => {
 
 <template>
   <div class="container mx-auto px-4 py-6">
-    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">
-      Estado de Entrega de Documentos por Maestro
-    </h1>
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Estado de Entrega de Documentos por Maestro</h1>
     <div class="overflow-x-auto">
       <table class="min-w-full table-auto border-collapse shadow-lg rounded-lg overflow-hidden">
         <thead class="bg-gray-200">
@@ -99,28 +97,16 @@ const estadoClase = (maestro: Maestro): string => {
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(maestro, index) in maestros"
-            :key="index"
-            class="hover:bg-gray-100 transition-colors"
-          >
+          <tr v-for="(maestro, index) in maestros" :key="index" class="hover:bg-gray-100 transition-colors">
             <td class="p-4 border font-medium text-gray-800">{{ maestro.nombre }}</td>
             <td :class="[estadoClase(maestro), 'p-4 border text-center font-bold rounded']">
               {{ maestroEstado(maestro) }}
             </td>
             <td class="p-4 border">
-              <div
-                v-for="(materia, materiaNombre) in maestro.materias"
-                :key="materiaNombre"
-                class="mb-4"
-              >
+              <div v-for="(materia, materiaNombre) in maestro.materias" :key="materiaNombre" class="mb-4">
                 <h3 class="font-semibold text-lg text-indigo-700 mb-2">{{ materiaNombre }}</h3>
                 <ul class="list-inside space-y-1">
-                  <li
-                    v-for="(estado, documento) in materia"
-                    :key="documento"
-                    class="flex justify-between items-center"
-                  >
+                  <li v-for="(estado, documento) in materia" :key="documento" class="flex justify-between items-center">
                     <span class="font-medium">{{ documento }}:</span>
                     <span class="text-green-600 font-semibold">Entregado</span>
                   </li>

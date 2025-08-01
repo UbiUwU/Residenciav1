@@ -1,8 +1,8 @@
 <template>
-  <button @click="enviarAPHP" class="export-button">📤 Exportar a PHP</button>
+  <button class="export-button" @click="enviarAPHP">📤 Exportar a PHP</button>
 
   <div class="asignatura-detail">
-    <button @click="volverALista" class="back-button">← Volver a la lista</button>
+    <button class="back-button" @click="volverALista">← Volver a la lista</button>
 
     <div v-if="loading" class="loading">Cargando detalles de la asignatura...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
@@ -36,7 +36,7 @@
           <div v-for="(competencia, index) in competencias" :key="index" class="competencia-item">
             <h3>Competencia {{ index + 1 }}</h3>
             <p>{{ competencia.Descripcion }}</p>
-            <div class="badge" v-for="tipo in competencia.Tipo_Competencia" :key="tipo">
+            <div v-for="tipo in competencia.Tipo_Competencia" :key="tipo" class="badge">
               {{ tipo }}
             </div>
           </div>
@@ -63,7 +63,7 @@
               <div class="competencias-list">
                 <div v-for="(competencia, idx) in tema.competencias" :key="idx" class="competencia-tema">
                   <p>{{ competencia.Descripcion_Comp_Tema }}</p>
-                  <div class="badge" v-for="tipo in competencia.Tipo_Competencia" :key="tipo">
+                  <div v-for="tipo in competencia.Tipo_Competencia" :key="tipo" class="badge">
                     {{ tipo }}
                   </div>
                 </div>
@@ -129,7 +129,7 @@ onMounted(() => {
 const enviarAPHP = async () => {
   try {
     // URL configurable desde variables de entorno
-    const pdfBaseUrl = import.meta.env.VITE_PDF_BASE_URL || 'http://localhost/Inicio%20de%20sesion/PlugginPDF2';
+    const pdfBaseUrl = import.meta.env.VITE_PDF_BASE_URL || 'http://localhost/Inicio%20de%20sesion/PlugginPDF2'
     const response = await fetch(`${pdfBaseUrl}/gestionar_plantillas.php`, {
       method: 'POST',
       headers: {

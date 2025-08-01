@@ -16,16 +16,21 @@ const fetchAsignaturas = async () => {
     loadingReporte.value = true
     const response = await api.getDetalleGruposPorCarreraByTarjeta(tarjeta)
     console.log('DATA RECIBIDA:', response.data)
-    
-    reporte.value = response.data.map(asignatura => {
-      asignatura.aulas_grupos_periodos.forEach(agp => {
-        agp.carreras.forEach(carrera => {
+
+    reporte.value = response.data.map((asignatura) => {
+      asignatura.aulas_grupos_periodos.forEach((agp) => {
+        agp.carreras.forEach((carrera) => {
           const alumnos = carrera.alumnos || []
 
           const total = alumnos.length
-          let ordinarios = 0, complementarios = 0, noAcreditados = 0, desertores = 0, sumaCalif = 0, conCalif = 0
+          let ordinarios = 0,
+            complementarios = 0,
+            noAcreditados = 0,
+            desertores = 0,
+            sumaCalif = 0,
+            conCalif = 0
 
-          alumnos.forEach(alumno => {
+          alumnos.forEach((alumno) => {
             const calificaciones = alumno.calificaciones || []
 
             if (calificaciones.length === 0) {
@@ -36,7 +41,7 @@ const fetchAsignaturas = async () => {
             let evaluado = false
             let aprobado = false
 
-            for (let cal of calificaciones) {
+            for (const cal of calificaciones) {
               if (!cal || typeof cal.calificacion !== 'number') continue
 
               if (cal.tipo_evaluacion === 'Ordinario') {
@@ -50,7 +55,7 @@ const fetchAsignaturas = async () => {
             }
 
             if (!evaluado) {
-              for (let cal of calificaciones) {
+              for (const cal of calificaciones) {
                 if (cal.tipo_evaluacion === 'Complementario') {
                   evaluado = true
                   if (cal.calificacion >= 70) {
@@ -66,7 +71,7 @@ const fetchAsignaturas = async () => {
               noAcreditados++
             }
 
-            for (let cal of calificaciones) {
+            for (const cal of calificaciones) {
               if (typeof cal.calificacion === 'number') {
                 sumaCalif += cal.calificacion
                 conCalif++
@@ -109,41 +114,29 @@ onMounted(() => {
 })
 
 const generarReportePDF = () => {
-  const url = `http://localhost/Inicio%20de%20sesion/PlugginPDF2//download.php?tarjeta=${tarjeta}&tipo=reporte_final`;
-
+  let url = `http://localhost/Inicio%20de%20sesion/PlugginPDF2//download.php?tarjeta=${tarjeta}&tipo=reporte_final`
   // URL configurable desde variables de entorno
-  const pdfBaseUrl = import.meta.env.VITE_PDF_BASE_URL || 'http://localhost/Inicio%20de%20sesion/PlugginPDF2';
-  const url = `${pdfBaseUrl}/download.php?tarjeta=${tarjeta}&tipo=reporte_final`;
-  window.open(url, '_blank');
+  const pdfBaseUrl = import.meta.env.VITE_PDF_BASE_URL || 'http://localhost/Inicio%20de%20sesion/PlugginPDF2'
+  url = `${pdfBaseUrl}/download.php?tarjeta=${tarjeta}&tipo=reporte_final`
+  window.open(url, '_blank')
 }
 </script>
 
-
 <template>
   <div class="boton-regresar">
-    <button @click="handleRegresar">
-      ← Regresar
-    </button>
+    <button @click="handleRegresar">← Regresar</button>
   </div>
 
   <div class="boton-generar-pdf">
-    <button @click="generarReportePDF">
-      Generar Reporte PDF
-    </button>
+    <button @click="generarReportePDF">Generar Reporte PDF</button>
   </div>
 
-  <div v-if="loadingReporte" class="loading-container">
-    Cargando reporte...
-  </div>
+  <div v-if="loadingReporte" class="loading-container">Cargando reporte...</div>
 
   <div v-if="reporte.length" class="reporte-container">
     <h1 class="va-h4 mb-4">Reporte final</h1>
 
-    <div
-      v-for="(asignatura, index) in reporte"
-      :key="index"
-      class="asignatura-card"
-    >
+    <div v-for="(asignatura, index) in reporte" :key="index" class="asignatura-card">
       <h3>{{ asignatura.informacionbasica.nombre }} ({{ asignatura.informacionbasica.clave }})</h3>
       <p><strong>Créditos:</strong> {{ asignatura.informacionbasica.creditos }}</p>
       <p><strong>Nombre del maestro:</strong> {{ asignatura.informacionbasica.maestro || 'Juan Pérez' }}</p>
@@ -152,73 +145,75 @@ const generarReportePDF = () => {
 
     <div class="carreras-table">
       <table>
-  <thead>
-    <tr>
-      <th rowspan="2">Asignatura</th>
-      <th rowspan="2">Carrera</th>
-      <th rowspan="2">Grupo</th>  <!-- Nueva columna -->
-      <th rowspan="2">A</th>
-      <th colspan="2" style="text-align: center;">B</th>
-      <th rowspan="2">C</th>
-      <th rowspan="2">D</th>
-      <th rowspan="2">E</th>
-      <th rowspan="2">F</th>
-      <th rowspan="2">G</th>
-      <th rowspan="2">H</th>
-    </tr>
-    <tr>
-      <th>O</th>
-      <th>Co</th>
-    </tr>
-  </thead>
-  <tbody>
-    <template v-for="(asignatura, asignaturaIndex) in reporte" :key="'asignatura-' + asignaturaIndex">
-      <template v-if="asignatura.aulas_grupos_periodos && asignatura.aulas_grupos_periodos.length > 0">
-        <template v-for="(agp, agpIndex) in asignatura.aulas_grupos_periodos" :key="'agp-' + agpIndex">
-          <template v-for="(carrera, carreraIndex) in agp.carreras" :key="'carrera-' + carreraIndex">
-            <tr>
-              <td v-if="agpIndex === 0 && carreraIndex === 0" :rowspan="totalFilasPorAsignatura(asignatura)">
-                {{ asignatura.informacionbasica.nombre }}
-              </td>
-              <td>{{ carrera.nombre_carrera }}</td>
-              <td>{{ agp.grupo || 'Sin grupo' }}</td>  <!-- Nuevo -->
-              <td>{{ carrera.A || 0 }}</td>
-              <td>{{ carrera.C || 0 }}</td>
-              <td>{{ carrera.D || 0 }}</td>
-              <td>{{ carrera.E || 0 }}</td>
-              <td>{{ carrera.F || 0 }}</td>
-              <td>{{ carrera.G || 0 }}</td>
-              <td>{{ carrera.H || 0 }}</td>
-              <td>{{ carrera.O || 0 }}</td>
-              <td>{{ carrera.Co || 0 }}</td>
-            </tr>
+        <thead>
+          <tr>
+            <th rowspan="2">Asignatura</th>
+            <th rowspan="2">Carrera</th>
+            <th rowspan="2">Grupo</th>
+            <!-- Nueva columna -->
+            <th rowspan="2">A</th>
+            <th colspan="2" style="text-align: center">B</th>
+            <th rowspan="2">C</th>
+            <th rowspan="2">D</th>
+            <th rowspan="2">E</th>
+            <th rowspan="2">F</th>
+            <th rowspan="2">G</th>
+            <th rowspan="2">H</th>
+          </tr>
+          <tr>
+            <th>O</th>
+            <th>Co</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-for="(asignatura, asignaturaIndex) in reporte" :key="'asignatura-' + asignaturaIndex">
+            <template v-if="asignatura.aulas_grupos_periodos && asignatura.aulas_grupos_periodos.length > 0">
+              <template v-for="(agp, agpIndex) in asignatura.aulas_grupos_periodos" :key="'agp-' + agpIndex">
+                <template v-for="(carrera, carreraIndex) in agp.carreras" :key="'carrera-' + carreraIndex">
+                  <tr>
+                    <td v-if="agpIndex === 0 && carreraIndex === 0" :rowspan="totalFilasPorAsignatura(asignatura)">
+                      {{ asignatura.informacionbasica.nombre }}
+                    </td>
+                    <td>{{ carrera.nombre_carrera }}</td>
+                    <td>{{ agp.grupo || 'Sin grupo' }}</td>
+                    <!-- Nuevo -->
+                    <td>{{ carrera.A || 0 }}</td>
+                    <td>{{ carrera.C || 0 }}</td>
+                    <td>{{ carrera.D || 0 }}</td>
+                    <td>{{ carrera.E || 0 }}</td>
+                    <td>{{ carrera.F || 0 }}</td>
+                    <td>{{ carrera.G || 0 }}</td>
+                    <td>{{ carrera.H || 0 }}</td>
+                    <td>{{ carrera.O || 0 }}</td>
+                    <td>{{ carrera.Co || 0 }}</td>
+                  </tr>
+                </template>
+              </template>
+            </template>
+            <template v-else>
+              <tr>
+                <td>{{ asignatura.informacionbasica.nombre }}</td>
+                <td colspan="11" style="text-align: center">No hay datos para esta asignatura</td>
+                <!-- ajustado colspan -->
+              </tr>
+            </template>
           </template>
-        </template>
-      </template>
-      <template v-else>
-        <tr>
-          <td>{{ asignatura.informacionbasica.nombre }}</td>
-          <td colspan="11" style="text-align:center;">No hay datos para esta asignatura</td> <!-- ajustado colspan -->
-        </tr>
-      </template>
-    </template>
-  </tbody>
-</table>
-<div class="leyenda">
-      <h3>Leyenda:</h3>
-      <ul>
-        <li><strong>A</strong> = TOTAL DE ESTUDIANTES POR MATERIA/GRUPO</li>
-        <li><strong>B_O</strong> = No. DE ESTUDIANTES ACREDITADOS EN ORDINARIO</li>
-        <li><strong>B_Co</strong> = No. DE ESTUDIANTES ACREDITADOS EN COMPLEMENTARIO</li>
-        <li><strong>C</strong> = % DE ESTUDIANTES ACREDITADOS</li>
-        <li><strong>D</strong> = No. DE ESTUDIANTES NO ACREDITADOS</li>
-        <li><strong>E</strong> = % DE ESTUDIANTES NO ACREDITADOS</li>
-        <li><strong>F</strong> = No. DE ESTUDIANTES QUE DESERTARON DURANTE EL SEMESTRE EN LA MATERIA</li>
-        <li><strong>G</strong> = % DE ESTUDIANTES QUE DESERTARON EN LA MATERIA</li>
-        <li><strong>H</strong> = PROMEDIO GENERAL DE LA MATERIA/GRUPO</li>
-      </ul>
-    </div>
-
+        </tbody>
+      </table>
+      <div class="leyenda">
+        <h3>Leyenda:</h3>
+        <ul>
+          <li><strong>A</strong> = TOTAL DE ESTUDIANTES POR MATERIA/GRUPO</li>
+          <li><strong>B_O</strong> = No. DE ESTUDIANTES ACREDITADOS EN ORDINARIO</li>
+          <li><strong>B_Co</strong> = No. DE ESTUDIANTES ACREDITADOS EN COMPLEMENTARIO</li>
+          <li><strong>C</strong> = % DE ESTUDIANTES ACREDITADOS</li>
+          <li><strong>D</strong> = No. DE ESTUDIANTES NO ACREDITADOS</li>
+          <li><strong>E</strong> = % DE ESTUDIANTES NO ACREDITADOS</li>
+          <li><strong>F</strong> = No. DE ESTUDIANTES QUE DESERTARON DURANTE EL SEMESTRE EN LA MATERIA</li>
+          <li><strong>G</strong> = % DE ESTUDIANTES QUE DESERTARON EN LA MATERIA</li>
+          <li><strong>H</strong> = PROMEDIO GENERAL DE LA MATERIA/GRUPO</li>
+        </ul>
+      </div>
     </div>
 
     <div class="alumnos-list-container">
@@ -243,9 +238,9 @@ const generarReportePDF = () => {
                     <div class="alumno-calificaciones">
                       <span class="label">Calificaciones:</span>
                       <span class="calificacion">
-                      {{
+                        {{
                           alumno.calificaciones && alumno.calificaciones.length
-                            ? alumno.calificaciones.map(c => c.calificacion).join(', ')
+                            ? alumno.calificaciones.map((c) => c.calificacion).join(', ')
                             : 'Sin calificaciones'
                         }}
                       </span>
@@ -258,15 +253,10 @@ const generarReportePDF = () => {
         </div>
       </template>
     </div>
-
   </div>
 
-  <div v-if="!loadingReporte && !reporte.length" class="empty-container">
-    No hay datos para mostrar.
-  </div>
+  <div v-if="!loadingReporte && !reporte.length" class="empty-container">No hay datos para mostrar.</div>
 </template>
-
-
 
 <style scoped>
 .loading-container,
@@ -525,5 +515,4 @@ td {
 .leyenda li {
   margin-bottom: 5px;
 }
-
 </style>

@@ -2,21 +2,21 @@
   <!-- Título de la vista -->
   <h1 class="va-h4 mb-4">Comisiones</h1>
   <div class="p-4">
-    <va-card>
-      <va-card-content>
+    <VaCard>
+      <VaCardContent>
         <!-- Filtros -->
         <div class="flex flex-wrap gap-4 mb-6">
-          <va-select v-model="selectedStatus" label="Estado" :options="statusOptions" class="min-w-40" />
+          <VaSelect v-model="selectedStatus" label="Estado" :options="statusOptions" class="min-w-40" />
 
-          <va-select v-model="selectedEventType" label="Tipo de Evento" :options="eventTypeOptions" class="min-w-48" />
+          <VaSelect v-model="selectedEventType" label="Tipo de Evento" :options="eventTypeOptions" class="min-w-48" />
 
-          <va-date-input v-model="dateRange" label="Rango de fechas" mode="range" clearable />
+          <VaDateInput v-model="dateRange" label="Rango de fechas" mode="range" clearable />
         </div>
 
         <!-- Tabla de comisiones -->
-        <va-data-table :items="filteredCommissions" :columns="columns" :loading="loading" hoverable>
+        <VaDataTable :items="filteredCommissions" :columns="columns" :loading="loading" hoverable>
           <template #cell(status)="{ value }">
-            <va-badge :text="value" :color="getStatusColor(value)" />
+            <VaBadge :text="value" :color="getStatusColor(value)" />
           </template>
 
           <template #cell(daysLeft)="{ value }">
@@ -26,20 +26,20 @@
           </template>
 
           <template #cell(actions)="{ row }">
-            <va-button preset="secondary" size="small" icon="visibility" @click="viewDetails(row)" class="mr-2" />
-            <va-button preset="secondary" size="small" icon="download" @click="downloadCommissionPDF(row)" />
+            <VaButton preset="secondary" size="small" icon="visibility" class="mr-2" @click="viewDetails(row)" />
+            <VaButton preset="secondary" size="small" icon="download" @click="downloadCommissionPDF(row)" />
           </template>
-        </va-data-table>
+        </VaDataTable>
 
         <!-- Paginación -->
         <div class="flex justify-center mt-4">
-          <va-pagination v-model="currentPage" :pages="totalPages" :visible-pages="5" />
+          <VaPagination v-model="currentPage" :pages="totalPages" :visible-pages="5" />
         </div>
-      </va-card-content>
-    </va-card>
+      </VaCardContent>
+    </VaCard>
 
     <!-- Modal de detalles -->
-    <va-modal
+    <VaModal
       v-model="showDetailsModal"
       :title="selectedCommission?.eventName || 'Detalles de comisión'"
       size="large"
@@ -49,40 +49,40 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
             <h3 class="text-lg font-semibold mb-3">Información del Evento</h3>
-            <va-list>
-              <va-list-item>
-                <va-list-item-label class="font-medium">Nombre:</va-list-item-label>
-                <va-list-item-section>{{ selectedCommission.eventName }}</va-list-item-section>
-              </va-list-item>
-              <va-list-item>
-                <va-list-item-label class="font-medium">Tipo:</va-list-item-label>
-                <va-list-item-section>{{ selectedCommission.eventType }}</va-list-item-section>
-              </va-list-item>
-              <va-list-item>
-                <va-list-item-label class="font-medium">Fecha:</va-list-item-label>
-                <va-list-item-section>
+            <VaList>
+              <VaListItem>
+                <VaListItemLabel class="font-medium">Nombre:</VaListItemLabel>
+                <VaListItemSection>{{ selectedCommission.eventName }}</VaListItemSection>
+              </VaListItem>
+              <VaListItem>
+                <VaListItemLabel class="font-medium">Tipo:</VaListItemLabel>
+                <VaListItemSection>{{ selectedCommission.eventType }}</VaListItemSection>
+              </VaListItem>
+              <VaListItem>
+                <VaListItemLabel class="font-medium">Fecha:</VaListItemLabel>
+                <VaListItemSection>
                   {{ formatDate(selectedCommission.eventDate) }}
-                </va-list-item-section>
-              </va-list-item>
-              <va-list-item>
-                <va-list-item-label class="font-medium">Horario:</va-list-item-label>
-                <va-list-item-section>{{ selectedCommission.eventTime }}</va-list-item-section>
-              </va-list-item>
-            </va-list>
+                </VaListItemSection>
+              </VaListItem>
+              <VaListItem>
+                <VaListItemLabel class="font-medium">Horario:</VaListItemLabel>
+                <VaListItemSection>{{ selectedCommission.eventTime }}</VaListItemSection>
+              </VaListItem>
+            </VaList>
           </div>
 
           <div>
             <h3 class="text-lg font-semibold mb-3">Detalles de Comisión</h3>
-            <va-list>
-              <va-list-item>
-                <va-list-item-label class="font-medium">Estado:</va-list-item-label>
-                <va-list-item-section>
-                  <va-badge :text="selectedCommission.status" :color="getStatusColor(selectedCommission.status)" />
-                </va-list-item-section>
-              </va-list-item>
-              <va-list-item>
-                <va-list-item-label class="font-medium">Días restantes:</va-list-item-label>
-                <va-list-item-section>
+            <VaList>
+              <VaListItem>
+                <VaListItemLabel class="font-medium">Estado:</VaListItemLabel>
+                <VaListItemSection>
+                  <VaBadge :text="selectedCommission.status" :color="getStatusColor(selectedCommission.status)" />
+                </VaListItemSection>
+              </VaListItem>
+              <VaListItem>
+                <VaListItemLabel class="font-medium">Días restantes:</VaListItemLabel>
+                <VaListItemSection>
                   <span
                     :class="{
                       'text-red-500': selectedCommission.daysLeft <= 3,
@@ -91,17 +91,17 @@
                   >
                     {{ selectedCommission.daysLeft }} día(s)
                   </span>
-                </va-list-item-section>
-              </va-list-item>
-              <va-list-item>
-                <va-list-item-label class="font-medium">Lugar:</va-list-item-label>
-                <va-list-item-section>{{ selectedCommission.location }}</va-list-item-section>
-              </va-list-item>
-              <va-list-item>
-                <va-list-item-label class="font-medium">Responsable:</va-list-item-label>
-                <va-list-item-section>{{ selectedCommission.responsible }}</va-list-item-section>
-              </va-list-item>
-            </va-list>
+                </VaListItemSection>
+              </VaListItem>
+              <VaListItem>
+                <VaListItemLabel class="font-medium">Lugar:</VaListItemLabel>
+                <VaListItemSection>{{ selectedCommission.location }}</VaListItemSection>
+              </VaListItem>
+              <VaListItem>
+                <VaListItemLabel class="font-medium">Responsable:</VaListItemLabel>
+                <VaListItemSection>{{ selectedCommission.responsible }}</VaListItemSection>
+              </VaListItem>
+            </VaList>
           </div>
         </div>
 
@@ -111,13 +111,13 @@
         </div>
 
         <div class="flex justify-end gap-2">
-          <va-button preset="secondary" @click="showDetailsModal = false"> Cerrar </va-button>
-          <va-button color="success" icon="download" @click="downloadCommissionPDF(selectedCommission)">
+          <VaButton preset="secondary" @click="showDetailsModal = false"> Cerrar </VaButton>
+          <VaButton color="success" icon="download" @click="downloadCommissionPDF(selectedCommission)">
             Descargar PDF Oficial
-          </va-button>
+          </VaButton>
         </div>
       </div>
-    </va-modal>
+    </VaModal>
   </div>
 </template>
 

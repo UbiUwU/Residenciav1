@@ -1,14 +1,14 @@
 <template>
-  <va-card>
-    <va-card-title>Establecer Mi Horario Semanal</va-card-title>
-    <va-card-content>
+  <VaCard>
+    <VaCardTitle>Establecer Mi Horario Semanal</VaCardTitle>
+    <VaCardContent>
       <div class="mb-6">
-        <va-alert color="info" class="mb-4">
+        <VaAlert color="info" class="mb-4">
           Selecciona las horas en las que estarás disponible durante el semestre. Este horario se aplicará a todas las
           semanas.
-        </va-alert>
+        </VaAlert>
 
-        <va-checkbox v-model="todasLasHoras" label="Seleccionar todas las horas de los días marcados" class="mb-4" />
+        <VaCheckbox v-model="todasLasHoras" label="Seleccionar todas las horas de los días marcados" class="mb-4" />
       </div>
 
       <!-- Calendario visual -->
@@ -28,7 +28,7 @@
         <!-- Días de la semana -->
         <div v-for="dia in diasSemana" :key="dia" class="border-r border-gray-200">
           <div class="h-12 border-b border-gray-200 flex items-center justify-center">
-            <va-checkbox v-model="diasSeleccionados" :array-value="dia" :label="dia" color="primary" />
+            <VaCheckbox v-model="diasSeleccionados" :array-value="dia" :label="dia" color="primary" />
           </div>
           <div
             v-for="hora in horas"
@@ -49,15 +49,15 @@
 
       <!-- Acciones -->
       <div class="flex justify-end gap-4 mt-6">
-        <va-button @click="limpiarSeleccion" color="danger"> Limpiar selección </va-button>
-        <va-button @click="guardarHorario" :disabled="horarioSeleccionado.length === 0"> Guardar horario </va-button>
+        <VaButton color="danger" @click="limpiarSeleccion"> Limpiar selección </VaButton>
+        <VaButton :disabled="horarioSeleccionado.length === 0" @click="guardarHorario"> Guardar horario </VaButton>
       </div>
-    </va-card-content>
-  </va-card>
+    </VaCardContent>
+  </VaCard>
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useToast } from 'vuestic-ui'
 
 export default {

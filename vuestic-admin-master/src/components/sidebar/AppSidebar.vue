@@ -13,7 +13,7 @@
     :minimized="minimized"
     @update:visible="$emit('update:visible', $event)"
   />
-   <SuperSidebar
+  <SuperSidebar
     v-else-if="authStore.isSuper"
     :visible="visible"
     :mobile="mobile"
@@ -31,7 +31,7 @@ import SuperSidebar from './SuperSidebar.vue'
 defineProps({
   visible: { type: Boolean, default: true },
   mobile: { type: Boolean, default: false },
-  minimized: { type: Boolean, default: false }
+  minimized: { type: Boolean, default: false },
 })
 
 defineEmits(['update:visible'])

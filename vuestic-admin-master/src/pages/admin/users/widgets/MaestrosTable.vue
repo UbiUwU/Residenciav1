@@ -88,7 +88,6 @@ const generarReporteFinal = (tarjeta: number) => {
   </VaDataTable>
 </template>
 
-
 <style scoped>
 .mb-4 {
   margin-bottom: 1rem;

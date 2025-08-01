@@ -1,27 +1,29 @@
 <template>
   <!-- Título de la vista -->
   <h1 class="va-h4 mb-4">Formulario de Avance Programatico</h1>
-  
+
   <!-- Encabezado institucional -->
-  <va-card class="mb-4">
-    <va-card-content class="text-center">
+  <VaCard class="mb-4">
+    <VaCardContent class="text-center">
       <h1 class="va-h3">INSTITUTO TECNOLÓGICO DE CHETUMAL</h1>
       <h2 class="va-h5">SUBDIRECCIÓN ACADÉMICA</h2>
-      <h3 class="va-h6">DEPARTAMENTO: 
-        <va-input v-model="departamento" placeholder="Nombre del departamento" class="d-inline" readonly />
+      <h3 class="va-h6">
+        DEPARTAMENTO:
+        <VaInput v-model="departamento" placeholder="Nombre del departamento" class="d-inline" readonly />
       </h3>
-      <h3 class="va-h6">PLANEACIÓN DEL CURSO Y AVANCE PROGRAMÁTICO DEL PERIODO: 
-        <va-input v-model="periodo" placeholder="Ej. ENE-JUN 2025" class="d-inline" />
+      <h3 class="va-h6">
+        PLANEACIÓN DEL CURSO Y AVANCE PROGRAMÁTICO DEL PERIODO:
+        <VaInput v-model="periodo" placeholder="Ej. ENE-JUN 2025" class="d-inline" />
       </h3>
-    </va-card-content>
-  </va-card>
-  
+    </VaCardContent>
+  </VaCard>
+
   <!-- Datos básicos del curso -->
-  <va-card class="mb-4">
-    <va-card-content>
+  <VaCard class="mb-4">
+    <VaCardContent>
       <!-- Selector de asignatura -->
       <div class="mb-6">
-        <va-select
+        <VaSelect
           v-model="asignaturaSeleccionada"
           label="Seleccionar Asignatura"
           :options="opcionesAsignaturas"
@@ -33,35 +35,30 @@
           <template #content="{ text }">
             <div class="flex justify-between">
               <span>{{ text }}</span>
-              <span class="text-gray-500 ml-2" v-if="asignaturaSeleccionada">
+              <span v-if="asignaturaSeleccionada" class="text-gray-500 ml-2">
                 ({{ asignaturaSeleccionada.creditos }} créditos)
               </span>
             </div>
           </template>
-        </va-select>
+        </VaSelect>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-        <va-input v-model="materia" label="MATERIA" readonly />
-        <va-input v-model="horasTeoricas" label="HT" type="number" readonly />
-        <va-input v-model="horasPracticas" label="HP" type="number" readonly />
-        <va-input v-model="creditos" label="CR" type="number" readonly />
+        <VaInput v-model="materia" label="MATERIA" readonly />
+        <VaInput v-model="horasTeoricas" label="HT" type="number" readonly />
+        <VaInput v-model="horasPracticas" label="HP" type="number" readonly />
+        <VaInput v-model="creditos" label="CR" type="number" readonly />
       </div>
-      
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-        <va-input v-model="grupo" label="GRUPO" />
-        <va-input v-model="carrera" label="CARRERA" readonly />
-        <va-input v-model="aula" label="AULA" />
+        <VaInput v-model="grupo" label="GRUPO" />
+        <VaInput v-model="carrera" label="CARRERA" readonly />
+        <VaInput v-model="aula" label="AULA" />
       </div>
-      
-      <va-input 
-        v-model="profesor" 
-        label="PROFESOR(A)" 
-        class="mb-4"
-        readonly
-      />
-      
-      <va-input
+
+      <VaInput v-model="profesor" label="PROFESOR(A)" class="mb-4" readonly />
+
+      <VaInput
         v-model="competenciaAsignatura"
         type="textarea"
         label="COMPETENCIA ESPECÍFICA DE LA ASIGNATURA:"
@@ -69,19 +66,14 @@
         class="mb-4"
         readonly
       />
-      
-      <va-input
-        v-model="numTemas"
-        label="No. DE TEMAS:"
-        type="number"
-        readonly
-      />
-    </va-card-content>
-  </va-card>
+
+      <VaInput v-model="numTemas" label="No. DE TEMAS:" type="number" readonly />
+    </VaCardContent>
+  </VaCard>
 
   <!-- Tabla principal de programación -->
-  <va-card>
-    <va-card-content>
+  <VaCard>
+    <VaCardContent>
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead>
@@ -107,119 +99,83 @@
           <tbody>
             <tr v-for="(tema, index) in temas" :key="index">
               <td class="p-2 border">
-                <va-input v-model="tema.nombre" placeholder="Tema" class="w-full" readonly />
+                <VaInput v-model="tema.nombre" placeholder="Tema" class="w-full" readonly />
               </td>
               <td class="p-2 border">
-                <va-input v-model="tema.subtemas" placeholder="Subtemas" class="w-full" readonly />
+                <VaInput v-model="tema.subtemas" placeholder="Subtemas" class="w-full" readonly />
               </td>
               <td class="p-2 border">
-                <va-date-input v-model="tema.fechaProgramada" placeholder="Programado" class="w-full" />
+                <VaDateInput v-model="tema.fechaProgramada" placeholder="Programado" class="w-full" />
               </td>
               <td class="p-2 border">
-                <va-date-input v-model="tema.fechaReal" placeholder="Real" class="w-full" />
+                <VaDateInput v-model="tema.fechaReal" placeholder="Real" class="w-full" />
               </td>
               <td class="p-2 border">
-                <va-input v-model="tema.evaluacionProgramada" placeholder="Evaluación prog." class="w-full" readonly />
+                <VaInput v-model="tema.evaluacionProgramada" placeholder="Evaluación prog." class="w-full" readonly />
               </td>
               <td class="p-2 border">
-                <va-input v-model="tema.evaluacionReal" placeholder="Evaluación real" class="w-full" readonly />
+                <VaInput v-model="tema.evaluacionReal" placeholder="Evaluación real" class="w-full" readonly />
               </td>
               <td class="p-2 border">
-                <va-input v-model="tema.porcentajeAprobacion" placeholder="%" type="number" class="w-full" readonly />
+                <VaInput v-model="tema.porcentajeAprobacion" placeholder="%" type="number" class="w-full" readonly />
               </td>
               <td class="p-2 border"></td>
               <td class="p-2 border"></td>
               <td class="p-2 border">
-                <va-input v-model="tema.observaciones" placeholder="Observaciones" class="w-full" readonly />
+                <VaInput v-model="tema.observaciones" placeholder="Observaciones" class="w-full" readonly />
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      
-      <va-button 
-        @click="agregarTema" 
-        class="mt-4"
-        preset="secondary"
-        disabled
-      >
-        <va-icon name="add" class="mr-2" />
+
+      <VaButton class="mt-4" preset="secondary" disabled @click="agregarTema">
+        <VaIcon name="add" class="mr-2" />
         Agregar tema
-      </va-button>
-    </va-card-content>
-  </va-card>
+      </VaButton>
+    </VaCardContent>
+  </VaCard>
 
   <!-- Fechas de seguimiento -->
-  <va-card class="mt-4">
-    <va-card-content>
+  <VaCard class="mt-4">
+    <VaCardContent>
       <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <va-date-input 
-          v-model="fechaEntregaProgramacion" 
-          label="Fecha de entrega de programación" 
-          class="mb-4"
-        />
-        <va-date-input 
-          v-model="seguimiento1.fecha" 
-          :label="`Seguimiento 1 (${periodo})`" 
-        />
-        <va-date-input 
-          v-model="seguimiento2.fecha" 
-          :label="`Seguimiento 2 (${periodo})`" 
-        />
-        <va-date-input 
-          v-model="seguimiento3.fecha" 
-          :label="`Seguimiento 3 (${periodo})`" 
-        />
-        <va-date-input 
-          v-model="seguimiento4.fecha" 
-          :label="`Seguimiento 4 (${periodo})`" 
-        />
+        <VaDateInput v-model="fechaEntregaProgramacion" label="Fecha de entrega de programación" class="mb-4" />
+        <VaDateInput v-model="seguimiento1.fecha" :label="`Seguimiento 1 (${periodo})`" />
+        <VaDateInput v-model="seguimiento2.fecha" :label="`Seguimiento 2 (${periodo})`" />
+        <VaDateInput v-model="seguimiento3.fecha" :label="`Seguimiento 3 (${periodo})`" />
+        <VaDateInput v-model="seguimiento4.fecha" :label="`Seguimiento 4 (${periodo})`" />
       </div>
-    </va-card-content>
-  </va-card>
+    </VaCardContent>
+  </VaCard>
 
   <!-- Firmas y validación -->
-  <va-card class="mt-4">
-    <va-card-content>
+  <VaCard class="mt-4">
+    <VaCardContent>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <va-input 
-            v-model="firmaDocente" 
-            label="Firma del Docente" 
-            class="mb-4"
-            readonly
-          />
-          <va-input 
-            v-model="firmaJefeAcademico" 
-            label="Vo.Bo. del Jefe(a) de Departamento" 
-            readonly
-          />
+          <VaInput v-model="firmaDocente" label="Firma del Docente" class="mb-4" readonly />
+          <VaInput v-model="firmaJefeAcademico" label="Vo.Bo. del Jefe(a) de Departamento" readonly />
         </div>
-        <va-input
-          v-model="observacionesGenerales"
-          type="textarea"
-          label="Observaciones generales"
-          autosize
-          readonly
-        />
+        <VaInput v-model="observacionesGenerales" type="textarea" label="Observaciones generales" autosize readonly />
       </div>
-    </va-card-content>
-  </va-card>
+    </VaCardContent>
+  </VaCard>
 
   <!-- Botones de acción -->
   <div class="flex justify-end gap-4 mt-6">
-    <va-button preset="secondary" @click="guardarBorrador">
-      <va-icon name="save" class="mr-2" />
+    <VaButton preset="secondary" @click="guardarBorrador">
+      <VaIcon name="save" class="mr-2" />
       Guardar borrador
-    </va-button>
-    <va-button @click="imprimirFormulario">
-      <va-icon name="print" class="mr-2" />
+    </VaButton>
+    <VaButton @click="imprimirFormulario">
+      <VaIcon name="print" class="mr-2" />
       Imprimir
-    </va-button>
-    <va-button preset="primary" @click="enviarFormulario">
-      <va-icon name="send" class="mr-2" />
+    </VaButton>
+    <VaButton preset="primary" @click="enviarFormulario">
+      <VaIcon name="send" class="mr-2" />
       Enviar
-    </va-button>
+    </VaButton>
   </div>
 </template>
 
@@ -230,174 +186,180 @@ import api from '../../services/api'
 // Datos de ejemplo para asignaturas (simulando respuesta de API)
 const asignaturasEjemplo = [
   {
-    claveasignatura: "ITC-101",
-    nombreasignatura: "Programación Estructurada",
+    claveasignatura: 'ITC-101',
+    nombreasignatura: 'Programación Estructurada',
     satca_teoricas: 3,
     satca_practicas: 2,
     creditos: 5,
-    clavecarrera: "ING-SIS",
+    clavecarrera: 'ING-SIS',
     competencias: [
       {
-        tipo: "ESPECÍFICA",
-        descripcion: "Diseña y desarrolla algoritmos eficientes utilizando estructuras de control básicas y técnicas de programación estructurada, aplicando principios de modularidad y reutilización de código."
+        tipo: 'ESPECÍFICA',
+        descripcion:
+          'Diseña y desarrolla algoritmos eficientes utilizando estructuras de control básicas y técnicas de programación estructurada, aplicando principios de modularidad y reutilización de código.',
       },
       {
-        tipo: "ESPECÍFICA",
-        descripcion: "Implementa soluciones de software en lenguaje C, aplicando buenas prácticas de programación, manejo de memoria y estructuras de datos básicas para resolver problemas computacionales."
-      }
+        tipo: 'ESPECÍFICA',
+        descripcion:
+          'Implementa soluciones de software en lenguaje C, aplicando buenas prácticas de programación, manejo de memoria y estructuras de datos básicas para resolver problemas computacionales.',
+      },
     ],
     temas: [
       {
-        nombre: "Fundamentos de programación",
-        subtemas: "Algoritmos, pseudocódigo, diagramas de flujo, herramientas de desarrollo",
-        evaluacionProgramada: "Examen teórico-práctico",
-        evaluacionReal: "",
+        nombre: 'Fundamentos de programación',
+        subtemas: 'Algoritmos, pseudocódigo, diagramas de flujo, herramientas de desarrollo',
+        evaluacionProgramada: 'Examen teórico-práctico',
+        evaluacionReal: '',
         porcentajeAprobacion: 0,
-        observaciones: ""
+        observaciones: '',
       },
       {
-        nombre: "Estructuras de control",
-        subtemas: "Secuenciales, condicionales (if-else, switch), ciclos (for, while, do-while)",
-        evaluacionProgramada: "Práctica calificada",
+        nombre: 'Estructuras de control',
+        subtemas: 'Secuenciales, condicionales (if-else, switch), ciclos (for, while, do-while)',
+        evaluacionProgramada: 'Práctica calificada',
         porcentajeAprobacion: 0,
-        observaciones: ""
+        observaciones: '',
       },
       {
-        nombre: "Funciones y modularidad",
-        subtemas: "Definición de funciones, paso de parámetros, alcance de variables, recursividad",
-        evaluacionProgramada: "Proyecto modular",
+        nombre: 'Funciones y modularidad',
+        subtemas: 'Definición de funciones, paso de parámetros, alcance de variables, recursividad',
+        evaluacionProgramada: 'Proyecto modular',
         porcentajeAprobacion: 0,
-        observaciones: ""
+        observaciones: '',
       },
       {
-        nombre: "Arreglos y cadenas",
-        subtemas: "Arreglos unidimensionales y multidimensionales, manejo de cadenas, funciones de string.h",
-        evaluacionProgramada: "Examen parcial",
+        nombre: 'Arreglos y cadenas',
+        subtemas: 'Arreglos unidimensionales y multidimensionales, manejo de cadenas, funciones de string.h',
+        evaluacionProgramada: 'Examen parcial',
         porcentajeAprobacion: 0,
-        observaciones: ""
+        observaciones: '',
       },
       {
-        nombre: "Estructuras y archivos",
-        subtemas: "Tipos de datos definidos por el usuario, manejo de archivos binarios y de texto",
-        evaluacionProgramada: "Proyecto final",
+        nombre: 'Estructuras y archivos',
+        subtemas: 'Tipos de datos definidos por el usuario, manejo de archivos binarios y de texto',
+        evaluacionProgramada: 'Proyecto final',
         porcentajeAprobacion: 0,
-        observaciones: ""
-      }
+        observaciones: '',
+      },
     ],
-    departamento: "Sistemas y Computación"
+    departamento: 'Sistemas y Computación',
   },
   {
-    claveasignatura: "AEF-1031",
-    nombreasignatura: "Fund. de Bases de Datos",
+    claveasignatura: 'AEF-1031',
+    nombreasignatura: 'Fund. de Bases de Datos',
     satca_teoricas: 2,
     satca_practicas: 3,
     creditos: 5,
-    clavecarrera: "ISIC",
+    clavecarrera: 'ISIC',
     competencias: [
       {
-        tipo: "ESPECÍFICA",
-        descripcion: "Diseña modelos conceptuales y lógicos de bases de datos aplicando técnicas de normalización y considerando los requerimientos del negocio para garantizar la integridad y consistencia de los datos."
+        tipo: 'ESPECÍFICA',
+        descripcion:
+          'Diseña modelos conceptuales y lógicos de bases de datos aplicando técnicas de normalización y considerando los requerimientos del negocio para garantizar la integridad y consistencia de los datos.',
       },
       {
-        tipo: "ESPECÍFICA",
-        descripcion: "Implementa bases de datos relacionales utilizando sistemas gestores como MySQL o PostgreSQL, desarrollando consultas SQL complejas, procedimientos almacenados y triggers para aplicaciones empresariales."
-      }
+        tipo: 'ESPECÍFICA',
+        descripcion:
+          'Implementa bases de datos relacionales utilizando sistemas gestores como MySQL o PostgreSQL, desarrollando consultas SQL complejas, procedimientos almacenados y triggers para aplicaciones empresariales.',
+      },
     ],
     temas: [
       {
-        nombre: "Fundamentos de bases de datos",
-        subtemas: "Conceptos básicos, modelos de datos, arquitectura ANSI/SPARC, SGBD",
-        evaluacionProgramada: "Examen teórico",
+        nombre: 'Fundamentos de bases de datos',
+        subtemas: 'Conceptos básicos, modelos de datos, arquitectura ANSI/SPARC, SGBD',
+        evaluacionProgramada: 'Examen teórico',
         porcentajeAprobacion: 0,
-        observaciones: ""
+        observaciones: '',
       },
       {
-        nombre: "Modelado conceptual",
-        subtemas: "Modelo Entidad-Relación, diagramas ER, restricciones de integridad",
-        evaluacionProgramada: "Práctica de modelado",
+        nombre: 'Modelado conceptual',
+        subtemas: 'Modelo Entidad-Relación, diagramas ER, restricciones de integridad',
+        evaluacionProgramada: 'Práctica de modelado',
         porcentajeAprobacion: 0,
-        observaciones: ""
+        observaciones: '',
       },
       {
-        nombre: "Modelo relacional",
-        subtemas: "Estructuras relacionales, álgebra relacional, normalización (1FN a 5FN)",
-        evaluacionProgramada: "Examen parcial",
+        nombre: 'Modelo relacional',
+        subtemas: 'Estructuras relacionales, álgebra relacional, normalización (1FN a 5FN)',
+        evaluacionProgramada: 'Examen parcial',
         porcentajeAprobacion: 0,
-        observaciones: ""
+        observaciones: '',
       },
       {
-        nombre: "SQL básico y avanzado",
-        subtemas: "DDL, DML, consultas complejas, vistas, índices",
-        evaluacionProgramada: "Práctica en laboratorio",
+        nombre: 'SQL básico y avanzado',
+        subtemas: 'DDL, DML, consultas complejas, vistas, índices',
+        evaluacionProgramada: 'Práctica en laboratorio',
         porcentajeAprobacion: 0,
-        observaciones: ""
+        observaciones: '',
       },
       {
-        nombre: "Diseño físico e implementación",
-        subtemas: "Procedimientos almacenados, triggers, transacciones, seguridad",
-        evaluacionProgramada: "Proyecto final",
+        nombre: 'Diseño físico e implementación',
+        subtemas: 'Procedimientos almacenados, triggers, transacciones, seguridad',
+        evaluacionProgramada: 'Proyecto final',
         porcentajeAprobacion: 0,
-        observaciones: ""
-      }
+        observaciones: '',
+      },
     ],
-    departamento: "Sistemas y Computación"
+    departamento: 'Sistemas y Computación',
   },
   {
-    claveasignatura: "ITC-305",
-    nombreasignatura: "Redes de Computadoras",
+    claveasignatura: 'ITC-305',
+    nombreasignatura: 'Redes de Computadoras',
     satca_teoricas: 4,
     satca_practicas: 1,
     creditos: 5,
-    clavecarrera: "ING-TICS",
+    clavecarrera: 'ING-TICS',
     competencias: [
       {
-        tipo: "ESPECÍFICA",
-        descripcion: "Diseña e implementa redes de computadoras considerando estándares y protocolos actuales, evaluando requerimientos de ancho de banda, latencia y seguridad para garantizar la conectividad y calidad de servicio."
+        tipo: 'ESPECÍFICA',
+        descripcion:
+          'Diseña e implementa redes de computadoras considerando estándares y protocolos actuales, evaluando requerimientos de ancho de banda, latencia y seguridad para garantizar la conectividad y calidad de servicio.',
       },
       {
-        tipo: "ESPECÍFICA",
-        descripcion: "Configura dispositivos de red como switches, routers y firewalls aplicando protocolos de enrutamiento y mecanismos de seguridad para construir infraestructuras de red escalables y seguras."
-      }
+        tipo: 'ESPECÍFICA',
+        descripcion:
+          'Configura dispositivos de red como switches, routers y firewalls aplicando protocolos de enrutamiento y mecanismos de seguridad para construir infraestructuras de red escalables y seguras.',
+      },
     ],
     temas: [
       {
-        nombre: "Introducción a redes",
-        subtemas: "Conceptos básicos, modelos OSI y TCP/IP, topologías, medios de transmisión",
-        evaluacionProgramada: "Examen teórico",
+        nombre: 'Introducción a redes',
+        subtemas: 'Conceptos básicos, modelos OSI y TCP/IP, topologías, medios de transmisión',
+        evaluacionProgramada: 'Examen teórico',
         porcentajeAprobacion: 0,
-        observaciones: ""
+        observaciones: '',
       },
       {
-        nombre: "Capa física y de enlace",
-        subtemas: "Codificación de datos, Ethernet, switches, protocolos MAC",
-        evaluacionProgramada: "Práctica de laboratorio",
+        nombre: 'Capa física y de enlace',
+        subtemas: 'Codificación de datos, Ethernet, switches, protocolos MAC',
+        evaluacionProgramada: 'Práctica de laboratorio',
         porcentajeAprobacion: 0,
-        observaciones: ""
+        observaciones: '',
       },
       {
-        nombre: "Capa de red",
-        subtemas: "Direccionamiento IP, enrutamiento estático y dinámico, protocolos RIP, OSPF",
-        evaluacionProgramada: "Examen parcial",
+        nombre: 'Capa de red',
+        subtemas: 'Direccionamiento IP, enrutamiento estático y dinámico, protocolos RIP, OSPF',
+        evaluacionProgramada: 'Examen parcial',
         porcentajeAprobacion: 0,
-        observaciones: ""
+        observaciones: '',
       },
       {
-        nombre: "Capas de transporte y aplicación",
-        subtemas: "TCP/UDP, DNS, HTTP, FTP, protocolos de seguridad",
-        evaluacionProgramada: "Práctica configuraciones",
+        nombre: 'Capas de transporte y aplicación',
+        subtemas: 'TCP/UDP, DNS, HTTP, FTP, protocolos de seguridad',
+        evaluacionProgramada: 'Práctica configuraciones',
         porcentajeAprobacion: 0,
-        observaciones: ""
+        observaciones: '',
       },
       {
-        nombre: "Seguridad en redes",
-        subtemas: "Firewalls, VPN, detección de intrusos, redes privadas virtuales",
-        evaluacionProgramada: "Proyecto final",
+        nombre: 'Seguridad en redes',
+        subtemas: 'Firewalls, VPN, detección de intrusos, redes privadas virtuales',
+        evaluacionProgramada: 'Proyecto final',
         porcentajeAprobacion: 0,
-        observaciones: ""
-      }
+        observaciones: '',
+      },
     ],
-    departamento: "Tecnologías de la Información"
-  }
+    departamento: 'Tecnologías de la Información',
+  },
 ]
 
 // Estado para las asignaturas
@@ -423,16 +385,16 @@ const numTemas = ref(0)
 
 // Tabla de temas
 const temas = ref([
-  { 
-    nombre: '', 
-    subtemas: '', 
-    fechaProgramada: null, 
-    fechaReal: null, 
-    evaluacionProgramada: '', 
-    evaluacionReal: '', 
-    porcentajeAprobacion: 0, 
-    observaciones: '' 
-  }
+  {
+    nombre: '',
+    subtemas: '',
+    fechaProgramada: null,
+    fechaReal: null,
+    evaluacionProgramada: '',
+    evaluacionReal: '',
+    porcentajeAprobacion: 0,
+    observaciones: '',
+  },
 ])
 
 // Fechas de seguimiento
@@ -457,13 +419,13 @@ const cargarAsignaturas = async () => {
   cargandoAsignaturas.value = true
   try {
     // Simulamos un retraso de red
-    await new Promise(resolve => setTimeout(resolve, 800))
-    
+    await new Promise((resolve) => setTimeout(resolve, 800))
+
     // Usamos los datos de ejemplo en lugar de la API
-    opcionesAsignaturas.value = asignaturasEjemplo.map(asignatura => ({
+    opcionesAsignaturas.value = asignaturasEjemplo.map((asignatura) => ({
       text: `${asignatura.claveasignatura} - ${asignatura.nombreasignatura}`,
       value: asignatura.claveasignatura,
-      ...asignatura 
+      ...asignatura,
     }))
   } catch (error) {
     console.error('Error al cargar asignaturas:', error)
@@ -486,11 +448,11 @@ const cargarDatosAsignatura = (asignatura: any) => {
   creditos.value = asignatura.creditos || 0
   carrera.value = asignatura.clavecarrera || ''
   departamento.value = asignatura.departamento || ''
-  
+
   // Establecer valores por defecto para grupo y aula
   grupo.value = '1' // Grupo por defecto
   aula.value = 'LAB-1' // Aula por defecto
-  
+
   // Competencias específicas
   if (asignatura.competencias && asignatura.competencias.length) {
     competenciaAsignatura.value = asignatura.competencias
@@ -500,14 +462,14 @@ const cargarDatosAsignatura = (asignatura: any) => {
   } else {
     competenciaAsignatura.value = '• Competencias no definidas en el programa'
   }
-  
+
   // Temas de la asignatura (siempre 5 temas)
   if (asignatura.temas && asignatura.temas.length) {
     temas.value = asignatura.temas.map((tema: any) => ({
       ...tema,
       fechaProgramada: null, // El docente llenará esto
-      fechaReal: null,       // El docente llenará esto
-      evaluacionReal: '',    // El docente llenará esto
+      fechaReal: null, // El docente llenará esto
+      evaluacionReal: '', // El docente llenará esto
     }))
     numTemas.value = asignatura.temas.length
   } else {
@@ -520,7 +482,7 @@ const cargarDatosAsignatura = (asignatura: any) => {
       evaluacionProgramada: i === 4 ? 'Proyecto final' : `Evaluación ${i + 1}`,
       evaluacionReal: '',
       porcentajeAprobacion: 0,
-      observaciones: ''
+      observaciones: '',
     }))
     numTemas.value = 5
   }
@@ -537,30 +499,32 @@ const limpiarDatosAsignatura = () => {
   grupo.value = ''
   aula.value = ''
   competenciaAsignatura.value = ''
-  temas.value = [{
-    nombre: '', 
-    subtemas: '', 
-    fechaProgramada: null, 
-    fechaReal: null, 
-    evaluacionProgramada: '', 
-    evaluacionReal: '', 
-    porcentajeAprobacion: 0, 
-    observaciones: '' 
-  }]
+  temas.value = [
+    {
+      nombre: '',
+      subtemas: '',
+      fechaProgramada: null,
+      fechaReal: null,
+      evaluacionProgramada: '',
+      evaluacionReal: '',
+      porcentajeAprobacion: 0,
+      observaciones: '',
+    },
+  ]
   numTemas.value = 0
 }
 
 // Funciones existentes del formulario
 const agregarTema = () => {
-  temas.value.push({ 
-    nombre: '', 
-    subtemas: '', 
-    fechaProgramada: null, 
-    fechaReal: null, 
-    evaluacionProgramada: '', 
-    evaluacionReal: '', 
-    porcentajeAprobacion: 0, 
-    observaciones: '' 
+  temas.value.push({
+    nombre: '',
+    subtemas: '',
+    fechaProgramada: null,
+    fechaReal: null,
+    evaluacionProgramada: '',
+    evaluacionReal: '',
+    porcentajeAprobacion: 0,
+    observaciones: '',
   })
 }
 
@@ -597,15 +561,17 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 0.5rem;
 }
 
 @media (max-width: 768px) {
-  .grid-cols-5, .grid-cols-2 {
+  .grid-cols-5,
+  .grid-cols-2 {
     grid-template-columns: 1fr;
   }
-  
+
   table {
     display: block;
     overflow-x: auto;

@@ -2,42 +2,42 @@
   <!-- Título de la vista -->
   <h1 class="va-h4 mb-4">Nombramientos</h1>
   <div class="p-4">
-    <va-card>
-      <va-card-content>
+    <VaCard>
+      <VaCardContent>
         <!-- Barra de búsqueda y filtros -->
         <div class="flex flex-col md:flex-row gap-4 mb-6">
-          <va-input v-model="searchQuery" placeholder="Buscar nombramientos..." class="flex-grow" clearable>
+          <VaInput v-model="searchQuery" placeholder="Buscar nombramientos..." class="flex-grow" clearable>
             <template #prependInner>
-              <va-icon name="search" size="small" />
+              <VaIcon name="search" size="small" />
             </template>
-          </va-input>
+          </VaInput>
 
-          <va-select v-model="selectedPeriod" label="Periodo" :options="periodOptions" class="min-w-40" />
+          <VaSelect v-model="selectedPeriod" label="Periodo" :options="periodOptions" class="min-w-40" />
 
-          <va-select v-model="selectedStatus" label="Estado" :options="statusOptions" class="min-w-40" />
+          <VaSelect v-model="selectedStatus" label="Estado" :options="statusOptions" class="min-w-40" />
         </div>
 
         <!-- Tabla de nombramientos -->
-        <va-data-table :items="filteredAppointments" :columns="columns" :loading="loading" hoverable>
+        <VaDataTable :items="filteredAppointments" :columns="columns" :loading="loading" hoverable>
           <template #cell(status)="{ value }">
-            <va-badge :text="getStatusText(value)" :color="getStatusColor(value)" />
+            <VaBadge :text="getStatusText(value)" :color="getStatusColor(value)" />
           </template>
 
           <template #cell(actions)="{ row }">
-            <va-button preset="secondary" size="small" icon="info" @click="openDetails(row)" class="mr-2" />
-            <va-button preset="secondary" size="small" icon="download" @click="downloadAppointment(row)" />
+            <VaButton preset="secondary" size="small" icon="info" class="mr-2" @click="openDetails(row)" />
+            <VaButton preset="secondary" size="small" icon="download" @click="downloadAppointment(row)" />
           </template>
-        </va-data-table>
+        </VaDataTable>
 
         <!-- Paginación -->
         <div class="flex justify-center mt-4">
-          <va-pagination v-model="currentPage" :pages="totalPages" :visible-pages="5" />
+          <VaPagination v-model="currentPage" :pages="totalPages" :visible-pages="5" />
         </div>
-      </va-card-content>
-    </va-card>
+      </VaCardContent>
+    </VaCard>
 
     <!-- Modal de detalles -->
-    <va-modal
+    <VaModal
       v-model="showDetailsModal"
       :title="selectedAppointment?.course || 'Detalles del nombramiento'"
       size="large"
@@ -47,38 +47,38 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div>
             <h3 class="text-lg font-semibold mb-3">Información básica</h3>
-            <va-list>
-              <va-list-item>
-                <va-list-item-label class="font-medium">Código:</va-list-item-label>
-                <va-list-item-section>{{ selectedAppointment.code }}</va-list-item-section>
-              </va-list-item>
-              <va-list-item>
-                <va-list-item-label class="font-medium">Materia:</va-list-item-label>
-                <va-list-item-section>{{ selectedAppointment.course }}</va-list-item-section>
-              </va-list-item>
-              <va-list-item>
-                <va-list-item-label class="font-medium">Grupo:</va-list-item-label>
-                <va-list-item-section>{{ selectedAppointment.group }}</va-list-item-section>
-              </va-list-item>
-            </va-list>
+            <VaList>
+              <VaListItem>
+                <VaListItemLabel class="font-medium">Código:</VaListItemLabel>
+                <VaListItemSection>{{ selectedAppointment.code }}</VaListItemSection>
+              </VaListItem>
+              <VaListItem>
+                <VaListItemLabel class="font-medium">Materia:</VaListItemLabel>
+                <VaListItemSection>{{ selectedAppointment.course }}</VaListItemSection>
+              </VaListItem>
+              <VaListItem>
+                <VaListItemLabel class="font-medium">Grupo:</VaListItemLabel>
+                <VaListItemSection>{{ selectedAppointment.group }}</VaListItemSection>
+              </VaListItem>
+            </VaList>
           </div>
 
           <div>
             <h3 class="text-lg font-semibold mb-3">Horario</h3>
-            <va-list>
-              <va-list-item v-for="(session, idx) in selectedAppointment.schedule" :key="idx">
-                <va-list-item-label class="font-medium">{{ session.day }}:</va-list-item-label>
-                <va-list-item-section>{{ session.time }}</va-list-item-section>
-              </va-list-item>
-            </va-list>
+            <VaList>
+              <VaListItem v-for="(session, idx) in selectedAppointment.schedule" :key="idx">
+                <VaListItemLabel class="font-medium">{{ session.day }}:</VaListItemLabel>
+                <VaListItemSection>{{ session.time }}</VaListItemSection>
+              </VaListItem>
+            </VaList>
           </div>
         </div>
 
         <div class="flex justify-end">
-          <va-button @click="showDetailsModal = false">Cerrar</va-button>
+          <VaButton @click="showDetailsModal = false">Cerrar</VaButton>
         </div>
       </div>
-    </va-modal>
+    </VaModal>
   </div>
 </template>
 

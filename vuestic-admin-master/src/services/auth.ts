@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import api from './api'
 import { useRouter } from 'vue-router'
 import { Maestro, Usuario, AuthData } from '../services/types/auth'
 import { ROLES } from '../constants/roles' // Importación de roles
@@ -20,27 +19,26 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Carga los datos del almacenamiento local o de sesión
   const loadFromStorage = () => {
-  const stored = localStorage.getItem('userData') || sessionStorage.getItem('userData')
+    const stored = localStorage.getItem('userData') || sessionStorage.getItem('userData')
 
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored)
-      token.value = parsed.token
-      user.value = parsed.user
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        token.value = parsed.token
+        user.value = parsed.user
 
-      // Solo cargar maestro si el rol es teacher
-      if (parsed.user.idrol === ROLES.TEACHER) {
-        maestro.value = parsed.maestro
-      } else {
-        maestro.value = null
+        // Solo cargar maestro si el rol es teacher
+        if (parsed.user.idrol === ROLES.TEACHER) {
+          maestro.value = parsed.maestro
+        } else {
+          maestro.value = null
+        }
+      } catch (error) {
+        console.error('Error al cargar datos de almacenamiento:', error)
+        logout()
       }
-    } catch (error) {
-      console.error('Error al cargar datos de almacenamiento:', error)
-      logout()
     }
   }
-}
-
 
   // Restaurar sesión existente
   const restoreSession = () => {
@@ -50,15 +48,14 @@ export const useAuthStore = defineStore('auth', () => {
 
   // Guardar sesión en localStorage o sessionStorage
   const persistSession = (data: AuthData, keepLoggedIn: boolean) => {
-  const storage = keepLoggedIn ? localStorage : sessionStorage
-  const payload = JSON.stringify({
-    token: data.token,
-    user: data.user,
-    maestro: data.user.idrol === ROLES.TEACHER ? data.maestro : null,
-  })
-  storage.setItem('userData', payload)
-}
-
+    const storage = keepLoggedIn ? localStorage : sessionStorage
+    const payload = JSON.stringify({
+      token: data.token,
+      user: data.user,
+      maestro: data.user.idrol === ROLES.TEACHER ? data.maestro : null,
+    })
+    storage.setItem('userData', payload)
+  }
 
   // Iniciar sesión (versión mejorada)
   const login = async (authData: AuthData, keepLoggedIn: boolean) => {
@@ -75,7 +72,7 @@ export const useAuthStore = defineStore('auth', () => {
   // Versión alternativa de login que maneja la redirección internamente
   const loginAndRedirect = async (authData: AuthData, keepLoggedIn: boolean) => {
     const role = await login(authData, keepLoggedIn)
-    
+
     // Redirección basada en el rol
     switch (role) {
       case ROLES.ADMIN:
@@ -84,13 +81,13 @@ export const useAuthStore = defineStore('auth', () => {
       case ROLES.TEACHER:
         router.push({ name: 'dashboard-teacher' })
         break
-       case ROLES.SUPER:
+      case ROLES.SUPER:
         router.push({ name: 'dashboard-super' })
         break
       default:
         router.push({ name: 'dashboard' })
     }
-    
+
     return role
   }
 
@@ -120,7 +117,7 @@ export const useAuthStore = defineStore('auth', () => {
     isSuper,
     initialize,
     restoreSession,
-    login,          // Versión que retorna el rol
+    login, // Versión que retorna el rol
     loginAndRedirect, // Versión que maneja redirección
     logout,
   }

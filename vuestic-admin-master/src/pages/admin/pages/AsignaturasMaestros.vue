@@ -1,8 +1,6 @@
 <template>
   <div class="boton-regresar">
-    <button @click="handleRegresar">
-      ← Regresar
-    </button>
+    <button @click="handleRegresar">← Regresar</button>
   </div>
 
   <div class="asignaturas-container">
@@ -11,43 +9,29 @@
     <div v-if="loading" class="loading">Cargando asignaturas...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
 
-    <div v-else-if="asignaturas.length === 0" class="no-data">
-      Este maestro no tiene asignaturas registradas.
-    </div>
+    <div v-else-if="asignaturas.length === 0" class="no-data">Este maestro no tiene asignaturas registradas.</div>
 
     <div v-else class="asignaturas-grid">
-      <div
-        v-for="asignatura in asignaturas"
-        :key="asignatura.ClaveAsignatura"
-        class="asignatura-card"
-      >
-        <div @click="toggleDetalle(asignatura.ClaveAsignatura)" class="asignatura-header">
-          <h3>
-            {{ asignatura.ClaveAsignatura }} - {{ asignatura.NombreAsignatura }}
-          </h3>
+      <div v-for="asignatura in asignaturas" :key="asignatura.ClaveAsignatura" class="asignatura-card">
+        <div class="asignatura-header" @click="toggleDetalle(asignatura.ClaveAsignatura)">
+          <h3>{{ asignatura.ClaveAsignatura }} - {{ asignatura.NombreAsignatura }}</h3>
           <div class="asignatura-info">
             <span>Créditos: {{ asignatura.Creditos }}</span>
             <span>
-              SATCA: {{ asignatura.Satca_Total }}
-              (T:{{ asignatura.Satca_Teoricas }}, P:{{ asignatura.Satca_Practicas }})
+              SATCA: {{ asignatura.Satca_Total }} (T:{{ asignatura.Satca_Teoricas }}, P:{{
+                asignatura.Satca_Practicas
+              }})
             </span>
           </div>
         </div>
 
         <!-- Submenú: solo se muestra si es la asignatura seleccionada -->
-        <transition name="fade">
-          <div
-            v-show="detalleAbierto === asignatura.ClaveAsignatura"
-            class="submenu"
-          >
-            <button @click="verPDF('instrumentacion')">
-              Instrumentación Didáctica
-            </button>
-            <button @click="verPDF('avance')">
-              Avance Programático
-            </button>
+        <Transition name="fade">
+          <div v-show="detalleAbierto === asignatura.ClaveAsignatura" class="submenu">
+            <button @click="verPDF('instrumentacion')">Instrumentación Didáctica</button>
+            <button @click="verPDF('avance')">Avance Programático</button>
           </div>
-        </transition>
+        </Transition>
       </div>
     </div>
   </div>
@@ -75,13 +59,13 @@ const fetchAsignaturas = async () => {
     const data = response.data
 
     if (Array.isArray(data) && data.length > 0) {
-      asignaturas.value = data.map(item => ({
+      asignaturas.value = data.map((item) => ({
         ClaveAsignatura: item.informacionbasica.clave,
         NombreAsignatura: item.informacionbasica.nombre,
         Creditos: item.informacionbasica.creditos,
         Satca_Teoricas: item.informacionbasica.satca.teoricas,
         Satca_Practicas: item.informacionbasica.satca.practicas,
-        Satca_Total: item.informacionbasica.satca.total
+        Satca_Total: item.informacionbasica.satca.total,
       }))
 
       // Asignatura ficticia para prueba
@@ -91,9 +75,8 @@ const fetchAsignaturas = async () => {
         Creditos: 5,
         Satca_Teoricas: 3,
         Satca_Practicas: 2,
-        Satca_Total: 5
+        Satca_Total: 5,
       })
-
     } else {
       asignaturas.value = []
     }
@@ -124,10 +107,12 @@ onMounted(() => {
 
 <style scoped>
 /* Transición */
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: all 0.3s ease;
 }
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
   transform: scaleY(0.95);
 }

@@ -1,11 +1,11 @@
 <template>
-  <va-card>
-    <va-card-title>Registro de Asesorías Académicas</va-card-title>
-    <va-card-content>
+  <VaCard>
+    <VaCardTitle>Registro de Asesorías Académicas</VaCardTitle>
+    <VaCardContent>
       <!-- Selección de grupo y materia -->
       <div class="row">
         <div class="flex md6">
-          <va-select
+          <VaSelect
             v-model="grupoSeleccionado"
             label="Seleccione el grupo"
             :options="gruposDisponibles"
@@ -14,7 +14,7 @@
           />
         </div>
         <div class="flex md6">
-          <va-select
+          <VaSelect
             v-model="materiaSeleccionada"
             label="Seleccione la materia"
             :options="materiasDisponibles"
@@ -27,35 +27,25 @@
 
       <!-- Botón para cargar el formato -->
       <div class="flex justify-center mb-6">
-        <va-button
-          :disabled="!materiaSeleccionada"
-          @click="cargarFormato"
-        >
-          Cargar Formato
-        </va-button>
+        <VaButton :disabled="!materiaSeleccionada" @click="cargarFormato"> Cargar Formato </VaButton>
       </div>
 
       <!-- Formulario de asesorías -->
       <div v-if="mostrarFormato">
-        <va-card>
-          <va-card-title>Formato de Asesorías</va-card-title>
-          <va-card-content>
-            <va-input
-              v-model="docenteNombre"
-              label="Nombre del docente/instructor"
-              class="mb-4"
-            />
+        <VaCard>
+          <VaCardTitle>Formato de Asesorías</VaCardTitle>
+          <VaCardContent>
+            <VaInput v-model="docenteNombre" label="Nombre del docente/instructor" class="mb-4" />
 
             <div class="flex gap-2 mb-4">
-              <va-button @click="agregarAsesoria">
-                <va-icon name="add" class="mr-2" />
+              <VaButton @click="agregarAsesoria">
+                <VaIcon name="add" class="mr-2" />
                 Agregar fila
-              </va-button>
-              <va-button color="danger" @click="eliminarUltima">
-                <va-icon name="delete" class="mr-2" />
+              </VaButton>
+              <VaButton color="danger" @click="eliminarUltima">
+                <VaIcon name="delete" class="mr-2" />
                 Eliminar última
-              </va-button>
-             
+              </VaButton>
             </div>
 
             <!-- Tabla de asesorías -->
@@ -65,52 +55,47 @@
             </div>
 
             <div id="tabla-asesorias">
-              <va-data-table
-                :items="asesorias"
-                :columns="columnasTabla"
-                striped
-                hoverable
-              >
+              <VaDataTable :items="asesorias" :columns="columnasTabla" striped hoverable>
                 <template #cell(numeroControl)="{ rowIndex }">
-                  <va-input v-model="asesorias[rowIndex].numeroControl" />
+                  <VaInput v-model="asesorias[rowIndex].numeroControl" />
                 </template>
                 <template #cell(nombreEstudiante)="{ rowIndex }">
-                  <va-input v-model="asesorias[rowIndex].nombreEstudiante" />
+                  <VaInput v-model="asesorias[rowIndex].nombreEstudiante" />
                 </template>
                 <template #cell(carrera)="{ rowIndex }">
-                  <va-input v-model="asesorias[rowIndex].carrera" />
+                  <VaInput v-model="asesorias[rowIndex].carrera" />
                 </template>
                 <template #cell(tema)="{ rowIndex }">
-                  <va-input v-model="asesorias[rowIndex].tema" />
+                  <VaInput v-model="asesorias[rowIndex].tema" />
                 </template>
                 <template #cell(firma)="{ rowIndex }">
                   <div class="firma-placeholder"></div>
                 </template>
-              </va-data-table>
+              </VaDataTable>
             </div>
 
             <!-- Botones de acción -->
             <div class="flex justify-between mt-6">
-              <va-button color="danger" @click="limpiarFormulario">
-                <va-icon name="delete" class="mr-2" />
+              <VaButton color="danger" @click="limpiarFormulario">
+                <VaIcon name="delete" class="mr-2" />
                 Limpiar formulario
-              </va-button>
+              </VaButton>
               <div class="flex gap-2">
-                <va-button color="success" @click="guardarAsesorias">
-                  <va-icon name="save" class="mr-2" />
+                <VaButton color="success" @click="guardarAsesorias">
+                  <VaIcon name="save" class="mr-2" />
                   Guardar
-                </va-button>
-                <va-button color="primary" @click="generarPDF">
-                  <va-icon name="picture_as_pdf" class="mr-2" />
+                </VaButton>
+                <VaButton color="primary" @click="generarPDF">
+                  <VaIcon name="picture_as_pdf" class="mr-2" />
                   Generar PDF
-                </va-button>
+                </VaButton>
               </div>
             </div>
-          </va-card-content>
-        </va-card>
+          </VaCardContent>
+        </VaCard>
       </div>
-    </va-card-content>
-  </va-card>
+    </VaCardContent>
+  </VaCard>
 </template>
 
 <script setup>
@@ -128,7 +113,7 @@ const columnasTabla = [
   { key: 'nombreEstudiante', label: 'Nombre del Estudiante', sortable: true },
   { key: 'carrera', label: 'Carrera', sortable: true },
   { key: 'tema', label: 'Tema/Actividad', sortable: true },
-  { key: 'firma', label: 'Firma', className: 'firma-header' }
+  { key: 'firma', label: 'Firma', className: 'firma-header' },
 ]
 
 // Datos simulados - en una aplicación real vendrían de una API
@@ -174,16 +159,16 @@ const listaAlumnos = ref([
   { numeroControl: '20230010', nombreEstudiante: 'SALAZAR GUTIÉRREZ SOFÍA GUADALUPE' },
   { numeroControl: '20230011', nombreEstudiante: 'TORRES MENDOZA JORGE ALBERTO' },
   { numeroControl: '20230012', nombreEstudiante: 'VÁZQUEZ RUIZ ADRIANA LUCERO' },
-  { numeroControl: '20230013', nombreEstudiante: 'FLORES CASTILLO DAVID ALEJANDRO' }
+  { numeroControl: '20230013', nombreEstudiante: 'FLORES CASTILLO DAVID ALEJANDRO' },
 ])
 
 // Función para precargar alumnos
 const precargarAlumnos = () => {
-  asesorias.value = listaAlumnos.value.map(alumno => ({
+  asesorias.value = listaAlumnos.value.map((alumno) => ({
     numeroControl: alumno.numeroControl,
     nombreEstudiante: alumno.nombreEstudiante,
     carrera: carreraGrupo.value,
-    tema: materiaSeleccionada.value
+    tema: materiaSeleccionada.value,
   }))
 }
 
@@ -233,7 +218,7 @@ const guardarAsesorias = () => {
   // Mostrar notificación de éxito
   vaToast.init({
     message: 'Asesorías guardadas correctamente',
-    color: 'success'
+    color: 'success',
   })
 }
 
@@ -345,11 +330,11 @@ const generarPDF = () => {
 
   // Generar el PDF
   html2pdf().from(element).set(opt).save()
-  
+
   // Mostrar notificación
   vaToast.init({
     message: 'PDF generado con éxito',
-    color: 'success'
+    color: 'success',
   })
 }
 </script>
