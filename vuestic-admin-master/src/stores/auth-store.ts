@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from '../services/api'
+import api from '../services/apiJ'
 import { useRouter } from 'vue-router'
 
 interface MaestroData {
@@ -37,6 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
       if (userResponse.data.user_type === 'maestro') {
         user.value = {
           user_type: 'maestro',
+          correo: userResponse.data.dada.correo,
           data: userResponse.data.data,
           token: authData.token,
         }

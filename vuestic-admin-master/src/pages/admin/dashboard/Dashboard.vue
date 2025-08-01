@@ -1,19 +1,5 @@
 <template>
-<<<<<<< HEAD
-  <div class="nueva-vista">
-    <!-- Título de la vista -->
-    <h1 class="va-h4 mb-4">{{ titulo }}</h1>
-
-    <!-- Contenido principal -->
-    <VaCard>
-      <VaCardContent>
-        <p>Esta es mi nueva vista integrada correctamente con el AppLayout.</p>
-
-        <!-- Ejemplo de componente Vuestic -->
-        <VaButton class="mt-4" @click="mostrarMensaje"> Probar funcionamiento </VaButton>
-      </VaCardContent>
-    </VaCard>
-=======
+  <!-- Contenido principal -->
   <div class="dashboard-container">
     <!-- ENCABEZADO -->
     <VaCard class="mb-4">
@@ -106,26 +92,32 @@
         </li>
       </ul>
     </div>
->>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
   </div>
 </template>
 
 <script setup lang="ts">
-<<<<<<< HEAD
-// Importaciones básicas (opcional)
-import { ref } from 'vue'
-
-// Datos reactivos
-const titulo = ref('Mi Nueva Vista')
-=======
 import { ref, computed, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMaestrosConAsignaturas } from '../dashboard/maestros'
 
 const router = useRouter()
->>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
-
 const { maestros, fetchMaestrosConAsignaturas, isLoading, error } = useMaestrosConAsignaturas()
+
+// Tipos
+interface Maestro {
+  tarjeta: string
+  nombre: string
+  asignaturas: number
+  avance: number
+  estado: 'Pendiente' | 'En progreso' | 'Completado'
+}
+
+interface Alerta {
+  mensaje: string
+  color: string
+  icono: string
+  accion: string
+}
 
 const columnasMaestros = ref([
   { key: 'nombre', label: 'Nombre del maestro', sortable: true },
@@ -135,17 +127,15 @@ const columnasMaestros = ref([
 ])
 
 const busqueda = ref('')
-const filtroEstado = ref(null)
+const filtroEstado = ref<string | null>(null)
 const opcionesEstado = ref(['Pendiente', 'En progreso', 'Completado'])
 
-const maestrosConEstado = computed(() => {
+// Asegura estado dinámico si viene vacío desde la API
+const maestrosConEstado = computed<Maestro[]>(() => {
   return maestros.value.map((m) => {
-    const avanceReal = m.avance ?? 0
-    return {
-      ...m,
-      avance: avanceReal,
-      estado: avanceReal >= 100 ? 'Completado' : avanceReal > 0 ? 'En progreso' : 'Pendiente',
-    }
+    const avance = m.avance ?? 0
+    const estado: Maestro['estado'] = avance >= 100 ? 'Completado' : avance > 0 ? 'En progreso' : 'Pendiente'
+    return { ...m, avance, estado }
   })
 })
 
@@ -164,7 +154,7 @@ const maestrosFiltrados = computed(() => {
   return lista
 })
 
-// KPIs dinámicos calculados
+// KPIs
 const totalMaestros = computed(() => maestros.value.length)
 
 const promedioAvance = computed(() => {
@@ -181,8 +171,8 @@ const alertasActivas = computed(() => {
   return maestros.value.filter((m) => (m.avance ?? 0) <= 50).length
 })
 
-// Alertas dinámicas: maestros con 0% de avance
-const alertas = ref([])
+// Alertas dinámicas
+const alertas = ref<Alerta[]>([])
 
 watchEffect(() => {
   alertas.value = maestrosConEstado.value
@@ -191,7 +181,7 @@ watchEffect(() => {
       mensaje: `Maestro ${m.nombre} tiene ${m.avance}% de progreso`,
       color: 'danger',
       icono: 'error',
-      accion: `detalle:${m.tarjeta ?? m.id ?? m.nombre}`,
+      accion: `detalle:${m.tarjeta}`,
     }))
 })
 
@@ -202,7 +192,7 @@ const manejarAlerta = (accion: string) => {
   }
 }
 
-const verDetalleMaestro = (tarjeta: string | number) => {
+const verDetalleMaestro = (tarjeta: string) => {
   router.push({ name: 'materiasMaestro', params: { tarjeta } })
 }
 </script>

@@ -53,7 +53,7 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useForm, useToast } from 'vuestic-ui'
 import { validators } from '../../services/utils'
-import api from '../../services/api'
+import api from '../../services/apiJ'
 import { useAuthStore } from '../../services/auth'
 import { ROLES } from '../../constants/roles'
 

@@ -3,7 +3,6 @@ import { computed, ref, watch } from 'vue'
 import { EmptyProject, Project } from '../types'
 import { SelectOption } from 'vuestic-ui'
 import ProjectStatusBadge from '../components/ProjectStatusBadge.vue'
-import UserAvatar from '../../users/widgets/UserAvatar.vue'
 import { useUsersStore } from '../../../stores/users'
 
 const props = defineProps<{

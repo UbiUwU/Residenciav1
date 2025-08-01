@@ -202,7 +202,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import api from '../services/api'
+import api from '../services/apiJ'
 
 const route = useRoute()
 const clave = route.params.clave as string

@@ -1,10 +1,19 @@
 import { ref } from 'vue'
-import apiClient from '../../../services/api.js' // Ajusta la ruta si es necesario
+// 👇 Usa el tipo explícito para decirle a TS que tu apiClient tiene esas funciones
+import apiClient from '../../../services/apiJ'
+
+interface Maestro {
+  tarjeta: string
+  nombre: string
+  asignaturas: number
+  avance: number
+  estado: string
+}
 
 export function useMaestrosConAsignaturas() {
-  const maestros = ref<any[]>([])
+  const maestros = ref<Maestro[]>([])
   const isLoading = ref(false)
-  const error = ref<string | null>(null) // Ahora es string
+  const error = ref<string | null>(null)
 
   async function fetchMaestrosConAsignaturas() {
     isLoading.value = true
@@ -12,29 +21,33 @@ export function useMaestrosConAsignaturas() {
 
     try {
       const response = await apiClient.getMaestros()
-      const maestrosRaw = response.data.data
+      const maestrosRaw = response.data.data as any[]
 
-      const maestrosFiltrados = await Promise.all(
-        maestrosRaw.map(async (m: any) => {
+      const maestrosFiltrados: Maestro[] = []
+
+      for (const m of maestrosRaw) {
+        try {
           const asignaturasResp = await apiClient.getAsignaturaByTarjetaCompleta(m.tarjeta)
           const asignaturas = asignaturasResp.data
 
-          return {
-            tarjeta: m.tarjeta,
-            nombre: m.nombre,
-            asignaturas: asignaturas.length,
-            avance: Math.floor(Math.random() * 100),
-            estado: ['Pendiente', 'En progreso', 'Completado'][Math.floor(Math.random() * 3)],
+          if (Array.isArray(asignaturas) && asignaturas.length > 0) {
+            maestrosFiltrados.push({
+              tarjeta: m.tarjeta,
+              nombre: m.nombre,
+              asignaturas: asignaturas.length,
+              avance: Math.floor(Math.random() * 100),
+              estado: ['Pendiente', 'En progreso', 'Completado'][Math.floor(Math.random() * 3)],
+            })
           }
-        }),
-      )
+        } catch (asigError) {
+          console.warn(`No se pudieron obtener asignaturas para ${m.tarjeta}:`, asigError)
+        }
+      }
 
-      maestros.value = maestrosFiltrados.filter((m) => m.asignaturas > 0)
+      maestros.value = maestrosFiltrados.filter((m: Maestro) => m.asignaturas > 0)
     } catch (err: any) {
       console.error('Error:', err)
-
-      // ⚡ Detecta error de red específico
-      if (err.message && err.message.includes('net::ERR_NETWORK_CHANGED')) {
+      if (err.message?.includes('net::ERR_NETWORK_CHANGED')) {
         error.value = 'Se perdió la conexión. Por favor verifica tu conexión e inténtalo de nuevo.'
       } else if (err.code === 'ECONNABORTED') {
         error.value = 'La solicitud tardó demasiado. Intenta de nuevo.'
@@ -46,7 +59,6 @@ export function useMaestrosConAsignaturas() {
     }
   }
 
-  // Ejecuta al cargar
   fetchMaestrosConAsignaturas()
 
   return {

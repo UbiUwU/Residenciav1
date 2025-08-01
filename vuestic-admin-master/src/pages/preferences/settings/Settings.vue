@@ -57,6 +57,16 @@ import { useToast } from 'vuestic-ui'
 import { buttonStyles } from '../styles'
 
 const { init } = useToast()
+// src/composables/storage.ts
+const Storage = {
+  get is2FAEnabled(): boolean {
+    return localStorage.getItem('is2FAEnabled') === 'true'
+  },
+  toggle2FA(): void {
+    const current = localStorage.getItem('is2FAEnabled') === 'true'
+    localStorage.setItem('is2FAEnabled', (!current).toString())
+  },
+}
 
 const toastMessage = computed(() => (Storage.is2FAEnabled ? '2FA successfully enabled' : '2FA successfully disabled'))
 

@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useToast } from 'vuestic-ui'
-import api from '../../../services/api.js'
+import api from '../../../services/apiJ'
 
 const maestros = ref<any[]>([])
 const comisiones = ref<any[]>([])

@@ -83,7 +83,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import api from '../services/api'
+import api from '../services/apiJ'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -112,7 +112,18 @@ const mostrarModalAsignatura = ref(false)
 const esEdicion = ref(false)
 const claveAsignaturaEditando = ref<string | null>(null)
 
-const form = ref({
+interface FormularioAsignatura {
+  clave_asignatura: string
+  nombre: string
+  creditos: number
+  horas_teoricas: number
+  horas_practicas: number
+  clave_carrera: string | { text: string; value: string }
+  semestre: number
+  posicion: number
+}
+
+const form = ref<FormularioAsignatura>({
   clave_asignatura: '',
   nombre: '',
   creditos: 0,

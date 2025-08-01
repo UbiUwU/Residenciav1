@@ -9,20 +9,14 @@ import AppLayout from '../layouts/AppLayout.vue'
 import RouteViewComponent from '../layouts/RouterBypass.vue'
 
 // Componentes de prueba
-import Asignaturas from '../test/Asignaturas.vue'
-import AsignaturaDetail from '../test/AsignaturaDetail.vue'
 import departamento from '../test/departamentos.vue'
-import InHorarioMaestro from '../test/IngresarHorario.vue'
 import MateriasMaestroPage from '../pages/admin/pages/AsignaturasMaestros.vue'
 import reporteFinal from '../pages/admin/pages/ReporteFinal.vue'
-import visualizarhorario from '../test/visualizarhorario.vue'
 import PDFView from '../pages/admin/pages/AsignaturaDetail.vue'
 import maestro from '../pages/admin/pages/PaginaUsuarios.vue'
 import usuarios from '../test/usuarios.vue'
 import roles from '../test/roles.vue'
-import avance from '../test/avanceprogra.vue'
 import periodos from '../test/periodos.vue'
-import eventosmdestino from '../test/tiposeventos_Destino.vue'
 import horaraio2 from '../test/HorarioMaestro.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -112,7 +106,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         name: 'admin-reporte',
         path: 'admin-reporte',
-        component: () => import('../pages/admin/pages/ReporteFinal.vue')
+        component: () => import('../pages/admin/pages/ReporteFinal.vue'),
       },
       {
         name: 'admin-usuarios',
@@ -212,9 +206,14 @@ const routes: Array<RouteRecordRaw> = [
         component: PDFView,
       },
       {
+        path: '/visualizarhorario',
+        name: 'vishorario',
+        component: horaraio2,
+      },
+      {
         name: 'admin-reporte',
         path: 'admin-reporte',
-        component: () => import('../pages/admin/pages/ReporteFinal.vue')
+        component: () => import('../pages/admin/pages/ReporteFinal.vue'),
       },
     ],
   },
@@ -335,7 +334,7 @@ const routes: Array<RouteRecordRaw> = [
   },
 
   // Rutas de prueba (solo desarrollo)
-  ...(process.env.NODE_ENV === 'development' ? [
+  /*...(process.env.NODE_ENV === 'development' ? [
     {
       path: '/test',
       component: AppLayout,
@@ -381,8 +380,9 @@ const routes: Array<RouteRecordRaw> = [
           name: 'horario-maestro',
           component: horaraio2
         }
-      ]
+      ],
     : []),
+*/
 
   // Rutas de error
   {
@@ -432,7 +432,9 @@ router.beforeEach((to, from, next) => {
       return next({ name: 'login' })
     }
 
-    if (!to.meta.allowedRoles.includes(authStore.userRole)) {
+    const allowedRoles = to.meta.allowedRoles as string[] | undefined
+
+    if (allowedRoles && !allowedRoles.includes(authStore.userRole)) {
       return next({ name: 'unauthorized' })
     }
   }
