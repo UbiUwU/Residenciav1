@@ -250,7 +250,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 // Datos institucionales
 const departamento = ref('Sistemas y Computación')
@@ -380,7 +380,7 @@ const agregarCompetencia = () => {
   })
 }
 
-const eliminarCompetencia = (index) => {
+const eliminarCompetencia = (index: number) => {
   if (competencias.value.length > 1) {
     competencias.value.splice(index, 1)
     // Renumerar las competencias
@@ -390,7 +390,7 @@ const eliminarCompetencia = (index) => {
   }
 }
 
-const agregarTema = (competenciaIndex) => {
+const agregarTema = (competenciaIndex: number) => {
   competencias.value[competenciaIndex].temas.push({
     temasSubtemas: '',
     actividadesAprendizaje: '',
@@ -400,20 +400,20 @@ const agregarTema = (competenciaIndex) => {
   })
 }
 
-const agregarIndicador = (competenciaIndex) => {
+const agregarIndicador = (competenciaIndex: number) => {
   competencias.value[competenciaIndex].indicadores.push({
     descripcion: '',
     valor: 0,
   })
 }
 
-const eliminarIndicador = (competenciaIndex, indicadorIndex) => {
+const eliminarIndicador = (competenciaIndex: number, indicadorIndex: number) => {
   if (competencias.value[competenciaIndex].indicadores.length > 1) {
     competencias.value[competenciaIndex].indicadores.splice(indicadorIndex, 1)
   }
 }
 
-const cargarDatosAsignatura = (asignatura) => {
+const cargarDatosAsignatura = (asignatura: number) => {
   if (!asignatura) {
     resetearFormulario()
     return

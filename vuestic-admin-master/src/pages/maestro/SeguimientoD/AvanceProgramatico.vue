@@ -181,7 +181,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import api from '../../services/api'
 
 // Datos de ejemplo para asignaturas (simulando respuesta de API)
 const asignaturasEjemplo = [
@@ -535,10 +534,6 @@ const guardarBorrador = () => {
     materia: materia.value,
     // ... otros campos
   })
-}
-
-const imprimirFormulario = () => {
-  window.print()
 }
 
 const enviarFormulario = () => {

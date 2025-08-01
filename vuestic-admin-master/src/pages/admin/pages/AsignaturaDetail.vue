@@ -2,6 +2,7 @@
   <div class="pdf-viewer">
     <h1 class="va-h4 mb-4 text-center">Instrumentación Didáctica</h1>
 
+    <!-- PDF Viewer -->
     <VaCard>
       <VaCardTitle class="flex items-center">
         <VaIcon name="picture_as_pdf" class="mr-2" />
@@ -12,6 +13,7 @@
       </VaCardContent>
     </VaCard>
 
+    <!-- Botones de acción -->
     <VaCard class="mt-4">
       <VaCardContent>
         <div class="flex justify-center gap-4">
@@ -35,6 +37,7 @@
       </VaCardContent>
     </VaCard>
 
+    <!-- Observaciones -->
     <VaCard v-if="mostrarObservaciones" class="mt-4">
       <VaCardTitle class="flex items-center">
         <VaIcon name="note" class="mr-2" />

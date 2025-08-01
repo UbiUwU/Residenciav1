@@ -62,7 +62,6 @@
 import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useColors } from 'vuestic-ui'
-import { useI18n } from 'vue-i18n'
 import { SuperRoutes } from './SuperRoutes'
 
 const props = defineProps({

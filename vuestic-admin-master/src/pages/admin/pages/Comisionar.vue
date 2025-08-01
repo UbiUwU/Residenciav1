@@ -109,9 +109,8 @@ const submitForm = async () => {
     }
 
     const eventTypeText = form.value.eventType.trim()
-
     const selectedMaestroValues = form.value.selectedMaestro.map((item) =>
-      typeof item === 'object' && item.value ? item.value : item,
+      typeof item === 'string' ? item : item.value,
     )
 
     const payload = {

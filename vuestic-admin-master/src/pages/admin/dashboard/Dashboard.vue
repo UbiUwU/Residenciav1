@@ -1,4 +1,19 @@
 <template>
+<<<<<<< HEAD
+  <div class="nueva-vista">
+    <!-- Título de la vista -->
+    <h1 class="va-h4 mb-4">{{ titulo }}</h1>
+
+    <!-- Contenido principal -->
+    <VaCard>
+      <VaCardContent>
+        <p>Esta es mi nueva vista integrada correctamente con el AppLayout.</p>
+
+        <!-- Ejemplo de componente Vuestic -->
+        <VaButton class="mt-4" @click="mostrarMensaje"> Probar funcionamiento </VaButton>
+      </VaCardContent>
+    </VaCard>
+=======
   <div class="dashboard-container">
     <!-- ENCABEZADO -->
     <VaCard class="mb-4">
@@ -91,15 +106,24 @@
         </li>
       </ul>
     </div>
+>>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
   </div>
 </template>
 
 <script setup lang="ts">
+<<<<<<< HEAD
+// Importaciones básicas (opcional)
+import { ref } from 'vue'
+
+// Datos reactivos
+const titulo = ref('Mi Nueva Vista')
+=======
 import { ref, computed, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMaestrosConAsignaturas } from '../dashboard/maestros'
 
 const router = useRouter()
+>>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
 
 const { maestros, fetchMaestrosConAsignaturas, isLoading, error } = useMaestrosConAsignaturas()
 

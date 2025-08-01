@@ -40,6 +40,11 @@ export const SuperRoutes: INavigationRoute[] = [
         meta: { allowedRoles: [5] },
       },
       {
+        name: 'asignaturas',
+        displayName: 'Asignaturas',
+        meta: { allowedRoles: [5] },
+      },
+      {
         name: 'admin-periodos',
         displayName: 'Periodos',
         meta: { allowedRoles: [5] },

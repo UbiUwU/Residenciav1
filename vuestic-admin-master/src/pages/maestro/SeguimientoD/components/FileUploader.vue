@@ -23,13 +23,6 @@
 import { ref } from 'vue'
 import { useToast } from 'vuestic-ui'
 
-const props = defineProps({
-  materiaId: {
-    type: Number,
-    required: true,
-  },
-})
-
 const emit = defineEmits(['file-uploaded'])
 const { init } = useToast()
 const files = ref([])

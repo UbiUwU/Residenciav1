@@ -267,12 +267,6 @@ const totalPages = computed(() => {
   return Math.ceil(filteredCommissions.value.length / itemsPerPage)
 })
 
-const paginatedCommissions = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage
-  const end = start + itemsPerPage
-  return filteredCommissions.value.slice(start, end)
-})
-
 // Métodos
 const loadCommissions = async () => {
   loading.value = true

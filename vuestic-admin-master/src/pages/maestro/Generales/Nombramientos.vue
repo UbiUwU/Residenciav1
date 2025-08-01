@@ -185,12 +185,6 @@ const totalPages = computed(() => {
   return Math.ceil(filteredAppointments.value.length / itemsPerPage)
 })
 
-const paginatedAppointments = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage
-  const end = start + itemsPerPage
-  return filteredAppointments.value.slice(start, end)
-})
-
 // Helpers
 const getStatusColor = (status: string) => {
   const colors: Record<string, string> = {

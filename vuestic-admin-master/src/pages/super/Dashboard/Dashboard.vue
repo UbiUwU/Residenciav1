@@ -421,7 +421,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -754,7 +754,6 @@ const confirmacionMensaje = ref('')
 const confirmacionAccion = ref('')
 const confirmacionColor = ref('danger')
 const accionConfirmada = ref(null)
-const parametroConfirmacion = ref(null)
 
 // Funciones
 const getBadgeColor = (estado) => {
@@ -765,7 +764,6 @@ const getBadgeColor = (estado) => {
     Suspendido: 'danger',
     Completado: 'success',
     'En progreso': 'warning',
-    Pendiente: 'info',
     Atrasado: 'danger',
   }
   return estados[estado] || 'primary'
@@ -866,7 +864,7 @@ const mostrarModalNotificacion = () => {
 }
 
 const crearNuevoPeriodo = () => {
-  router.push('/periodos/nuevo')
+  router.push('/periodos')
 }
 
 const verDetalleActividad = (id) => {
@@ -1107,7 +1105,7 @@ const eliminarAlertaSistema = (index) => {
   alertasSistemaUrgentes.value.splice(index, 1)
 }
 
-const mostrarConfirmacion = (titulo, mensaje, accion, color, callback, mostrarCancelar = true) => {
+const mostrarConfirmacion = (titulo, mensaje, accion, color, callback = true) => {
   confirmacionTitulo.value = titulo
   confirmacionMensaje.value = mensaje
   confirmacionAccion.value = accion

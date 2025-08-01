@@ -112,7 +112,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         name: 'admin-reporte',
         path: 'admin-reporte',
-        component: () => import('../pages/admin/pages/ReporteFinal.vue'),
+        component: () => import('../pages/admin/pages/ReporteFinal.vue')
       },
       {
         name: 'admin-usuarios',
@@ -162,6 +162,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/admin/pages/Comisionar.vue'),
       },
       {
+        name: 'admin-reporte',
+        path: 'admin-reporte',
+        component: () => import('../pages/admin/pages/ReporteFinal.vue'),
+      },
+      {
         name: 'admin-maestros',
         path: 'usuarios',
         component: usuarios,
@@ -209,7 +214,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         name: 'admin-reporte',
         path: 'admin-reporte',
-        component: () => import('../pages/admin/pages/ReporteFinal.vue'),
+        component: () => import('../pages/admin/pages/ReporteFinal.vue')
       },
     ],
   },
@@ -330,55 +335,52 @@ const routes: Array<RouteRecordRaw> = [
   },
 
   // Rutas de prueba (solo desarrollo)
-  ...(process.env.NODE_ENV === 'development'
-    ? [
+  ...(process.env.NODE_ENV === 'development' ? [
+    {
+      path: '/test',
+      component: AppLayout,
+      children: [
         {
-          path: '/test',
-          component: AppLayout,
-          children: [
-            {
-              path: 'asignaturas',
-              name: 'asignaturas',
-              component: Asignaturas,
-            },
-            {
-              path: 'asignaturas/:clave',
-              name: 'asignatura-detail',
-              component: AsignaturaDetail,
-              props: true,
-            },
-            {
-              path: 'asignaturas/complete/:clave',
-              name: 'asignatura-completa',
-              component: () => import('../test/asignaturas2.vue'),
-            },
-            {
-              path: 'visualizar-horario',
-              name: 'visualizar-horario',
-              component: visualizarhorario,
-            },
-            {
-              path: 'ingresar-horario',
-              name: 'ingresar-horario',
-              component: InHorarioMaestro,
-            },
-            {
-              path: 'eventos-destino',
-              name: 'eventos-destino',
-              component: eventosmdestino,
-            },
-            {
-              path: 'avance',
-              name: 'avance',
-              component: avance,
-            },
-            {
-              path: 'horario-maestro',
-              name: 'horario-maestro',
-              component: horaraio2,
-            },
-          ],
+          path: 'asignaturas',
+          name: 'asignaturas',
+          component: Asignaturas
         },
+        {
+          path: 'asignaturas/:clave',
+          name: 'asignatura-detail',
+          component: AsignaturaDetail,
+          props: true
+        },
+        {
+          path: 'asignaturas/complete/:clave',
+          name: 'asignatura-completa',
+          component: () => import('../test/asignaturas2.vue')
+        },
+        {
+          path: 'visualizar-horario',
+          name: 'visualizar-horario',
+          component: visualizarhorario
+        },
+        {
+          path: 'ingresar-horario',
+          name: 'ingresar-horario',
+          component: InHorarioMaestro
+        },
+        {
+          path: 'eventos-destino',
+          name: 'eventos-destino',
+          component: eventosmdestino
+        },
+        {
+          path: 'avance',
+          name: 'avance',
+          component: avance
+        },
+        {
+          path: 'horario-maestro',
+          name: 'horario-maestro',
+          component: horaraio2
+        }
       ]
     : []),
 

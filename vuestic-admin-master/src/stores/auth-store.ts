@@ -17,6 +17,7 @@ interface MaestroData {
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<{
     user_type: string
+    correo: string
     data: MaestroData | null
     token?: string
   } | null>(null)
