@@ -1,19 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <div class="nueva-vista">
-    <!-- Título de la vista -->
-    <h1 class="va-h4 mb-4">{{ titulo }}</h1>
-
-    <!-- Contenido principal -->
-    <VaCard>
-      <VaCardContent>
-        <p>Esta es mi nueva vista integrada correctamente con el AppLayout.</p>
-
-        <!-- Ejemplo de componente Vuestic -->
-        <VaButton class="mt-4" @click="mostrarMensaje"> Probar funcionamiento </VaButton>
-      </VaCardContent>
-    </VaCard>
-=======
   <!-- Contenido principal -->
   <div class="dashboard-container">
     <!-- ENCABEZADO -->
@@ -107,20 +92,10 @@
         </li>
       </ul>
     </div>
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
   </div>
 </template>
 
 <script setup lang="ts">
-<<<<<<< HEAD
-// Importaciones básicas (opcional)
-import { ref } from 'vue'
-
-// Datos reactivos
-const titulo = ref('Mi Nueva Vista')
-
-const { maestros, fetchMaestrosConAsignaturas, isLoading, error } = useMaestrosConAsignaturas()
-=======
 import { ref, computed, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMaestrosConAsignaturas } from '../dashboard/maestros'
@@ -143,7 +118,6 @@ interface Alerta {
   icono: string
   accion: string
 }
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
 
 const columnasMaestros = ref([
   { key: 'nombre', label: 'Nombre del maestro', sortable: true },
@@ -156,23 +130,12 @@ const busqueda = ref('')
 const filtroEstado = ref<string | null>(null)
 const opcionesEstado = ref(['Pendiente', 'En progreso', 'Completado'])
 
-<<<<<<< HEAD
-const maestrosConEstado = computed(() => {
-  return maestros.value.map((m) => {
-    const avanceReal = m.avance ?? 0
-    return {
-      ...m,
-      avance: avanceReal,
-      estado: avanceReal >= 100 ? 'Completado' : avanceReal > 0 ? 'En progreso' : 'Pendiente',
-    }
-=======
 // Asegura estado dinámico si viene vacío desde la API
 const maestrosConEstado = computed<Maestro[]>(() => {
   return maestros.value.map((m) => {
     const avance = m.avance ?? 0
     const estado: Maestro['estado'] = avance >= 100 ? 'Completado' : avance > 0 ? 'En progreso' : 'Pendiente'
     return { ...m, avance, estado }
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
   })
 })
 

@@ -252,14 +252,50 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+// Definición de interfaces
+interface Asignatura {
+  text: string
+  value: string
+  nombre: string
+  creditos: number
+  horasTeoricas: number
+  horasPracticas: number
+}
+
+interface Tema {
+  temasSubtemas: string
+  actividadesAprendizaje: string
+  actividadesEnsenanza: string
+  competenciasGenericas: string[]
+  horas: number
+}
+
+interface Indicador {
+  descripcion: string
+  valor: number
+}
+
+interface Competencia {
+  numero: number
+  descripcion: string
+  temas: Tema[]
+  indicadores: Indicador[]
+  matrizEvaluacion: string
+}
+
+interface CompetenciaGenerica {
+  text: string
+  value: string
+}
+
 // Datos institucionales
 const departamento = ref('Sistemas y Computación')
 const periodo = ref('ENE-JUN 2025')
 const planEstudios = ref('ING-2020')
 
 // Datos de la asignatura
-const asignaturaSeleccionada = ref(null)
-const opcionesAsignaturas = ref([
+const asignaturaSeleccionada = ref<Asignatura | null>(null)
+const opcionesAsignaturas = ref<Asignatura[]>([
   {
     text: 'FDBD - Fundamentos de Bases de Datos',
     value: 'FDBD',
@@ -301,7 +337,7 @@ const intencionDidactica = ref('')
 const competenciaAsignatura = ref('')
 
 // Sección 4: Competencias específicas
-const competencias = ref([
+const competencias = ref<Competencia[]>([
   {
     numero: 1,
     descripcion: '',
@@ -320,7 +356,7 @@ const competencias = ref([
 ])
 
 // Opciones para competencias genéricas
-const opcionesCompetenciasGenericas = ref([
+const opcionesCompetenciasGenericas = ref<CompetenciaGenerica[]>([
   { text: 'Capacidad de análisis y síntesis', value: 'analisis_sintesis' },
   { text: 'Capacidad de organizar y planificar', value: 'organizar_planificar' },
   { text: 'Comunicación oral y escrita', value: 'comunicacion' },
@@ -413,7 +449,7 @@ const eliminarIndicador = (competenciaIndex: number, indicadorIndex: number) => 
   }
 }
 
-const cargarDatosAsignatura = (asignatura: number) => {
+const cargarDatosAsignatura = (asignatura: Asignatura | null) => {
   if (!asignatura) {
     resetearFormulario()
     return

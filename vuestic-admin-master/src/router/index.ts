@@ -10,15 +10,8 @@ import RouteViewComponent from '../layouts/RouterBypass.vue'
 
 // Componentes de prueba
 import departamento from '../test/departamentos.vue'
-<<<<<<< HEAD
-import InHorarioMaestro from '../test/IngresarHorario.vue'
 import MateriasMaestroPage from '../pages/admin/pages/AsignaturasMaestros.vue'
 import reporteFinal from '../pages/admin/pages/ReporteFinal.vue'
-import visualizarhorario from '../test/visualizarhorario.vue'
-=======
-import MateriasMaestroPage from '../pages/admin/pages/AsignaturasMaestros.vue'
-import reporteFinal from '../pages/admin/pages/ReporteFinal.vue'
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
 import PDFView from '../pages/admin/pages/AsignaturaDetail.vue'
 import maestro from '../pages/admin/pages/PaginaUsuarios.vue'
 import usuarios from '../test/usuarios.vue'
@@ -113,25 +106,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'admin-reporte',
         component: () => import('../pages/admin/pages/ReporteFinal.vue'),
       },
-<<<<<<< HEAD
-      {
-        path: 'asignaturas',
-        name: 'asignaturas',
-        component: Asignaturas,
-      },
-      {
-        path: 'asignaturas/:clave',
-        name: 'asignatura-detail',
-        component: AsignaturaDetail,
-        props: true,
-      },
-      {
-        path: 'asignaturas/complete/:clave',
-        name: 'asignatura-completa',
-        component: () => import('../test/asignaturas2.vue'),
-      },
-=======
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
       {
         name: 'admin-usuarios',
         path: 'usuarios',
@@ -183,14 +157,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'admin-reporte',
         component: () => import('../pages/admin/pages/ReporteFinal.vue'),
       },
-<<<<<<< HEAD
-=======
       {
         name: 'admin-maestros',
         path: 'usuarios',
         component: usuarios,
       },
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
       {
         name: 'admin-maestros',
         path: 'maestros',
@@ -215,14 +186,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'admin-periodos',
         path: 'periodos',
         component: periodos,
-<<<<<<< HEAD
-=======
       },
       {
         name: 'admin-maestros',
         path: 'maestros',
         component: maestro,
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
       },
       {
         path: '/materiasMaestro/:tarjeta',
@@ -239,8 +207,6 @@ const routes: Array<RouteRecordRaw> = [
         name: 'pdf',
         component: PDFView,
       },
-<<<<<<< HEAD
-=======
       {
         path: '/visualizarhorario',
         name: 'vishorario',
@@ -251,7 +217,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'admin-reporte',
         component: () => import('../pages/admin/pages/ReporteFinal.vue'),
       },
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
     ],
   },
 
@@ -313,6 +278,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'instrumentacion-didactica',
         component: () => import('../pages/maestro/SeguimientoD/InstrumentacionDidactica.vue'),
       },
+
       {
         name: 'acuse-estudiante',
         path: 'acuse-estudiante',
@@ -326,18 +292,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/seguimiento',
     component: RouteViewComponent,
     meta: { requiresAuth: true, allowedRoles: [ROLES.TEACHER] },
-    children: [
-      {
-        name: 'evaluacion-diagnostica',
-        path: 'evaluacion-diagnostica',
-        component: () => import('../pages/maestro/SeguimientoD/EvaluacionDiagnostica.vue'),
-      },
-      {
-        name: 'calificaciones-parciales',
-        path: 'calificaciones-parciales',
-        component: () => import('../pages/maestro/SeguimientoD/CalificacionesParciales.vue'),
-      },
-    ],
+    children: [],
   },
 
   // Liberación de actividades (Teacher)
@@ -345,28 +300,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/liberacion',
     component: RouteViewComponent,
     meta: { requiresAuth: true, allowedRoles: [ROLES.TEACHER] },
-    children: [
-      {
-        name: 'reporte-final',
-        path: 'reporte-final',
-        component: () => import('../pages/maestro/Liberacion/ReporteFinal.vue'),
-      },
-      {
-        name: 'actas-calificaciones',
-        path: 'actas-calificaciones',
-        component: () => import('../pages/maestro/Liberacion/ActasCalificaciones.vue'),
-      },
-      {
-        name: 'liberacion-actividades-d',
-        path: 'liberacion-actividades-d',
-        component: () => import('../pages/maestro/Liberacion/LiberacionActividadesD.vue'),
-      },
-      {
-        name: 'liberacion-actividades-a',
-        path: 'liberacion-actividades-a',
-        component: () => import('../pages/maestro/Liberacion/LiberacionActividadesA.vue'),
-      },
-    ],
+    children: [],
   },
 
   // Rutas de prueba (solo desarrollo)
@@ -445,37 +379,44 @@ const router = createRouter({
   },
 })
 
-router.beforeEach((to, from, next) => {
+// Modifica tu guardia de ruta así:
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
-  // No aplicar redirección para rutas públicas
   if (!to.meta.requiresAuth) {
     return next()
   }
 
-  // Si no está autenticado, redirigir a login
   if (!authStore.isAuthenticated) {
-    return next({ name: 'login', query: { redirect: to.fullPath } })
+    return next({
+      name: 'login',
+      query: { redirect: to.fullPath },
+    })
   }
 
-  // Verificar roles solo si la ruta los requiere
   if (to.meta.allowedRoles) {
     if (!authStore.userRole) {
-      // Intentar restaurar sesión si no hay rol
-      if (authStore.restoreSession()) {
-        return next(to.fullPath) // Reintentar navegación
+      try {
+        await authStore.initialize()
+        if (!authStore.userRole) {
+          return next({ name: 'login' })
+        }
+      } catch (error) {
+        console.error('Error al inicializar sesión:', error)
+        return next({ name: 'login' })
       }
-      return next({ name: 'login' })
     }
 
-    const allowedRoles = to.meta.allowedRoles as string[] | undefined
+    const allowedRoles = to.meta.allowedRoles as number[] // Cambiado a number[]
 
-    if (allowedRoles && !allowedRoles.includes(authStore.userRole)) {
+    // Asegurarnos que userRole es number
+    const userRole = Number(authStore.userRole)
+
+    if (allowedRoles && !allowedRoles.includes(userRole)) {
       return next({ name: 'unauthorized' })
     }
   }
 
   next()
 })
-
 export default router

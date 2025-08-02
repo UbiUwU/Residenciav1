@@ -182,6 +182,21 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
+const imprimirFormulario = () => {
+  console.log('Imprimiendo formulario...')
+
+  const element = document.createElement('div')
+  element.innerHTML = 'Contenido del formulario a imprimir...'
+  const ventana = window.open('', '_blank')
+  ventana?.document.write(element.innerHTML)
+  ventana?.document.close()
+  ventana?.focus()
+
+  // Esperar un momento antes de imprimir
+  setTimeout(() => {
+    ventana?.print()
+  }, 500)
+}
 // Datos de ejemplo para asignaturas (simulando respuesta de API)
 const asignaturasEjemplo = [
   {

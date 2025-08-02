@@ -25,10 +25,8 @@
           </div>
         </div>
 
-<<<<<<< HEAD
-=======
         <!-- Submenú: solo se muestra si es la asignatura seleccionada -->
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
+
         <Transition name="fade">
           <div v-show="detalleAbierto === asignatura.ClaveAsignatura" class="submenu">
             <button @click="verPDF('instrumentacion')">Instrumentación Didáctica</button>
@@ -43,7 +41,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '../../../services/apiJ'
+import api from '../../../services/api'
 
 const route = useRoute()
 const router = useRouter()
@@ -80,10 +78,7 @@ const fetchAsignaturas = async () => {
         Satca_Total: 5,
       })
     } else {
-<<<<<<< HEAD
-=======
       asignaturas.value = [] // No hay asignaturas
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
       asignaturas.value = []
     }
   } catch (err) {
@@ -94,26 +89,16 @@ const fetchAsignaturas = async () => {
   }
 }
 
-<<<<<<< HEAD
-=======
 const handleRegresar = () => {
   window.history.back() // o router.back() si usas Vue Router
 }
 
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
 const toggleDetalle = (clave) => {
   detalleAbierto.value = detalleAbierto.value === clave ? null : clave
 }
 
 const verPDF = (tipo) => {
   router.push({ name: 'pdf', params: { tarjeta, tipo } })
-<<<<<<< HEAD
-}
-
-const handleRegresar = () => {
-  window.history.back()
-=======
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
 }
 
 onMounted(() => {
@@ -154,8 +139,6 @@ h1 {
 
 /* Tarjeta */
 .asignatura-card {
-<<<<<<< HEAD
-=======
   background-color: var(--va-background-element);
   color: var(--va-on-background);
   border-radius: 8px;
@@ -164,7 +147,6 @@ h1 {
   transition:
     transform 0.2s,
     box-shadow 0.2s;
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 10px;

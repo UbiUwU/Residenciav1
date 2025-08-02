@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from '../services/apiJ'
+import api from '../services/api'
 import { useRouter } from 'vue-router'
 
 interface MaestroData {

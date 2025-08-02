@@ -44,47 +44,6 @@ const verMaestro = (tarjeta: number) => {
 }
 
 const generarReporteFinal = (tarjeta: number) => {
-<<<<<<< HEAD
-  router.push({ name: 'reporteFinalMaestro', params: { tarjeta } })
-}
-
-const userToCreate = ref({
-  tarjeta: '',
-  nombre: '',
-  apellidopaterno: '',
-  apellidomaterno: '',
-  idusuario: '',
-  rfc: '',
-  escolaridad_licenciatura: '',
-  estado_licenciatura: '',
-  escolaridad_especializacion: '',
-  estado_especializacion: '',
-  escolaridad_maestria: '',
-  estado_maestria: '',
-  escolaridad_doctorado: '',
-  estado_doctorado: '',
-  id_departamento: '',
-})
-
-const doShowUserFormModal = ref(false)
-
-const cancelModal = () => {
-  doShowUserFormModal.value = false
-}
-
-const onUserSaved = () => {
-  // Aquí iría la lógica de guardado del nuevo usuario
-  console.log('Usuario guardado:', userToCreate.value)
-  doShowUserFormModal.value = false
-
-  // Muestra un mensaje de éxito utilizando notify()
-  useToast().notify({
-    message: 'Usuario creado con éxito',
-    color: 'success',
-  })
-
-=======
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
   router.push({ name: 'reporteFinal', params: { tarjeta } })
 }
 </script>
@@ -102,7 +61,6 @@ const onUserSaved = () => {
 
   <VaDataTable :columns="columns" :items="filteredMaestros" :loading="loading">
     <template #cell(acciones)="{ rowData }">
-<<<<<<< HEAD
       <VaButton color="primary" icon="visibility" size="small" @click="verMaestro(rowData.tarjeta)">
         Ver maestro
       </VaButton>
@@ -110,8 +68,6 @@ const onUserSaved = () => {
         Reporte Final
       </VaButton>
 
-=======
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
       <div class="flex flex-wrap gap-2">
         <VaButton
           color="primary"

@@ -20,8 +20,13 @@
           </template>
 
           <template #cell(daysLeft)="{ value }">
-            <span :class="{ 'text-red-500': value <= 3, 'text-orange-500': value > 3 && value <= 7 }">
-              {{ value }} día(s)
+            <span
+              :class="{
+                'text-red-500': Number(value) <= 3,
+                'text-orange-500': Number(value) > 3 && Number(value) <= 7,
+              }"
+            >
+              {{ value }} días
             </span>
           </template>
 

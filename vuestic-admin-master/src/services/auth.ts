@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { Maestro, Usuario, AuthData } from '../services/types/auth'
-import { ROLES } from '../constants/roles' // Importación de roles
+import { ROLES } from '../constants/roles'
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(null)
@@ -10,14 +10,17 @@ export const useAuthStore = defineStore('auth', () => {
   const maestro = ref<Maestro | null>(null)
   const router = useRouter()
 
-  // Constantes correspondientes a cada rol
+  // Convertimos el rol a número reactivamente
+  const userRole = computed(() => {
+    const role = user.value?.idrol
+    return role ? Number(role) : null
+  })
+
   const isAuthenticated = computed(() => !!token.value)
-  const userRole = computed(() => user.value?.idrol || null)
   const isAdmin = computed(() => userRole.value === ROLES.ADMIN)
   const isTeacher = computed(() => userRole.value === ROLES.TEACHER)
   const isSuper = computed(() => userRole.value === ROLES.SUPER)
 
-  // Carga los datos del almacenamiento local o de sesión
   const loadFromStorage = () => {
     const stored = localStorage.getItem('userData') || sessionStorage.getItem('userData')
 
@@ -27,71 +30,66 @@ export const useAuthStore = defineStore('auth', () => {
         token.value = parsed.token
         user.value = parsed.user
 
-        // Solo cargar maestro si el rol es teacher
-        if (parsed.user.idrol === ROLES.TEACHER) {
+        // Convertimos el rol al comparar
+        const role = parsed.user.idrol ? Number(parsed.user.idrol) : null
+        if (role === ROLES.TEACHER) {
           maestro.value = parsed.maestro
         } else {
           maestro.value = null
         }
       } catch (error) {
-        console.error('Error al cargar datos de almacenamiento:', error)
+        console.error('Error al cargar datos:', error)
         logout()
       }
     }
   }
 
-  // Restaurar sesión existente
-  const restoreSession = () => {
-    loadFromStorage()
-    return isAuthenticated.value
-  }
-
-  // Guardar sesión en localStorage o sessionStorage
   const persistSession = (data: AuthData, keepLoggedIn: boolean) => {
     const storage = keepLoggedIn ? localStorage : sessionStorage
-    const payload = JSON.stringify({
-      token: data.token,
-      user: data.user,
-      maestro: data.user.idrol === ROLES.TEACHER ? data.maestro : null,
-    })
-    storage.setItem('userData', payload)
+    const role = data.user.idrol ? Number(data.user.idrol) : null
+
+    storage.setItem(
+      'userData',
+      JSON.stringify({
+        token: data.token,
+        user: data.user,
+        maestro: role === ROLES.TEACHER ? data.maestro : null,
+      }),
+    )
   }
 
-  // Iniciar sesión (versión mejorada)
   const login = async (authData: AuthData, keepLoggedIn: boolean) => {
     token.value = authData.token
     user.value = authData.user
-    maestro.value = authData.maestro
+
+    // Convertimos el rol al asignar
+    const role = authData.user.idrol ? Number(authData.user.idrol) : null
+    if (role === ROLES.TEACHER) {
+      maestro.value = authData.maestro
+    } else {
+      maestro.value = null
+    }
 
     persistSession(authData, keepLoggedIn)
-
-    // Retornamos el rol del usuario para que el componente pueda manejar la redirección
-    return authData.user.idrol
+    return role
   }
 
-  // Versión alternativa de login que maneja la redirección internamente
   const loginAndRedirect = async (authData: AuthData, keepLoggedIn: boolean) => {
     const role = await login(authData, keepLoggedIn)
 
-    // Redirección basada en el rol
-    switch (role) {
-      case ROLES.ADMIN:
-        router.push({ name: 'dashboard' })
-        break
-      case ROLES.TEACHER:
-        router.push({ name: 'dashboard-teacher' })
-        break
-      case ROLES.SUPER:
-        router.push({ name: 'dashboard-super' })
-        break
-      default:
-        router.push({ name: 'dashboard' })
+    if (role === ROLES.ADMIN) {
+      router.push({ name: 'dashboard' })
+    } else if (role === ROLES.TEACHER) {
+      router.push({ name: 'dashboard-teacher' })
+    } else if (role === ROLES.SUPER) {
+      router.push({ name: 'dashboard-super' })
+    } else {
+      router.push({ name: 'dashboard' })
     }
 
     return role
   }
 
-  // Cerrar sesión
   const logout = () => {
     token.value = null
     user.value = null
@@ -101,7 +99,6 @@ export const useAuthStore = defineStore('auth', () => {
     router.push('/login')
   }
 
-  // Inicializar store al cargar
   const initialize = () => {
     loadFromStorage()
   }
@@ -116,9 +113,8 @@ export const useAuthStore = defineStore('auth', () => {
     isTeacher,
     isSuper,
     initialize,
-    restoreSession,
-    login, // Versión que retorna el rol
-    loginAndRedirect, // Versión que maneja redirección
+    login,
+    loginAndRedirect,
     logout,
   }
 })

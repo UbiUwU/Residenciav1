@@ -75,6 +75,7 @@ export const teacherRoutes: INavigationRoute[] = [
         displayName: 'Acuse Estudiante',
         meta: { allowedRoles: [2] },
       },
+
       {
         name: 'asesorias',
         displayName: 'Asesorias',

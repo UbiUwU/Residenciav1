@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 // 👇 Usa el tipo explícito para decirle a TS que tu apiClient tiene esas funciones
-import apiClient from '../../../services/apiJ'
+import apiClient from '../../../services/api'
 
 interface Maestro {
   tarjeta: string
@@ -30,19 +30,6 @@ export function useMaestrosConAsignaturas() {
           const asignaturasResp = await apiClient.getAsignaturaByTarjetaCompleta(m.tarjeta)
           const asignaturas = asignaturasResp.data
 
-<<<<<<< HEAD
-          return {
-            tarjeta: m.tarjeta,
-            nombre: m.nombre,
-            asignaturas: asignaturas.length,
-            avance: Math.floor(Math.random() * 100),
-            estado: ['Pendiente', 'En progreso', 'Completado'][Math.floor(Math.random() * 3)],
-          }
-        }),
-      )
-
-      maestros.value = maestrosFiltrados.filter((m) => m.asignaturas > 0)
-=======
           if (Array.isArray(asignaturas) && asignaturas.length > 0) {
             maestrosFiltrados.push({
               tarjeta: m.tarjeta,
@@ -58,7 +45,6 @@ export function useMaestrosConAsignaturas() {
       }
 
       maestros.value = maestrosFiltrados.filter((m: Maestro) => m.asignaturas > 0)
->>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
     } catch (err: any) {
       console.error('Error:', err)
       if (err.message?.includes('net::ERR_NETWORK_CHANGED')) {
