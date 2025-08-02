@@ -13,13 +13,15 @@ onMounted(() => {
     type: 'bar',
     data: {
       labels: ['Maestro A', 'Maestro B', 'Maestro C', 'Maestro D'],
-      datasets: [{
-        label: 'Avance (%)',
-        data: [80, 55, 90, 30],
-        backgroundColor: '#3B82F6',
-        borderColor: '#1E40AF',
-        borderWidth: 1,
-      }]
+      datasets: [
+        {
+          label: 'Avance (%)',
+          data: [80, 55, 90, 30],
+          backgroundColor: '#3B82F6',
+          borderColor: '#1E40AF',
+          borderWidth: 1,
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -27,9 +29,9 @@ onMounted(() => {
         y: {
           beginAtZero: true,
           max: 100,
-        }
-      }
-    }
+        },
+      },
+    },
   })
 })
 </script>

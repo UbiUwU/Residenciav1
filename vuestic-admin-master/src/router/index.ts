@@ -13,11 +13,8 @@ import Asignaturas from '../test/Asignaturas.vue'
 import AsignaturaDetail from '../test/AsignaturaDetail.vue'
 import departamento from '../test/departamentos.vue'
 import InHorarioMaestro from '../test/IngresarHorario.vue'
-<<<<<<< HEAD
-=======
 import MateriasMaestroPage from '../pages/admin/pages/AsignaturasMaestros.vue'
 import reporteFinal from '../pages/admin/pages/ReporteFinal.vue'
->>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
 import visualizarhorario from '../test/visualizarhorario.vue'
 import PDFView from '../pages/admin/pages/AsignaturaDetail.vue'
 import maestro from '../pages/admin/pages/PaginaUsuarios.vue'
@@ -98,7 +95,6 @@ const routes: Array<RouteRecordRaw> = [
   },
 
   //Area de SuperUsuario
-
   {
     name: 'super',
     path: '/super',
@@ -111,13 +107,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'dashboard-super',
         component: () => import('../pages/super/Dashboard/Dashboard.vue'),
       },
-
       {
         name: 'admin-reporte',
         path: 'admin-reporte',
         component: () => import('../pages/admin/pages/ReporteFinal.vue'),
       },
-
       {
         path: 'asignaturas',
         name: 'asignaturas',
@@ -149,7 +143,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'roles',
         component: roles,
       },
-
       {
         name: 'admin-periodos',
         path: 'periodos',
@@ -163,7 +156,7 @@ const routes: Array<RouteRecordRaw> = [
     ],
   },
 
-  // Área de Administrador
+  // Área de Administrador - CORREGIDO
   {
     name: 'admin',
     path: '/admin',
@@ -182,41 +175,34 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/admin/pages/Comisionar.vue'),
       },
       {
-<<<<<<< HEAD
         name: 'admin-reporte',
         path: 'admin-reporte',
         component: () => import('../pages/admin/pages/ReporteFinal.vue'),
       },
-    ],
-=======
-        name: 'admin-maestros',
-        path: 'usuarios',
-        component: usuarios
-      },
       {
         name: 'admin-maestros',
+        path: 'maestros',
+        component: maestro,
+      },
+      {
+        name: 'admin-usuarios',
         path: 'usuarios',
-        component: usuarios
+        component: usuarios,
       },
       {
         name: 'admin-departamentos',
         path: 'departamentos',
-        component: departamento
+        component: departamento,
       },
       {
         name: 'admin-roles',
         path: 'roles',
-        component: roles
+        component: roles,
       },
       {
         name: 'admin-periodos',
         path: 'periodos',
-        component: periodos
-      },
-      {
-        name: 'admin-maestros',
-        path: 'maestros',
-        component: maestro
+        component: periodos,
       },
       {
         path: '/materiasMaestro/:tarjeta',
@@ -233,13 +219,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'pdf',
         component: PDFView,
       },
-      {
-        name: 'admin-reporte',
-        path: 'admin-reporte',
-        component: () => import('../pages/admin/pages/ReporteFinal.vue')
-      }
-    ]
->>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
+    ],
   },
 
   // Área de Maestro
@@ -300,7 +280,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'instrumentacion-didactica',
         component: () => import('../pages/maestro/SeguimientoD/InstrumentacionDidactica.vue'),
       },
-
       {
         name: 'acuse-estudiante',
         path: 'acuse-estudiante',

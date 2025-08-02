@@ -129,7 +129,7 @@ onMounted(() => {
 const enviarAPHP = async () => {
   try {
     // URL configurable desde variables de entorno
-    const pdfBaseUrl = import.meta.env.VITE_PDF_BASE_URL || 'http://localhost/Inicio%20de%20sesion/PlugginPDF2';
+    const pdfBaseUrl = import.meta.env.VITE_PDF_BASE_URL || 'http://localhost/Inicio%20de%20sesion/PlugginPDF2'
     const response = await fetch(`${pdfBaseUrl}/gestionar_plantillas.php`, {
       method: 'POST',
       headers: {

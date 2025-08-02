@@ -12,7 +12,6 @@
     <div v-else-if="asignaturas.length === 0" class="no-data">Este maestro no tiene asignaturas registradas.</div>
 
     <div v-else class="asignaturas-grid">
-<<<<<<< HEAD
       <div v-for="asignatura in asignaturas" :key="asignatura.ClaveAsignatura" class="asignatura-card">
         <div @click="toggleDetalle(asignatura.ClaveAsignatura)">
           <h3>{{ asignatura.ClaveAsignatura }} - {{ asignatura.NombreAsignatura }}</h3>
@@ -22,47 +21,16 @@
               SATCA: {{ asignatura.Satca_Total }} (T:{{ asignatura.Satca_Teoricas }}, P:{{
                 asignatura.Satca_Practicas
               }})
-=======
-      <div
-        v-for="asignatura in asignaturas"
-        :key="asignatura.ClaveAsignatura"
-        class="asignatura-card"
-      >
-        <div @click="toggleDetalle(asignatura.ClaveAsignatura)" class="asignatura-header">
-          <h3>
-            {{ asignatura.ClaveAsignatura }} - {{ asignatura.NombreAsignatura }}
-          </h3>
-          <div class="asignatura-info">
-            <span>Créditos: {{ asignatura.Creditos }}</span>
-            <span>
-              SATCA: {{ asignatura.Satca_Total }}
-              (T:{{ asignatura.Satca_Teoricas }}, P:{{ asignatura.Satca_Practicas }})
->>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
             </span>
           </div>
         </div>
 
-<<<<<<< HEAD
-        <div v-if="detalleAbierto === asignatura.ClaveAsignatura" class="submenu">
-          <button @click="verPDF()">Instrumentación Didáctica</button>
-          <button @click="verPDF(asignatura.ClaveAsignatura, 'avance')">Avance Programático</button>
-        </div>
-=======
-        <!-- Submenú: solo se muestra si es la asignatura seleccionada -->
-        <transition name="fade">
-          <div
-            v-show="detalleAbierto === asignatura.ClaveAsignatura"
-            class="submenu"
-          >
-            <button @click="verPDF('instrumentacion')">
-              Instrumentación Didáctica
-            </button>
-            <button @click="verPDF('avance')">
-              Avance Programático
-            </button>
+        <Transition name="fade">
+          <div v-show="detalleAbierto === asignatura.ClaveAsignatura" class="submenu">
+            <button @click="verPDF('instrumentacion')">Instrumentación Didáctica</button>
+            <button @click="verPDF('avance')">Avance Programático</button>
           </div>
-        </transition>
->>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
+        </Transition>
       </div>
     </div>
   </div>
@@ -86,16 +54,10 @@ const fetchAsignaturas = async () => {
   try {
     loading.value = true
     const response = await api.getAsignaturaByTarjetaCompleta(tarjeta)
-
     const data = response.data
 
     if (Array.isArray(data) && data.length > 0) {
-<<<<<<< HEAD
-      // Transformar los datos al formato esperado
       asignaturas.value = data.map((item) => ({
-=======
-      asignaturas.value = data.map(item => ({
->>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
         ClaveAsignatura: item.informacionbasica.clave,
         NombreAsignatura: item.informacionbasica.nombre,
         Creditos: item.informacionbasica.creditos,
@@ -111,15 +73,10 @@ const fetchAsignaturas = async () => {
         Creditos: 5,
         Satca_Teoricas: 3,
         Satca_Practicas: 2,
-        Satca_Total: 5
+        Satca_Total: 5,
       })
-
     } else {
-<<<<<<< HEAD
-      asignaturas.value = [] // No hay asignaturas
-=======
       asignaturas.value = []
->>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
     }
   } catch (err) {
     error.value = 'Error al cargar las asignaturas: ' + (err.response?.data?.error || err.message)
@@ -129,25 +86,12 @@ const fetchAsignaturas = async () => {
   }
 }
 
-<<<<<<< HEAD
-const handleRegresar = () => {
-  window.history.back() // o router.back() si usas Vue Router
-}
-const detalleAbierto = ref(null)
-
-=======
->>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
 const toggleDetalle = (clave) => {
   detalleAbierto.value = detalleAbierto.value === clave ? null : clave
 }
 
-<<<<<<< HEAD
-const verPDF = () => {
-  router.push({ name: 'pdf' })
-=======
 const verPDF = (tipo) => {
   router.push({ name: 'pdf', params: { tarjeta, tipo } })
->>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
 }
 
 const handleRegresar = () => {
@@ -160,19 +104,18 @@ onMounted(() => {
 </script>
 
 <style scoped>
-<<<<<<< HEAD
-=======
 /* Transición */
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: all 0.3s ease;
 }
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
   transform: scaleY(0.95);
 }
 
 /* Layout */
->>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
 .asignaturas-container {
   padding: 20px;
   max-width: 1200px;
@@ -193,23 +136,12 @@ h1 {
 
 /* Tarjeta */
 .asignatura-card {
-<<<<<<< HEAD
-  background-color: var(--va-background-element);
-  color: var(--va-on-background);
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: var(--va-box-shadow);
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
-=======
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
->>>>>>> 9245f27f7b357463a428bdf14ded921c39eb8283
 }
 .asignatura-card:hover {
   transform: translateY(-3px);
