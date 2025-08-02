@@ -9,20 +9,21 @@ import AppLayout from '../layouts/AppLayout.vue'
 import RouteViewComponent from '../layouts/RouterBypass.vue'
 
 // Componentes de prueba
-import Asignaturas from '../test/Asignaturas.vue'
-import AsignaturaDetail from '../test/AsignaturaDetail.vue'
 import departamento from '../test/departamentos.vue'
+<<<<<<< HEAD
 import InHorarioMaestro from '../test/IngresarHorario.vue'
 import MateriasMaestroPage from '../pages/admin/pages/AsignaturasMaestros.vue'
 import reporteFinal from '../pages/admin/pages/ReporteFinal.vue'
 import visualizarhorario from '../test/visualizarhorario.vue'
+=======
+import MateriasMaestroPage from '../pages/admin/pages/AsignaturasMaestros.vue'
+import reporteFinal from '../pages/admin/pages/ReporteFinal.vue'
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
 import PDFView from '../pages/admin/pages/AsignaturaDetail.vue'
 import maestro from '../pages/admin/pages/PaginaUsuarios.vue'
 import usuarios from '../test/usuarios.vue'
 import roles from '../test/roles.vue'
-import avance from '../test/avanceprogra.vue'
 import periodos from '../test/periodos.vue'
-import eventosmdestino from '../test/tiposeventos_Destino.vue'
 import horaraio2 from '../test/HorarioMaestro.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -112,6 +113,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'admin-reporte',
         component: () => import('../pages/admin/pages/ReporteFinal.vue'),
       },
+<<<<<<< HEAD
       {
         path: 'asignaturas',
         name: 'asignaturas',
@@ -128,6 +130,8 @@ const routes: Array<RouteRecordRaw> = [
         name: 'asignatura-completa',
         component: () => import('../test/asignaturas2.vue'),
       },
+=======
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
       {
         name: 'admin-usuarios',
         path: 'usuarios',
@@ -179,6 +183,14 @@ const routes: Array<RouteRecordRaw> = [
         path: 'admin-reporte',
         component: () => import('../pages/admin/pages/ReporteFinal.vue'),
       },
+<<<<<<< HEAD
+=======
+      {
+        name: 'admin-maestros',
+        path: 'usuarios',
+        component: usuarios,
+      },
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
       {
         name: 'admin-maestros',
         path: 'maestros',
@@ -203,6 +215,14 @@ const routes: Array<RouteRecordRaw> = [
         name: 'admin-periodos',
         path: 'periodos',
         component: periodos,
+<<<<<<< HEAD
+=======
+      },
+      {
+        name: 'admin-maestros',
+        path: 'maestros',
+        component: maestro,
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
       },
       {
         path: '/materiasMaestro/:tarjeta',
@@ -219,6 +239,19 @@ const routes: Array<RouteRecordRaw> = [
         name: 'pdf',
         component: PDFView,
       },
+<<<<<<< HEAD
+=======
+      {
+        path: '/visualizarhorario',
+        name: 'vishorario',
+        component: horaraio2,
+      },
+      {
+        name: 'admin-reporte',
+        path: 'admin-reporte',
+        component: () => import('../pages/admin/pages/ReporteFinal.vue'),
+      },
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
     ],
   },
 
@@ -337,41 +370,55 @@ const routes: Array<RouteRecordRaw> = [
   },
 
   // Rutas de prueba (solo desarrollo)
-  ...(process.env.NODE_ENV === 'development'
-    ? [
+  /*...(process.env.NODE_ENV === 'development' ? [
+    {
+      path: '/test',
+      component: AppLayout,
+      children: [
         {
-          path: '/test',
-          component: AppLayout,
-          children: [
-            {
-              path: 'visualizar-horario',
-              name: 'visualizar-horario',
-              component: visualizarhorario,
-            },
-            {
-              path: 'ingresar-horario',
-              name: 'ingresar-horario',
-              component: InHorarioMaestro,
-            },
-            {
-              path: 'eventos-destino',
-              name: 'eventos-destino',
-              component: eventosmdestino,
-            },
-            {
-              path: 'avance',
-              name: 'avance',
-              component: avance,
-            },
-            {
-              path: 'horario-maestro',
-              name: 'horario-maestro',
-              component: horaraio2,
-            },
-          ],
+          path: 'asignaturas',
+          name: 'asignaturas',
+          component: Asignaturas
         },
-      ]
+        {
+          path: 'asignaturas/:clave',
+          name: 'asignatura-detail',
+          component: AsignaturaDetail,
+          props: true
+        },
+        {
+          path: 'asignaturas/complete/:clave',
+          name: 'asignatura-completa',
+          component: () => import('../test/asignaturas2.vue')
+        },
+        {
+          path: 'visualizar-horario',
+          name: 'visualizar-horario',
+          component: visualizarhorario
+        },
+        {
+          path: 'ingresar-horario',
+          name: 'ingresar-horario',
+          component: InHorarioMaestro
+        },
+        {
+          path: 'eventos-destino',
+          name: 'eventos-destino',
+          component: eventosmdestino
+        },
+        {
+          path: 'avance',
+          name: 'avance',
+          component: avance
+        },
+        {
+          path: 'horario-maestro',
+          name: 'horario-maestro',
+          component: horaraio2
+        }
+      ],
     : []),
+*/
 
   // Rutas de error
   {
@@ -421,7 +468,9 @@ router.beforeEach((to, from, next) => {
       return next({ name: 'login' })
     }
 
-    if (!to.meta.allowedRoles.includes(authStore.userRole)) {
+    const allowedRoles = to.meta.allowedRoles as string[] | undefined
+
+    if (allowedRoles && !allowedRoles.includes(authStore.userRole)) {
       return next({ name: 'unauthorized' })
     }
   }

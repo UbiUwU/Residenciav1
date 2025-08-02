@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div class="nueva-vista">
     <!-- Título de la vista -->
     <h1 class="va-h4 mb-4">{{ titulo }}</h1>
@@ -12,10 +13,106 @@
         <VaButton class="mt-4" @click="mostrarMensaje"> Probar funcionamiento </VaButton>
       </VaCardContent>
     </VaCard>
+=======
+  <!-- Contenido principal -->
+  <div class="dashboard-container">
+    <!-- ENCABEZADO -->
+    <VaCard class="mb-4">
+      <VaCardContent class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 class="va-h3">Panel Jefe de Departamento</h1>
+          <p class="text-gray-500">Resumen de avances de los maestros</p>
+        </div>
+        <VaButton icon="refresh" preset="secondary" @click="fetchMaestrosConAsignaturas"> Actualizar </VaButton>
+      </VaCardContent>
+    </VaCard>
+
+    <!-- KPIs dinámicos -->
+    <VaCard class="mb-4">
+      <VaCardContent class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+        <div class="kpi-box text-primary border border-primary rounded-xl py-3">
+          <h2 class="text-2xl font-bold">{{ totalMaestros }}</h2>
+          <p class="text-base">Maestros registrados</p>
+        </div>
+        <div class="kpi-box text-success border border-success rounded-xl py-3">
+          <h2 class="text-2xl font-bold">{{ promedioAvance }}%</h2>
+          <p class="text-base">Promedio de avance</p>
+        </div>
+        <div class="kpi-box text-warning border border-warning rounded-xl py-3">
+          <h2 class="text-2xl font-bold">{{ maestrosSinAvance }}</h2>
+          <p class="text-base">Sin avance</p>
+        </div>
+        <div class="kpi-box text-danger border border-danger rounded-xl py-3">
+          <h2 class="text-2xl font-bold">{{ alertasActivas }}</h2>
+          <p class="text-base">Alertas activas</p>
+        </div>
+      </VaCardContent>
+    </VaCard>
+
+    <!-- FILTROS -->
+    <div class="filters-container">
+      <VaInput
+        v-model="busqueda"
+        label="Busqueda"
+        placeholder="Buscar maestro..."
+        clearable
+        prepend-inner-icon="search"
+        class="filter-item busqueda"
+      />
+      <VaSelect
+        v-model="filtroEstado"
+        :options="opcionesEstado"
+        label="Filtrar por estado"
+        clearable
+        class="filter-item estado"
+      />
+    </div>
+
+    <!-- LOADER -->
+    <div v-if="isLoading" class="flex justify-center items-center p-6">
+      <VaLoader size="large" />
+      <span class="ml-2 text-gray-600">Cargando maestros...</span>
+    </div>
+
+    <!-- ERROR -->
+    <div v-else-if="error" class="text-red-600 p-4 text-center">Error: {{ error }}</div>
+
+    <!-- TABLA O MENSAJE VACÍO -->
+    <div v-else>
+      <VaDataTable
+        v-if="maestrosFiltrados.length > 0"
+        :columns="columnasMaestros"
+        :items="maestrosFiltrados"
+        :per-page="5"
+      >
+        <template #cell(avance)="{ value }">
+          <div class="flex items-center gap-2">
+            <VaProgressBar :model-value="value" color="primary" />
+            <span class="text-sm text-gray-700">{{ value }}%</span>
+          </div>
+        </template>
+      </VaDataTable>
+
+      <div v-else class="p-4 text-center text-gray-500">No hay maestros disponibles.</div>
+    </div>
+    <!-- ALERTAS -->
+    <div v-if="alertas.length" class="alertas-minimalistas p-2 mb-4">
+      <h3 class="va-h6 mb-2" style="color: #333">Alertas de progreso bajo</h3>
+      <ul style="list-style: none; padding-left: 0; margin: 0">
+        <li v-for="(alerta, index) in alertas" :key="index" class="alerta-item flex justify-between items-center mb-1">
+          <span style="color: #555">{{ alerta.mensaje }}</span>
+          <VaButton size="small" color="primary" aria-label="Ver detalles" @click="manejarAlerta(alerta.accion)">
+            Ver detalles
+          </VaButton>
+        </li>
+      </ul>
+    </div>
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
   </div>
 </template>
 
 <script setup lang="ts">
+<<<<<<< HEAD
 // Importaciones básicas (opcional)
 import { ref } from 'vue'
 
@@ -23,6 +120,30 @@ import { ref } from 'vue'
 const titulo = ref('Mi Nueva Vista')
 
 const { maestros, fetchMaestrosConAsignaturas, isLoading, error } = useMaestrosConAsignaturas()
+=======
+import { ref, computed, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
+import { useMaestrosConAsignaturas } from '../dashboard/maestros'
+
+const router = useRouter()
+const { maestros, fetchMaestrosConAsignaturas, isLoading, error } = useMaestrosConAsignaturas()
+
+// Tipos
+interface Maestro {
+  tarjeta: string
+  nombre: string
+  asignaturas: number
+  avance: number
+  estado: 'Pendiente' | 'En progreso' | 'Completado'
+}
+
+interface Alerta {
+  mensaje: string
+  color: string
+  icono: string
+  accion: string
+}
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
 
 const columnasMaestros = ref([
   { key: 'nombre', label: 'Nombre del maestro', sortable: true },
@@ -32,9 +153,10 @@ const columnasMaestros = ref([
 ])
 
 const busqueda = ref('')
-const filtroEstado = ref(null)
+const filtroEstado = ref<string | null>(null)
 const opcionesEstado = ref(['Pendiente', 'En progreso', 'Completado'])
 
+<<<<<<< HEAD
 const maestrosConEstado = computed(() => {
   return maestros.value.map((m) => {
     const avanceReal = m.avance ?? 0
@@ -43,6 +165,14 @@ const maestrosConEstado = computed(() => {
       avance: avanceReal,
       estado: avanceReal >= 100 ? 'Completado' : avanceReal > 0 ? 'En progreso' : 'Pendiente',
     }
+=======
+// Asegura estado dinámico si viene vacío desde la API
+const maestrosConEstado = computed<Maestro[]>(() => {
+  return maestros.value.map((m) => {
+    const avance = m.avance ?? 0
+    const estado: Maestro['estado'] = avance >= 100 ? 'Completado' : avance > 0 ? 'En progreso' : 'Pendiente'
+    return { ...m, avance, estado }
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
   })
 })
 
@@ -61,7 +191,7 @@ const maestrosFiltrados = computed(() => {
   return lista
 })
 
-// KPIs dinámicos calculados
+// KPIs
 const totalMaestros = computed(() => maestros.value.length)
 
 const promedioAvance = computed(() => {
@@ -78,8 +208,8 @@ const alertasActivas = computed(() => {
   return maestros.value.filter((m) => (m.avance ?? 0) <= 50).length
 })
 
-// Alertas dinámicas: maestros con 0% de avance
-const alertas = ref([])
+// Alertas dinámicas
+const alertas = ref<Alerta[]>([])
 
 watchEffect(() => {
   alertas.value = maestrosConEstado.value
@@ -88,7 +218,7 @@ watchEffect(() => {
       mensaje: `Maestro ${m.nombre} tiene ${m.avance}% de progreso`,
       color: 'danger',
       icono: 'error',
-      accion: `detalle:${m.tarjeta ?? m.id ?? m.nombre}`,
+      accion: `detalle:${m.tarjeta}`,
     }))
 })
 
@@ -99,7 +229,7 @@ const manejarAlerta = (accion: string) => {
   }
 }
 
-const verDetalleMaestro = (tarjeta: string | number) => {
+const verDetalleMaestro = (tarjeta: string) => {
   router.push({ name: 'materiasMaestro', params: { tarjeta } })
 }
 </script>

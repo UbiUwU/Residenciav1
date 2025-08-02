@@ -68,6 +68,9 @@
                 <template #cell(tema)="{ rowIndex }">
                   <VaInput v-model="asesorias[rowIndex].tema" />
                 </template>
+                <template #cell(firma)="{}">
+                  <div class="firma-placeholder"></div>
+                </template>
               </VaDataTable>
             </div>
 

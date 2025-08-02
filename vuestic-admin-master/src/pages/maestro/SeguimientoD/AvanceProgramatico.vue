@@ -168,9 +168,9 @@
       <VaIcon name="save" class="mr-2" />
       Guardar borrador
     </VaButton>
-    <VaButton @click="generarPDFEstricto">
+    <VaButton @click="imprimirFormulario">
       <VaIcon name="print" class="mr-2" />
-      Generar PDF
+      Imprimir
     </VaButton>
     <VaButton preset="primary" @click="enviarFormulario">
       <VaIcon name="send" class="mr-2" />

@@ -1,6 +1,5 @@
 <template>
   <div class="pdf-viewer">
-    <!-- Título de la vista -->
     <h1 class="va-h4 mb-4 text-center">Instrumentación Didáctica</h1>
 
     <!-- PDF Viewer -->
@@ -66,43 +65,74 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
+import api from '../../../services/api'
 
 const router = useRouter()
-const route = useRoute()
 
-const tarjeta = route.params.tarjeta
-const tipo = route.params.tipo
-
-console.log('Tarjeta:', tarjeta)
-console.log('Tipo:', tipo)
 const mostrarObservaciones = ref(false)
 const observaciones = ref('')
+
+// Si ya conoces los detalles de avance puedes obtener el ID aquí:
+const idAvanceDetalle = 1 // Cambia por el ID real si lo tienes
 
 const volver = () => {
   router.back()
 }
 
-const marcarRevisado = () => {
-  alert('El documento ha sido marcado como REVISADO.')
+const marcarRevisado = async () => {
+  try {
+    await api.actualizarAvance(idAvanceDetalle, {
+      estado: 'En Revisión',
+      detalles: [], // siempre envía detalles aunque sea vacío
+    })
+    alert('Documento marcado como REVISADO.')
+  } catch (error) {
+    console.error('Error marcarRevisado:', error.response?.data || error.message)
+    alert('Error al marcar como revisado. Revisa la consola.')
+  }
 }
 
-const marcarCorrecto = () => {
-  alert('El documento ha sido marcado como CORRECTO.')
+const marcarCorrecto = async () => {
+  try {
+    await api.actualizarAvance(idAvanceDetalle, {
+      estado: 'Aprobado',
+      detalles: [],
+    })
+    alert('Documento marcado como CORRECTO.')
+  } catch (error) {
+    console.error('Error marcarCorrecto:', error.response?.data || error.message)
+    alert('Error al marcar como correcto. Revisa la consola.')
+  }
 }
 
 const toggleObservaciones = () => {
   mostrarObservaciones.value = !mostrarObservaciones.value
 }
 
-const enviarCorrecciones = () => {
+const enviarCorrecciones = async () => {
   if (observaciones.value.trim() === '') {
     alert('Por favor, escribe las observaciones antes de enviar.')
     return
   }
-  alert(`Las observaciones se han enviado:\n\n${observaciones.value}`)
-  observaciones.value = ''
-  mostrarObservaciones.value = false
+
+  try {
+    await api.actualizarAvance(idAvanceDetalle, {
+      estado: 'Rechazado',
+      detalles: [
+        {
+          id_avance_detalle: idAvanceDetalle,
+          observaciones: observaciones.value,
+        },
+      ],
+    })
+    alert('Observaciones enviadas para corrección.')
+    observaciones.value = ''
+    mostrarObservaciones.value = false
+  } catch (error) {
+    console.error('Error enviarCorrecciones:', error.response?.data || error.message)
+    alert('Error al enviar las observaciones. Revisa la consola.')
+  }
 }
 </script>
 

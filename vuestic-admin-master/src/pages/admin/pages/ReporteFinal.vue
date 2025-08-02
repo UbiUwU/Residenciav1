@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useToast } from 'vuestic-ui'
-import api from '../../../services/api.js'
+import api from '../../../services/apiJ'
 
 const route = useRoute()
 const reporte = ref([])
@@ -106,7 +106,11 @@ const totalFilasPorAsignatura = (asignatura) => {
 }
 
 const handleRegresar = () => {
+<<<<<<< HEAD
   window.history.back()
+=======
+  window.history.back() // o router.back() si usas Vue Router
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
 }
 
 onMounted(() => {
@@ -162,6 +166,7 @@ const generarReportePDF = () => {
             <th>Co</th>
           </tr>
         </thead>
+
         <tbody>
           <template v-for="(asignatura, asignaturaIndex) in reporte" :key="'asignatura-' + asignaturaIndex">
             <template v-if="asignatura.aulas_grupos_periodos && asignatura.aulas_grupos_periodos.length > 0">
@@ -176,12 +181,21 @@ const generarReportePDF = () => {
                     <td>{{ carrera.A || 0 }}</td>
                     <td>{{ carrera.B_O || 0 }}</td>
                     <td>{{ carrera.B_Co || 0 }}</td>
+<<<<<<< HEAD
                     <td>{{ carrera.C || '0.00%' }}</td>
                     <td>{{ carrera.D || 0 }}</td>
                     <td>{{ carrera.E || '0.00%' }}</td>
                     <td>{{ carrera.F || 0 }}</td>
                     <td>{{ carrera.G || '0.00%' }}</td>
                     <td>{{ carrera.H || '0.00' }}</td>
+=======
+                    <td>{{ carrera.C || 0 }}</td>
+                    <td>{{ carrera.D || 0 }}</td>
+                    <td>{{ carrera.E || 0 }}</td>
+                    <td>{{ carrera.F || 0 }}</td>
+                    <td>{{ carrera.G || 0 }}</td>
+                    <td>{{ carrera.H || 0 }}</td>
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
                   </tr>
                 </template>
               </template>
@@ -195,6 +209,7 @@ const generarReportePDF = () => {
           </template>
         </tbody>
       </table>
+<<<<<<< HEAD
     </div>
 
     <div class="leyenda">
@@ -210,6 +225,22 @@ const generarReportePDF = () => {
         <li><strong>G</strong> = % DE ESTUDIANTES QUE DESERTARON EN LA MATERIA</li>
         <li><strong>H</strong> = PROMEDIO GENERAL DE LA MATERIA/GRUPO</li>
       </ul>
+=======
+      <div class="leyenda">
+        <h3>Leyenda:</h3>
+        <ul>
+          <li><strong>A</strong> = TOTAL DE ESTUDIANTES POR MATERIA/GRUPO</li>
+          <li><strong>B_O</strong> = No. DE ESTUDIANTES ACREDITADOS EN ORDINARIO</li>
+          <li><strong>B_Co</strong> = No. DE ESTUDIANTES ACREDITADOS EN COMPLEMENTARIO</li>
+          <li><strong>C</strong> = % DE ESTUDIANTES ACREDITADOS</li>
+          <li><strong>D</strong> = No. DE ESTUDIANTES NO ACREDITADOS</li>
+          <li><strong>E</strong> = % DE ESTUDIANTES NO ACREDITADOS</li>
+          <li><strong>F</strong> = No. DE ESTUDIANTES QUE DESERTARON DURANTE EL SEMESTRE EN LA MATERIA</li>
+          <li><strong>G</strong> = % DE ESTUDIANTES QUE DESERTARON EN LA MATERIA</li>
+          <li><strong>H</strong> = PROMEDIO GENERAL DE LA MATERIA/GRUPO</li>
+        </ul>
+      </div>
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
     </div>
 
     <div class="alumnos-list-container">
@@ -255,5 +286,264 @@ const generarReportePDF = () => {
 </template>
 
 <style scoped>
+<<<<<<< HEAD
 /* Estilos (igual que en tu versión original) */
+=======
+.loading-container,
+.empty-container {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.reporte-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.asignatura-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.agp-section {
+  margin-top: 1rem;
+  padding-left: 1rem;
+  border-left: 3px solid #007bff20;
+}
+
+.agp-header {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.carrera-card {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+}
+
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+th {
+  background-color: #f0f0f0;
+  font-weight: 600;
+}
+
+td {
+  background-color: #fff;
+}
+
+.carreras-table {
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+.alumnos-list-container {
+  margin-top: 2rem;
+  background-color: #f9faff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.alumnos-list-container h5 {
+  font-size: 1.2rem;
+  color: #2a5dff;
+  margin-bottom: 0.5rem;
+}
+
+.asignatura-section h4 {
+  color: #333;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.carrera-section h5 {
+  margin-top: 0.5rem;
+  color: #444;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.alumnos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.alumno-card {
+  background-color: #fff;
+  border: 1px solid #d0d9ff;
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+.alumno-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.alumno-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.badge.numero-control {
+  background-color: #2a5dff;
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.alumno-nombre {
+  color: #333;
+  flex: 1;
+}
+
+.alumno-calificaciones {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.label {
+  font-weight: 500;
+  color: #666;
+}
+
+.calificacion {
+  background-color: #f0f4ff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.boton-regresar {
+  position: sticky;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+}
+
+.boton-regresar button {
+  background-color: #2a5dff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.boton-regresar button:hover {
+  background-color: #1e45cc;
+}
+
+/* Nuevos estilos para el botón de PDF */
+.boton-generar-pdf {
+  position: sticky;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+.boton-generar-pdf button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.boton-generar-pdf button:hover {
+  background-color: #218838;
+}
+.grupo-calificaciones {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #fff8e1;
+  border-radius: 8px;
+  border: 1px solid #ffe082;
+}
+
+.grupo-asignatura-section h5 {
+  margin-top: 1rem;
+  color: #795548;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.grupo-info {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+}
+
+.grupo-info h6 {
+  margin-bottom: 0.3rem;
+  color: #ff6f00;
+  font-weight: 500;
+}
+
+.grupo-info ul {
+  margin-left: 1rem;
+  list-style: disc;
+}
+
+.grupo-info li {
+  margin-bottom: 0.3rem;
+  font-size: 0.95rem;
+}
+
+.grupo-promedio {
+  font-weight: bold;
+  margin-top: 0.5rem;
+  color: #333;
+}
+
+.leyenda {
+  margin-top: 20px;
+}
+.leyenda ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+.leyenda li {
+  margin-bottom: 5px;
+}
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
 </style>

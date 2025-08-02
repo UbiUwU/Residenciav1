@@ -44,6 +44,7 @@ const verMaestro = (tarjeta: number) => {
 }
 
 const generarReporteFinal = (tarjeta: number) => {
+<<<<<<< HEAD
   router.push({ name: 'reporteFinalMaestro', params: { tarjeta } })
 }
 
@@ -82,6 +83,8 @@ const onUserSaved = () => {
     color: 'success',
   })
 
+=======
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
   router.push({ name: 'reporteFinal', params: { tarjeta } })
 }
 </script>
@@ -99,6 +102,7 @@ const onUserSaved = () => {
 
   <VaDataTable :columns="columns" :items="filteredMaestros" :loading="loading">
     <template #cell(acciones)="{ rowData }">
+<<<<<<< HEAD
       <VaButton color="primary" icon="visibility" size="small" @click="verMaestro(rowData.tarjeta)">
         Ver maestro
       </VaButton>
@@ -106,6 +110,8 @@ const onUserSaved = () => {
         Reporte Final
       </VaButton>
 
+=======
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
       <div class="flex flex-wrap gap-2">
         <VaButton
           color="primary"

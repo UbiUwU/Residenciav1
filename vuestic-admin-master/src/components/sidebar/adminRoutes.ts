@@ -23,9 +23,22 @@ export const adminRoutes: INavigationRoute[] = [
         displayName: 'Comisionar',
         meta: { allowedRoles: [3] },
       },
+<<<<<<< HEAD
+=======
       {
-        name: 'admin-reporte',
-        displayName: 'Reporte Final',
+        name: 'admin-maestros',
+        displayName: 'Maestros',
+        meta: { allowedRoles: [3] },
+      },
+      {
+        name: 'admin-periodos',
+        displayName: 'Periodos',
+        meta: { allowedRoles: [3] },
+      },
+>>>>>>> e98679297c524364d4bb0bff7b23864b0d42dfdb
+      {
+        name: 'vishorario',
+        displayName: 'Visualizar horario',
         meta: { allowedRoles: [3] },
       },
     ],
