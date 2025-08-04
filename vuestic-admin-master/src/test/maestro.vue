@@ -1,202 +1,191 @@
 <template>
-  <div class="p-4">
-    <h1 class="text-2xl font-bold mb-4">Gestión de Maestros</h1>
+  <VaCard class="maestros-container">
+    <VaCardTitle class="header-container">
+      <h1 class="va-h1 title-text">Gestión de Maestros</h1>
+      <VaButton color="primary" icon="add" class="add-button" @click="abrirFormulario"> Nuevo Maestro </VaButton>
+    </VaCardTitle>
 
-    <!-- Botón para abrir formulario -->
-    <button class="mb-4 bg-blue-600 text-white px-4 py-2 rounded" @click="abrirFormulario()">Nuevo Maestro</button>
+    <VaCardContent class="content-container">
+      <!-- Tabla de maestros -->
+      <VaDataTable :items="maestros" :columns="columnas" :loading="cargando" striped hoverable class="maestros-table">
+        <template #cell(nombre_completo)="{ row }">
+          {{ `${row.nombre} ${row.apellidopaterno} ${row.apellidomaterno}` }}
+        </template>
 
-    <!-- Tabla de Maestros -->
-    <table class="table-auto w-full border">
-      <thead class="bg-gray-200">
-        <tr>
-          <th class="px-4 py-2">Tarjeta</th>
-          <th class="px-4 py-2">Nombre</th>
-          <th class="px-4 py-2">RFC</th>
-          <th class="px-4 py-2">Departamento</th>
-          <th class="px-4 py-2">Email</th>
-          <th class="px-4 py-2">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="maestro in maestros" :key="maestro.tarjeta">
-          <td class="border px-4 py-2">{{ maestro.tarjeta }}</td>
-          <td class="border px-4 py-2">
-            {{ maestro.nombre }} {{ maestro.apellidopaterno }} {{ maestro.apellidomaterno }}
-          </td>
-          <td class="border px-4 py-2">{{ maestro.rfc }}</td>
-          <td class="border px-4 py-2">{{ maestro.nombre_departamento }}</td>
-          <td class="border px-4 py-2">{{ maestro.correo }}</td>
-          <td class="border px-4 py-2">
-            <button @click="editarMaestro(maestro)" class="bg-yellow-500 text-white px-2 py-1 rounded mr-2">
-              Editar
-            </button>
-            <button @click="eliminar(maestro.tarjeta)" class="bg-red-600 text-white px-2 py-1 rounded">Eliminar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- Formulario de Crear/Editar -->
-    <div v-if="mostrarFormulario" class="mt-6 bg-gray-100 p-4 rounded">
-      <h2 class="text-xl mb-4">{{ editando ? 'Editar' : 'Crear' }} Maestro</h2>
-      <form @submit.prevent="guardarMaestro">
-        <!-- User Section -->
-        <div class="mb-4 p-4 bg-white rounded">
-          <h3 class="font-bold mb-2">Datos de Usuario</h3>
-          <div class="mb-2">
-            <label>Email</label>
-            <input v-model="form.correo" type="email" class="w-full p-2 border rounded" required />
+        <template #cell(actions)="{ row }">
+          <div class="actions-container">
+            <VaButton size="small" color="info" icon="edit" class="action-button" @click="editarMaestro(row)" />
+            <VaButton size="small" color="danger" icon="delete" class="action-button" @click="confirmarEliminar(row)" />
           </div>
-          <div class="mb-2">
-            <label>Contraseña</label>
-            <input
+        </template>
+      </VaDataTable>
+
+      <!-- Modal para crear/editar -->
+      <VaModal
+        v-model="mostrarFormulario"
+        :title="modalTitulo"
+        size="large"
+        hide-default-actions
+        class="maestro-modal"
+        maximizable
+      >
+        <VaForm class="modal-form" @submit.prevent="guardarMaestro">
+          <VaTabs v-model="tabActivo" class="mb-4">
+            <VaTab name="datosUsuario">Datos de Usuario</VaTab>
+            <VaTab name="datosMaestro">Datos del Maestro</VaTab>
+            <VaTab name="escolaridad">Escolaridad</VaTab>
+          </VaTabs>
+
+          <div v-show="tabActivo === 'datosUsuario'">
+            <VaInput
+              v-model="form.correo"
+              label="Email"
+              type="email"
+              class="mb-4"
+              :rules="[(v) => !!v || 'Campo requerido', emailRule]"
+            />
+
+            <VaInput
               v-model="form.password"
+              label="Contraseña"
               type="password"
-              class="w-full p-2 border rounded"
-              :required="!editando"
+              class="mb-4"
+              :rules="[(v) => !editando || v.length >= 6 || 'Mínimo 6 caracteres']"
               :disabled="editando"
             />
-          </div>
-          <div class="mb-2">
-            <label>Rol</label>
-            <select v-model="form.id_rol" class="w-full p-2 border rounded" required>
-              <option value="2">Maestro</option>
-              <!-- Add other role options as needed -->
-            </select>
-          </div>
-        </div>
 
-        <!-- Teacher Section -->
-        <div class="mb-4 p-4 bg-white rounded">
-          <h3 class="font-bold mb-2">Datos del Maestro</h3>
-          <div class="mb-2">
-            <label>Tarjeta</label>
-            <input
+            <VaSelect
+              v-model="form.id_rol"
+              label="Rol"
+              class="mb-4"
+              :options="roles"
+              :rules="[(v) => !!v || 'Campo requerido']"
+            />
+          </div>
+
+          <div v-show="tabActivo === 'datosMaestro'">
+            <VaInput
               v-model="form.tarjeta"
-              :disabled="editando"
+              label="Tarjeta"
               type="number"
-              class="w-full p-2 border rounded"
-              required
+              class="mb-4"
+              :rules="[(v) => !!v || 'Campo requerido']"
+              :disabled="editando"
+            />
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <VaInput v-model="form.nombre" label="Nombre" class="mb-0" :rules="[(v) => !!v || 'Campo requerido']" />
+              <VaInput
+                v-model="form.apellidopaterno"
+                label="Apellido Paterno"
+                class="mb-0"
+                :rules="[(v) => !!v || 'Campo requerido']"
+              />
+              <VaInput
+                v-model="form.apellidomaterno"
+                label="Apellido Materno"
+                class="mb-0"
+                :rules="[(v) => !!v || 'Campo requerido']"
+              />
+            </div>
+
+            <VaInput v-model="form.rfc" label="RFC" class="mb-4" :rules="[(v) => !!v || 'Campo requerido']" />
+
+            <VaSelect
+              v-model="form.id_departamento"
+              label="Departamento"
+              class="mb-4"
+              :options="departamentos"
+              :rules="[(v) => !!v || 'Campo requerido']"
             />
           </div>
-          <div class="mb-2">
-            <label>Nombre</label>
-            <input v-model="form.nombre" type="text" class="w-full p-2 border rounded" required />
-          </div>
-          <div class="mb-2">
-            <label>Apellido Paterno</label>
-            <input v-model="form.apellidopaterno" type="text" class="w-full p-2 border rounded" required />
-          </div>
-          <div class="mb-2">
-            <label>Apellido Materno</label>
-            <input v-model="form.apellidomaterno" type="text" class="w-full p-2 border rounded" required />
-          </div>
-          <div class="mb-2">
-            <label>RFC</label>
-            <input v-model="form.rfc" type="text" class="w-full p-2 border rounded" required />
-          </div>
-          <div class="mb-2">
-            <label>Departamento</label>
-            <select v-model="form.id_departamento" class="w-full p-2 border rounded" required>
-              <option disabled value="">Seleccione un departamento</option>
-              <option v-for="d in departamentos" :key="d.id_departamento" :value="d.id_departamento">
-                {{ d.nombre }}
-              </option>
-            </select>
-          </div>
-        </div>
 
-        <!-- Escolaridad Section -->
-        <div class="mb-4 p-4 bg-white rounded">
-          <h3 class="font-bold mb-2">Escolaridad</h3>
-          <div class="grid grid-cols-2 gap-4">
-            <!-- Licenciatura -->
-            <div>
-              <label>Licenciatura</label>
-              <input v-model="form.escolaridad_licenciatura" type="text" class="w-full p-2 border rounded" />
-            </div>
-            <div>
-              <label>Estado Licenciatura</label>
-              <select v-model="form.estado_licenciatura" class="w-full p-2 border rounded">
-                <option value="C">Concluida</option>
-                <option value="E">En curso</option>
-              </select>
-            </div>
+          <div v-show="tabActivo === 'escolaridad'">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Licenciatura -->
+              <VaInput v-model="form.escolaridad_licenciatura" label="Licenciatura" class="mb-4" />
+              <VaSelect
+                v-model="form.estado_licenciatura"
+                label="Estado Licenciatura"
+                class="mb-4"
+                :options="estadosEscolaridad"
+              />
 
-            <!-- Especialización -->
-            <div>
-              <label>Especialización</label>
-              <input v-model="form.escolaridad_especializacion" type="text" class="w-full p-2 border rounded" />
-            </div>
-            <div>
-              <label>Estado Especialización</label>
-              <select v-model="form.estado_especializacion" class="w-full p-2 border rounded">
-                <option value="C">Concluida</option>
-                <option value="E">En curso</option>
-              </select>
-            </div>
+              <!-- Especialización -->
+              <VaInput v-model="form.escolaridad_especializacion" label="Especialización" class="mb-4" />
+              <VaSelect
+                v-model="form.estado_especializacion"
+                label="Estado Especialización"
+                class="mb-4"
+                :options="estadosEscolaridad"
+              />
 
-            <!-- Maestría -->
-            <div>
-              <label>Maestría</label>
-              <input v-model="form.escolaridad_maestria" type="text" class="w-full p-2 border rounded" />
-            </div>
-            <div>
-              <label>Estado Maestría</label>
-              <select v-model="form.estado_maestria" class="w-full p-2 border rounded">
-                <option value="C">Concluida</option>
-                <option value="E">En curso</option>
-              </select>
-            </div>
+              <!-- Maestría -->
+              <VaInput v-model="form.escolaridad_maestria" label="Maestría" class="mb-4" />
+              <VaSelect
+                v-model="form.estado_maestria"
+                label="Estado Maestría"
+                class="mb-4"
+                :options="estadosEscolaridad"
+              />
 
-            <!-- Doctorado -->
-            <div>
-              <label>Doctorado</label>
-              <input v-model="form.escolaridad_doctorado" type="text" class="w-full p-2 border rounded" />
-            </div>
-            <div>
-              <label>Estado Doctorado</label>
-              <select v-model="form.estado_doctorado" class="w-full p-2 border rounded">
-                <option value="C">Concluida</option>
-                <option value="E">En curso</option>
-              </select>
+              <!-- Doctorado -->
+              <VaInput v-model="form.escolaridad_doctorado" label="Doctorado" class="mb-4" />
+              <VaSelect
+                v-model="form.estado_doctorado"
+                label="Estado Doctorado"
+                class="mb-4"
+                :options="estadosEscolaridad"
+              />
             </div>
           </div>
-        </div>
 
-        <div class="mt-4">
-          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded mr-2">Guardar</button>
-          <button type="button" @click="cancelar" class="bg-gray-400 text-white px-4 py-2 rounded">Cancelar</button>
-        </div>
-      </form>
-    </div>
-  </div>
+          <div class="modal-actions">
+            <VaButton type="button" color="secondary" class="cancel-button" @click="cancelar"> Cancelar </VaButton>
+            <VaButton type="submit" color="primary" class="save-button" :disabled="!formValid">
+              {{ editando ? 'Actualizar' : 'Guardar' }}
+            </VaButton>
+          </div>
+        </VaForm>
+      </VaModal>
+    </VaCardContent>
+  </VaCard>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useToast } from 'vuestic-ui'
 import api from '../services/api'
+const { init } = useToast()
 
+// Estado del componente
 const maestros = ref([])
-const departamentos = ref([])
+const cargando = ref(false)
 const mostrarFormulario = ref(false)
 const editando = ref(false)
+const tabActivo = ref('datosUsuario')
 
+// Opciones para selects
+const departamentos = ref([{ text: 'Sistemas y Computación', value: 1 }])
+
+const roles = ref([{ text: 'Maestro', value: 2 }])
+
+const estadosEscolaridad = ref([
+  { text: 'Concluida', value: 'C' },
+  { text: 'En curso', value: 'E' },
+])
+
+// Formulario
 const form = ref({
-  // User fields
   correo: '',
   password: '',
-  id_rol: 2, // Default role for teachers
-
-  // Teacher fields
+  id_rol: 2,
   tarjeta: '',
   nombre: '',
   apellidopaterno: '',
   apellidomaterno: '',
   rfc: '',
-  id_departamento: '',
-
-  // Education fields
+  id_departamento: 1,
   escolaridad_licenciatura: '',
   estado_licenciatura: 'C',
   escolaridad_especializacion: '',
@@ -207,47 +196,105 @@ const form = ref({
   estado_doctorado: 'C',
 })
 
-// Obtener datos iniciales
+// Columnas de la tabla
+const columnas = [
+  { key: 'tarjeta', label: 'Tarjeta', sortable: true },
+  { key: 'nombre_completo', label: 'Nombre', sortable: true },
+  { key: 'rfc', label: 'RFC', sortable: true },
+  { key: 'nombre_departamento', label: 'Departamento', sortable: true },
+  { key: 'correo', label: 'Email', sortable: true },
+  { key: 'actions', label: 'Acciones', width: '120px' },
+]
+
+// Computed
+const modalTitulo = computed(() => (editando.value ? 'Editar Maestro' : 'Nuevo Maestro'))
+
+const formValid = computed(() => {
+  return (
+    form.value.correo &&
+    (!editando.value || form.value.password.length >= 6) &&
+    form.value.tarjeta &&
+    form.value.nombre &&
+    form.value.apellidopaterno &&
+    form.value.apellidomaterno &&
+    form.value.rfc
+  )
+})
+
+// Reglas de validación
+const emailRule = (value) => {
+  const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return pattern.test(value) || 'Email no válido'
+}
+
+// Métodos
 onMounted(() => {
   cargarMaestros()
-  cargarDepartamentos()
 })
 
 const cargarMaestros = async () => {
-  const { data } = await api.getMaestros()
-  maestros.value = data.data
-}
+  try {
+    cargando.value = true
+    const { data } = await api.getMaestros()
 
-const cargarDepartamentos = async () => {
-  const { data } = await api.getDepartamentos()
-  departamentos.value = data
+    maestros.value = data.data.map((maestro) => {
+      maestro.nombre_departamento = 'Sistemas y Computación'
+      maestro.id_departamento = 1
+
+      if (!maestro.correo) {
+        const nombre = maestro.nombre.toLowerCase().split(' ')[0]
+        const apellido = maestro.apellidopaterno.toLowerCase()
+        maestro.correo = `${nombre}.${apellido}@tecnm.mx`
+
+        let counter = 1
+        let tempEmail = maestro.correo
+        while (maestros.value.some((m) => m.correo === tempEmail)) {
+          tempEmail = `${nombre}.${apellido}${counter}@tecnm.mx`
+          counter++
+        }
+        maestro.correo = tempEmail
+      }
+
+      return maestro
+    })
+  } catch (error) {
+    init({
+      message: 'Error al cargar los maestros',
+      color: 'danger',
+    })
+    console.error('Error al cargar maestros:', error)
+  } finally {
+    cargando.value = false
+  }
 }
 
 const abrirFormulario = () => {
   resetForm()
   mostrarFormulario.value = true
   editando.value = false
+  tabActivo.value = 'datosUsuario'
 }
 
-const editarMaestro = (maestro) => {
-  // Map the teacher data to the form
+const editarMaestro = (row) => {
+  const maestro = row.rowData
   form.value = {
-    ...form.value,
+    correo: maestro.correo,
+    password: '', // No mostramos la contraseña existente
+    id_rol: 2,
     tarjeta: maestro.tarjeta,
     nombre: maestro.nombre,
     apellidopaterno: maestro.apellidopaterno,
     apellidomaterno: maestro.apellidomaterno,
     rfc: maestro.rfc,
-    id_departamento: maestro.id_departamento,
-    escolaridad_licenciatura: maestro.escolaridad_licenciatura,
-    estado_licenciatura: maestro.estado_licenciatura,
-    escolaridad_especializacion: maestro.escolaridad_especializacion,
-    estado_especializacion: maestro.estado_especializacion,
-    escolaridad_maestria: maestro.escolaridad_maestria,
-    estado_maestria: maestro.estado_maestria,
-    escolaridad_doctorado: maestro.escolaridad_doctorado,
-    estado_doctorado: maestro.estado_doctorado,
-    correo: maestro.correo,
+    id_departamento: 1,
+    escolaridad_licenciatura: maestro.escolaridad_licenciatura || '',
+    estado_licenciatura: maestro.estado_licenciatura || 'C',
+    escolaridad_especializacion: maestro.escolaridad_especializacion || '',
+    estado_especializacion: maestro.estado_especializacion || 'C',
+    escolaridad_maestria: maestro.escolaridad_maestria || '',
+    estado_maestria: maestro.estado_maestria || 'C',
+    escolaridad_doctorado: maestro.escolaridad_doctorado || '',
+    estado_doctorado: maestro.estado_doctorado || 'C',
   }
   mostrarFormulario.value = true
   editando.value = true
@@ -255,25 +302,66 @@ const editarMaestro = (maestro) => {
 
 const guardarMaestro = async () => {
   try {
-    if (editando.value) {
-      // For editing, we might want to create a separate API endpoint
-      // that doesn't require password and only updates teacher data
-      await api.actualizarMaestro(form.value.tarjeta, form.value)
-    } else {
-      // For creation, send all data
-      await api.crearMaestro(form.value)
+    if (!formValid.value) {
+      throw new Error('Por favor complete todos los campos requeridos')
     }
+
+    // Generar email si es nuevo y no tiene
+    if (!editando.value && !form.value.correo) {
+      const nombre = form.value.nombre.toLowerCase().split(' ')[0]
+      const apellido = form.value.apellidopaterno.toLowerCase()
+      form.value.correo = `${nombre}.${apellido}@tecnm.mx`
+
+      let counter = 1
+      let tempEmail = form.value.correo
+      while (maestros.value.some((m) => m.correo === tempEmail)) {
+        tempEmail = `${nombre}.${apellido}${counter}@tecnm.mx`
+        counter++
+      }
+      form.value.correo = tempEmail
+    }
+
+    if (editando.value) {
+      await api.actualizarMaestro(form.value.tarjeta, form.value)
+      init({ message: 'Maestro actualizado con éxito', color: 'success' })
+    } else {
+      await api.crearMaestro(form.value)
+      init({ message: 'Maestro creado con éxito', color: 'success' })
+    }
+
     await cargarMaestros()
     cancelar()
   } catch (error) {
-    alert('Error al guardar maestro: ' + error.message)
+    console.error('Error al guardar maestro:', error)
+    init({
+      message: error.message || 'Error al guardar el maestro',
+      color: 'danger',
+    })
   }
 }
 
-const eliminar = async (id) => {
-  if (confirm('¿Está seguro de eliminar este maestro?')) {
-    await api.eliminarMaestro(id)
-    await cargarMaestros()
+const confirmarEliminar = async (row) => {
+  try {
+    const maestro = row.rowData
+    const result = await this.$vaModal.confirm({
+      title: 'Confirmar eliminación',
+      message: `¿Está seguro de eliminar al maestro ${maestro.nombre} ${maestro.apellidopaterno}?`,
+      okText: 'Eliminar',
+      cancelText: 'Cancelar',
+      color: 'danger',
+    })
+
+    if (result) {
+      await api.eliminarMaestro(maestro.tarjeta)
+      init({ message: 'Maestro eliminado con éxito', color: 'success' })
+      await cargarMaestros()
+    }
+  } catch (error) {
+    console.error('Error al eliminar maestro:', error)
+    init({
+      message: error.response?.data?.message || 'Error al eliminar el maestro',
+      color: 'danger',
+    })
   }
 }
 
@@ -284,20 +372,15 @@ const cancelar = () => {
 
 const resetForm = () => {
   form.value = {
-    // User fields
     correo: '',
     password: '',
     id_rol: 2,
-
-    // Teacher fields
     tarjeta: '',
     nombre: '',
     apellidopaterno: '',
     apellidomaterno: '',
     rfc: '',
-    id_departamento: '',
-
-    // Education fields
+    id_departamento: 1,
     escolaridad_licenciatura: '',
     estado_licenciatura: 'C',
     escolaridad_especializacion: '',
@@ -311,8 +394,94 @@ const resetForm = () => {
 </script>
 
 <style scoped>
-input,
-select {
-  margin-top: 4px;
+.maestros-container {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.title-text {
+  color: #2d3748;
+  margin: 0;
+  font-weight: 600;
+}
+
+.add-button {
+  font-weight: 500;
+}
+
+.content-container {
+  padding: 1.5rem;
+}
+
+.maestros-table {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.maestros-table :deep(.va-data-table__table) {
+  min-width: 100%;
+}
+
+.maestros-table :deep(.va-data-table__table th) {
+  background-color: #f1f5f9;
+  color: #334155;
+  font-weight: 600;
+}
+
+.actions-container {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.action-button {
+  min-width: 36px;
+}
+
+.modal-form {
+  padding: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.cancel-button {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+.save-button {
+  font-weight: 500;
+}
+
+.maestro-modal :deep(.va-modal__inner) {
+  border-radius: 8px;
+  max-width: 800px;
+}
+
+.maestro-modal :deep(.va-modal__title) {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.grid {
+  display: grid;
 }
 </style>

@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 // Definimos las interfaces para las materias y maestros
 interface Materia {
-  [key: string]: boolean // Esto permite acceder a cualquier clave de tipo string y obtener un valor booleano
+  [key: string]: boolean
   'Instrumentación Didáctica': boolean
   'Planeación del curso': boolean
   'Acuse del estudiante': boolean
@@ -18,22 +18,13 @@ interface Maestro {
   materias: { [key: string]: Materia }
 }
 
-// Datos de los maestros con materias
+// Datos de los maestros (todos entregados en true)
 const maestros = ref<Maestro[]>([
   {
     nombre: 'Ana Sánchez',
     materias: {
       'Matemáticas Discretas': {
         'Instrumentación Didáctica': true,
-        'Planeación del curso': true,
-        'Acuse del estudiante': true,
-        'Evaluación Diagnóstica, resultados y acciones a tomar': true,
-        'Carpetas de evidencias': true,
-        'Listas de calificaciones parciales': true,
-        'Evidencias de asesorias y atención a alumnos': true,
-      },
-      'Programación I': {
-        'Instrumentación Didáctica': false,
         'Planeación del curso': true,
         'Acuse del estudiante': true,
         'Evaluación Diagnóstica, resultados y acciones a tomar': true,
@@ -52,18 +43,17 @@ const maestros = ref<Maestro[]>([
         'Acuse del estudiante': true,
         'Evaluación Diagnóstica, resultados y acciones a tomar': true,
         'Carpetas de evidencias': true,
-        'Listas de calificaciones parciales': false,
+        'Listas de calificaciones parciales': true,
         'Evidencias de asesorias y atención a alumnos': true,
       },
     },
   },
 ])
 
-// Función para calcular el estado del maestro (completo, parcial, incompleto)
+// Calcula el estado del maestro (Completo, Parcial o Incompleto)
 const maestroEstado = (maestro: Maestro): string => {
   let total = 0
   let entregados = 0
-  // Iteramos sobre todas las materias y sus entregas
   for (const materia in maestro.materias) {
     const materiaEntregada = maestro.materias[materia]
     for (const documento in materiaEntregada) {
@@ -73,26 +63,21 @@ const maestroEstado = (maestro: Maestro): string => {
       }
     }
   }
-  // Determinamos el estado basado en las entregas
-  if (entregados === total) {
-    return 'Completo'
-  } else if (entregados > 0) {
-    return 'Parcial'
-  } else {
-    return 'Incompleto'
-  }
+  if (entregados === total) return 'Completo'
+  if (entregados > 0) return 'Parcial'
+  return 'Incompleto'
 }
 
-// Definimos la clase para el estado visual
+// Asigna colores de fondo al estado
 const estadoClase = (maestro: Maestro): string => {
   const estado = maestroEstado(maestro)
   switch (estado) {
     case 'Completo':
-      return 'bg-green-500 text-white' // Verde para completo
+      return 'bg-green-500 text-white'
     case 'Parcial':
-      return 'bg-yellow-500 text-white' // Amarillo para parcial
+      return 'bg-yellow-500 text-white'
     case 'Incompleto':
-      return 'bg-red-500 text-white' // Rojo para incompleto
+      return 'bg-red-500 text-white'
     default:
       return ''
   }
@@ -100,92 +85,62 @@ const estadoClase = (maestro: Maestro): string => {
 </script>
 
 <template>
-  <div class="overflow-x-auto">
-    <!-- Tabla de maestros con estado -->
-    <table class="min-w-full table-auto border-collapse">
-      <thead>
-        <tr class="">
-          <th class="p-3 border text-left">Nombre del Maestro</th>
-          <th class="p-3 border text-left">Estado</th>
-          <th class="p-3 border text-left">Materias y Documentos</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(maestro, index) in maestros" :key="index">
-          <td class="p-3 border">{{ maestro.nombre }}</td>
-          <td :class="estadoClase(maestro)" class="p-3 border text-center font-bold">
-            {{ maestroEstado(maestro) }}
-          </td>
-          <td class="p-3 border">
-            <div v-for="(materia, materiaNombre) in maestro.materias" :key="materiaNombre" class="mb-4">
-              <h3 class="font-semibold text-lg mb-2">{{ materiaNombre }}</h3>
-              <ul class="list-inside">
-                <li v-for="(estado, documento) in materia" :key="documento" class="flex justify-between">
-                  <span class="font-medium">{{ documento }}:</span>
-                  <span :class="estado ? 'text-green-500' : 'text-red-500'" class="font-medium">
-                    {{ estado ? 'Entregado' : 'Pendiente' }}
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="container mx-auto px-4 py-6">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Estado de Entrega de Documentos por Maestro</h1>
+    <div class="overflow-x-auto">
+      <table class="min-w-full table-auto border-collapse shadow-lg rounded-lg overflow-hidden">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="p-4 border text-left font-semibold text-gray-700">Nombre del Maestro</th>
+            <th class="p-4 border text-left font-semibold text-gray-700">Estado</th>
+            <th class="p-4 border text-left font-semibold text-gray-700">Materias y Documentos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(maestro, index) in maestros" :key="index" class="hover:bg-gray-100 transition-colors">
+            <td class="p-4 border font-medium text-gray-800">{{ maestro.nombre }}</td>
+            <td :class="[estadoClase(maestro), 'p-4 border text-center font-bold rounded']">
+              {{ maestroEstado(maestro) }}
+            </td>
+            <td class="p-4 border">
+              <div v-for="(materia, materiaNombre) in maestro.materias" :key="materiaNombre" class="mb-4">
+                <h3 class="font-semibold text-lg text-indigo-700 mb-2">{{ materiaNombre }}</h3>
+                <ul class="list-inside space-y-1">
+                  <li v-for="(estado, documento) in materia" :key="documento" class="flex justify-between items-center">
+                    <span class="font-medium">{{ documento }}:</span>
+                    <span class="text-green-600 font-semibold">Entregado</span>
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <style scoped>
-/* Estilos para las celdas de estado */
 .bg-green-500 {
-  background-color: #48bb78; /* Verde */
+  background-color: #48bb78;
 }
 .bg-yellow-500 {
-  background-color: #ecc94b; /* Amarillo */
+  background-color: #ecc94b;
 }
 .bg-red-500 {
-  background-color: #f56565; /* Rojo */
+  background-color: #f56565;
 }
 .text-white {
   color: white;
 }
-
-.text-green-500 {
-  color: #48bb78; /* Verde */
+.table-auto {
+  border-radius: 8px;
+  overflow: hidden;
 }
-
-.text-red-500 {
-  color: #f56565; /* Rojo */
+.shadow-lg {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
-
-.font-semibold {
-  font-weight: 600;
-}
-
-.font-medium {
-  font-weight: 500;
-}
-
-/* Bordes y espaciado */
-table {
-  border-collapse: collapse;
-}
-
-th,
-td {
-  padding: 10px;
-  border: 1px solid #e2e8f0;
-}
-
-.list-inside {
-  list-style-position: inside;
-}
-
-.mb-4 {
-  margin-bottom: 16px;
-}
-
-.bg-gray-100 {
-  background-color: #f7fafc;
+.rounded-lg {
+  border-radius: 8px;
 }
 </style>

@@ -32,6 +32,8 @@
     "flag-icons": "^6.15.0",
     "html2pdf.js": "^0.10.3",
     "ionicons": "^4.6.3",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "medium-editor": "^5.23.3",
     "pinia": "^2.1.7",
     "register-service-worker": "^1.7.1",

@@ -136,32 +136,32 @@ onMounted(obtenerRoles)
 
 <template>
   <div class="p-4">
-    <va-card>
-      <va-card-title>Gestión de Roles Universitarios</va-card-title>
-      <va-card-content>
+    <VaCard>
+      <VaCardTitle>Gestión de Roles Universitarios</VaCardTitle>
+      <VaCardContent>
         <div class="flex flex-wrap gap-4 items-end">
-          <va-input
+          <VaInput
             v-model="nuevoRol.idrol"
             type="number"
             label="ID del Rol"
             class="w-48"
             :rules="[(value) => !!value || 'El ID es requerido']"
           />
-          <va-input
+          <VaInput
             v-model="nuevoRol.nombre"
             label="Nombre del Rol"
             class="flex-1"
             :rules="[(value) => !!value || 'El nombre es requerido']"
           />
-          <va-button color="primary" @click="crearRol">Agregar Rol</va-button>
+          <VaButton color="primary" @click="crearRol">Agregar Rol</VaButton>
         </div>
-      </va-card-content>
-    </va-card>
+      </VaCardContent>
+    </VaCard>
 
-    <va-card class="mt-6">
-      <va-card-title>Lista de Roles</va-card-title>
-      <va-card-content>
-        <va-data-table
+    <VaCard class="mt-6">
+      <VaCardTitle>Lista de Roles</VaCardTitle>
+      <VaCardContent>
+        <VaDataTable
           :items="roles"
           :columns="[
             { key: 'idrol', label: 'ID' },
@@ -174,32 +174,32 @@ onMounted(obtenerRoles)
         >
           <template #cell(actions)="{ row }">
             <div class="flex gap-2">
-              <va-button size="small" color="info" icon="edit" @click="prepararEdicion(row.rowData)" />
-              <va-button size="small" color="danger" icon="delete" @click="confirmarEliminacion(row)" />
+              <VaButton size="small" color="info" icon="edit" @click="prepararEdicion(row.rowData)" />
+              <VaButton size="small" color="danger" icon="delete" @click="confirmarEliminacion(row)" />
             </div>
           </template>
-        </va-data-table>
-      </va-card-content>
-    </va-card>
+        </VaDataTable>
+      </VaCardContent>
+    </VaCard>
 
     <!-- Modal de Edición -->
-    <va-modal v-model="mostrarModalEdicion" title="Editar Rol" hide-default-actions size="small">
-      <va-form @submit.prevent="actualizarRol">
-        <va-input
+    <VaModal v-model="mostrarModalEdicion" title="Editar Rol" hide-default-actions size="small">
+      <VaForm @submit.prevent="actualizarRol">
+        <VaInput
           v-model="rolEditando.nombre"
           label="Nombre del Rol"
           class="mb-4"
           :rules="[(value) => !!value || 'El nombre es requerido']"
         />
         <div class="flex justify-end gap-2">
-          <va-button type="button" color="secondary" @click="mostrarModalEdicion = false"> Cancelar </va-button>
-          <va-button type="submit" color="primary"> Guardar Cambios </va-button>
+          <VaButton type="button" color="secondary" @click="mostrarModalEdicion = false"> Cancelar </VaButton>
+          <VaButton type="submit" color="primary"> Guardar Cambios </VaButton>
         </div>
-      </va-form>
-    </va-modal>
+      </VaForm>
+    </VaModal>
 
     <!-- Modal de Confirmación de Eliminación -->
-    <va-modal v-model="mostrarModalConfirmacion" title="Confirmar Eliminación" hide-default-actions size="small">
+    <VaModal v-model="mostrarModalConfirmacion" title="Confirmar Eliminación" hide-default-actions size="small">
       <template v-if="rolAEliminar">
         <p>
           ¿Estás seguro de eliminar el rol <strong>"{{ rolAEliminar.nombre }}"</strong> (ID: {{ rolAEliminar.idrol }})?
@@ -207,10 +207,10 @@ onMounted(obtenerRoles)
         <small class="text-warning">Esta acción no se puede deshacer</small>
       </template>
       <div class="flex justify-end gap-2 mt-4">
-        <va-button color="secondary" @click="mostrarModalConfirmacion = false"> Cancelar </va-button>
-        <va-button color="danger" @click="eliminarRol"> Eliminar </va-button>
+        <VaButton color="secondary" @click="mostrarModalConfirmacion = false"> Cancelar </VaButton>
+        <VaButton color="danger" @click="eliminarRol"> Eliminar </VaButton>
       </div>
-    </va-modal>
+    </VaModal>
   </div>
 </template>
 

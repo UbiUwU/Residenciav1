@@ -1,71 +1,71 @@
 <template>
   <div class="grid gap-6">
     <!-- Card para Tipos de Evento -->
-    <va-card>
-      <va-card-title>
+    <VaCard>
+      <VaCardTitle>
         <h1 class="va-h1">Gestión de Tipos de Evento</h1>
-        <va-button color="primary" icon="add" @click="mostrarModalCrearTipoEvento"> Nuevo Tipo </va-button>
-      </va-card-title>
+        <VaButton color="primary" icon="add" @click="mostrarModalCrearTipoEvento"> Nuevo Tipo </VaButton>
+      </VaCardTitle>
 
-      <va-card-content>
-        <va-data-table :items="tiposEvento" :columns="columnasTipoEvento" :loading="cargandoTipos">
+      <VaCardContent>
+        <VaDataTable :items="tiposEvento" :columns="columnasTipoEvento" :loading="cargandoTipos">
           <template #cell(actions)="{ row }">
-            <va-button size="small" color="info" icon="edit" class="mr-2" @click="mostrarModalEditarTipoEvento(row)" />
-            <va-button size="small" color="danger" icon="delete" @click="confirmarEliminarTipoEvento(row)" />
+            <VaButton size="small" color="info" icon="edit" class="mr-2" @click="mostrarModalEditarTipoEvento(row)" />
+            <VaButton size="small" color="danger" icon="delete" @click="confirmarEliminarTipoEvento(row)" />
           </template>
-        </va-data-table>
+        </VaDataTable>
 
         <!-- Modal para Tipo Evento -->
-        <va-modal v-model="mostrarModalTipoEvento" :title="modalTituloTipoEvento" size="small" hide-default-actions>
-          <va-form @submit.prevent="guardarTipoEvento">
-            <va-input
+        <VaModal v-model="mostrarModalTipoEvento" :title="modalTituloTipoEvento" size="small" hide-default-actions>
+          <VaForm @submit.prevent="guardarTipoEvento">
+            <VaInput
               v-model="formTipoEvento.nombre"
               label="Nombre"
               class="mb-4"
               :rules="[(v) => !!v || 'Campo requerido']"
             />
 
-            <va-input v-model="formTipoEvento.descripcion" label="Descripción" class="mb-4" type="textarea" />
+            <VaInput v-model="formTipoEvento.descripcion" label="Descripción" class="mb-4" type="textarea" />
 
             <div class="flex justify-end gap-2 mt-4">
-              <va-button type="button" color="secondary" @click="mostrarModalTipoEvento = false"> Cancelar </va-button>
-              <va-button type="submit" color="primary"> Guardar </va-button>
+              <VaButton type="button" color="secondary" @click="mostrarModalTipoEvento = false"> Cancelar </VaButton>
+              <VaButton type="submit" color="primary"> Guardar </VaButton>
             </div>
-          </va-form>
-        </va-modal>
-      </va-card-content>
-    </va-card>
+          </VaForm>
+        </VaModal>
+      </VaCardContent>
+    </VaCard>
 
     <!-- Card para Público Destino -->
-    <va-card>
-      <va-card-title>
+    <VaCard>
+      <VaCardTitle>
         <h1 class="va-h1">Gestión de Público Destino</h1>
-        <va-button color="primary" icon="add" @click="mostrarModalCrearPublicoDestino"> Nuevo Público </va-button>
-      </va-card-title>
+        <VaButton color="primary" icon="add" @click="mostrarModalCrearPublicoDestino"> Nuevo Público </VaButton>
+      </VaCardTitle>
 
-      <va-card-content>
-        <va-data-table :items="publicosDestino" :columns="columnasPublicoDestino" :loading="cargandoPublicos">
+      <VaCardContent>
+        <VaDataTable :items="publicosDestino" :columns="columnasPublicoDestino" :loading="cargandoPublicos">
           <template #cell(actions)="{ row }">
-            <va-button
+            <VaButton
               size="small"
               color="info"
               icon="edit"
               class="mr-2"
               @click="mostrarModalEditarPublicoDestino(row)"
             />
-            <va-button size="small" color="danger" icon="delete" @click="confirmarEliminarPublicoDestino(row)" />
+            <VaButton size="small" color="danger" icon="delete" @click="confirmarEliminarPublicoDestino(row)" />
           </template>
-        </va-data-table>
+        </VaDataTable>
 
         <!-- Modal para Público Destino -->
-        <va-modal
+        <VaModal
           v-model="mostrarModalPublicoDestino"
           :title="modalTituloPublicoDestino"
           size="small"
           hide-default-actions
         >
-          <va-form @submit.prevent="guardarPublicoDestino">
-            <va-input
+          <VaForm @submit.prevent="guardarPublicoDestino">
+            <VaInput
               v-model="formPublicoDestino.nombre"
               label="Nombre"
               class="mb-4"
@@ -73,15 +73,15 @@
             />
 
             <div class="flex justify-end gap-2 mt-4">
-              <va-button type="button" color="secondary" @click="mostrarModalPublicoDestino = false">
+              <VaButton type="button" color="secondary" @click="mostrarModalPublicoDestino = false">
                 Cancelar
-              </va-button>
-              <va-button type="submit" color="primary"> Guardar </va-button>
+              </VaButton>
+              <VaButton type="submit" color="primary"> Guardar </VaButton>
             </div>
-          </va-form>
-        </va-modal>
-      </va-card-content>
-    </va-card>
+          </VaForm>
+        </VaModal>
+      </VaCardContent>
+    </VaCard>
   </div>
 </template>
 

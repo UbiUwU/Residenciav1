@@ -9,14 +9,48 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300..600,0,0"
     />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/public/favicon.ico" />
 
-    <title>Vuestic Admin</title>
+    <title>SII</title>
 
     <style>
-      /* Set vuestic higher priority over tailwind normalize css */
       @layer tailwind.base, vuestic;
     </style>
+
+    <script>
+      function updateTabTitleWithTime() {
+        const now = new Date()
+
+        // Hora con segundos (formato 12h AM/PM)
+        const timeString = now.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        })
+
+        // Fecha personalizada (formato "mes dia, año")
+        const months = [
+          'Enero',
+          'Febrero',
+          'Marzo',
+          'Abril',
+          'Mayo',
+          'Junio',
+          'Julio',
+          'Agosto',
+          'Septiembre',
+          'Octubre',
+          'Noviembre',
+          'Diciembre',
+        ]
+        const dateString = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`
+
+        document.title = `SII : ${dateString} | ${timeString}`
+        setTimeout(updateTabTitleWithTime, 1000)
+      }
+
+      document.addEventListener('DOMContentLoaded', updateTabTitleWithTime)
+    </script>
   </head>
   <body>
     <div id="app"></div>

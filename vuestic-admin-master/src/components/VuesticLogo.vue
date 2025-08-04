@@ -1,10 +1,21 @@
 <template>
   <div class="role-container">
-    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" :class="iconClass">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="40"
+      height="40"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      :class="iconClass"
+    >
       <circle cx="12" cy="8" r="4"></circle>
       <path d="M6 21v-2a6 6 0 0 1 12 0v2"></path>
     </svg>
-     <!-- Añadimos una clase específica para el texto del correo -->
+    <!-- Añadimos una clase específica para el texto del correo -->
     <span :class="['email-text', textClass]">{{ userEmail }}</span>
   </div>
 </template>
@@ -51,11 +62,13 @@ const textClass = computed(() => (isDarkMode.value ? 'text-dark' : 'text-light')
   white-space: nowrap;
 }
 
-.icon-light, .text-light {
+.icon-light,
+.text-light {
   color: #333;
 }
 
-.icon-dark, .text-dark {
+.icon-dark,
+.text-dark {
   color: #fff;
 }
 </style>

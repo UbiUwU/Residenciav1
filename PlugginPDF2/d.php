@@ -1,5 +1,6 @@
 <?php
 // includes/pdf.php
+//Version antigua, se dejo para que se tenga una version limpia del codigo
 
 // Función para convertir un archivo de Word a PDF
 function createPDF($variabledef) {

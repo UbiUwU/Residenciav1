@@ -3,13 +3,14 @@ require_once 'includes/db.php';
 require_once 'pdf.php';
 require_once 'tbs_3152/tbs_class.php';
 require_once 'tbs_plugin_opentbs_1.12.0/tbs_plugin_opentbs.php';
-require_once 'data_repository.php'; 
+require_once 'data_repository.php';
 
 header('Content-Type: text/html; charset=utf-8');
 
 // Recibir parámetros GET
 $plantilla_id = $_GET['id'] ?? null;
 $tipo_plantilla = $_GET['tipo'] ?? null;
+$id_avance = $_GET['id_avance'] ?? null;
 $tarjeta = isset($_GET['tarjeta']) ? (int) $_GET['tarjeta'] : null;
 
 if (!$tipo_plantilla) {
@@ -19,6 +20,7 @@ if (!$tipo_plantilla) {
 if (!$tarjeta) {
     die("Error: El parámetro 'tarjeta' es obligatorio.");
 }
+
 
 try {
     // Buscar plantilla: si no hay id, buscar última del tipo
@@ -52,15 +54,23 @@ try {
     $TBS->LoadTemplate($ruta_plantilla, OPENTBS_ALREADY_UTF8);
 
     // Obtener datos según tipo y tarjeta
-    $datos = obtenerDatosDesdeFuncion($conn, $tipo_plantilla, $tarjeta);
-
+    $datos = obtenerDatosDesdeFuncion($conn, $tipo_plantilla, $tarjeta, $id_avance);
 
     if (!empty($datos)) {
-    $TBS->MergeBlock('asignaturas', $datos['asignaturas'] ?? []);
-    $TBS->MergeField('resumen', $datos['resumen'] ?? []);
-    $TBS->MergeField('maestro_nombre', $datos['maestro_nombre'] ?? '');  // <--- Aquí
-}
+        // Procesar resumen
+        $TBS->MergeField('resumen', $datos['resumen'] ?? []);
 
+        // Procesar asignaturas (si existe)
+        $TBS->MergeBlock('asignaturas', $datos['asignaturas'] ?? []);
+
+        // Procesar detalles (esto es lo que faltaba)
+        if (isset($datos['detalles']) && is_array($datos['detalles'])) {
+            $TBS->MergeBlock('detalles', $datos['detalles']);
+        }
+
+        // Otros campos individuales
+        $TBS->MergeField('maestro_nombre', $datos['maestro_nombre'] ?? '');
+    }
 
     $nombreArchivo = 'documento_' . $plantilla['id'] . '_' . time();
     $docxPath = "doc/{$nombreArchivo}.docx";

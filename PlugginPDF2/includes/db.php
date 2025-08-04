@@ -1,13 +1,28 @@
 <?php
 // includes/db.php
-$host = 'localhost';
-$dbname = 'postgres'; // Cambia esto al nombre de tu base de datos
-$username = 'postgres'; // Usuario por defecto en PostgreSQL
-$password = '12345k'; // Contraseña que configuraste
+
+// Cargar variables de entorno desde archivo .env si existe
+if (file_exists(__DIR__ . '/../../Back/.env')) {
+    $lines = file(__DIR__ . '/../../Back/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) {
+            continue; // Ignorar comentarios
+        }
+        list($name, $value) = explode('=', $line, 2);
+        $_ENV[trim($name)] = trim($value);
+    }
+}
+
+// Configuración de base de datos usando variables de entorno con valores por defecto
+$host = $_ENV['DB_HOST'];
+$dbname = $_ENV['DB_DATABASE'];
+$username = $_ENV['DB_USERNAME'];
+$password = $_ENV['DB_PASSWORD'];
+$port = $_ENV['DB_PORT'];
 
 try {
     // Cadena de conexión para PostgreSQL
-    $conn = new PDO("pgsql:host=$host;dbname=$dbname", $username, $password);
+    $conn = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     // Configuración para mejorar rendimiento en consultas

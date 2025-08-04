@@ -81,7 +81,7 @@ export default {
         //testeo de paginas "asignaturas" "maestro" "periodos" "departamentos"
         {
           name: 'asignaturas',
-          displayName: '🛠️Asignaturas',
+          displayName: 'Asignaturas',
         },
         {
           name: 'CarpetaEvidencias',
@@ -128,46 +128,6 @@ export default {
         },
       ],
     },
-
-    {
-      name: 'users',
-      displayName: 'menu.users',
-      meta: {
-        icon: 'group',
-      },
-    },
-    {
-      name: 'comisionar',
-      displayName: 'Comisionar',
-      meta: {
-        icon: 'group',
-      },
-    },
-
-    
-
-    //Rutas para la seccion de pagos (que no se plenea usar)
-    /*  {
-      name: 'payments',
-      displayName: 'menu.payments',
-      meta: {
-        icon: 'credit_card',
-      },
-      children: [
-        {
-          name: 'payment-methods',
-          displayName: 'menu.payment-methods',
-        },
-        {
-          name: 'pricing-plans',
-          displayName: 'menu.pricing-plans',
-        },
-        {
-          name: 'billing',
-          displayName: 'menu.billing',
-        },
-      ],
-    }, */
 
     {
       name: 'faq',

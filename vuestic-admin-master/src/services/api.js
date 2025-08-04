@@ -29,7 +29,7 @@ export default {
       password: password,
     })
   },
-  //Meotodo de inicio de sesión con ID del usuario que se obtiene al iniciar sesión
+  //Metodo de inicio de sesión con ID del usuario que se obtiene al iniciar sesión
   getUserData() {
     return apiClient.get('/me')
   },
@@ -49,29 +49,20 @@ export default {
     return apiClient.post('/maestros', data)
   },
 
+  crearComision(data) {
+    return apiClient.post('/comisiones', data)
+  },
+
+  getComisiones() {
+    return apiClient.get('/comisiones')
+  },
+
   actualizarMaestro(id, data) {
     return apiClient.put(`/maestros/${id}`, data)
   },
 
   eliminarMaestro(id) {
     return apiClient.delete(`/maestros/${id}`)
-  },
-
-  // Horarios de Maestros /horarios/{maestro_id}
-  getHorariosDeMaestro(maestroId) {
-    return apiClient.get(`/horarios/${maestroId}`)
-  },
-
-  createHorarioMaestro(data) {
-    return apiClient.post('/horarios', data)
-  },
-
-  updateHorarioMaestro(id, data) {
-    return apiClient.put(`/horarios/${id}`, data)
-  },
-
-  deleteHorarioMaestro(id) {
-    return apiClient.delete(`/horarios/${id}`)
   },
 
   getAsignaturasPorMaestro(tarjeta) {
@@ -179,29 +170,49 @@ export default {
     return apiClient.get(`/calificaciones/reporte/${clave}`)
   },
 
-
   // Obtener todas las carreras
   getCarreras() {
-    return apiClient.get('/carreras');
+    return apiClient.get('/carreras')
   },
 
   // Obtener una carrera por su clave
   getCarrera(clave) {
-    return apiClient.get(`/carreras/${clave}`);
+    return apiClient.get(`/carreras/${clave}`)
   },
 
   // Crear una nueva carrera
   createCarrera(carreraData) {
-    return apiClient.post('/carreras', carreraData);
+    return apiClient.post('/carreras', carreraData)
   },
 
   // Actualizar una carrera existente
   updateCarrera(clave, carreraData) {
-    return apiClient.put(`/carreras/${clave}`, carreraData);
+    return apiClient.put(`/carreras/${clave}`, carreraData)
   },
 
   // Eliminar una carrera
   deleteCarrera(clave) {
-    return apiClient.delete(`/carreras/${clave}`);
+    return apiClient.delete(`/carreras/${clave}`)
+  },
+
+  //Avance programático
+  //Obtener las materias de los maestros para realizar el avance
+
+  getListaM(tarjeta) {
+    return apiClient.get(`/ListaM/${tarjeta}`)
+  },
+  // Obtener todos los avances completos
+  getAvancesCompletos() {
+    return apiClient.get('/avance')
+  },
+
+  // Crear un nuevo avance
+  crearAvance(data) {
+    return apiClient.post('/avance', data)
+  },
+
+  // Actualizar un avance existente
+  actualizarAvance(id, data) {
+    return apiClient.put(`/avance/${id}`, data)
   },
 }

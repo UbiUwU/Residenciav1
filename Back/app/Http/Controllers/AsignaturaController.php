@@ -140,7 +140,7 @@ class AsignaturaController extends Controller
 
         return response()->json(['message' => $result[0]->result]);
     }
-
+    
     public function getByTarjetaComplete($clave)
     {
         // Validar que la tarjeta sea un número positivo
@@ -175,5 +175,4 @@ class AsignaturaController extends Controller
         $json = $detalles[0]->get_detalle_grupos__para_calificaciones_by_tarjeta;
         return response()->json(json_decode($json));
     }
-
 }

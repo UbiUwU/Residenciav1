@@ -26,11 +26,7 @@
         @clickAppendInner.stop="isPasswordVisible.value = !isPasswordVisible.value"
       >
         <template #appendInner>
-          <VaIcon
-            :name="isPasswordVisible.value ? 'mso-visibility_off' : 'mso-visibility'"
-            class="cursor-pointer"
-            color="secondary"
-          />
+          <VaIcon class="cursor-pointer" color="secondary" />
         </template>
       </VaInput>
     </VaValue>
@@ -59,6 +55,7 @@ import { useForm, useToast } from 'vuestic-ui'
 import { validators } from '../../services/utils'
 import api from '../../services/api'
 import { useAuthStore } from '../../services/auth'
+import { ROLES } from '../../constants/roles'
 
 const { validate } = useForm('form')
 const { push } = useRouter()
@@ -81,7 +78,8 @@ const submit = async () => {
     const response = await api.login(formData.email, formData.password)
 
     if (response.data.success) {
-      authStore.login(
+      // Realiza el login y obtén el rol del usuario
+      const userRole = await authStore.login(
         {
           token: response.data.token,
           user: response.data.data.user,
@@ -90,13 +88,31 @@ const submit = async () => {
         formData.keepLoggedIn,
       )
 
-      init({ message: "You've successfully logged in", color: 'success' })
-      push({ name: 'dashboard' })
+      init({ message: 'Inicio de sesión exitoso', color: 'success' })
+      const userRoleNumber = Number(userRole) // o parseInt(userRole, 10)
+
+      switch (userRoleNumber) {
+        case ROLES.ADMIN:
+          push({ name: 'dashboard' })
+          break
+        case ROLES.TEACHER:
+          push({ name: 'dashboard-teacher' })
+          break
+        case ROLES.SUPER:
+          push({ name: 'dashboard-super' })
+          break
+        default:
+          push({ name: '404' })
+          init({
+            message: 'Tu cuenta no tiene un rol asignado',
+            color: 'warning',
+          })
+      }
     } else {
-      init({ message: response.data.message || 'Login failed', color: 'danger' })
+      init({ message: response.data.message || 'Error en el inicio de sesión', color: 'danger' })
     }
   } catch (error) {
-    init({ message: 'An error occurred during login', color: 'danger' })
+    init({ message: 'Correo o contraseña inválidos', color: 'danger' })
     console.error('Login error:', error)
   } finally {
     loading.value = false
