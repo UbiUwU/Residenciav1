@@ -149,4 +149,19 @@ class MaestroMController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Registro en bitácora exitoso']);
     }
+
+    // 9. Obtener aulas
+    public function getAulas()
+    {
+        $aulas = DB::select("SELECT * FROM aulas");
+        return response()->json($aulas);
+    }
+
+    // 10. Obtener edificios
+    public function getEdificios()
+    {
+        $edificios = DB::select("SELECT * FROM edificios");
+        return response()->json($edificios);                            
+    }
+
 }

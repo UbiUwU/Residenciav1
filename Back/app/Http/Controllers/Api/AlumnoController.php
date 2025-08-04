@@ -90,7 +90,7 @@ class AlumnoController extends Controller
             'nombre' => 'sometimes|string|max:255',
             'apellido_paterno' => 'sometimes|string|max:255',
             'apellido_materno' => 'sometimes|string|max:255',
-            'clave_carrera' => 'sometimes|string|exists:carreras,ClaveCarrera'
+            'clave_carrera' => 'sometimes|string|exists:carreras,clavecarrera'
         ]);
 
         try {
@@ -207,7 +207,8 @@ class AlumnoController extends Controller
             $request->password
         ]);
 
-        $idUsuario = $nuevoUsuario[0]->idusuario;
+        $idUsuarioResult = DB::select("SELECT idusuario FROM usuarios WHERE correo = ?", [$request->correo]);
+        $idUsuario = $idUsuarioResult[0]->idusuario;
 
         DB::select("SELECT * FROM insert_alumno(?, ?, ?, ?, ?, ?)", [
             $request->numerocontrol,
@@ -220,6 +221,8 @@ class AlumnoController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Alumno registrado correctamente']);
     }
+
+
 
     // 3. Cambiar contraseña
     public function cambiarContrasena(Request $request)

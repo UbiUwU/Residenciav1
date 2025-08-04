@@ -197,7 +197,7 @@ Route::get('/comisiones/maestro/{tarjeta}', [ComisionController::class, 'getByMa
 //Esta zona es de la zona movil.
 use App\Http\Controllers\Api\MaestroMController;
 
-Route::prefix('maestrom')->group(function () {
+Route::prefix('maestro')->group(function () {
     Route::get('/horario/{tarjeta}', [MaestroMController::class, 'getHorario']);
     Route::post('/tiene-reservacion', [MaestroMController::class, 'tieneReservacion']);
     Route::post('/reservacion-actual', [MaestroMController::class, 'getReservacionActual']);
@@ -206,6 +206,8 @@ Route::prefix('maestrom')->group(function () {
     Route::delete('/eliminar-reservacion', [MaestroMController::class, 'eliminarReservacion']);
     Route::get('/verificar-aula/{clave_aula}', [MaestroMController::class, 'verificarAula']);
     Route::post('/bitacora', [MaestroMController::class, 'registrarBitacora']);
+    Route::get('/aulas', [MaestroMController::class, 'getAulas']);
+    Route::get('/edificios', [MaestroMController::class, 'getEdificios']);
 });
 
 use App\Http\Controllers\Api\AlumnoController;
@@ -246,3 +248,14 @@ use App\Http\Controllers\Api\AuthController;
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 Route::post('/cambiar-contrasena', [AuthController::class, 'changePassword']);
+
+
+use App\Http\Controllers\Api\NotificacionesController;
+
+Route::prefix ('notificaciones')->group(function (){
+    Route::get('/', [NotificacionesController::class, 'index']);
+    Route::get('/{Usuario_id}', [NotificacionesController::class, 'show']);
+    Route::post('/', [NotificacionesController::class, 'store']);
+    Route::put('/{id}', [NotificacionesController::class, 'update']);
+    Route::delete('/{id}', [NotificacionesController::class, 'destroy']);
+});
