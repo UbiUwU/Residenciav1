@@ -149,7 +149,8 @@ class MaestroMController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Registro en bitácora exitoso']);
     }
-     // 9. Obtener aulas
+
+    // 9. Obtener aulas
     public function getAulas()
     {
         $aulas = DB::select("SELECT * FROM aulas");
@@ -160,6 +161,7 @@ class MaestroMController extends Controller
     public function getEdificios()
     {
         $edificios = DB::select("SELECT * FROM edificios");
-        return response()->json($edificios);
+        return response()->json($edificios);                            
     }
+
 }
