@@ -114,7 +114,7 @@ onMounted(() => {
 })
 
 const generarReportePDF = () => {
-  const pdfBaseUrl = import.meta.env.VITE_PDF_BASE_URL || 'http://localhost/Inicio%20de%20sesion/PlugginPDF2'
+  const pdfBaseUrl = import.meta.env.VITE_PDF_BASE_URL || 'http://localhost/RESIDENCIAV1/PlugginPDF2'
   const url = `${pdfBaseUrl}/download.php?tarjeta=${tarjeta}&tipo=reporte_final`
   window.open(url, '_blank')
 }

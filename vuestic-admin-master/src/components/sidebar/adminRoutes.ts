@@ -38,6 +38,11 @@ export const adminRoutes: INavigationRoute[] = [
         displayName: 'Visualizar horario',
         meta: { allowedRoles: [3] },
       },
+      {
+        name: 'crearusuario',
+        displayName: 'Crear Usuario',
+        meta: { allowedRoles: [3] },
+      },
     ],
   },
 

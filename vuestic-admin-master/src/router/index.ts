@@ -17,7 +17,9 @@ import maestro from '../pages/admin/pages/PaginaUsuarios.vue'
 import usuarios from '../test/usuarios.vue'
 import roles from '../test/roles.vue'
 import periodos from '../test/periodos.vue'
-import horaraio2 from '../test/HorarioMaestro.vue'
+import horaraio2 from '../test/visualizarhorario.vue'
+import crearusuario from '../test/usuarios.vue'
+
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -206,9 +208,14 @@ const routes: Array<RouteRecordRaw> = [
         component: PDFView,
       },
       {
-        path: '/visualizarhorario',
+        path: '/visualizarhorarios',
         name: 'vishorario',
         component: horaraio2,
+      },
+      {
+        path: '/crearusuarios',
+        name: 'crearusuario',
+        component: crearusuario,
       },
       {
         name: 'admin-reporte',
