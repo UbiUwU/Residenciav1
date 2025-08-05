@@ -12,36 +12,15 @@ export const SuperRoutes: INavigationRoute[] = [
 
   {
     name: 'administracion',
-    displayName: 'Administracion',
+    displayName: 'Gestionar Sistema',
     meta: {
       icon: 'manage_accounts',
       allowedRoles: [5],
     },
     children: [
       {
-        name: 'admin-departamentos',
-        displayName: 'Departamentos',
-        meta: { allowedRoles: [5] },
-      },
-
-      {
         name: 'admin-roles',
         displayName: 'Roles',
-        meta: { allowedRoles: [5] },
-      },
-      {
-        name: 'admin-usuarios',
-        displayName: 'Usuarios',
-        meta: { allowedRoles: [5] },
-      },
-      {
-        name: 'admin-maestros',
-        displayName: 'Maestros',
-        meta: { allowedRoles: [5] },
-      },
-      {
-        name: 'asignaturas',
-        displayName: 'Asignaturas',
         meta: { allowedRoles: [5] },
       },
       {
@@ -49,6 +28,37 @@ export const SuperRoutes: INavigationRoute[] = [
         displayName: 'Periodos',
         meta: { allowedRoles: [5] },
       },
+      {
+        name: 'asignaturas',
+        displayName: 'Asignaturas',
+        meta: { allowedRoles: [5] },
+      },
     ],
+  },
+
+  // Rutas compartidas (las mismas que en teacherRoutes)
+  {
+    name: 'settings',
+    displayName: 'menu.settings',
+    meta: {
+      icon: 'settings',
+      allowedRoles: [2, 3],
+    },
+  },
+  {
+    name: 'preferences',
+    displayName: 'menu.preferences',
+    meta: {
+      icon: 'manage_accounts',
+      allowedRoles: [2, 3],
+    },
+  },
+  {
+    name: 'faq',
+    displayName: 'menu.faq',
+    meta: {
+      icon: 'quiz',
+      allowedRoles: [2, 3],
+    },
   },
 ]

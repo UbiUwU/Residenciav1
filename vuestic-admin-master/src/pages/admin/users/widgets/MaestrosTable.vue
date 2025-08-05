@@ -61,13 +61,6 @@ const generarReporteFinal = (tarjeta: number) => {
 
   <VaDataTable :columns="columns" :items="filteredMaestros" :loading="loading">
     <template #cell(acciones)="{ rowData }">
-      <VaButton color="primary" icon="visibility" size="small" @click="verMaestro(rowData.tarjeta)">
-        Ver maestro
-      </VaButton>
-      <VaButton color="info" icon="description" size="small" class="ml-2" @click="generarReporteFinal(rowData.tarjeta)">
-        Reporte Final
-      </VaButton>
-
       <div class="flex flex-wrap gap-2">
         <VaButton
           color="primary"

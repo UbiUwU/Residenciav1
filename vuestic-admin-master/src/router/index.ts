@@ -107,6 +107,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/admin/pages/ReporteFinal.vue'),
       },
       {
+        path: 'asignaturas',
+        name: 'asignaturas',
+        component: () => import('../test/Asignaturas.vue'),
+      },
+      {
         name: 'admin-usuarios',
         path: 'usuarios',
         component: usuarios,
@@ -379,7 +384,6 @@ const router = createRouter({
   },
 })
 
-// Modifica tu guardia de ruta así:
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
@@ -393,30 +397,7 @@ router.beforeEach(async (to, from, next) => {
       query: { redirect: to.fullPath },
     })
   }
-
-  if (to.meta.allowedRoles) {
-    if (!authStore.userRole) {
-      try {
-        await authStore.initialize()
-        if (!authStore.userRole) {
-          return next({ name: 'login' })
-        }
-      } catch (error) {
-        console.error('Error al inicializar sesión:', error)
-        return next({ name: 'login' })
-      }
-    }
-
-    const allowedRoles = to.meta.allowedRoles as number[] // Cambiado a number[]
-
-    // Asegurarnos que userRole es number
-    const userRole = Number(authStore.userRole)
-
-    if (allowedRoles && !allowedRoles.includes(userRole)) {
-      return next({ name: 'unauthorized' })
-    }
-  }
-
   next()
 })
+
 export default router
