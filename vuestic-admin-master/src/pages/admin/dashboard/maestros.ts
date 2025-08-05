@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 // 👇 Usa el tipo explícito para decirle a TS que tu apiClient tiene esas funciones
-import apiClient from '../../../services/apiJ'
+import apiClient from '../../../services/api'
 
 interface Maestro {
   tarjeta: string

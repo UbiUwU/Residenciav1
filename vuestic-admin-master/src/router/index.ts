@@ -91,7 +91,6 @@ const routes: Array<RouteRecordRaw> = [
   },
 
   //Area de SuperUsuario
-
   {
     name: 'super',
     path: '/super',
@@ -104,11 +103,15 @@ const routes: Array<RouteRecordRaw> = [
         path: 'dashboard-super',
         component: () => import('../pages/super/Dashboard/Dashboard.vue'),
       },
-
       {
         name: 'admin-reporte',
         path: 'admin-reporte',
         component: () => import('../pages/admin/pages/ReporteFinal.vue'),
+      },
+      {
+        path: 'asignaturas',
+        name: 'asignaturas',
+        component: () => import('../test/Asignaturas.vue'),
       },
       {
         name: 'admin-usuarios',
@@ -125,7 +128,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'roles',
         component: roles,
       },
-
       {
         name: 'admin-periodos',
         path: 'periodos',
@@ -139,7 +141,7 @@ const routes: Array<RouteRecordRaw> = [
     ],
   },
 
-  // Área de Administrador
+  // Área de Administrador - CORREGIDO
   {
     name: 'admin',
     path: '/admin',
@@ -169,6 +171,11 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         name: 'admin-maestros',
+        path: 'maestros',
+        component: maestro,
+      },
+      {
+        name: 'admin-usuarios',
         path: 'usuarios',
         component: usuarios,
       },
@@ -297,18 +304,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/seguimiento',
     component: RouteViewComponent,
     meta: { requiresAuth: true, allowedRoles: [ROLES.TEACHER] },
-    children: [
-      {
-        name: 'evaluacion-diagnostica',
-        path: 'evaluacion-diagnostica',
-        component: () => import('../pages/maestro/SeguimientoD/EvaluacionDiagnostica.vue'),
-      },
-      {
-        name: 'calificaciones-parciales',
-        path: 'calificaciones-parciales',
-        component: () => import('../pages/maestro/SeguimientoD/CalificacionesParciales.vue'),
-      },
-    ],
+    children: [],
   },
 
   // Liberación de actividades (Teacher)
@@ -316,28 +312,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/liberacion',
     component: RouteViewComponent,
     meta: { requiresAuth: true, allowedRoles: [ROLES.TEACHER] },
-    children: [
-      {
-        name: 'reporte-final',
-        path: 'reporte-final',
-        component: () => import('../pages/maestro/Liberacion/ReporteFinal.vue'),
-      },
-      {
-        name: 'actas-calificaciones',
-        path: 'actas-calificaciones',
-        component: () => import('../pages/maestro/Liberacion/ActasCalificaciones.vue'),
-      },
-      {
-        name: 'liberacion-actividades-d',
-        path: 'liberacion-actividades-d',
-        component: () => import('../pages/maestro/Liberacion/LiberacionActividadesD.vue'),
-      },
-      {
-        name: 'liberacion-actividades-a',
-        path: 'liberacion-actividades-a',
-        component: () => import('../pages/maestro/Liberacion/LiberacionActividadesA.vue'),
-      },
-    ],
+    children: [],
   },
 
   // Rutas de prueba (solo desarrollo)
@@ -416,36 +391,19 @@ const router = createRouter({
   },
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
 
-  // No aplicar redirección para rutas públicas
   if (!to.meta.requiresAuth) {
     return next()
   }
 
-  // Si no está autenticado, redirigir a login
   if (!authStore.isAuthenticated) {
-    return next({ name: 'login', query: { redirect: to.fullPath } })
+    return next({
+      name: 'login',
+      query: { redirect: to.fullPath },
+    })
   }
-
-  // Verificar roles solo si la ruta los requiere
-  if (to.meta.allowedRoles) {
-    if (!authStore.userRole) {
-      // Intentar restaurar sesión si no hay rol
-      if (authStore.restoreSession()) {
-        return next(to.fullPath) // Reintentar navegación
-      }
-      return next({ name: 'login' })
-    }
-
-    const allowedRoles = to.meta.allowedRoles as string[] | undefined
-
-    if (allowedRoles && !allowedRoles.includes(authStore.userRole)) {
-      return next({ name: 'unauthorized' })
-    }
-  }
-
   next()
 })
 

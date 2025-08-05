@@ -78,7 +78,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useToast } from 'vuestic-ui'
-import api from '../services/apiJ'
+import api from '../services/api'
 const { init } = useToast()
 
 // Estado del componente

@@ -26,6 +26,7 @@
         </div>
 
         <!-- Submenú: solo se muestra si es la asignatura seleccionada -->
+
         <Transition name="fade">
           <div v-show="detalleAbierto === asignatura.ClaveAsignatura" class="submenu">
             <button @click="verPDF('instrumentacion')">Instrumentación Didáctica</button>
@@ -40,7 +41,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '../../../services/apiJ'
+import api from '../../../services/api'
 
 const route = useRoute()
 const router = useRouter()
@@ -55,7 +56,6 @@ const fetchAsignaturas = async () => {
   try {
     loading.value = true
     const response = await api.getAsignaturaByTarjetaCompleta(tarjeta)
-
     const data = response.data
 
     if (Array.isArray(data) && data.length > 0) {

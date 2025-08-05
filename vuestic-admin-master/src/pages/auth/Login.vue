@@ -43,7 +43,7 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useForm, useToast } from 'vuestic-ui'
 import { validators } from '../../services/utils'
-import api from '../../services/apiJ'
+import api from '../../services/api'
 import { useAuthStore } from '../../services/auth'
 import { ROLES } from '../../constants/roles'
 
@@ -79,21 +79,19 @@ const submit = async () => {
       )
 
       init({ message: 'Inicio de sesión exitoso', color: 'success' })
+      const userRoleNumber = Number(userRole) // o parseInt(userRole, 10)
 
-      // Redirección basada en el rol del usuario
-      switch (userRole) {
+      switch (userRoleNumber) {
         case ROLES.ADMIN:
           push({ name: 'dashboard' })
           break
         case ROLES.TEACHER:
           push({ name: 'dashboard-teacher' })
           break
-        //Rol de SuperUsuario agregado
         case ROLES.SUPER:
           push({ name: 'dashboard-super' })
           break
         default:
-          // Si el rol no está definido, redirige a una página genérica
           push({ name: '404' })
           init({
             message: 'Tu cuenta no tiene un rol asignado',

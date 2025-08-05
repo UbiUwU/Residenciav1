@@ -431,18 +431,18 @@ const periodoSeleccionado = ref('ENE-JUN 2025')
 const periodosAcademicos = ref(['AGO-DIC 2025', 'ENE-JUN 2025', 'AGO-DIC 2024', 'ENE-JUN 2024'])
 
 // Estadísticas del sistema
-const usuariosActivos = ref(143)
+const usuariosActivos = ref(12)
 const nuevosUsuarios7d = ref(7)
-const documentosPendientesSistema = ref(87)
-const documentosAtrasados = ref(23)
-const reportesGenerados = ref(45)
+const documentosPendientesSistema = ref(7)
+const documentosAtrasados = ref(3)
+const reportesGenerados = ref(15)
 const reportesPendientes = ref(12)
 const alertasSistema = ref(8)
 const alertasCriticas = ref(3)
 
 // Configuración del sistema
 const configSistema = ref({
-  nombreInstitucion: 'Instituto Tecnológico Superior',
+  nombreInstitucion: 'Instituto Tecnológico de Chetumal',
   logoUrl: '/img/logo-instituto.png',
   periodoActual: 'ENE-JUN 2025',
   diasEntregaDocumentos: 15,
@@ -459,7 +459,7 @@ const accionesRapidas = ref([
     accion: 'respaldarBD',
   },
   {
-    texto: 'Generar Reporte',
+    texto: 'PR',
     icono: 'description',
     preset: 'secondary',
     accion: 'generarReporte',
