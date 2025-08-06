@@ -6,15 +6,7 @@
         <div>
           <h1 class="va-h3">Bienvenido, Profesor {{ nombreProfesor }}</h1>
           <p class="text-gray-500">Resumen de tus actividades académicas</p>
-        </div>
-        <div class="flex items-center gap-4">
-          <VaSelect
-            v-model="periodoSeleccionado"
-            :options="periodosAcademicos"
-            label="Período académico"
-            class="w-48"
-          />
-          <VaButton preset="secondary" icon="refresh" @click="actualizarDatos"> Actualizar </VaButton>
+         <h1> {{ periodoSeleccionado }}</h1>
         </div>
       </VaCardContent>
     </VaCard>
@@ -249,7 +241,6 @@ const nombreProfesor = ref('Carlos Eduardo Azueta Leon')
 
 // Periodos académicos
 const periodoSeleccionado = ref('ENE-JUN 2025')
-const periodosAcademicos = ref(['AGO-DIC 2025'])
 
 // Datos de resumen
 const documentosPendientes = ref(4)
@@ -558,10 +549,6 @@ const seleccionAsignaturaCambiada = (selectedItems) => {
   console.log('Asignaturas seleccionadas:', selectedItems)
 }
 
-const actualizarDatos = () => {
-  // Lógica para actualizar datos del dashboard
-  console.log('Actualizando datos...')
-}
 
 // Inicialización de gráficos
 onMounted(() => {

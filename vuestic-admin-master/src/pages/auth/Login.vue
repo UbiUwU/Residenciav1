@@ -2,8 +2,7 @@
   <VaForm ref="form" @submit.prevent="submit">
     <h1 class="font-semibold text-4xl mb-4">Inicio Sesión</h1>
     <p class="text-base mb-4 leading-5">
-      ¿Eres nuevo usuario? Registrate
-      <RouterLink :to="{ name: 'signup' }" class="font-semibold text-primary">¡Aquí!</RouterLink>
+      ¡Bienvenido, inicia sesión con tus credenciales!
     </p>
 
     <!-- Email Input -->
@@ -31,16 +30,7 @@
       </VaInput>
     </VaValue>
 
-    <div class="auth-layout__options flex flex-col sm:flex-row items-start sm:items-center justify-between">
-      <VaCheckbox
-        v-model="formData.keepLoggedIn"
-        class="mb-2 sm:mb-0"
-        label="Mantenerme conectado en este dispositivo"
-      />
-      <RouterLink :to="{ name: 'recover-password' }" class="mt-2 sm:mt-0 sm:ml-1 font-semibold text-primary">
-        ¿Has olvidado tu contraseña?
-      </RouterLink>
-    </div>
+   
 
     <div class="flex justify-center mt-4">
       <VaButton class="w-full" :loading="loading" @click="submit">Iniciar sesión</VaButton>

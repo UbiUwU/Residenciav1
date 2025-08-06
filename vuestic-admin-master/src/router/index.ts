@@ -12,12 +12,14 @@ import RouteViewComponent from '../layouts/RouterBypass.vue'
 import departamento from '../test/departamentos.vue'
 import MateriasMaestroPage from '../pages/admin/pages/AsignaturasMaestros.vue'
 import reporteFinal from '../pages/admin/pages/ReporteFinal.vue'
-import PDFView from '../pages/admin/pages/AsignaturaDetail.vue'
+import PDFView from '../pages/admin/pages/InstrumentacionDidactica.vue'
 import maestro from '../pages/admin/pages/PaginaUsuarios.vue'
 import usuarios from '../test/usuarios.vue'
 import roles from '../test/roles.vue'
-import periodos from '../test/periodos.vue'
-import horaraio2 from '../test/HorarioMaestro.vue'
+import periodos from '../pages/admin/pages/periodosJefe.vue'
+import horaraio2 from '../test/visualizarhorario.vue'
+import crearusuario from '../test/usuarios.vue'
+
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -213,9 +215,25 @@ const routes: Array<RouteRecordRaw> = [
         component: PDFView,
       },
       {
-        path: '/visualizarhorario',
+        path: '/instrumentacion/:tarjeta',
+        name: 'instrumentacion',
+        component: () => import('../pages/admin/pages/InstrumentacionDidactica.vue'),
+      },
+      {
+        path: '/avance/:tarjeta',
+        name: 'avance',
+        component: () => import('../pages/admin/pages/AvanceProgramatico.vue'),
+      },
+
+      {
+        path: '/visualizarhorarios',
         name: 'vishorario',
         component: horaraio2,
+      },
+      {
+        path: '/crearusuarios',
+        name: 'crearusuario',
+        component: crearusuario,
       },
       {
         name: 'admin-reporte',
