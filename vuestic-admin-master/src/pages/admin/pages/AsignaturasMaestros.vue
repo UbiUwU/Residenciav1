@@ -98,7 +98,11 @@ const toggleDetalle = (clave) => {
 }
 
 const verPDF = (tipo) => {
-  router.push({ name: 'pdf', params: { tarjeta, tipo } })
+  if (tipo === 'instrumentacion') {
+    router.push({ name: 'instrumentacion', params: { tarjeta } })
+  } else if (tipo === 'avance') {
+    router.push({ name: 'avance', params: { tarjeta } })
+  }
 }
 
 onMounted(() => {
