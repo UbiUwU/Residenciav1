@@ -28,3 +28,5 @@ vendor/
 .idea/
 *.swp
 *.swo
+Back/.env
+Back/config/cors.php

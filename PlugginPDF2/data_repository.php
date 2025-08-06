@@ -90,15 +90,17 @@ function obtenerDatosReporteFinal(PDO $conn, int $tarjeta): array
             $asignatura['periodo'] = null;
         }
 
-
         foreach ($asignatura['aulas_grupos_periodos'] as &$agp) {
             $gruposAsignatura++;
             $resumen['periodo'] = $datos['asignaturas'][0]['aulas_grupos_periodos'][0]['periodo'] ?? 'Sin periodo';
             $agp['periodo'] = $asignatura['periodo'];
             $agp['resumen'] = [
                 'periodo' => $agp['periodo'],
-                'asignatura' => $asignatura['nombre'],
+                'nombre_asignatura' => $asignatura['informacionbasica']['nombre'] ?? 'Sin nombre'
+                ,
             ];
+
+
 
             foreach ($agp['carreras'] as &$carrera) {
                 foreach ($carrera['alumnos'] as &$alumno) {

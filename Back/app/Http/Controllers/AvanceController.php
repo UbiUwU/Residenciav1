@@ -11,31 +11,72 @@ use Illuminate\Support\Facades\Validator;
 class AvanceController extends Controller
 {
     public function obtenerAvancesCompletos(Request $request)
-{
-    $tarjeta = $request->query('tarjeta');
+    {
+        $tarjeta = $request->query('tarjeta');
 
-    $resultados = DB::select(
-        'SELECT * FROM obtener_avances_completos(?)',
-        [$tarjeta]
-    );
+        $resultados = DB::select(
+            'SELECT * FROM obtener_avances_completos(?)',
+            [$tarjeta]
+        );
 
-    // Convertir cada resultado a array y decodificar los campos JSON necesarios
-    $respuesta = array_map(function ($item) {
-        $item = (array) $item;
+        // Convertir cada resultado a array y decodificar los campos JSON necesarios
+        $respuesta = array_map(function ($item) {
+            $item = (array) $item;
 
-        // Decodificar campos JSON si existen
-        if (isset($item['detalles'])) {
-            $item['detalles'] = json_decode($item['detalles'], true);
-        }
-        if (isset($item['presentacion'])) {
-            $item['presentacion'] = json_decode($item['presentacion'], true);
-        }
+            // Decodificar campos JSON si existen
+            if (isset($item['detalles'])) {
+                $item['detalles'] = json_decode($item['detalles'], true);
+            }
+            if (isset($item['presentacion'])) {
+                $item['presentacion'] = json_decode($item['presentacion'], true);
+            }
 
-        return $item;
-    }, $resultados);
+            return $item;
+        }, $resultados);
 
-    return response()->json($respuesta);
-}
+        return response()->json($respuesta);
+    }
+
+    public function obtenerTodosLosAvances()
+    {
+        $resultados = DB::select('SELECT * FROM obtener_avances_completos(NULL)');
+
+        $respuesta = array_map(function ($item) {
+            $item = (array) $item;
+
+            if (isset($item['detalles'])) {
+                $item['detalles'] = json_decode($item['detalles'], true);
+            }
+            if (isset($item['presentacion'])) {
+                $item['presentacion'] = json_decode($item['presentacion'], true);
+            }
+
+            return $item;
+        }, $resultados);
+
+        return response()->json($respuesta);
+    }
+
+    public function obtenerAvancesPorTarjeta($tarjeta)
+    {
+        $resultados = DB::select('SELECT * FROM obtener_avances_completos(?)', [$tarjeta]);
+
+        $respuesta = array_map(function ($item) {
+            $item = (array) $item;
+
+            if (isset($item['detalles'])) {
+                $item['detalles'] = json_decode($item['detalles'], true);
+            }
+            if (isset($item['presentacion'])) {
+                $item['presentacion'] = json_decode($item['presentacion'], true);
+            }
+
+            return $item;
+        }, $resultados);
+
+        return response()->json($respuesta);
+    }
+
 
     public function crear(Request $request)
     {

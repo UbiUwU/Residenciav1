@@ -18,9 +18,12 @@ use App\Http\Controllers\PresentacionController;
 use App\Http\Controllers\DisenoController;
 use App\Http\Controllers\AvanceController;
 
-Route::get('avance', [AvanceController::class, 'obtenerAvancesCompletos']);
+//Route::get('avance', [AvanceController::class, 'obtenerAvancesCompletos']);
 Route::post('/avance', [AvanceController::class, 'crear']);
 Route::put('/avance/{id}', [AvanceController::class, 'actualizarAvance']);
+Route::get('/avance', [AvanceController::class, 'obtenerTodosLosAvances']);
+Route::get('/avance/{tarjeta}', [AvanceController::class, 'obtenerAvancesPorTarjeta']);
+
 
 Route::prefix('maestros')->group(function () {
     Route::get('/', [MaestroController::class, 'index']); // Listar todos
