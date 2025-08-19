@@ -206,6 +206,10 @@ export default {
     return apiClient.get('/avance')
   },
 
+  getAvancesMaestro(tarjeta) {
+    return apiClient.get(`/avance/${tarjeta}`)
+  },
+
   // Crear un nuevo avance
   crearAvance(data) {
     return apiClient.post('/avance', data)
