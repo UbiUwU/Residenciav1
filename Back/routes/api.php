@@ -6,6 +6,7 @@ use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\EdificioController;
 use App\Http\Controllers\PracticaController;
 use App\Http\Controllers\ProyectoController;
+use App\Http\Controllers\TipoEventoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AsignaturaController;
 use App\Http\Controllers\Api\MaestroController;
@@ -52,7 +53,7 @@ Route::post('/roles', [RoleController::class, 'store']);
 Route::put('/roles/{id}', [RoleController::class, 'update']);
 Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
 
-Route::prefix('periodos-escolares')->group(function () {
+Route::prefix('periodos')->group(function () {
     Route::post('/', [PeriodoEscolarController::class, 'store']);
     Route::get('/', [PeriodoEscolarController::class, 'index']);
     Route::get('/{id}', [PeriodoEscolarController::class, 'show']);
@@ -215,6 +216,14 @@ Route::prefix('aulas')->group(function () {
     Route::post('/', [AulaController::class, 'store']);
     Route::put('/{clave}', [AulaController::class, 'update']);
     Route::delete('/{clave}', [AulaController::class, 'destroy']);
+});
+
+Route::prefix('tipoevento')->group(function () {
+    Route::get('/', [TipoEventoController::class, 'index']);
+    Route::get('/{clave}', [TipoEventoController::class, 'show']);
+    Route::post('/', [TipoEventoController::class, 'store']);
+    Route::put('/{clave}', [TipoEventoController::class, 'update']);
+    Route::delete('/{clave}', [TipoEventoController::class, 'destroy']);
 });
 
 
