@@ -30,3 +30,4 @@ vendor/
 *.swo
 Back/.env
 Back/config/cors.php
+Back/.env

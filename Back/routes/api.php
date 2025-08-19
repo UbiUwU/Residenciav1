@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ComisionController;
 use App\Http\Controllers\CompetenciaController;
+use App\Http\Controllers\DepartamentoController;
+use App\Http\Controllers\EdificioController;
 use App\Http\Controllers\PracticaController;
 use App\Http\Controllers\ProyectoController;
 use Illuminate\Support\Facades\Route;
@@ -13,10 +15,12 @@ use App\Http\Controllers\CarreraController;
 use App\Http\Controllers\ComputadoraController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\HorarioController;
-use App\Http\Controllers\Api\AulaController;
+use App\Http\Controllers\AulaController;
 use App\Http\Controllers\PresentacionController;
 use App\Http\Controllers\DisenoController;
 use App\Http\Controllers\AvanceController;
+use App\Http\Controllers\RolController;
+use App\Http\Controllers\UsuarioController;
 
 //Route::get('avance', [AvanceController::class, 'obtenerAvancesCompletos']);
 Route::post('/avance', [AvanceController::class, 'crear']);
@@ -33,13 +37,6 @@ Route::prefix('maestros')->group(function () {
     Route::delete('/{id}', [MaestroController::class, 'destroy']); // Eliminar
     Route::get('/ListaM/{tarjeta}', [MaestroController::class, 'ListaM']);
 });
-
-Route::get('/aulas', [AulaController::class, 'getAllAulas']);
-Route::get('/aulas/{claveAula}', [AulaController::class, 'getAulaById']);
-Route::post('/aulas', [AulaController::class, 'insertAula']);
-Route::put('/aulas/{claveAula}', [AulaController::class, 'updateAula']);
-Route::delete('/aulas/{claveAula}', [AulaController::class, 'deleteAula']);
-
 
 Route::prefix('carreras')->group(function () {
     Route::get('/', [CarreraController::class, 'index']);
@@ -174,11 +171,52 @@ use App\Http\Controllers\CalificacionUnidadController;
 Route::post('/calificaciones', [CalificacionUnidadController::class, 'store']);
 Route::get('/calificaciones/reporte/{tarjeta}', [CalificacionUnidadController::class, 'getDetalleGruposPorCarrera']);
 
-Route::post('/comisiones', [ComisionController::class, 'store']);
-Route::put('/comisiones/{id}', [ComisionController::class, 'update']);
-Route::delete('/comisiones/{id}', [ComisionController::class, 'destroy']);
-Route::get('/comisiones', [ComisionController::class, 'index']);
-Route::get('/comisiones/maestro/{tarjeta}', [ComisionController::class, 'getByMaestro']);
+Route::prefix('comisiones')->group(function () {
+    Route::get('/', [ComisionController::class, 'index']);           // Listar todas
+    Route::get('/{id}', [ComisionController::class, 'show']);       // Mostrar 1
+    Route::post('/', [ComisionController::class, 'store']);         // Crear nueva
+    Route::put('/{id}', [ComisionController::class, 'update']);     // Actualizar
+    Route::delete('/{id}', [ComisionController::class, 'destroy']); // Eliminar
+});
+
+Route::prefix('roles')->group(function () {
+    Route::get('/', [RolController::class, 'index']);           // Listar todos los roles
+    Route::get('/{id}', [RolController::class, 'show']);       // Mostrar un rol específico
+    Route::post('/', [RolController::class, 'store']);         // Crear un nuevo rol
+    Route::put('/{id}', [RolController::class, 'update']);     // Actualizar un rol existente
+});
+
+Route::prefix('usuarios')->group(function () {
+    Route::get('/', [UsuarioController::class, 'index']);           // Listar todos los usuarios
+    Route::get('/{id}', [UsuarioController::class, 'show']);       // Mostrar un usuario específico
+    Route::post('/', [UsuarioController::class, 'store']);         // Crear un nuevo usuario
+    Route::put('/{id}', [UsuarioController::class, 'update']);     // Actualizar un usuario existente
+});
+
+Route::prefix('departamentos')->group(function () {
+    Route::get('/', [DepartamentoController::class, 'index']);        // Listar todos
+    Route::get('/{id}', [DepartamentoController::class, 'show']);    // Mostrar uno
+    Route::post('/', [DepartamentoController::class, 'store']);      // Crear
+    Route::put('/{id}', [DepartamentoController::class, 'update']);  // Actualizar
+    Route::delete('/{id}', [DepartamentoController::class, 'destroy']); // Eliminar
+});
+
+Route::prefix('edificios')->group(function () {
+    Route::get('/', [EdificioController::class, 'index']);
+    Route::get('/{clave}', [EdificioController::class, 'show']);
+    Route::post('/', [EdificioController::class, 'store']);
+    Route::put('/{clave}', [EdificioController::class, 'update']);
+    Route::delete('/{clave}', [EdificioController::class, 'destroy']);
+});
+
+Route::prefix('aulas')->group(function () {
+    Route::get('/', [AulaController::class, 'index']);
+    Route::get('/{clave}', [AulaController::class, 'show']);
+    Route::post('/', [AulaController::class, 'store']);
+    Route::put('/{clave}', [AulaController::class, 'update']);
+    Route::delete('/{clave}', [AulaController::class, 'destroy']);
+});
+
 
 //Esta zona es de la zona movil.
 use App\Http\Controllers\Api\MaestroMController;

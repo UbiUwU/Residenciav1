@@ -2,98 +2,165 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comision;
+use App\Models\ComisionFecha;
+use App\Models\ComisionMaestro;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 
 class ComisionController extends Controller
 {
-    public function store(Request $request)
-    {
-        // Validación
-        $validator = Validator::make($request->all(), [
-            'eventName' => 'required|string|max:100',
-            'eventType.value' => 'required|string|max:50',
-            'eventDate' => 'required|date',
-            'status' => 'required|string|max:30',
-            'selectedMaestro' => 'required|array|min:1',
-            'selectedMaestro.*.value' => 'required|integer'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        // Extraer los valores
-        $nombreEvento = $request->eventName;
-        $tipoEvento = $request->eventType['value'];
-        $fechaEvento = $request->eventDate;
-        $estatus = $request->status;
-        $maestros = collect($request->selectedMaestro)->pluck('value')->toArray();
-
-        // Llamar a la función de PostgreSQL
-        $result = DB::select('SELECT * FROM crear_comision_con_maestros(?, ?, ?, ?, ?)', [
-            $nombreEvento,
-            $tipoEvento,
-            $fechaEvento,
-            $estatus,
-            '{' . implode(',', $maestros) . '}' // Formato ARRAY
-        ]);
-
-        return response()->json($result[0]);
-    }
-    public function update(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'nombre_evento' => 'required|string|max:255',
-            'tipo_evento' => 'required|string|max:100',
-            'fecha_evento' => 'required|date',
-            'estatus' => 'required|string|max:20',
-            'tarjetas_maestros' => 'required|array|min:1',
-            'tarjetas_maestros.*' => 'integer|min:1'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
-        $result = DB::select('SELECT actualizar_comision(?, ?, ?, ?, ?, ?) AS result', [
-            (int) $id,
-            $request->nombre_evento,
-            $request->tipo_evento,
-            $request->fecha_evento,
-            $request->estatus,
-            '{' . implode(',', $request->tarjetas_maestros) . '}'
-        ]);
-
-        return response()->json(json_decode($result[0]->result));
-    }
-
-    public function destroy($id)
-    {
-        $result = DB::select('SELECT eliminar_comision(?) AS result', [(int) $id]);
-        return response()->json(json_decode($result[0]->result));
-    }
+    // Listar todas las comisiones con relaciones
     public function index()
     {
-        $result = DB::select('SELECT obtener_comisiones_con_maestros() AS result');
+        $comisiones = Comision::with(['tipoEvento', 'periodoEscolar', 'fechas', 'maestros'])
+            ->orderBy('id_comision', 'desc')
+            ->get();
 
-        if (empty($result) || $result[0]->result === null) {
-            return response()->json([]);
+        return response()->json($comisiones);
+    }
+
+    // Mostrar una comisión específica
+    public function show($id)
+    {
+        $comision = Comision::with(['tipoEvento', 'periodoEscolar', 'fechas', 'maestros'])
+            ->findOrFail($id);
+
+        return response()->json($comision);
+    }
+
+    // Crear una nueva comisión
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nombre_evento' => 'required|string|max:100',
+            'id_tipo_evento' => 'required|integer|exists:tipo_evento,id_tipo_evento',
+            'id_periodo_escolar' => 'required|integer|exists:periodo_escolar,id_periodo_escolar',
+            'estado' => 'nullable|string',
+            'folio' => 'nullable|string|max:50',
+            'remitente_nombre' => 'nullable|string|max:100',
+            'remitente_puesto' => 'nullable|string|max:100',
+            'lugar' => 'nullable|string|max:255',
+            'motivo' => 'nullable|string',
+            'tipo_comision' => 'nullable|string',
+            'permiso_constancia' => 'nullable|boolean',
+            'fechas' => 'nullable|array',
+            'fechas.*.fecha' => 'required|date',
+            'fechas.*.hora_inicio' => 'nullable|date_format:H:i',
+            'fechas.*.hora_fin' => 'nullable|date_format:H:i',
+            'fechas.*.duracion' => 'nullable|string',
+            'fechas.*.observaciones' => 'nullable|string',
+            'maestros' => 'nullable|array',
+            'maestros.*' => 'required|integer|exists:maestros,tarjeta',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $comision = Comision::create($request->only([
+                'folio',
+                'nombre_evento',
+                'id_tipo_evento',
+                'id_periodo_escolar',
+                'estado',
+                'remitente_nombre',
+                'remitente_puesto',
+                'lugar',
+                'motivo',
+                'tipo_comision',
+                'permiso_constancia',
+            ]));
+
+            // Insertar fechas si vienen
+            if ($request->has('fechas')) {
+                foreach ($request->fechas as $fecha) {
+                    $comision->fechas()->create($fecha);
+                }
+            }
+
+            // Relacionar maestros si vienen
+            if ($request->has('maestros')) {
+                $comision->maestros()->sync($request->maestros);
+            }
+
+            DB::commit();
+            return response()->json($comision->load(['tipoEvento', 'periodoEscolar', 'fechas', 'maestros']), 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        return response()->json(json_decode($result[0]->result));
     }
 
-    public function getByMaestro($tarjeta)
-{
-    $result = DB::select('SELECT get_comisiones_by_maestro(CAST(? AS bigint)) AS result', [$tarjeta]);
+    // Actualizar comisión
+    public function update(Request $request, $id)
+    {
+        $comision = Comision::findOrFail($id);
 
-    if (empty($result) || $result[0]->result === null) {
-        return response()->json([]);
+        $request->validate([
+            'nombre_evento' => 'nullable|string|max:100',
+            'id_tipo_evento' => 'nullable|integer|exists:tipo_evento,id_tipo_evento',
+            'id_periodo_escolar' => 'nullable|integer|exists:periodo_escolar,id_periodo_escolar',
+            'estado' => 'nullable|string',
+            'folio' => 'nullable|string|max:50',
+            'remitente_nombre' => 'nullable|string|max:100',
+            'remitente_puesto' => 'nullable|string|max:100',
+            'lugar' => 'nullable|string|max:255',
+            'motivo' => 'nullable|string',
+            'tipo_comision' => 'nullable|string',
+            'permiso_constancia' => 'nullable|boolean',
+            'fechas' => 'nullable|array',
+            'fechas.*.fecha' => 'required|date',
+            'fechas.*.hora_inicio' => 'nullable|date_format:H:i',
+            'fechas.*.hora_fin' => 'nullable|date_format:H:i',
+            'fechas.*.duracion' => 'nullable|string',
+            'fechas.*.observaciones' => 'nullable|string',
+            'maestros' => 'nullable|array',
+            'maestros.*' => 'required|integer|exists:maestros,tarjeta',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $comision->update($request->only([
+                'folio',
+                'nombre_evento',
+                'id_tipo_evento',
+                'id_periodo_escolar',
+                'estado',
+                'remitente_nombre',
+                'remitente_puesto',
+                'lugar',
+                'motivo',
+                'tipo_comision',
+                'permiso_constancia',
+            ]));
+
+            // Actualizar fechas
+            if ($request->has('fechas')) {
+                $comision->fechas()->delete();
+                foreach ($request->fechas as $fecha) {
+                    $comision->fechas()->create($fecha);
+                }
+            }
+
+            // Actualizar maestros
+            if ($request->has('maestros')) {
+                $comision->maestros()->sync($request->maestros);
+            }
+
+            DB::commit();
+            return response()->json($comision->load(['tipoEvento', 'periodoEscolar', 'fechas', 'maestros']));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
-    return response()->json(json_decode($result[0]->result));
-}
-
+    // Eliminar comisión
+    public function destroy($id)
+    {
+        $comision = Comision::findOrFail($id);
+        $comision->delete();
+        return response()->json(['message' => 'Comisión eliminada correctamente']);
+    }
 }
