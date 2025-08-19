@@ -11,10 +11,10 @@ class Maestro extends Model
 
     protected $table = 'maestros';
     protected $primaryKey = 'tarjeta';
-    public $incrementing = true;
-    protected $keyType = 'integer';
+    public $incrementing = true;      // bigserial
+    protected $keyType = 'int';
     public $timestamps = false;
-    
+
     protected $fillable = [
         'tarjeta',
         'nombre',
@@ -33,9 +33,27 @@ class Maestro extends Model
         'id_departamento'
     ];
 
-    // Relación con departamento (si existe el modelo Departamento)
-    /*
-    public function departamento() {
-        return $this->belongsTo(Departamento::class, 'id_departamento');
-    }*/
+    // Relaciones
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'idusuario', 'idusuario');
+    }
+
+    public function departamento()
+    {
+        return $this->belongsTo(Departamento::class, 'id_departamento', 'id_departamento');
+    }
+
+    // Si tienes el modelo Comision, puedes habilitar esta relación:
+    // public function comisiones()
+    // {
+    //     return $this->belongsToMany(
+    //         Comision::class,
+    //         'comision_maestro',
+    //         'tarjeta_maestro',   // FK en la pivote hacia maestro
+    //         'id_comision',       // FK en la pivote hacia comision
+    //         'tarjeta',           // local key maestro
+    //         'id_comision'        // local key comision
+    //     );
+    // }
 }

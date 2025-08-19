@@ -9,7 +9,7 @@ use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\TipoEventoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AsignaturaController;
-use App\Http\Controllers\Api\MaestroController;
+use App\Http\Controllers\MaestroController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PeriodoEscolarController;
 use App\Http\Controllers\CarreraController;
