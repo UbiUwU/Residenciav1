@@ -8,29 +8,27 @@
 
     <div v-if="loading" class="loading">Cargando asignaturas...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
-
-    <div v-else-if="asignaturas.length === 0" class="no-data">Este maestro no tiene asignaturas registradas.</div>
+    <div v-else-if="asignaturas.length === 0" class="no-data">
+      Este maestro no tiene asignaturas registradas.
+    </div>
 
     <div v-else class="asignaturas-grid">
-      <div v-for="asignatura in asignaturas" :key="asignatura.ClaveAsignatura" class="asignatura-card">
+      <div v-for="asignatura in asignaturas" :key="asignatura.ClaveAsignatura + '-' + asignatura.Grupo" class="asignatura-card">
         <div class="asignatura-header" @click="toggleDetalle(asignatura.ClaveAsignatura)">
           <h3>{{ asignatura.ClaveAsignatura }} - {{ asignatura.NombreAsignatura }}</h3>
           <div class="asignatura-info">
+            <span>Grupo: {{ asignatura.Grupo }}</span>
             <span>Créditos: {{ asignatura.Creditos }}</span>
             <span>
-              SATCA: {{ asignatura.Satca_Total }} (T:{{ asignatura.Satca_Teoricas }}, P:{{
-                asignatura.Satca_Practicas
-              }})
+              SATCA: {{ asignatura.Satca_Total }} (T:{{ asignatura.Satca_Teoricas }}, P:{{ asignatura.Satca_Practicas }})
             </span>
           </div>
         </div>
 
-        <!-- Submenú: solo se muestra si es la asignatura seleccionada -->
-
         <Transition name="fade">
           <div v-show="detalleAbierto === asignatura.ClaveAsignatura" class="submenu">
-            <button @click="verPDF('instrumentacion')">Instrumentación Didáctica</button>
-            <button @click="verPDF('avance')">Avance Programático</button>
+            <button @click="verPDF('instrumentacion', asignatura)">Instrumentación Didáctica</button>
+            <button @click="verPDF('avance', asignatura)">Avance Programático</button>
           </div>
         </Transition>
       </div>
@@ -66,19 +64,10 @@ const fetchAsignaturas = async () => {
         Satca_Teoricas: item.informacionbasica.satca.teoricas,
         Satca_Practicas: item.informacionbasica.satca.practicas,
         Satca_Total: item.informacionbasica.satca.total,
-      }))
-
-      // Asignatura ficticia para prueba
-      asignaturas.value.push({
-        ClaveAsignatura: 'PRUEBA123',
-        NombreAsignatura: 'Asignatura de Prueba',
-        Creditos: 5,
-        Satca_Teoricas: 3,
-        Satca_Practicas: 2,
-        Satca_Total: 5,
+        Grupo: item.aulas_grupos_periodos?.[0]?.grupo || 'Sin grupo',
       })
+      )
     } else {
-      asignaturas.value = [] // No hay asignaturas
       asignaturas.value = []
     }
   } catch (err) {
@@ -90,28 +79,28 @@ const fetchAsignaturas = async () => {
 }
 
 const handleRegresar = () => {
-  window.history.back() // o router.back() si usas Vue Router
+  router.back()
 }
 
 const toggleDetalle = (clave) => {
   detalleAbierto.value = detalleAbierto.value === clave ? null : clave
 }
 
-const verPDF = (tipo) => {
-  if (tipo === 'instrumentacion') {
-    router.push({ name: 'instrumentacion', params: { tarjeta } })
-  } else if (tipo === 'avance') {
-    router.push({ name: 'avance', params: { tarjeta } })
+const verPDF = (tipo, asignatura) => {
+  const params = {
+    tarjeta: tarjeta,
+    grupo: asignatura.Grupo,
+    clave_asignatura: asignatura.ClaveAsignatura, // SIN encodeURIComponent
   }
+
+  const routeName = tipo === 'instrumentacion' ? 'instrumentacion' : 'avance'
+  router.push({ name: routeName, params })
 }
 
-onMounted(() => {
-  fetchAsignaturas()
-})
+onMounted(fetchAsignaturas)
 </script>
 
 <style scoped>
-/* Transición */
 .fade-enter-active,
 .fade-leave-active {
   transition: all 0.3s ease;
@@ -122,7 +111,6 @@ onMounted(() => {
   transform: scaleY(0.95);
 }
 
-/* Layout */
 .asignaturas-container {
   padding: 20px;
   max-width: 1200px;
@@ -134,24 +122,14 @@ h1 {
   margin-bottom: 20px;
 }
 
-/* Grid responsivo */
 .asignaturas-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
 }
 
-/* Tarjeta */
 .asignatura-card {
-  background-color: var(--va-background-element);
-  color: var(--va-on-background);
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: var(--va-box-shadow);
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
-  background-color: white;
+  background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 20px;
@@ -161,6 +139,7 @@ h1 {
 .asignatura-card:hover {
   transform: translateY(-3px);
 }
+
 .asignatura-header {
   cursor: pointer;
 }
@@ -173,7 +152,6 @@ h1 {
   color: #555;
 }
 
-/* Submenú */
 .submenu {
   margin-top: 15px;
   padding-top: 12px;
@@ -196,7 +174,6 @@ h1 {
   background-color: #1e45cc;
 }
 
-/* Botón regresar */
 .boton-regresar {
   position: sticky;
   top: 1rem;
@@ -218,7 +195,6 @@ h1 {
   background-color: #1e45cc;
 }
 
-/* Estados */
 .loading,
 .error,
 .no-data {
@@ -226,6 +202,7 @@ h1 {
   padding: 20px;
   font-size: 1.1em;
 }
+
 .error {
   color: #e74c3c;
 }

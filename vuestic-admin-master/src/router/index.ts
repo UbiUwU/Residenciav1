@@ -19,6 +19,8 @@ import roles from '../test/roles.vue'
 import periodos from '../pages/admin/pages/periodosJefe.vue'
 import horaraio2 from '../test/visualizarhorario.vue'
 import crearusuario from '../test/usuarios.vue'
+import InstrumentacionComponent from '../pages/admin/pages/InstrumentacionDidactica.vue'
+import AvanceComponent from '../pages/admin/pages/AvanceProgramatico.vue'
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -215,16 +217,15 @@ const routes: Array<RouteRecordRaw> = [
         component: PDFView,
       },
       {
-        path: '/instrumentacion/:tarjeta',
+        path: '/instrumentacion/:tarjeta/:grupo/:clave_asignatura',
         name: 'instrumentacion',
-        component: () => import('../pages/admin/pages/InstrumentacionDidactica.vue'),
+        component: InstrumentacionComponent,
       },
       {
-        path: '/avance/:tarjeta',
+        path: '/avance/:tarjeta/:grupo/:clave_asignatura',
         name: 'avance',
-        component: () => import('../pages/admin/pages/AvanceProgramatico.vue'),
+        component: AvanceComponent,
       },
-
       {
         path: '/visualizarhorarios',
         name: 'vishorario',
