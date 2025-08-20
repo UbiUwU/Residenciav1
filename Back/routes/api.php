@@ -24,6 +24,11 @@ use App\Http\Controllers\RolController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\HorarioAsignaturaMaestroController;
 
+
+// routes/api.php
+Route::get('/enum/{tipo}', [App\Http\Controllers\EnumController::class, 'getValores']);
+
+
 //Route::get('avance', [AvanceController::class, 'obtenerAvancesCompletos']);
 Route::post('/avance', [AvanceController::class, 'crear']);
 Route::put('/avance/{id}', [AvanceController::class, 'actualizarAvance']);
@@ -279,6 +284,9 @@ Route::prefix('alumno')->group(function () {
     Route::put('/extender-reserva', [AlumnoController::class, 'extenderReserva']);
     Route::delete('/cancelar-reserva', [AlumnoController::class, 'cancelarReserva']);
     Route::post('/bitacora', [AlumnoController::class, 'registrarBitacora']);
+    Route::post('/bitacora/cerrar', [AlumnoController::class, 'cerrarBitacora']);
+    // Ver bitácora completa de un alumno
+    Route::get('/bitacora/{numerocontrol}', [AlumnoController::class, 'verBitacoraAlumno']);
 
 
     Route::get('/', [AlumnoController::class, 'index']);

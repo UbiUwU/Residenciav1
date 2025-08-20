@@ -37,6 +37,7 @@ class AulaController extends Controller
             'nombre' => 'required|string|max:100',
             'cantidadcomputadoras' => 'required|integer|min:0',
             'horadisponible' => 'required|date_format:H:i:s',
+            'estado' => 'required|string|in:activo,inactivo,pendiente,eliminado', // Agregado para manejar el estado del aula
         ]);
 
         try {
@@ -45,7 +46,8 @@ class AulaController extends Controller
                 'claveedificio',
                 'nombre',
                 'cantidadcomputadoras',
-                'horadisponible'
+                'horadisponible',
+                'estado'
             ]));
 
             return response()->json([
@@ -72,6 +74,7 @@ class AulaController extends Controller
             'nombre' => 'sometimes|required|string|max:100',
             'cantidadcomputadoras' => 'sometimes|required|integer|min:0',
             'horadisponible' => 'sometimes|required|date_format:H:i:s',
+            'estado' => 'sometimes|required|string|in:activo,inactivo,pendiente,eliminado', // Agregado para manejar el estado del aula
         ]);
 
         try {
@@ -79,7 +82,8 @@ class AulaController extends Controller
                 'claveedificio',
                 'nombre',
                 'cantidadcomputadoras',
-                'horadisponible'
+                'horadisponible',
+                'estado'
             ]));
 
             return response()->json([

@@ -154,33 +154,33 @@ class AlumnoController extends Controller
 
     // 1. Ver horario del alumno
     public function getHorario($numeroControl)
-{
-    $result = DB::select("SELECT * FROM public.get_horario_alumno(?)", [$numeroControl]);
+    {
+        $result = DB::select("SELECT * FROM public.get_horario_alumno(?)", [$numeroControl]);
 
-    if (empty($result)) {
-        return response()->json([]);
+        if (empty($result)) {
+            return response()->json([]);
+        }
+
+        // Supongamos que la función devuelve un solo registro con un campo JSON en texto
+        $jsonString = $result[0]->get_horario_alumno ?? null;
+
+        if ($jsonString === null) {
+            return response()->json([]);
+        }
+
+        // Decodificar el JSON para obtener un array PHP
+        $horarioArray = json_decode($jsonString, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return response()->json([
+                'error' => 'Error al decodificar JSON del horario',
+                'message' => json_last_error_msg(),
+            ], 500);
+        }
+
+        // Retornar el JSON ya decodificado para mejor visualización
+        return response()->json($horarioArray);
     }
-
-    // Supongamos que la función devuelve un solo registro con un campo JSON en texto
-    $jsonString = $result[0]->get_horario_alumno ?? null;
-
-    if ($jsonString === null) {
-        return response()->json([]);
-    }
-
-    // Decodificar el JSON para obtener un array PHP
-    $horarioArray = json_decode($jsonString, true);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        return response()->json([
-            'error' => 'Error al decodificar JSON del horario',
-            'message' => json_last_error_msg(),
-        ], 500);
-    }
-
-    // Retornar el JSON ya decodificado para mejor visualización
-    return response()->json($horarioArray);
-}
 
 
     // 2. Registrar usuario y alumno
@@ -384,4 +384,64 @@ class AlumnoController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Bitácora registrada']);
     }
+    public function cerrarBitacora(Request $request)
+    {
+        $request->validate([
+            'id_bitacora_alumno' => 'required|integer'
+        ]);
+
+        $result = DB::select("SELECT * FROM close_bitacora_alumno(?)", [
+            $request->id_bitacora_alumno
+        ]);
+
+        if (empty($result)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cerrar la bitácora.'
+            ], 400);
+        }
+
+        $row = $result[0];
+
+        return response()->json([
+            'success' => $row->tiempo_uso !== null,
+            'message' => $row->mensaje,
+            'tiempo_uso' => $row->tiempo_uso ?? null
+        ]);
+    }
+
+    public function verBitacoraAlumno(Request $request)
+    {
+        $request->validate([
+            'numerocontrol' => 'required|integer'
+        ]);
+
+        $bitacora = DB::select("
+        SELECT 
+            id_bitacora_alumno,
+            numerocontrol,
+            numeroinventario,
+            hora_entrada,
+            hora_salida,
+            tiempo_uso
+        FROM bitacora_alumnos
+        WHERE numerocontrol = ?
+        ORDER BY hora_entrada DESC
+    ", [$request->numerocontrol]);
+
+        if (empty($bitacora)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron registros en la bitácora para este alumno.'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Bitácora encontrada.',
+            'data' => $bitacora
+        ]);
+    }
+
+
 }

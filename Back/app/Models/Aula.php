@@ -18,6 +18,7 @@ class Aula extends Model
         'nombre',
         'cantidadcomputadoras',
         'horadisponible',
+        'estado',
     ];
 
     public function edificio()
