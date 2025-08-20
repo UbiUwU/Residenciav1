@@ -2,177 +2,158 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asignatura;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 
 class AsignaturaController extends Controller
 {
+    // Listar todas las asignaturas
     public function index()
     {
-        // Obtener todas las asignaturas
-        $asignaturas = DB::select('SELECT * FROM get_all_asignaturas()');
-        return response()->json($asignaturas);
+        $asignaturas = Asignatura::with('carreras')->get();
+        return response()->json($asignaturas, 200);
     }
 
-    public function show($clave)
+    // Mostrar una asignatura específica
+    public function show($ClaveAsignatura)
     {
-        // Obtener una asignatura por clave
-        $asignatura = DB::select('SELECT * FROM get_asignatura_by_clave(CAST(? AS varchar))', [$clave]);
-
-        if (empty($asignatura)) {
+        $asignatura = Asignatura::with('carreras')->find($ClaveAsignatura);
+        if (!$asignatura) {
             return response()->json(['message' => 'Asignatura no encontrada'], 404);
         }
-
-        return response()->json($asignatura[0]);
+        return response()->json($asignatura, 200);
     }
 
-    public function getByClaveComplete($clave)
-    {
-        $asignatura = DB::select('SELECT * FROM get_asignatura_by_clave_complete(CAST(? AS varchar))', [$clave]);
-
-        if (empty($asignatura)) {
-            return response()->json(['message' => 'Asignatura no encontrada'], 404);
-        }
-
-        $json = $asignatura[0]->get_asignatura_by_clave_complete;
-        return response()->json(json_decode($json));
-    }
-
-    public function getByCarrera($claveCarrera)
-    {
-        // Obtener asignaturas por carrera
-        $asignaturas = DB::select('SELECT * FROM get_asignaturas_by_carrera(CAST(? AS varchar))', [$claveCarrera]);
-        return response()->json($asignaturas);
-    }
-
-    public function getByCarreraAndSemestre($claveCarrera, $semestre)
-    {
-        // Obtener asignaturas por carrera y semestre
-        $asignaturas = DB::select(
-            'SELECT * FROM get_asignaturas_by_carrera_and_semestre(CAST(? AS varchar), CAST(? AS smallint))',
-            [$claveCarrera, $semestre]
-        );
-        return response()->json($asignaturas);
-    }
-
+    // Crear una nueva asignatura
     public function store(Request $request)
     {
-        // Validar los datos de entrada
-        $validator = Validator::make($request->all(), [
-            'clave_asignatura' => 'required|string|max:50',
-            'clave_carrera' => 'required|string|max:20',
-            'nombre' => 'required|string|max:100',
-            'creditos' => 'required|integer',
-            'horas_teoricas' => 'required|integer',
-            'horas_practicas' => 'required|integer',
-            'semestre' => 'required|integer|min:1|max:12',
-            'posicion' => 'required|integer|min:1'
+        $request->validate([
+            'ClaveAsignatura' => 'required|string|max:20|unique:asignatura,ClaveAsignatura',
+            'NombreAsignatura' => 'required|string|max:100',
+            'Creditos' => 'required|integer|min:0',
+            'Satca_Practicas' => 'required|integer|min:0',
+            'Satca_Teoricas' => 'required|integer|min:0',
+            'Satca_Total' => 'required|integer|min:0',
+            'carreras' => 'nullable|array', // Arreglo de carreras
+            'carreras.*.clavecarrera' => 'required_with:carreras|string|exists:carreras,clavecarrera',
+            'carreras.*.Semestre' => 'required_with:carreras|integer|min:1',
+            'carreras.*.Posicion' => 'required_with:carreras|integer|min:1',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+        try {
+            $asignatura = DB::transaction(function () use ($request) {
+
+                // Crear la asignatura
+                $asignatura = Asignatura::create($request->only([
+                    'ClaveAsignatura',
+                    'NombreAsignatura',
+                    'Creditos',
+                    'Satca_Practicas',
+                    'Satca_Teoricas',
+                    'Satca_Total'
+                ]));
+
+                // Asociar carreras si se proporcionan
+                if ($request->has('carreras')) {
+                    $carrerasData = [];
+                    foreach ($request->carreras as $c) {
+                        $carrerasData[$c['clavecarrera']] = [
+                            'Semestre' => $c['Semestre'],
+                            'Posicion' => $c['Posicion']
+                        ];
+                    }
+                    $asignatura->carreras()->attach($carrerasData);
+                }
+
+                return $asignatura->load('carreras'); // Cargar relaciones
+            });
+
+            return response()->json([
+                'message' => 'Asignatura creada exitosamente',
+                'asignatura' => $asignatura
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al crear la asignatura',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        // Insertar nueva asignatura
-        $result = DB::select(
-            'SELECT insert_asignatura_carrera(CAST(? AS varchar), CAST(? AS varchar), CAST(? AS varchar), 
-            CAST(? AS integer), CAST(? AS integer), CAST(? AS integer), CAST(? AS smallint), CAST(? AS smallint)) AS result',
-            [
-                $request->clave_asignatura,
-                $request->clave_carrera,
-                $request->nombre,
-                $request->creditos,
-                $request->horas_teoricas,
-                $request->horas_practicas,
-                $request->semestre,
-                $request->posicion
-            ]
-        );
-
-        return response()->json(['message' => $result[0]->result], 201);
     }
 
-    public function update(Request $request, $clave)
+
+    public function update(Request $request, $ClaveAsignatura)
     {
-        // Validar los datos de entrada
-        $validator = Validator::make($request->all(), [
-            'clave_carrera' => 'required|string|max:20',
-            'nombre' => 'required|string|max:100',
-            'creditos' => 'required|integer',
-            'horas_teoricas' => 'required|integer',
-            'horas_practicas' => 'required|integer',
-            'semestre' => 'required|integer|min:1|max:12',
-            'posicion' => 'required|integer|min:1'
+        $asignatura = Asignatura::find($ClaveAsignatura);
+        if (!$asignatura) {
+            return response()->json(['message' => 'Asignatura no encontrada'], 404);
+        }
+
+        $request->validate([
+            'NombreAsignatura' => 'sometimes|required|string|max:100',
+            'Creditos' => 'sometimes|required|integer|min:0',
+            'Satca_Practicas' => 'sometimes|required|integer|min:0',
+            'Satca_Teoricas' => 'sometimes|required|integer|min:0',
+            'Satca_Total' => 'sometimes|required|integer|min:0',
+            'carreras' => 'nullable|array',
+            'carreras.*.clavecarrera' => 'required_with:carreras|string|exists:carreras,clavecarrera',
+            'carreras.*.Semestre' => 'required_with:carreras|integer|min:1',
+            'carreras.*.Posicion' => 'required_with:carreras|integer|min:1',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+        try {
+            $updatedAsignatura = DB::transaction(function () use ($asignatura, $request) {
+
+                // Actualizar datos de la asignatura
+                $asignatura->update($request->only([
+                    'NombreAsignatura',
+                    'Creditos',
+                    'Satca_Practicas',
+                    'Satca_Teoricas',
+                    'Satca_Total'
+                ]));
+
+                // Sincronizar carreras si se proporcionan
+                if ($request->has('carreras')) {
+                    $carrerasData = [];
+                    foreach ($request->carreras as $c) {
+                        $carrerasData[$c['clavecarrera']] = [
+                            'Semestre' => $c['Semestre'],
+                            'Posicion' => $c['Posicion']
+                        ];
+                    }
+                    $asignatura->carreras()->sync($carrerasData); // Reemplaza las anteriores
+                }
+
+                return $asignatura->load('carreras'); // Cargar relaciones actualizadas
+            });
+
+            return response()->json([
+                'message' => 'Asignatura actualizada exitosamente',
+                'asignatura' => $updatedAsignatura
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al actualizar la asignatura', 'error' => $e->getMessage()], 400);
         }
-
-        // Actualizar asignatura
-        $result = DB::select(
-            'SELECT update_asignatura_carrera(CAST(? AS varchar), CAST(? AS varchar), CAST(? AS varchar), 
-            CAST(? AS integer), CAST(? AS integer), CAST(? AS integer), CAST(? AS smallint), CAST(? AS smallint)) AS result',
-            [
-                $clave,
-                $request->clave_carrera,
-                $request->nombre,
-                $request->creditos,
-                $request->horas_teoricas,
-                $request->horas_practicas,
-                $request->semestre,
-                $request->posicion
-            ]
-        );
-
-        return response()->json(['message' => $result[0]->result]);
     }
 
-    public function destroy($clave)
+
+    // Eliminar una asignatura
+    public function destroy($ClaveAsignatura)
     {
-        // Eliminar asignatura
-        $result = DB::select('SELECT delete_asignatura(CAST(? AS varchar)) AS result', [$clave]);
-
-        if (strpos($result[0]->result, 'Error') !== false) {
-            return response()->json(['message' => $result[0]->result], 404);
+        $asignatura = Asignatura::find($ClaveAsignatura);
+        if (!$asignatura) {
+            return response()->json(['message' => 'Asignatura no encontrada'], 404);
         }
 
-        return response()->json(['message' => $result[0]->result]);
-    }
-    
-    public function getByTarjetaComplete($clave)
-    {
-        // Validar que la tarjeta sea un número positivo
-        if (!is_numeric($clave) || $clave <= 0) {
-            return response()->json(['message' => 'Tarjeta inválida'], 400);
+        try {
+            $asignatura->delete();
+            return response()->json(['message' => 'Asignatura eliminada exitosamente'], 200);
+        } catch (QueryException $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
         }
-
-        // Obtener todas las asignaturas completas asociadas a la tarjeta (maestro)
-        $asignaturas = DB::select('SELECT * FROM get_asignaturas_by_tarjeta_complete(CAST(? AS bigint))', [$clave]);
-
-        if (empty($asignaturas)) {
-            return response()->json(['message' => 'No se encontraron asignaturas para esta tarjeta'], 404);
-        }
-
-        $json = $asignaturas[0]->get_asignaturas_by_tarjeta_complete;
-        return response()->json(json_decode($json));
-    }
-    public function getDetalleGruposByTarjeta($clave)
-    {
-        // Validar que la tarjeta sea un número positivo
-        if (!is_numeric($clave) || $clave <= 0) {
-            return response()->json(['message' => 'Tarjeta inválida'], 400);
-        }
-
-        // Ejecutar la función PostgreSQL
-        $detalles = DB::select('SELECT * FROM get_Detalle_Grupos__Para_Calificaciones_By_Tarjeta(CAST(? AS bigint))', [$clave]);
-
-        if (empty($detalles)) {
-            return response()->json(['message' => 'No se encontraron datos para esta tarjeta'], 404);
-        }
-
-        $json = $detalles[0]->get_detalle_grupos__para_calificaciones_by_tarjeta;
-        return response()->json(json_decode($json));
     }
 }

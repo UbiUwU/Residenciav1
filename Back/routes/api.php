@@ -22,6 +22,7 @@ use App\Http\Controllers\DisenoController;
 use App\Http\Controllers\AvanceController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\HorarioAsignaturaMaestroController;
 
 //Route::get('avance', [AvanceController::class, 'obtenerAvancesCompletos']);
 Route::post('/avance', [AvanceController::class, 'crear']);
@@ -70,12 +71,13 @@ Route::prefix('computadoras')->group(function () {
 });
 
 Route::prefix('grupos')->group(function () {
-    Route::get('/', [GrupoController::class, 'index']);
-    Route::get('/{clave_grupo}', [GrupoController::class, 'show']);
-    Route::post('/', [GrupoController::class, 'store']);
-    Route::put('/{clave_grupo}', [GrupoController::class, 'update']);
-    Route::delete('/{clave_grupo}', [GrupoController::class, 'destroy']);
+    Route::get('/', [GrupoController::class, 'index']);          // Listar todos
+    Route::get('/{clavegrupo}', [GrupoController::class, 'show']); // Mostrar uno
+    Route::post('/', [GrupoController::class, 'store']);         // Crear
+    Route::put('/{clavegrupo}', [GrupoController::class, 'update']); // Actualizar
+    Route::delete('/{clavegrupo}', [GrupoController::class, 'destroy']); // Eliminar
 });
+
 
 
 Route::prefix('horarios')->group(function () {
@@ -88,11 +90,12 @@ Route::prefix('horarios')->group(function () {
 
     //Rutas para los datos generales de la materia
 Route::prefix('asignaturas')->group(function () {
-    Route::get('/', [AsignaturaController::class, 'index']);
-    Route::post('/', [AsignaturaController::class, 'store']);
-    Route::get('/{clave}', [AsignaturaController::class, 'show']);
-    Route::put('/{clave}', [AsignaturaController::class, 'update']);
-    Route::delete('/{clave}', [AsignaturaController::class, 'destroy']);
+    Route::get('/', [AsignaturaController::class, 'index']);               // Listar todas
+    Route::get('/{ClaveAsignatura}', [AsignaturaController::class, 'show']); // Mostrar 1
+    Route::post('/', [AsignaturaController::class, 'store']);              // Crear nueva
+    Route::put('/{ClaveAsignatura}', [AsignaturaController::class, 'update']); // Actualizar
+    Route::delete('/{ClaveAsignatura}', [AsignaturaController::class, 'destroy']); // Eliminar
+
     Route::get('/maestro/{clave}', [AsignaturaController::class, 'getByTarjetaComplete']);
     Route::get('/grupos/{clave}', [AsignaturaController::class, 'getDetalleGruposByTarjeta']);
     Route::get('/complete/{clave}', [AsignaturaController::class, 'getByClaveComplete']);
@@ -225,6 +228,25 @@ Route::prefix('tipoevento')->group(function () {
     Route::put('/{clave}', [TipoEventoController::class, 'update']);
     Route::delete('/{clave}', [TipoEventoController::class, 'destroy']);
 });
+
+Route::prefix('carreras')->group(function () {
+    Route::get('/', [CarreraController::class, 'index']);          // Listar todas
+    Route::get('/{clavecarrera}', [CarreraController::class, 'show']); // Mostrar una
+    Route::post('/', [CarreraController::class, 'store']);         // Crear
+    Route::put('/{clavecarrera}', [CarreraController::class, 'update']); // Actualizar
+    Route::delete('/{clavecarrera}', [CarreraController::class, 'destroy']); // Eliminar
+});
+
+
+Route::prefix('horario')->group(function () {
+    Route::get('/', [HorarioAsignaturaMaestroController::class, 'index']);           // Listar todos los horarios
+    Route::get('/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'show']); // Mostrar un horario
+    Route::post('/', [HorarioAsignaturaMaestroController::class, 'store']);          // Crear nuevo horario
+    Route::put('/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'update']); // Actualizar horario
+    Route::delete('/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'destroy']); // Eliminar horario
+});
+
+
 
 
 //Esta zona es de la zona movil.
