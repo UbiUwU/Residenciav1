@@ -1,86 +1,76 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\Presentacion;
+use App\Models\Asignatura;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PresentacionController extends Controller
 {
-    public function store(Request $request)
+    // Crear/Actualizar toda la presentación de una asignatura
+    public function store(Request $request, $claveAsignatura)
     {
         $request->validate([
-            'clave_asignatura' => 'required|string',
-            'caracterizacion' => 'required|string|max:255',
-            'intencion_didactica' => 'required|string|max:255',
+            'caracterizacion' => 'required|array',
+            'caracterizacion.*.punto' => 'required|string',
+            'intencion' => 'required|array',
+            'intencion.*.tema' => 'required|string',
+            'intencion.*.descripcion' => 'required|string'
         ]);
 
-        try {
-            $id = DB::selectOne('SELECT crear_presentacion(?, ?, ?) AS id', [
-                $request->clave_asignatura,
-                $request->caracterizacion,
-                $request->intencion_didactica
+        // Verificar que la asignatura existe
+        $asignatura = Asignatura::findOrFail($claveAsignatura);
+
+        // Usar transacción para garantizar integridad
+        return DB::transaction(function () use ($asignatura, $request) {
+            
+            // Crear o encontrar la presentación principal
+            $presentacion = Presentacion::firstOrCreate([
+                'Clave_Asignatura' => $asignatura->ClaveAsignatura
             ]);
 
+            // Sincronizar caracterizaciones
+            $presentacion->caracterizaciones()->delete();
+            foreach ($request->caracterizacion as $index => $item) {
+                $presentacion->caracterizaciones()->create([
+                    'Orden' => $index + 1,
+                    'Punto' => $item['punto']
+                ]);
+            }
+
+            // Sincronizar intenciones
+            $presentacion->intenciones()->delete();
+            foreach ($request->intencion as $index => $item) {
+                $presentacion->intenciones()->create([
+                    'Orden' => $index + 1,
+                    'Tema' => $item['tema'],
+                    'Descripcion' => $item['descripcion']
+                ]);
+            }
+
             return response()->json([
-                'success' => true,
-                'id_presentacion' => $id->id
+                'message' => 'Presentación guardada exitosamente',
+                'data' => $presentacion->load(['caracterizaciones', 'intenciones'])
             ], 201);
-
-        } catch (\Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 400);
-        }
+        });
     }
 
-    public function update(Request $request, $id)
+    // Obtener la presentación completa de una asignatura
+    public function show($claveAsignatura)
     {
-        $request->validate([
-            'clave_asignatura' => 'required|string',
-            'caracterizacion' => 'required|string|max:255',
-            'intencion_didactica' => 'required|string|max:255',
-        ]);
+        $presentacion = Presentacion::with([
+                'caracterizaciones' => function($query) {
+                    $query->orderBy('Orden');
+                },
+                'intenciones' => function($query) {
+                    $query->orderBy('Orden');
+                }
+            ])
+            ->where('Clave_Asignatura', $claveAsignatura)
+            ->firstOrFail();
 
-        try {
-            $result = DB::selectOne('SELECT actualizar_presentacion(?, ?, ?, ?) AS actualizado', [
-                $id,
-                $request->clave_asignatura,
-                $request->caracterizacion,
-                $request->intencion_didactica
-            ]);
-
-            if ($result->actualizado) {
-                return response()->json(['success' => true], 200);
-            } else {
-                return response()->json(['success' => false, 'error' => 'No se encontró la presentación.'], 404);
-            }
-
-        } catch (\Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 400);
-        }
-    }
-
-    public function destroy($id)
-    {
-        try {
-            $result = DB::selectOne('SELECT eliminar_presentacion(?) AS eliminado', [$id]);
-
-            if ($result->eliminado) {
-                return response()->json(['success' => true], 200);
-            } else {
-                return response()->json(['success' => false, 'error' => 'No se encontró la presentación.'], 404);
-            }
-
-        } catch (\Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage()
-            ], 400);
-        }
+        return response()->json($presentacion);
     }
 }

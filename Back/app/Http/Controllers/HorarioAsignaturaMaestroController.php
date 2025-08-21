@@ -13,7 +13,9 @@ class HorarioAsignaturaMaestroController extends Controller
     public function index()
     {
         $horarios = HorarioAsignaturaMaestro::with([
-            'maestro.usuario.rol',
+            'maestro' => function ($query) {
+                $query->soloNombre();
+            },
             'aula',
             'grupo',
             'asignatura',
@@ -27,7 +29,7 @@ class HorarioAsignaturaMaestroController extends Controller
     public function show($clavehorario)
     {
         $horario = HorarioAsignaturaMaestro::with([
-            'maestro.usuario.rol',
+            'maestro',
             'aula',
             'grupo',
             'asignatura',

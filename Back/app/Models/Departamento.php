@@ -14,4 +14,9 @@ class Departamento extends Model
         'nombre',
         'abreviacion',
     ];
+
+    public function scopeInfoBasicaDepartamento($query)
+    {
+        return $query->select('id_departamento', 'nombre');
+    }
 }

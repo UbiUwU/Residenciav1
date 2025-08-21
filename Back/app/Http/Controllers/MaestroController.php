@@ -18,6 +18,12 @@ class MaestroController extends Controller
         }
         return response()->json($maestros, 200);
     }
+    public function indexL()
+    {
+        $maestros = Maestro::InfoBasicaMaestros()->get();
+
+        return response()->json($maestros);
+    }
 
     public function show($tarjeta)
     {
@@ -28,7 +34,6 @@ class MaestroController extends Controller
 
         return response()->json($maestro, 200);
     }
-
 
 
     public function store(Request $request)
