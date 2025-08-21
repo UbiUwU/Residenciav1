@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Asignatura extends Model
 {
@@ -32,4 +33,22 @@ class Asignatura extends Model
             'clavecarrera'
         )->withPivot('Semestre', 'Posicion');
     }
+
+    public function presentacion(): HasOne
+    {
+        return $this->hasOne(Presentacion::class, 'Clave_Asignatura', 'ClaveAsignatura')
+            ->with(['caracterizaciones' => function($query) {
+                $query->orderBy('Orden');
+            }, 'intenciones' => function($query) {
+                $query->orderBy('Orden');
+            }]);
+    }
+
+    public function temasConSubtemas()
+{
+    return $this->hasMany(Tema::class, 'Clave_Asignatura', 'ClaveAsignatura')
+                ->with('subtemasRecursivos');
+}
+
+
 }

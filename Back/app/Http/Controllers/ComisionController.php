@@ -13,7 +13,16 @@ class ComisionController extends Controller
     // Listar todas las comisiones con relaciones
     public function index()
     {
-        $comisiones = Comision::with(['tipoEvento', 'periodoEscolar', 'fechas', 'maestros'])
+        $comisiones = Comision::with([
+            'maestros' => function ($query) {
+                $query->soloNombre();
+            },
+            'periodoEscolar' => function ($query) {
+                $query->periodos(); 
+            },
+            'tipoEvento',
+            'fechas'
+        ])
             ->orderBy('id_comision', 'desc')
             ->get();
 

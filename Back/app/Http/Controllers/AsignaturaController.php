@@ -12,14 +12,14 @@ class AsignaturaController extends Controller
     // Listar todas las asignaturas
     public function index()
     {
-        $asignaturas = Asignatura::with('carreras')->get();
+        $asignaturas = Asignatura::with('carreras','presentacion')->get();
         return response()->json($asignaturas, 200);
     }
 
     // Mostrar una asignatura específica
     public function show($ClaveAsignatura)
     {
-        $asignatura = Asignatura::with('carreras')->find($ClaveAsignatura);
+        $asignatura = Asignatura::with('carreras', 'presentacion', 'temasConSubtemas')->find($ClaveAsignatura);
         if (!$asignatura) {
             return response()->json(['message' => 'Asignatura no encontrada'], 404);
         }

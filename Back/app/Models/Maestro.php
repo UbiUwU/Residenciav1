@@ -43,17 +43,21 @@ class Maestro extends Model
     {
         return $this->belongsTo(Departamento::class, 'id_departamento', 'id_departamento');
     }
+    public function scopeSoloNombre($query)
+    {
+        return $query->select('tarjeta', 'nombre', 'apellidopaterno', 'apellidomaterno');
+    }
 
-    // Si tienes el modelo Comision, puedes habilitar esta relación:
-    // public function comisiones()
-    // {
-    //     return $this->belongsToMany(
-    //         Comision::class,
-    //         'comision_maestro',
-    //         'tarjeta_maestro',   // FK en la pivote hacia maestro
-    //         'id_comision',       // FK en la pivote hacia comision
-    //         'tarjeta',           // local key maestro
-    //         'id_comision'        // local key comision
-    //     );
-    // }
+    // En tu modelo Maestro
+    public function scopeInfoBasicaMaestros($query)
+    {
+        return $query->select(
+            'maestros.tarjeta',
+            'maestros.nombre',
+            'maestros.apellidopaterno',
+            'maestros.apellidomaterno',
+            'departamentos.id_departamento',
+            'departamentos.nombre as departamento_nombre'
+        )->leftJoin('departamentos', 'maestros.id_departamento', '=', 'departamentos.id_departamento');
+    }
 }

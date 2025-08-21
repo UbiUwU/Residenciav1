@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\CatalogoTiposFechaController;
 use App\Http\Controllers\ComisionController;
 use App\Http\Controllers\CompetenciaController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\EdificioController;
+use App\Http\Controllers\FechasClavePeriodoController;
 use App\Http\Controllers\PracticaController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\TipoEventoController;
@@ -23,21 +25,50 @@ use App\Http\Controllers\AvanceController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\HorarioAsignaturaMaestroController;
+use App\Http\Controllers\AvanceDetalleController;
+use App\Http\Controllers\AvanceDetalleFechaController;
+use App\Http\Controllers\AvanceFechaController;
 
 
 // routes/api.php
 Route::get('/enum/{tipo}', [App\Http\Controllers\EnumController::class, 'getValores']);
 
 
-//Route::get('avance', [AvanceController::class, 'obtenerAvancesCompletos']);
-Route::post('/avance', [AvanceController::class, 'crear']);
-Route::put('/avance/{id}', [AvanceController::class, 'actualizarAvance']);
-Route::get('/avance', [AvanceController::class, 'obtenerTodosLosAvances']);
-Route::get('/avance/{tarjeta}', [AvanceController::class, 'obtenerAvancesPorTarjeta']);
+Route::prefix('avance')->group(function () {
+    Route::get('/', [AvanceController::class, 'index']); // Listar todos
+    Route::post('/', [AvanceController::class, 'store']); // Crear nuevo
+    Route::get('/{id}', [AvanceController::class, 'show']); // Mostrar uno
+    Route::put('/{id}', [AvanceController::class, 'update']); // Actualizar
+    Route::delete('/{id}', [AvanceController::class, 'destroy']); // Eliminar
+});
 
+Route::prefix('avancedetalles')->group(function () {
+    Route::get('/', [AvanceDetalleController::class, 'index']); // Listar todos
+    Route::post('/', [AvanceDetalleController::class, 'store']); // Crear nuevo
+    Route::get('/{id}', [AvanceDetalleController::class, 'show']); // Mostrar uno
+    Route::put('/{id}', [AvanceDetalleController::class, 'update']); // Actualizar
+    Route::delete('/{id}', [AvanceDetalleController::class, 'destroy']); // Eliminar
+});
+
+Route::prefix('avancedetallefechas')->group(function () {
+    Route::get('/', [AvanceDetalleFechaController::class, 'index']); // Listar todos
+    Route::post('/', [AvanceDetalleFechaController::class, 'store']); // Crear nuevo
+    Route::get('/{id}', [AvanceDetalleFechaController::class, 'show']); // Mostrar uno
+    Route::put('/{id}', [AvanceDetalleFechaController::class, 'update']); // Actualizar
+    Route::delete('/{id}', [AvanceDetalleFechaController::class, 'destroy']); // Eliminar
+});
+
+Route::prefix('avancefechas')->group(function () {
+    Route::get('/', [AvanceFechaController::class, 'index']); // Listar todos
+    Route::post('/', [AvanceFechaController::class, 'store']); // Crear nuevo
+    Route::get('/{id}', [AvanceFechaController::class, 'show']); // Mostrar uno
+    Route::put('/{id}', [AvanceFechaController::class, 'update']); // Actualizar
+    Route::delete('/{id}', [AvanceFechaController::class, 'destroy']); // Eliminar
+});
 
 Route::prefix('maestros')->group(function () {
     Route::get('/', [MaestroController::class, 'index']); // Listar todos
+    Route::get('/clean', [MaestroController::class, 'indexL']); // Listar maestros con info básica
     Route::post('/', [MaestroController::class, 'store']); // Crear nuevo
     Route::get('/{id}', [MaestroController::class, 'show']); // Mostrar uno
     Route::put('/{id}', [MaestroController::class, 'update']); // Actualizar
@@ -62,6 +93,8 @@ Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
 Route::prefix('periodos')->group(function () {
     Route::post('/', [PeriodoEscolarController::class, 'store']);
     Route::get('/', [PeriodoEscolarController::class, 'index']);
+    Route::get('/clean', [PeriodoEscolarController::class, 'indexL']);
+    Route::get('/cleanfc', [PeriodoEscolarController::class, 'indexLFC']);
     Route::get('/{id}', [PeriodoEscolarController::class, 'show']);
     Route::put('/{id}', [PeriodoEscolarController::class, 'update']);
     Route::delete('/{id}', [PeriodoEscolarController::class, 'destroy']);
@@ -110,6 +143,8 @@ Route::prefix('asignaturas')->group(function () {
 });
 
 Route::prefix('presentacion')->group(function () {
+    Route::get('/', [PresentacionController::class, 'index']);
+    Route::get('/{claveAsignatura}', [PresentacionController::class, 'show']);
     Route::post('/', [PresentacionController::class, 'store']);
     Route::put('/{id}', [PresentacionController::class, 'update']);
     Route::delete('/{id}', [PresentacionController::class, 'destroy']);
@@ -253,6 +288,21 @@ Route::prefix('horario')->group(function () {
 
 
 
+Route::prefix('fechasclave')->group(function () {
+    Route::get('/', [FechasClavePeriodoController::class, 'index']);           // Listar todos los horarios
+    Route::get('/{clavehorario}', [FechasClavePeriodoController::class, 'show']); // Mostrar un horario
+    Route::post('/', [FechasClavePeriodoController::class, 'store']);          // Crear nuevo horario
+    Route::put('/{clavehorario}', [FechasClavePeriodoController::class, 'update']); // Actualizar horario
+    Route::delete('/{clavehorario}', [FechasClavePeriodoController::class, 'destroy']); // Eliminar horario
+});
+
+Route::prefix('catalogofecha')->group(function () {
+    Route::get('/', [CatalogoTiposFechaController::class, 'index']);           // Listar todos los horarios
+    Route::get('/{clavehorario}', [CatalogoTiposFechaController::class, 'show']); // Mostrar un horario
+    Route::post('/', [CatalogoTiposFechaController::class, 'store']);          // Crear nuevo horario
+    Route::put('/{clavehorario}', [CatalogoTiposFechaController::class, 'update']); // Actualizar horario
+    Route::delete('/{clavehorario}', [CatalogoTiposFechaController::class, 'destroy']); // Eliminar horario
+});
 
 //Esta zona es de la zona movil.
 use App\Http\Controllers\Api\MaestroMController;
