@@ -219,4 +219,19 @@ export default {
   actualizarAvance(id, data) {
     return apiClient.put(`/avance/${id}`, data)
   },
+
+  //Eventos
+  getevento(){
+    return apiClient.get(`/tipoevento`)
+  },
+
+  //Periodos
+  getPeriodo(){
+    return apiClient.get(`/periodos`)
+  },
+
+  getEstado(){
+    return apiClient.get(`/enum/origen_enum`)
+  },
+
 }

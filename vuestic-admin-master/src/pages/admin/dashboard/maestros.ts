@@ -21,7 +21,7 @@ export function useMaestrosConAsignaturas() {
 
     try {
       const response = await apiClient.getMaestros()
-      const maestrosRaw = response.data.data as any[]
+      const maestrosRaw = response.data as any[]
 
       const maestrosFiltrados: Maestro[] = []
 

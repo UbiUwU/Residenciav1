@@ -22,7 +22,14 @@
           <VaInput v-model="form.motivo" label="Motivo" type="textarea" required />
 
           <!-- Tipo de Comisión -->
-          <VaInput v-model="form.tipoComision" label="Tipo de Comisión" required />
+          <VaSelect 
+            v-model="form.tipoComision"
+            :options="origenOptions"
+            label="Tipo de Comisión"
+            required
+            :track-by="'value'" 
+            :value-by="'value'"
+          />
 
           <!-- Permiso de la Constancia -->
           <div class="col-span-1 md:col-span-2">
@@ -34,35 +41,31 @@
           <VaInput v-model="form.nombreEvento" label="Nombre del Evento" required />
 
           <!-- Tipo de Evento -->
-         <VaSelect
+          <VaSelect
             v-model="form.idTipoEvento"
-            :options="tipoEventoOptions"
+            :options="eventoOptions"
             label="Tipo de Evento"
             required
             searchable
             allow-create
-            @create-new="addTipoEvento"
+            :get-option-value="(option: { text: string; value: number }) => option.value"
           />
 
-          <!-- Periodo Escolar -->
           <VaSelect
             v-model="form.idPeriodoEscolar"
             :options="periodoOptions"
             label="Periodo Escolar"
             required
+            :get-option-value="(option: { text: string; value: number }) => option.value"
           />
 
           <!-- Estado -->
-          <VaSelect v-model="form.estado" :options="statusOptions" label="Estado" required />
+          <VaInput v-model="form.estado" label="Estado" disabled />
 
           <!-- Fechas de la Comisión -->
           <div class="col-span-1 md:col-span-2">
             <h3 class="font-medium mb-2">Fechas de la Comisión</h3>
-            <div
-              v-for="(fecha, index) in form.fechas"
-              :key="index"
-              class="border p-3 rounded mb-2"
-            >
+            <div v-for="(fecha, index) in form.fechas" :key="index" class="border p-3 rounded mb-2">
               <VaInput v-model="fecha.fecha" type="date" label="Fecha" required />
               <VaInput v-model="fecha.horaInicio" type="time" label="Hora Inicio" required />
               <VaInput v-model="fecha.horaFin" type="time" label="Hora Fin" required />
@@ -100,12 +103,41 @@ import { useToast } from 'vuestic-ui'
 import api from '../../../services/api'
 
 const maestros = ref<any[]>([])
+const evento = ref<any[]>([])
+const periodo = ref<any[]>([])
+const origen = ref<any[]>([])
 const comisiones = ref<any[]>([])
 const error = ref<Error | null>(null)
+const { init } = useToast()
+
 
 const fetchMaestros = async () => {
   try {
-    maestros.value = (await api.getMaestros()).data.data
+    maestros.value = (await api.getMaestros()).data
+  } catch (err) {
+    error.value = err as Error
+  }
+}
+
+const fetchEventos = async () => {
+  try{
+    evento.value = (await api.getevento()).data
+  }catch (err){
+    error.value = err as Error
+  }
+}
+
+const fetchPeriodos = async () => {
+  try {
+    periodo.value = (await api.getPeriodo()).data
+  } catch (err) {
+    error.value = err as Error
+  }
+}
+
+const fetchOrigen = async () => {
+  try {
+    origen.value = (await api.getEstado()).data.valores
   } catch (err) {
     error.value = err as Error
   }
@@ -121,6 +153,9 @@ const fetchComisiones = async () => {
 
 onMounted(() => {
   fetchMaestros()
+  fetchEventos()
+  fetchPeriodos()
+  fetchOrigen()
   fetchComisiones()
 })
 
@@ -131,76 +166,73 @@ const maestroOptions = computed(() =>
   }))
 )
 
-const { init } = useToast()
+const eventoOptions = computed(() =>
+  evento.value.map((e) => ({
+    text: `${e.nombre}`,
+    value: e.id_tipo_evento,
+  }))
+)
 
-// ---- FORM DATA ----
-interface FechaData {
-  fecha: string
-  horaInicio: string
-  horaFin: string
-  duracion: string
-  observaciones: string
-}
+const periodoOptions = computed(() =>
+  periodo.value.map((p) => ({
+    text: `${p.codigoperiodo}`,
+    value: p.id_periodo_escolar,
+  }))
+)
 
-interface FormData {
-  folio: string
-  remitenteNombre: string
-  remitentePuesto: string
-  lugar: string
-  motivo: string
-  tipoComision: string
-  permisoConstancia: boolean
-  nombreEvento: string
-  idTipoEvento: number | null
-  idPeriodoEscolar: number | null
-  estado: string
-  fechas: FechaData[]
-  selectedMaestro: any[]
-}
+const origenOptions = computed(() =>
+  origen.value.map((v: string) => ({
+    text: v,
+    value: v,
+  }))
+)
 
-const form = ref<FormData>({
-  folio: '',
-  remitenteNombre: '',
-  remitentePuesto: '',
-  lugar: '',
-  motivo: '',
-  tipoComision: '',
-  permisoConstancia: false,
-  nombreEvento: '',
-  idTipoEvento: null,
-  idPeriodoEscolar: null,
-  estado: 'pendiente',
-  fechas: [
-    { fecha: '', horaInicio: '', horaFin: '', duracion: '', observaciones: '' },
-  ],
-  selectedMaestro: [],
-})
 
-// ---- OPTIONS ----
-const tipoEventoOptions = ref([
-  { text: 'Académico', value: 1 },
-  { text: 'Administrativo', value: 2 },
-])
+  // ---- FORM DATA ----
+  interface FechaData {
+    fecha: string
+    horaInicio: string
+    horaFin: string
+    duracion: string
+    observaciones: string
+  }
 
-const addTipoEvento = (newOption: string) => {
-  // Aquí generas un ID temporal (o pides al backend que lo cree)
-  const newId = tipoEventoOptions.value.length + 1
-  const option = { text: newOption, value: newId }
-  tipoEventoOptions.value.push(option)
-  form.value.idTipoEvento = newId
-}
+  interface FormData {
+    folio: string
+    remitenteNombre: string
+    remitentePuesto: string
+    lugar: string
+    motivo: string
+    tipoComision: string
+    permisoConstancia: boolean
+    nombreEvento: string
+    idTipoEvento: number | null
+    idPeriodoEscolar: number | null
+    estado: string
+    fechas: FechaData[]
+    selectedMaestro: any[]
+  }
 
-const periodoOptions = [
-  { text: '2025-1', value: 1 },
-  { text: '2025-2', value: 2 },
-]
 
-const statusOptions = [
-  { text: 'Pendiente', value: 'pendiente' },
-  { text: 'Completado', value: 'completado' },
-]
+  const form = ref<FormData>({
+    folio: '',
+    remitenteNombre: '',
+    remitentePuesto: '',
+    lugar: '',
+    motivo: '',
+    tipoComision: '',
+    permisoConstancia: false,
+    nombreEvento: '',
+    idTipoEvento: null,
+    idPeriodoEscolar: null,
+    estado: 'pendiente',
+    fechas: [
+      { fecha: '', horaInicio: '', horaFin: '', duracion: '', observaciones: '' },
+    ],
+    selectedMaestro: [],
+  })
 
-// ---- METHODS ----
+  // ---- METHODS ----
 const addFecha = () => {
   form.value.fechas.push({
     fecha: '',
@@ -216,14 +248,14 @@ const submitForm = async () => {
     const payload = {
       folio: form.value.folio,
       nombre_evento: form.value.nombreEvento,
-      id_tipo_evento: form.value.idTipoEvento,
-      id_periodo_escolar: form.value.idPeriodoEscolar,
+      id_tipo_evento: (form.value.idTipoEvento as any)?.value ?? form.value.idTipoEvento,
+      id_periodo_escolar: (form.value.idPeriodoEscolar as any)?.value ?? form.value.idPeriodoEscolar,
       estado: form.value.estado,
       remitente_nombre: form.value.remitenteNombre,
       remitente_puesto: form.value.remitentePuesto,
       lugar: form.value.lugar,
       motivo: form.value.motivo,
-      tipo_comision: form.value.tipoComision,
+      tipo_comision: (form.value.tipoComision as any)?.value ?? form.value.tipoComision,
       permiso_constancia: form.value.permisoConstancia,
       fechas: form.value.fechas.map((f) => ({
         fecha: f.fecha,
@@ -232,10 +264,9 @@ const submitForm = async () => {
         duracion: f.duracion,
         observaciones: f.observaciones,
       })),
-      maestros: form.value.selectedMaestro.map((m) =>
-        typeof m === 'string' ? m : m.value
-      ),
-    }
+      maestros: form.value.selectedMaestro.map((m) => typeof m === 'string' ? m : m.value),
+}
+    console.log('Payload a enviar:', payload)
 
     await api.crearComision(payload)
     init({ message: 'Comisión registrada exitosamente.', color: 'success' })
@@ -260,9 +291,7 @@ const resetForm = () => {
     idTipoEvento: null,
     idPeriodoEscolar: null,
     estado: 'pendiente',
-    fechas: [
-      { fecha: '', horaInicio: '', horaFin: '', duracion: '', observaciones: '' },
-    ],
+    fechas: [{ fecha: '', horaInicio: '', horaFin: '', duracion: '', observaciones: '' },],
     selectedMaestro: [],
   }
 }
