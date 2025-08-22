@@ -60,4 +60,8 @@ class Maestro extends Model
             'departamentos.nombre as departamento_nombre'
         )->leftJoin('departamentos', 'maestros.id_departamento', '=', 'departamentos.id_departamento');
     }
+    public function reportesFinales()
+    {
+        return $this->hasMany(ReporteFinal::class, 'tarjeta_profesor', 'tarjeta');
+    }
 }

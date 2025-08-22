@@ -6,7 +6,7 @@ use App\Models\HorarioAsignaturaMaestro;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Validator;
 class HorarioAsignaturaMaestroController extends Controller
 {
     // Listar todos los horarios
@@ -41,6 +41,113 @@ class HorarioAsignaturaMaestroController extends Controller
         }
 
         return response()->json($horario, 200);
+    }
+
+    public function indexByPeriodoAndMaestro($idperiodoescolar, $tarjeta)
+    {
+        // Validar los parámetros
+        $validator = Validator::make(
+            ['idperiodoescolar' => $idperiodoescolar, 'tarjeta' => $tarjeta],
+            [
+                'idperiodoescolar' => 'required|integer|exists:periodo_escolar,id_periodo_escolar',
+                'tarjeta' => 'required|string|exists:maestros,tarjeta'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parámetros inválidos',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $horarios = HorarioAsignaturaMaestro::with([
+            'aula',
+            'grupo',
+            'asignatura'
+        ])
+            ->where('idperiodoescolar', $idperiodoescolar)
+            ->where('tarjeta', $tarjeta)
+            ->orderBy('claveasignatura')
+            ->get();
+
+        if ($horarios->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'No se encontraron horarios para el maestro en el período especificado',
+                'data' => [],
+                'count' => 0
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $horarios,
+            'count' => $horarios->count()
+        ], 200);
+    }
+
+    public function indexByPeriodoAndCarrera($idperiodoescolar, $clavecarrera)
+    {
+        // Validar los parámetros
+        $validator = Validator::make(
+            [
+                'idperiodoescolar' => $idperiodoescolar,
+                'clavecarrera' => $clavecarrera
+            ],
+            [
+                'idperiodoescolar' => 'required|integer|exists:periodo_escolar,id_periodo_escolar',
+                'clavecarrera' => 'required|string|exists:carreras,clavecarrera'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parámetros inválidos',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $horarios = HorarioAsignaturaMaestro::with([
+            'maestro' => function ($query) {
+                $query->soloNombre();
+            },
+            'aula',
+            'grupo',
+            'asignatura',
+        ])
+            ->whereHas('asignatura.carreras', function ($query) use ($clavecarrera) {
+                $query->where('clavecarrera', $clavecarrera);
+            })
+            ->where('idperiodoescolar', $idperiodoescolar)
+            ->orderBy('claveasignatura')
+            ->get();
+
+        // Filtrar solo las asignaturas que pertenecen a la carrera especificada
+        $horarios->each(function ($horario) use ($clavecarrera) {
+            if ($horario->asignatura) {
+                $horario->asignatura->carreras = $horario->asignatura->carreras->filter(function ($carrera) use ($clavecarrera) {
+                    return $carrera->clavecarrera === $clavecarrera;
+                })->values();
+            }
+        });
+
+        if ($horarios->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'No se encontraron horarios para la carrera en el período especificado',
+                'data' => [],
+                'count' => 0
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $horarios,
+            'count' => $horarios->count()
+        ], 200);
     }
 
     // Crear un nuevo horario

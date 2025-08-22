@@ -42,5 +42,10 @@ class HorarioAsignaturaMaestro extends Model
     {
         return $this->belongsTo(PeriodoEscolar::class, 'idperiodoescolar', 'id_periodo_escolar');
     }
+    
+    public function cargaDetalles()
+    {
+        return $this->hasMany(CargaAcademicaDetalle::class, 'clavehorario', 'clavehorario');
+    }
 
 }

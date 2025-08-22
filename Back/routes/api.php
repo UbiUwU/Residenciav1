@@ -28,6 +28,7 @@ use App\Http\Controllers\HorarioAsignaturaMaestroController;
 use App\Http\Controllers\AvanceDetalleController;
 use App\Http\Controllers\AvanceDetalleFechaController;
 use App\Http\Controllers\AvanceFechaController;
+use App\Http\Controllers\AlumnoReworkController;
 
 
 // routes/api.php
@@ -74,7 +75,36 @@ Route::prefix('maestros')->group(function () {
     Route::put('/{id}', [MaestroController::class, 'update']); // Actualizar
     Route::delete('/{id}', [MaestroController::class, 'destroy']); // Eliminar
     Route::get('/ListaM/{tarjeta}', [MaestroController::class, 'ListaM']);
+    Route::get('/departamento/{idDepartamento}', [MaestroController::class, 'indexByDepartamentoBasic']);
 });
+
+use App\Http\Controllers\EstadisticasMaestroController;
+
+Route::get('/estadisticasmaestro/tarjeta/{tarjeta}/periodo/{id_periodo_escolar}', [EstadisticasMaestroController::class, 'estadisticasPorPeriodo']);
+
+use App\Http\Controllers\ReporteFinalController;
+
+// Rutas para ReporteFinal
+Route::get('reportesfinale', [ReporteFinalController::class, 'index']);
+Route::post('reportesfinale', [ReporteFinalController::class, 'store']);
+Route::get('reportesfinale/{id}', [ReporteFinalController::class, 'show']);
+Route::put('reportesfinale/{id}', [ReporteFinalController::class, 'update']);
+Route::delete('reportesfinale/{id}', [ReporteFinalController::class, 'destroy']);
+
+// Rutas adicionales
+Route::get('reportesfinales/maestro/{tarjeta}/periodo/{id_periodo_escolar}', [ReporteFinalController::class, 'getByMaestroPeriodo']);
+Route::put('reportesfinales/{id}/cambiar-estado', [ReporteFinalController::class, 'cambiarEstado']);
+
+use App\Http\Controllers\DatosEstaticosReporteFinalController;
+use App\Http\Controllers\ReporteFinalAsignaturaController;
+
+Route::put('DatosReportefinal/{id_reportefinal}', [DatosEstaticosReporteFinalController::class, 'update']);
+Route::delete('DatosReportefinal/{id_reportefinal}/datos-estaticos', [DatosEstaticosReporteFinalController::class, 'destroy']);
+
+Route::put('asignaturasReporteFinales/{id}', [ReporteFinalAsignaturaController::class, 'update']);
+Route::delete('reportes-finales/asignaturas/{id}', [ReporteFinalAsignaturaController::class, 'destroy']);
+Route::put('asignaturasReporteFinales/M/{id_reportefinal}', [ReporteFinalAsignaturaController::class, 'updateMultiple']);
+
 
 Route::prefix('carreras')->group(function () {
     Route::get('/', [CarreraController::class, 'index']);
@@ -126,20 +156,23 @@ Route::prefix('horarios')->group(function () {
     Route::delete('/{clave_horario}', [HorarioController::class, 'destroy']);
 });
 
-    //Rutas para los datos generales de la materia
+//Rutas para los datos generales de la materia
 Route::prefix('asignaturas')->group(function () {
-    Route::get('/', [AsignaturaController::class, 'index']);               // Listar todas
+    Route::get('/', [AsignaturaController::class, 'index']);
+    Route::get('/clean', [AsignaturaController::class, 'indexC']);           // Listar todas
+    Route::get('/carrera/{clavecarrera}', [AsignaturaController::class, 'indexByCarrera']); // Filtrar por carrera
     Route::get('/{ClaveAsignatura}', [AsignaturaController::class, 'show']); // Mostrar 1
     Route::post('/', [AsignaturaController::class, 'store']);              // Crear nueva
     Route::put('/{ClaveAsignatura}', [AsignaturaController::class, 'update']); // Actualizar
     Route::delete('/{ClaveAsignatura}', [AsignaturaController::class, 'destroy']); // Eliminar
+
 
     Route::get('/maestro/{clave}', [AsignaturaController::class, 'getByTarjetaComplete']);
     Route::get('/grupos/{clave}', [AsignaturaController::class, 'getDetalleGruposByTarjeta']);
     Route::get('/complete/{clave}', [AsignaturaController::class, 'getByClaveComplete']);
     //Reporte
     Route::get('/asignaturas/generate-pdf', [AsignaturaController::class, 'generatePDF']);
-   
+
 });
 
 Route::prefix('presentacion')->group(function () {
@@ -215,12 +248,38 @@ use App\Http\Controllers\CalificacionUnidadController;
 Route::post('/calificaciones', [CalificacionUnidadController::class, 'store']);
 Route::get('/calificaciones/reporte/{tarjeta}', [CalificacionUnidadController::class, 'getDetalleGruposPorCarrera']);
 
+
+Route::prefix('alumnosR')->group(function () {
+    Route::get('/', [AlumnoReworkController::class, 'index']);           // Listar todas
+    Route::get('/{id}', [AlumnoReworkController::class, 'show']);       // Mostrar 1
+    Route::post('/', [AlumnoReworkController::class, 'store']);         // Crear nueva
+    Route::put('/{id}', [AlumnoReworkController::class, 'update']);     // Actualizar
+    Route::delete('/{id}', [AlumnoReworkController::class, 'destroy']); // Eliminar
+});
+
+use App\Http\Controllers\CargaAcademicaDetalleController;
+
+Route::prefix('cargadetalles')->group(function () {
+    Route::get('/', [CargaAcademicaDetalleController::class, 'index']);           // Listar todas
+    Route::get('/{id}', [CargaAcademicaDetalleController::class, 'show']);       // Mostrar 1
+    Route::post('/', [CargaAcademicaDetalleController::class, 'store']);         // Crear nueva
+    Route::put('/{id}', [CargaAcademicaDetalleController::class, 'update']);     // Actualizar
+    Route::delete('/{id}', [CargaAcademicaDetalleController::class, 'destroy']); // Eliminar
+});
+
 Route::prefix('comisiones')->group(function () {
     Route::get('/', [ComisionController::class, 'index']);           // Listar todas
+    Route::get('/clean', [ComisionController::class, 'indexClean']); // Listar todas sin relaciones
     Route::get('/{id}', [ComisionController::class, 'show']);       // Mostrar 1
     Route::post('/', [ComisionController::class, 'store']);         // Crear nueva
     Route::put('/{id}', [ComisionController::class, 'update']);     // Actualizar
     Route::delete('/{id}', [ComisionController::class, 'destroy']); // Eliminar
+    // Comisiones por período
+    Route::get('periodo/{idPeriodoEscolar}', [ComisionController::class, 'indexByPeriodo']);
+    // Comisiones por maestro
+    Route::get('maestro/{tarjetaMaestro}', [ComisionController::class, 'indexByMaestro']);
+    // Comisiones por período y maestro
+    Route::get('/periodo/{idPeriodoEscolar}/{tarjetaMaestro}', [ComisionController::class, 'indexByPeriodoAndMaestro']);
 });
 
 Route::prefix('roles')->group(function () {
@@ -284,6 +343,8 @@ Route::prefix('horario')->group(function () {
     Route::post('/', [HorarioAsignaturaMaestroController::class, 'store']);          // Crear nuevo horario
     Route::put('/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'update']); // Actualizar horario
     Route::delete('/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'destroy']); // Eliminar horario
+    Route::get('/{idperiodoescolar}/maestro/{tarjeta}', [HorarioAsignaturaMaestroController::class, 'indexByPeriodoAndMaestro']);
+    Route::get('/periodo/{idperiodoescolar}/carrera/{clavecarrera}', [HorarioAsignaturaMaestroController::class, 'indexByPeriodoAndCarrera']);
 });
 
 
@@ -365,7 +426,7 @@ Route::post('/cambiar-contrasena', [AuthController::class, 'changePassword']);
 
 use App\Http\Controllers\Api\NotificacionesController;
 
-Route::prefix ('notificaciones')->group(function (){
+Route::prefix('notificaciones')->group(function () {
     Route::get('/', [NotificacionesController::class, 'index']);
     Route::get('/{Usuario_id}', [NotificacionesController::class, 'show']);
     Route::post('/', [NotificacionesController::class, 'store']);

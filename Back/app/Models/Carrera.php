@@ -10,6 +10,7 @@ class Carrera extends Model
     protected $primaryKey = 'clavecarrera';
     public $incrementing = false; // La PK es varchar, no autoincremental
     public $timestamps = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
         'clavecarrera',

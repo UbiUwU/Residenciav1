@@ -19,4 +19,9 @@ class Departamento extends Model
     {
         return $query->select('id_departamento', 'nombre');
     }
+
+    public function reportesFinales()
+    {
+        return $this->hasMany(ReporteFinal::class, 'id_departamento', 'id_departamento');
+    }
 }
