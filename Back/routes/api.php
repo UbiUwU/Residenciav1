@@ -29,6 +29,63 @@ use App\Http\Controllers\AvanceDetalleController;
 use App\Http\Controllers\AvanceDetalleFechaController;
 use App\Http\Controllers\AvanceFechaController;
 use App\Http\Controllers\AlumnoReworkController;
+use App\Http\Controllers\LiberacionAcademicaController;
+use App\Http\Controllers\LiberacionAcademicaDetalleController;
+use App\Http\Controllers\LiberacionDocenteController;
+use App\Http\Controllers\LiberacionDocenteDetalleController;
+
+// Rutas para LiberacionDocente
+
+Route::prefix('liberacionesdocentes')->group(function () {
+    Route::get('', [LiberacionDocenteController::class, 'index']);
+    Route::post('', [LiberacionDocenteController::class, 'store']);
+    Route::get('/{id}', [LiberacionDocenteController::class, 'show']);
+    Route::put('/{id}', [LiberacionDocenteController::class, 'update']);
+    Route::delete('/{id}', [LiberacionDocenteController::class, 'destroy']);
+    Route::put('/{id}/estado', [LiberacionDocenteController::class, 'cambiarEstadoLiberacion']);
+    Route::get('/departamento/{id_departamento}', [LiberacionDocenteController::class, 'indexByDepartamento']);
+    Route::get('/periodo/{id_periodo_escolar}', [LiberacionDocenteController::class, 'indexByPeriodo']);
+    Route::get('/departamento/{id_departamento}/periodo/{id_periodo_escolar}', [LiberacionDocenteController::class, 'indexByDepartamentoPeriodo']);
+    Route::get('/maestro/{tarjeta_maestro}', [LiberacionDocenteController::class, 'indexByMaestro']);
+    Route::get('/maestro/{tarjeta_maestro}/periodo/{id_periodo_escolar}', [LiberacionDocenteController::class, 'indexByMaestroPeriodo']);
+
+});
+
+Route::prefix('liberacionesdocentesde')->group(function () {
+// Rutas para LiberacionDocenteDetalleController
+Route::post('/{id_liberacion}', [LiberacionDocenteDetalleController::class, 'store']);
+Route::put('/{id}', [LiberacionDocenteDetalleController::class, 'update']);
+Route::delete('/{id}', [LiberacionDocenteDetalleController::class, 'destroy']);
+Route::post('/M/{id_liberacion}', [LiberacionDocenteDetalleController::class, 'storeMultiple']);
+Route::put('/MUpdate/{id_liberacion}', [LiberacionDocenteDetalleController::class, 'updateMultiple']);
+Route::put('liberacionesdocentes/detalles/{id}/estado', [LiberacionDocenteDetalleController::class, 'updateEstado']);
+});
+
+
+Route::prefix('liberacionesacademicas')->group(function () {
+Route::get('/', [LiberacionAcademicaController::class, 'index']);
+Route::get('/departamento/{id_departamento}', [LiberacionAcademicaController::class, 'indexByDepartamento']);
+Route::get('/periodo/{id_periodo_escolar}', [LiberacionAcademicaController::class, 'indexByPeriodo']);
+Route::get('/departamento/{id_departamento}/periodo/{id_periodo_escolar}', [LiberacionAcademicaController::class, 'indexByDepartamentoPeriodo']);
+Route::get('/maestro/{tarjeta_maestro}', [LiberacionAcademicaController::class, 'indexByMaestro']);
+Route::get('/maestro/{tarjeta_maestro}/periodo/{id_periodo_escolar}', [LiberacionAcademicaController::class, 'indexByMaestroPeriodo']);
+Route::post('/', [LiberacionAcademicaController::class, 'store']);
+Route::get('/{id}', [LiberacionAcademicaController::class, 'show']);
+Route::put('/{id}', [LiberacionAcademicaController::class, 'update']);
+Route::delete('/{id}', [LiberacionAcademicaController::class, 'destroy']);
+Route::put('/{id}/estado', [LiberacionAcademicaController::class, 'cambiarEstadoLiberacion']);
+});
+
+
+Route::prefix('liberacionesacademicasde')->group(function () {
+    Route::post('/{id_liberacion}', [LiberacionAcademicaDetalleController::class, 'store']);
+Route::put('/{id}', [LiberacionAcademicaDetalleController::class, 'update']);
+Route::delete('/{id}', [LiberacionAcademicaDetalleController::class, 'destroy']);
+Route::post('/M/{id_liberacion}', [LiberacionAcademicaDetalleController::class, 'storeMultiple']);
+Route::put('/MUpdate/{id_liberacion}', [LiberacionAcademicaDetalleController::class, 'updateMultiple']);
+Route::put('/detalles/{id}/estado', [LiberacionAcademicaDetalleController::class, 'updateEstado']);
+});
+
 
 
 // routes/api.php

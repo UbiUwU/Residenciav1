@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Maestro extends Model
 {
@@ -63,5 +64,13 @@ class Maestro extends Model
     public function reportesFinales()
     {
         return $this->hasMany(ReporteFinal::class, 'tarjeta_profesor', 'tarjeta');
+    }
+    public function liberacionesDocentes(): HasMany
+    {
+        return $this->hasMany(LiberacionDocente::class, 'tarjeta_maestro', 'tarjeta');
+    }
+    public function liberacionesAcademicas(): HasMany
+    {
+        return $this->hasMany(LiberacionAcademica::class, 'tarjeta_maestro', 'tarjeta');
     }
 }

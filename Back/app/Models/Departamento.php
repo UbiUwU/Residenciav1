@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Departamento extends Model
 {
@@ -23,5 +24,13 @@ class Departamento extends Model
     public function reportesFinales()
     {
         return $this->hasMany(ReporteFinal::class, 'id_departamento', 'id_departamento');
+    }
+    public function liberacionesDocentes(): HasMany
+    {
+        return $this->hasMany(LiberacionDocente::class, 'id_departamento', 'id_departamento');
+    }
+    public function liberacionesAcademicas(): HasMany
+    {
+        return $this->hasMany(LiberacionAcademica::class, 'id_departamento', 'id_departamento');
     }
 }
