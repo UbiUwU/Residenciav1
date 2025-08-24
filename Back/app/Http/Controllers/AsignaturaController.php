@@ -27,7 +27,22 @@ class AsignaturaController extends Controller
     // Mostrar una asignatura específica
     public function show($ClaveAsignatura)
     {
-        $asignatura = Asignatura::with('carreras', 'presentacion', 'temasConSubtemas')->find($ClaveAsignatura);
+        $asignatura = Asignatura::with([
+            'carreras',
+            'presentacion',
+            'competencias',
+            'temasConSubtemas' => function ($query) {
+                $query->with([
+                    'competenciasGenericas',
+                    'competenciasEspecificas',
+                    'actividadesAprendizaje'
+                ]);
+            },
+            'practias',
+            'evaluacionesCompetencias',
+            'fuentesInformacion'
+        ])->find($ClaveAsignatura);
+
         if (!$asignatura) {
             return response()->json(['message' => 'Asignatura no encontrada'], 404);
         }

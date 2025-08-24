@@ -1,11 +1,17 @@
 <?php
 
+use App\Http\Controllers\ActividadAprendizajeTemaController;
 use App\Http\Controllers\CatalogoTiposFechaController;
 use App\Http\Controllers\ComisionController;
 use App\Http\Controllers\CompetenciaController;
+use App\Http\Controllers\CompetenciaEspecificaTemaController;
+use App\Http\Controllers\CompetenciaGenericaTemaController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\EdificioController;
+use App\Http\Controllers\EvaluacionCompetenciasController;
 use App\Http\Controllers\FechasClavePeriodoController;
+use App\Http\Controllers\FuentesInformacionController;
+use App\Http\Controllers\PractiasasignaturaController;
 use App\Http\Controllers\PracticaController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\TipoEventoController;
@@ -86,8 +92,66 @@ Route::put('/MUpdate/{id_liberacion}', [LiberacionAcademicaDetalleController::cl
 Route::put('/detalles/{id}/estado', [LiberacionAcademicaDetalleController::class, 'updateEstado']);
 });
 
+Route::prefix('competenciasgenericastemas')->group(function () {
+    Route::post('/', [CompetenciaGenericaTemaController::class, 'createOne']);
+    Route::post('/M', [CompetenciaGenericaTemaController::class, 'createMultiple']);
+    Route::put('/{id}', [CompetenciaGenericaTemaController::class, 'updateOne']);
+    Route::put('/M/U', [CompetenciaGenericaTemaController::class, 'updateMultiple']);
+    Route::delete('/{id}', [CompetenciaGenericaTemaController::class, 'deleteOne']);
+});
+
+Route::prefix('competenciasespecificastemas')->group(function () {
+    Route::post('/', [CompetenciaEspecificaTemaController::class, 'createOne']);
+    Route::post('/M', [CompetenciaEspecificaTemaController::class, 'createMultiple']);
+    Route::put('/{id}', [CompetenciaEspecificaTemaController::class, 'updateOne']);
+    Route::put('/M/U', [CompetenciaEspecificaTemaController::class, 'updateMultiple']);
+    Route::delete('/{id}', [CompetenciaEspecificaTemaController::class, 'deleteOne']);
+});
+
+Route::prefix('actividadesaprendizajetemas')->group(function () {
+    Route::post('/', [ActividadAprendizajeTemaController::class, 'createOne']);
+    Route::post('/M', [ActividadAprendizajeTemaController::class, 'createMultiple']);
+    Route::put('/{id}', [ActividadAprendizajeTemaController::class, 'updateOne']);
+    Route::put('/M/U', [ActividadAprendizajeTemaController::class, 'updateMultiple']);
+    Route::delete('/{id}', [ActividadAprendizajeTemaController::class, 'deleteOne']);
+});
+
+Route::prefix('practicastema')->group(function () {
+    Route::post('/', [PractiasasignaturaController::class, 'createOne']);
+    Route::post('/M', [PractiasasignaturaController::class, 'createMultiple']);
+    Route::put('/{id}', [PractiasasignaturaController::class, 'updateOne']);
+    Route::put('/M/U', [PractiasasignaturaController::class, 'updateMultiple']);
+    Route::delete('/delete-one/{id}', [PractiasasignaturaController::class, 'deleteOne']);
+});
+
+// Rutas para Fuentes de Información
+Route::prefix('fuentesinformacion')->group(function () {
+    Route::post('/', [FuentesInformacionController::class, 'createOne']);
+    Route::post('/M/', [FuentesInformacionController::class, 'createMultiple']);
+    Route::put('/{id}', [FuentesInformacionController::class, 'updateOne']);
+    Route::put('/M/U', [FuentesInformacionController::class, 'updateMultiple']);
+    Route::delete('/{id}', [FuentesInformacionController::class, 'deleteOne']);
+});
+
+// Rutas para Evaluación por Competencias
+Route::prefix('evaluacioncompetencias')->group(function () {
+    Route::post('/', [EvaluacionCompetenciasController::class, 'createOne']);
+    Route::post('/M/', [EvaluacionCompetenciasController::class, 'createMultiple']);
+    Route::put('/{id}', [EvaluacionCompetenciasController::class, 'updateOne']);
+    Route::put('/M/U', [EvaluacionCompetenciasController::class, 'updateMultiple']);
+    Route::delete('/{id}', [EvaluacionCompetenciasController::class, 'deleteOne']);
+});
 
 
+
+Route::prefix('competencias')->group(function () {
+    Route::post('/', [CompetenciaController::class, 'createOne']);
+    Route::post('/M', [CompetenciaController::class, 'createMultiple']);
+    Route::put('/{id}', [CompetenciaController::class, 'updateOne']);
+    Route::put('/M/U', [CompetenciaController::class, 'updateMultiple']);
+    Route::delete('/{id}', [CompetenciaController::class, 'deleteOne']);
+
+});
 // routes/api.php
 Route::get('/enum/{tipo}', [App\Http\Controllers\EnumController::class, 'getValores']);
 
@@ -246,9 +310,6 @@ Route::delete('/diseno/{id}', [DisenoController::class, 'destroy']);
 Route::put('/diseno/participantes/{id}', [DisenoController::class, 'updateParticipantes']);
 Route::delete('/diseno/{id}/participante/{participante_id}', [DisenoController::class, 'eliminarParticipante']);
 
-Route::post('/competencias', [CompetenciaController::class, 'store']);
-Route::put('/competencias/{id}', [CompetenciaController::class, 'update']);
-Route::delete('/competencias/{id}', [CompetenciaController::class, 'destroy']);
 
 Route::post('/practicas', [PracticaController::class, 'store']);
 Route::put('/practicas/{id}', [PracticaController::class, 'update']);
