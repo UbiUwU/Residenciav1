@@ -77,6 +77,15 @@ CREATE SEQUENCE public.actividad_competencia_tema_idactcompetencia_seq
 	START 1
 	CACHE 1
 	NO CYCLE;
+-- DROP SEQUENCE public.actividades_ensenanza_instrum_id_actividades_ensenanza_inst_seq;
+
+CREATE SEQUENCE public.actividades_ensenanza_instrum_id_actividades_ensenanza_inst_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
 -- DROP SEQUENCE public.alumnos_numero_control_seq;
 
 CREATE SEQUENCE public.alumnos_numero_control_seq
@@ -84,6 +93,15 @@ CREATE SEQUENCE public.alumnos_numero_control_seq
 	MINVALUE 1
 	MAXVALUE 9223372036854775807
 	START 19390003
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE public.apoyos_didacticos_instrumentacion_id_apoyo_didactico_seq;
+
+CREATE SEQUENCE public.apoyos_didacticos_instrumentacion_id_apoyo_didactico_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
 	CACHE 1
 	NO CYCLE;
 -- DROP SEQUENCE public.asignatura_carrera_idasigcarrera_seq;
@@ -147,6 +165,15 @@ CREATE SEQUENCE public.bitacora_maestros_id_seq
 	MINVALUE 1
 	MAXVALUE 9223372036854775807
 	START 31
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE public.calendarizacion_evaluacion_instrumentaci_id_calendarizacion_seq;
+
+CREATE SEQUENCE public.calendarizacion_evaluacion_instrumentaci_id_calendarizacion_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
 	CACHE 1
 	NO CYCLE;
 -- DROP SEQUENCE public.calificaciones_id_seq;
@@ -230,6 +257,15 @@ CREATE SEQUENCE public.competencia_generica_tema_id_competencia_generica_seq
 	START 1
 	CACHE 1
 	NO CYCLE;
+-- DROP SEQUENCE public.competencia_generico_instrume_id_competencia_generico_instr_seq;
+
+CREATE SEQUENCE public.competencia_generico_instrume_id_competencia_generico_instr_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
 -- DROP SEQUENCE public.competencia_idcompetencia_seq;
 
 CREATE SEQUENCE public.competencia_idcompetencia_seq
@@ -245,6 +281,15 @@ CREATE SEQUENCE public.competencia_tema_idcomptema_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE public.competencias_instrumentacion_id_competencia_seq;
+
+CREATE SEQUENCE public.competencias_instrumentacion_id_competencia_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
 	START 1
 	CACHE 1
 	NO CYCLE;
@@ -302,6 +347,15 @@ CREATE SEQUENCE public.evaluacion_competencias_id_evaluacion_seq
 	START 1
 	CACHE 1
 	NO CYCLE;
+-- DROP SEQUENCE public.evaluacion_competencias_instrumen_id_evaluacion_competencia_seq;
+
+CREATE SEQUENCE public.evaluacion_competencias_instrumen_id_evaluacion_competencia_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
 -- DROP SEQUENCE public.evaluacion_idevaluacion_seq;
 
 CREATE SEQUENCE public.evaluacion_idevaluacion_seq
@@ -353,6 +407,42 @@ CREATE SEQUENCE public.horarios_maestros_idhorariomaestro_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 9223372036854775807
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE public.indicadores_alcance_evaluacion_instrum_id_indicador_alcance_seq;
+
+CREATE SEQUENCE public.indicadores_alcance_evaluacion_instrum_id_indicador_alcance_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE public.indicadores_alcance_id_indicador_alcance_seq;
+
+CREATE SEQUENCE public.indicadores_alcance_id_indicador_alcance_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE public.indicadores_alcance_instrumentacion_id_indicador_seq;
+
+CREATE SEQUENCE public.indicadores_alcance_instrumentacion_id_indicador_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE public.instrumentacion_id_instrumentacion_seq;
+
+CREATE SEQUENCE public.instrumentacion_id_instrumentacion_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
 	START 1
 	CACHE 1
 	NO CYCLE;
@@ -426,6 +516,15 @@ CREATE SEQUENCE public.migrations_id_seq
 	MINVALUE 1
 	MAXVALUE 9223372036854775807
 	START 20
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE public.niveles_desempeno_instrumentacion_id_nivel_desempeno_seq;
+
+CREATE SEQUENCE public.niveles_desempeno_instrumentacion_id_nivel_desempeno_seq
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
 	CACHE 1
 	NO CYCLE;
 -- DROP SEQUENCE public.notificaciones_carreras_idnotificacioncarrera_seq;
@@ -530,6 +629,15 @@ CREATE SEQUENCE public.presentacion_idpresentacion_seq
 -- DROP SEQUENCE public."presentacion_intencion_id_Intencion_seq";
 
 CREATE SEQUENCE public."presentacion_intencion_id_Intencion_seq"
+	INCREMENT BY 1
+	MINVALUE 1
+	MAXVALUE 2147483647
+	START 1
+	CACHE 1
+	NO CYCLE;
+-- DROP SEQUENCE public.proyecto_asignatura_id_proyecto_seq;
+
+CREATE SEQUENCE public.proyecto_asignatura_id_proyecto_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
@@ -954,7 +1062,7 @@ CREATE TABLE public.competencia (
 	"id_Competencia" int8 DEFAULT nextval('competencia_idcompetencia_seq'::regclass) NOT NULL,
 	"ClaveAsignatura" varchar(50) NOT NULL,
 	"Descripcion" varchar(255) NOT NULL,
-	"Tipo_Competencia" public."_tipo_comp" NOT NULL,
+	"Tipo_Competencia" public."tipo_comp" NOT NULL,
 	CONSTRAINT competencia_pkey PRIMARY KEY ("id_Competencia"),
 	CONSTRAINT competencia_clave_asignatura FOREIGN KEY ("ClaveAsignatura") REFERENCES public.asignatura("ClaveAsignatura")
 );
@@ -1231,11 +1339,12 @@ CREATE TABLE public.presentacion_intencion (
 -- DROP TABLE public.proyecto_asignatura;
 
 CREATE TABLE public.proyecto_asignatura (
-	"id_Proyecto_Asig" int8 DEFAULT nextval('proyecto_asignatura_idproyectoasig_seq'::regclass) NOT NULL,
-	"Clave_Asignatura" varchar(50) NOT NULL,
-	"Descripcion_Proyecto_Asig" varchar(255) NOT NULL,
-	CONSTRAINT proyecto_asignatura_pkey PRIMARY KEY ("id_Proyecto_Asig"),
-	CONSTRAINT proyecto_asignatura_clave_asignatura FOREIGN KEY ("Clave_Asignatura") REFERENCES public.asignatura("ClaveAsignatura")
+	id_proyecto serial4 NOT NULL,
+	"ClaveAsignatura" varchar(20) NOT NULL,
+	descripcion text NOT NULL,
+	orden int4 DEFAULT 0 NULL,
+	CONSTRAINT proyecto_asignatura_pkey PRIMARY KEY (id_proyecto),
+	CONSTRAINT "proyecto_asignatura_ClaveAsignatura_fkey" FOREIGN KEY ("ClaveAsignatura") REFERENCES public.asignatura("ClaveAsignatura") ON DELETE CASCADE
 );
 
 
@@ -1713,6 +1822,32 @@ CREATE TABLE public.horarios_maestros (
 );
 
 
+-- public.instrumentacion definition
+
+-- Drop table
+
+-- DROP TABLE public.instrumentacion;
+
+CREATE TABLE public.instrumentacion (
+	id_instrumentacion serial4 NOT NULL,
+	"ClaveAsignatura" varchar(50) NOT NULL,
+	tarjeta_profesor int8 NOT NULL,
+	clavecarrera varchar(20) NOT NULL,
+	id_periodo_escolar int8 NOT NULL,
+	nombre_jefe_academico varchar(60) NULL,
+	fecha_creacion date DEFAULT CURRENT_DATE NOT NULL,
+	fecha_ultima_actualizacion timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	id_departamento int2 NOT NULL,
+	estado varchar(20) DEFAULT 'borrador'::character varying NOT NULL,
+	CONSTRAINT instrumentacion_pkey PRIMARY KEY (id_instrumentacion),
+	CONSTRAINT fk_instrumentacion_asignatura FOREIGN KEY ("ClaveAsignatura") REFERENCES public.asignatura("ClaveAsignatura"),
+	CONSTRAINT fk_instrumentacion_carrera FOREIGN KEY (clavecarrera) REFERENCES public.carreras(clavecarrera),
+	CONSTRAINT fk_instrumentacion_departamento FOREIGN KEY (id_departamento) REFERENCES public.departamentos(id_departamento),
+	CONSTRAINT fk_instrumentacion_periodo FOREIGN KEY (id_periodo_escolar) REFERENCES public.periodo_escolar(id_periodo_escolar) ON DELETE RESTRICT,
+	CONSTRAINT fk_instrumentacion_profesor FOREIGN KEY (tarjeta_profesor) REFERENCES public.maestros(tarjeta)
+);
+
+
 -- public.liberacion_academica definition
 
 -- Drop table
@@ -1815,6 +1950,24 @@ CREATE INDEX idx_detalle_numero_actividad ON public.liberacion_docente_detalles 
 CREATE INDEX idx_detalle_si ON public.liberacion_docente_detalles USING btree (si) WHERE (si = true);
 
 
+-- public.apoyos_didacticos_instrumentacion definition
+
+-- Drop table
+
+-- DROP TABLE public.apoyos_didacticos_instrumentacion;
+
+CREATE TABLE public.apoyos_didacticos_instrumentacion (
+	id_apoyo_didactico serial4 NOT NULL,
+	id_instrumentacion int4 NOT NULL,
+	descripcion text NOT NULL,
+	orden int4 DEFAULT 0 NULL,
+	fecha_creacion timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT apoyos_didacticos_instrumentacion_pkey PRIMARY KEY (id_apoyo_didactico),
+	CONSTRAINT fk_apoyos_didacticos_instrumentacion FOREIGN KEY (id_instrumentacion) REFERENCES public.instrumentacion(id_instrumentacion) ON DELETE CASCADE
+);
+CREATE INDEX idx_apoyos_didacticos_instrumentacion ON public.apoyos_didacticos_instrumentacion USING btree (id_instrumentacion);
+
+
 -- public.avance definition
 
 -- Drop table
@@ -1904,6 +2057,29 @@ CREATE TABLE public.avance_fechas (
 );
 
 
+-- public.calendarizacion_evaluacion_instrumentacion definition
+
+-- Drop table
+
+-- DROP TABLE public.calendarizacion_evaluacion_instrumentacion;
+
+CREATE TABLE public.calendarizacion_evaluacion_instrumentacion (
+	id_calendarizacion int4 DEFAULT nextval('calendarizacion_evaluacion_instrumentaci_id_calendarizacion_seq'::regclass) NOT NULL,
+	id_instrumentacion int4 NOT NULL,
+	semana int4 NOT NULL,
+	tiempo_planeado varchar(100) NULL,
+	tiempo_real varchar(100) NULL,
+	seguimiento_departamental bool DEFAULT false NOT NULL,
+	descripcion text NULL,
+	fecha_creacion timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT calendarizacion_evaluacion_instrumentacion_pkey PRIMARY KEY (id_calendarizacion),
+	CONSTRAINT unq_semana_instrumentacion UNIQUE (id_instrumentacion, semana),
+	CONSTRAINT fk_calendarizacion_instrumentacion FOREIGN KEY (id_instrumentacion) REFERENCES public.instrumentacion(id_instrumentacion) ON DELETE CASCADE
+);
+CREATE INDEX idx_calendarizacion_instrumentacion ON public.calendarizacion_evaluacion_instrumentacion USING btree (id_instrumentacion);
+CREATE INDEX idx_calendarizacion_semana ON public.calendarizacion_evaluacion_instrumentacion USING btree (semana);
+
+
 -- public.carga_academica_detalles definition
 
 -- Drop table
@@ -1923,6 +2099,125 @@ CREATE TABLE public.carga_academica_detalles (
 );
 CREATE INDEX carga_academica_detalles_clavehorario_foreign ON public.carga_academica_detalles USING btree (clavehorario);
 CREATE INDEX carga_academica_detalles_idcargageneral_foreign ON public.carga_academica_detalles USING btree (idcargageneral);
+
+
+-- public.competencias_instrumentacion definition
+
+-- Drop table
+
+-- DROP TABLE public.competencias_instrumentacion;
+
+CREATE TABLE public.competencias_instrumentacion (
+	id_competencia serial4 NOT NULL,
+	id_instrumentacion int4 NOT NULL,
+	id_tema int8 NOT NULL,
+	horas_dedicadas int2 NOT NULL,
+	fecha_creacion timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT competencias_instrumentacion_pkey PRIMARY KEY (id_competencia),
+	CONSTRAINT fk_comp_instrumentacion FOREIGN KEY (id_instrumentacion) REFERENCES public.instrumentacion(id_instrumentacion) ON DELETE CASCADE,
+	CONSTRAINT fk_comp_tema FOREIGN KEY (id_tema) REFERENCES public.tema("id_Tema") ON DELETE CASCADE
+);
+CREATE INDEX idx_comp_instrumentacion ON public.competencias_instrumentacion USING btree (id_instrumentacion);
+CREATE INDEX idx_comp_tema ON public.competencias_instrumentacion USING btree (id_tema);
+
+
+-- public.evaluacion_competencias_instrumentacion definition
+
+-- Drop table
+
+-- DROP TABLE public.evaluacion_competencias_instrumentacion;
+
+CREATE TABLE public.evaluacion_competencias_instrumentacion (
+	id_evaluacion_competencia int4 DEFAULT nextval('evaluacion_competencias_instrumen_id_evaluacion_competencia_seq'::regclass) NOT NULL,
+	id_competencia int4 NOT NULL,
+	evidencia_aprendizaje text NOT NULL,
+	porcentaje_valor int4 NULL,
+	evaluacion_formativa text NOT NULL,
+	fecha_creacion timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT chk_porcentaje_valor CHECK (((porcentaje_valor IS NULL) OR ((porcentaje_valor >= 0) AND (porcentaje_valor <= 100)))),
+	CONSTRAINT evaluacion_competencias_instrumentacion_pkey PRIMARY KEY (id_evaluacion_competencia),
+	CONSTRAINT fk_evaluacion_comp_instrumentacion FOREIGN KEY (id_competencia) REFERENCES public.competencias_instrumentacion(id_competencia) ON DELETE CASCADE
+);
+CREATE INDEX idx_evaluacion_competencia_instrumentacion ON public.evaluacion_competencias_instrumentacion USING btree (id_competencia);
+
+
+-- public.indicadores_alcance_evaluacion_instrumentacion definition
+
+-- Drop table
+
+-- DROP TABLE public.indicadores_alcance_evaluacion_instrumentacion;
+
+CREATE TABLE public.indicadores_alcance_evaluacion_instrumentacion (
+	id_indicador_alcance int4 DEFAULT nextval('indicadores_alcance_evaluacion_instrum_id_indicador_alcance_seq'::regclass) NOT NULL,
+	id_evaluacion_competencia int4 NOT NULL,
+	letra_indicador varchar(5) NOT NULL,
+	porcentaje int4 NULL,
+	descripcion text NULL,
+	orden int4 DEFAULT 0 NULL,
+	fecha_creacion timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT chk_porcentaje CHECK (((porcentaje IS NULL) OR ((porcentaje >= 0) AND (porcentaje <= 100)))),
+	CONSTRAINT indicadores_alcance_evaluacion_instrumentacion_pkey PRIMARY KEY (id_indicador_alcance),
+	CONSTRAINT unq_letra_evaluacion_instrumentacion UNIQUE (id_evaluacion_competencia, letra_indicador),
+	CONSTRAINT fk_indicadores_evaluacion_instrumentacion FOREIGN KEY (id_evaluacion_competencia) REFERENCES public.evaluacion_competencias_instrumentacion(id_evaluacion_competencia) ON DELETE CASCADE
+);
+CREATE INDEX idx_indicadores_evaluacion_instrumentacion ON public.indicadores_alcance_evaluacion_instrumentacion USING btree (id_evaluacion_competencia);
+
+
+-- public.indicadores_alcance_instrumentacion definition
+
+-- Drop table
+
+-- DROP TABLE public.indicadores_alcance_instrumentacion;
+
+CREATE TABLE public.indicadores_alcance_instrumentacion (
+	id_indicador serial4 NOT NULL,
+	id_competencia int4 NOT NULL,
+	indicador_alcance text NOT NULL,
+	valor_indicador int4 NOT NULL,
+	fecha_creacion timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT indicadores_alcance_instrumentacion_pkey PRIMARY KEY (id_indicador),
+	CONSTRAINT fk_indicadores_comp FOREIGN KEY (id_competencia) REFERENCES public.competencias_instrumentacion(id_competencia) ON DELETE CASCADE
+);
+CREATE INDEX idx_indicadores_competencia ON public.indicadores_alcance_instrumentacion USING btree (id_competencia);
+
+
+-- public.niveles_desempeno_instrumentacion definition
+
+-- Drop table
+
+-- DROP TABLE public.niveles_desempeno_instrumentacion;
+
+CREATE TABLE public.niveles_desempeno_instrumentacion (
+	id_nivel_desempeno serial4 NOT NULL,
+	id_competencia int4 NOT NULL,
+	desempeno_alcanzado bool DEFAULT false NOT NULL,
+	nivel_desempeno varchar(100) NOT NULL,
+	valoracion_inicial int4 NOT NULL,
+	valoracion_final int4 NOT NULL,
+	fecha_creacion timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT chk_valoracion_rango CHECK ((valoracion_inicial <= valoracion_final)),
+	CONSTRAINT niveles_desempeno_instrumentacion_pkey PRIMARY KEY (id_nivel_desempeno),
+	CONSTRAINT fk_niveles_comp FOREIGN KEY (id_competencia) REFERENCES public.competencias_instrumentacion(id_competencia) ON DELETE CASCADE
+);
+CREATE INDEX idx_niveles_competencia ON public.niveles_desempeno_instrumentacion USING btree (id_competencia);
+
+
+-- public.actividades_ensenanza_instrumentacion definition
+
+-- Drop table
+
+-- DROP TABLE public.actividades_ensenanza_instrumentacion;
+
+CREATE TABLE public.actividades_ensenanza_instrumentacion (
+	id_actividades_ensenanza_instrumentacion int4 DEFAULT nextval('actividades_ensenanza_instrum_id_actividades_ensenanza_inst_seq'::regclass) NOT NULL,
+	id_competencia int4 NOT NULL,
+	descripcion text NOT NULL,
+	orden int4 DEFAULT 0 NULL,
+	fecha_creacion timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT actividades_ensenanza_instrumentacion_pkey PRIMARY KEY (id_actividades_ensenanza_instrumentacion),
+	CONSTRAINT fk_actividades_comp FOREIGN KEY (id_competencia) REFERENCES public.competencias_instrumentacion(id_competencia) ON DELETE CASCADE
+);
+CREATE INDEX idx_actividades_competencia ON public.actividades_ensenanza_instrumentacion USING btree (id_competencia);
 
 
 -- public.calificaciones_unidades definition
@@ -1951,6 +2246,42 @@ CREATE TABLE public.calificaciones_unidades (
 	CONSTRAINT uk_evaluacion_unica UNIQUE (idcargadetalle, unidad, tipoevaluacion, tipoacreditacion),
 	CONSTRAINT fk_calificacion_carga FOREIGN KEY (idcargadetalle) REFERENCES public.carga_academica_detalles(idcargadetalle) ON DELETE CASCADE
 );
+
+
+-- public.competencia_generico_instrumentacion definition
+
+-- Drop table
+
+-- DROP TABLE public.competencia_generico_instrumentacion;
+
+CREATE TABLE public.competencia_generico_instrumentacion (
+	id_competencia_generico_instrumentacion int4 DEFAULT nextval('competencia_generico_instrume_id_competencia_generico_instr_seq'::regclass) NOT NULL,
+	id_competencia int4 NOT NULL,
+	descripcion text NOT NULL,
+	orden int4 DEFAULT 0 NULL,
+	fecha_creacion timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT competencia_generico_instrumentacion_pkey PRIMARY KEY (id_competencia_generico_instrumentacion),
+	CONSTRAINT fk_comp_generico_comp FOREIGN KEY (id_competencia) REFERENCES public.competencias_instrumentacion(id_competencia) ON DELETE CASCADE
+);
+CREATE INDEX idx_generico_competencia ON public.competencia_generico_instrumentacion USING btree (id_competencia);
+
+
+-- public.indicadores_alcance definition
+
+-- Drop table
+
+-- DROP TABLE public.indicadores_alcance;
+
+CREATE TABLE public.indicadores_alcance (
+	id_indicador_alcance serial4 NOT NULL,
+	id_nivel_desempeno int4 NOT NULL,
+	descripcion text NOT NULL,
+	orden int4 DEFAULT 0 NULL,
+	fecha_creacion timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	CONSTRAINT indicadores_alcance_pkey PRIMARY KEY (id_indicador_alcance),
+	CONSTRAINT fk_indicadores_nivel_desempeno FOREIGN KEY (id_nivel_desempeno) REFERENCES public.niveles_desempeno_instrumentacion(id_nivel_desempeno) ON DELETE CASCADE
+);
+CREATE INDEX idx_indicadores_nivel_desempeno ON public.indicadores_alcance USING btree (id_nivel_desempeno);
 
 
 
