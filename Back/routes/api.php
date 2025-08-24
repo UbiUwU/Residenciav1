@@ -11,8 +11,10 @@ use App\Http\Controllers\EdificioController;
 use App\Http\Controllers\EvaluacionCompetenciasController;
 use App\Http\Controllers\FechasClavePeriodoController;
 use App\Http\Controllers\FuentesInformacionController;
+use App\Http\Controllers\InstrumentacionController;
 use App\Http\Controllers\PractiasasignaturaController;
 use App\Http\Controllers\PracticaController;
+use App\Http\Controllers\ProyectoAsignaturaController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\TipoEventoController;
 use Illuminate\Support\Facades\Route;
@@ -121,7 +123,7 @@ Route::prefix('practicastema')->group(function () {
     Route::post('/M', [PractiasasignaturaController::class, 'createMultiple']);
     Route::put('/{id}', [PractiasasignaturaController::class, 'updateOne']);
     Route::put('/M/U', [PractiasasignaturaController::class, 'updateMultiple']);
-    Route::delete('/delete-one/{id}', [PractiasasignaturaController::class, 'deleteOne']);
+    Route::delete('/{id}', [PractiasasignaturaController::class, 'deleteOne']);
 });
 
 // Rutas para Fuentes de Información
@@ -142,7 +144,14 @@ Route::prefix('evaluacioncompetencias')->group(function () {
     Route::delete('/{id}', [EvaluacionCompetenciasController::class, 'deleteOne']);
 });
 
-
+Route::prefix('proyectosasignatura')->group(function () {
+    Route::post('/', [ProyectoAsignaturaController::class, 'createOne']);
+    Route::post('/M', [ProyectoAsignaturaController::class, 'createMultiple']);
+    Route::put('/{id}', [ProyectoAsignaturaController::class, 'updateOne']);
+    Route::put('/M/U', [ProyectoAsignaturaController::class, 'updateMultiple']);
+    Route::delete('/{id}', [ProyectoAsignaturaController::class, 'deleteOne']);
+    Route::get('/asignatura/{claveAsignatura}', [ProyectoAsignaturaController::class, 'getByAsignatura']);
+});
 
 Route::prefix('competencias')->group(function () {
     Route::post('/', [CompetenciaController::class, 'createOne']);
@@ -151,6 +160,26 @@ Route::prefix('competencias')->group(function () {
     Route::put('/M/U', [CompetenciaController::class, 'updateMultiple']);
     Route::delete('/{id}', [CompetenciaController::class, 'deleteOne']);
 
+});
+
+
+
+Route::prefix('instrumentacion')->group(function () {
+    // Index
+    Route::get('/', [InstrumentacionController::class, 'indexCompleto']);
+    Route::get('/Clean', [InstrumentacionController::class, 'indexBasico']);
+    
+    // Búsquedas específicas
+    Route::get('/periodo/{idPeriodo}', [InstrumentacionController::class, 'buscarPorPeriodo']);
+    Route::get('/maestro/{tarjetaMaestro}', [InstrumentacionController::class, 'buscarPorMaestro']);
+    Route::get('/departamento/{idDepartamento}', [InstrumentacionController::class, 'buscarPorDepartamento']);
+    Route::get('/carrera/{claveCarrera}', [InstrumentacionController::class, 'buscarPorCarrera']);
+    Route::get('/buscar', [InstrumentacionController::class, 'buscarCombinada']);
+    
+    // CRUD básico
+    Route::post('/', [InstrumentacionController::class, 'create']);
+    Route::put('/{id}', [InstrumentacionController::class, 'update']);
+    Route::get('/{id}', [InstrumentacionController::class, 'show']);
 });
 // routes/api.php
 Route::get('/enum/{tipo}', [App\Http\Controllers\EnumController::class, 'getValores']);
