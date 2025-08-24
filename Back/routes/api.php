@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActividadAprendizajeTemaController;
+use App\Http\Controllers\ActividadEnsenanzaInstrumentacionController;
 use App\Http\Controllers\ApoyoDidacticoInstrumentacionController;
 use App\Http\Controllers\CalendarizacionEvaluacionInstrumentacionController;
 use App\Http\Controllers\CatalogoTiposFechaController;
@@ -8,12 +9,19 @@ use App\Http\Controllers\ComisionController;
 use App\Http\Controllers\CompetenciaController;
 use App\Http\Controllers\CompetenciaEspecificaTemaController;
 use App\Http\Controllers\CompetenciaGenericaTemaController;
+use App\Http\Controllers\CompetenciaGenericoInstrumentacionController;
+use App\Http\Controllers\CompetenciaInstrumentacionController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\EdificioController;
+use App\Http\Controllers\EvaluacionCompetenciaInstrumentacionController;
 use App\Http\Controllers\EvaluacionCompetenciasController;
 use App\Http\Controllers\FechasClavePeriodoController;
 use App\Http\Controllers\FuentesInformacionController;
+use App\Http\Controllers\IndicadorAlcanceController;
+use App\Http\Controllers\IndicadorAlcanceEvaluacionInstrumentacionController;
+use App\Http\Controllers\IndicadorAlcanceInstrumentacionController;
 use App\Http\Controllers\InstrumentacionController;
+use App\Http\Controllers\NivelDesempenoInstrumentacionController;
 use App\Http\Controllers\PractiasasignaturaController;
 use App\Http\Controllers\PracticaController;
 use App\Http\Controllers\ProyectoAsignaturaController;
@@ -196,6 +204,73 @@ Route::prefix('instrumentacion')->group(function () {
     Route::post('/', [InstrumentacionController::class, 'create']);
     Route::put('/{id}', [InstrumentacionController::class, 'update']);
     Route::get('/{id}', [InstrumentacionController::class, 'show']);
+});
+
+
+
+
+// Competencias de Instrumentación
+Route::prefix('competenciasinstrumentacion')->group(function () {
+    Route::post('/', [CompetenciaInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [CompetenciaInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [CompetenciaInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [CompetenciaInstrumentacionController::class, 'updateMultiple']);
+});
+
+// Competencias Genéricas de Instrumentación
+Route::prefix('competenciasgenericasinstrumentacion')->group(function () {
+    Route::post('/', [CompetenciaGenericoInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [CompetenciaGenericoInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [CompetenciaGenericoInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [CompetenciaGenericoInstrumentacionController::class, 'updateMultiple']);
+});
+
+// Actividades de Enseñanza de Instrumentación
+Route::prefix('actividadesensenanzainstrumentacion')->group(function () {
+    Route::post('/', [ActividadEnsenanzaInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [ActividadEnsenanzaInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [ActividadEnsenanzaInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [ActividadEnsenanzaInstrumentacionController::class, 'updateMultiple']);
+});
+
+// Indicadores de Alcance de Instrumentación
+Route::prefix('indicadoresalcanceinstrumentacion')->group(function () {
+    Route::post('/', [IndicadorAlcanceInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [IndicadorAlcanceInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [IndicadorAlcanceInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [IndicadorAlcanceInstrumentacionController::class, 'updateMultiple']);
+});
+
+// Niveles de Desempeño de Instrumentación
+Route::prefix('nivelesdesempenoinstrumentacion')->group(function () {
+    Route::post('/', [NivelDesempenoInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [NivelDesempenoInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [NivelDesempenoInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [NivelDesempenoInstrumentacionController::class, 'updateMultiple']);
+});
+
+// Indicadores de Alcance (para niveles de desempeño)
+Route::prefix('indicadoresalcance')->group(function () {
+    Route::post('/', [IndicadorAlcanceController::class, 'createOne']);
+    Route::post('/M', [IndicadorAlcanceController::class, 'createMultiple']);
+    Route::put('/{id}', [IndicadorAlcanceController::class, 'updateOne']);
+    Route::put('/M/U', [IndicadorAlcanceController::class, 'updateMultiple']);
+});
+
+// Evaluaciones de Competencias de Instrumentación
+Route::prefix('evaluacionescompetenciasinstrumentacion')->group(function () {
+    Route::post('/', [EvaluacionCompetenciaInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [EvaluacionCompetenciaInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [EvaluacionCompetenciaInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [EvaluacionCompetenciaInstrumentacionController::class, 'updateMultiple']);
+});
+
+// Indicadores de Alcance para Evaluación de Instrumentación
+Route::prefix('indicadoresalcanceevaluacioninstrumentacion')->group(function () {
+    Route::post('/', [IndicadorAlcanceEvaluacionInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [IndicadorAlcanceEvaluacionInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [IndicadorAlcanceEvaluacionInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [IndicadorAlcanceEvaluacionInstrumentacionController::class, 'updateMultiple']);
 });
 // routes/api.php
 Route::get('/enum/{tipo}', [App\Http\Controllers\EnumController::class, 'getValores']);
