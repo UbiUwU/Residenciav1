@@ -13,7 +13,7 @@ class CompetenciaController extends Controller
         $request->validate([
             'ClaveAsignatura' => 'required|exists:asignatura,ClaveAsignatura',
             'Descripcion' => 'required|string|max:255',
-            'Tipo_Competencia' => 'required|in:Específica,Generica'
+            'Tipo_Competencia' => 'required|in:Específica,Generica,Previas'
         ]);
 
 
