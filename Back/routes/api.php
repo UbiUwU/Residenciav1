@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ActividadAprendizajeTemaController;
+use App\Http\Controllers\ApoyoDidacticoInstrumentacionController;
+use App\Http\Controllers\CalendarizacionEvaluacionInstrumentacionController;
 use App\Http\Controllers\CatalogoTiposFechaController;
 use App\Http\Controllers\ComisionController;
 use App\Http\Controllers\CompetenciaController;
@@ -162,6 +164,20 @@ Route::prefix('competencias')->group(function () {
 
 });
 
+
+Route::prefix('calendarizacionesinstrumentacion')->group(function () {
+    Route::post('/', [CalendarizacionEvaluacionInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [CalendarizacionEvaluacionInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [CalendarizacionEvaluacionInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [CalendarizacionEvaluacionInstrumentacionController::class, 'updateMultiple']);
+});
+
+Route::prefix('apoyosdidacticosinstrumentacion')->group(function () {
+    Route::post('/', [ApoyoDidacticoInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [ApoyoDidacticoInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [ApoyoDidacticoInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [ApoyoDidacticoInstrumentacionController::class, 'updateMultiple']);
+});
 
 
 Route::prefix('instrumentacion')->group(function () {
