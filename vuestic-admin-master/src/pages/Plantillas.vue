@@ -68,8 +68,6 @@ const guardarPlantilla = async () => {
     }
 };
 
-
-
 // 🔹 Editar
 const editarPlantilla = (plantilla) => {
     form.value = { ...plantilla };

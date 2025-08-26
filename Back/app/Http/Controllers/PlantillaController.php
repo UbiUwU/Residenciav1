@@ -101,7 +101,7 @@ class PlantillaController extends Controller
         $validator = Validator::make($request->all(), [
             'nombre' => 'sometimes|required|string|max:255',
             'descripcion' => 'nullable|string',
-            'archivo' => 'sometimes|file|mimes:doc,docx,pdf|max:2048',
+            'archivo' => 'nullable|file|mimes:doc,docx,pdf|max:2048',
             'tipo_id' => 'sometimes|required|exists:tipos_plantilla,id',
             'estado_id' => 'sometimes|exists:estados_plantilla,id',
             'periodo_escolar_id' => 'nullable|exists:periodo_escolar,id_periodo_escolar'
@@ -117,14 +117,15 @@ class PlantillaController extends Controller
         $data = $request->except('archivo');
 
         if ($request->hasFile('archivo')) {
-            // Eliminar archivo anterior si existe
-            if ($plantilla->archivo && Storage::exists('plantillas/' . $plantilla->archivo)) {
-                Storage::delete('plantillas/' . $plantilla->archivo);
+            // borrar archivo anterior si existe
+            if ($plantilla->archivo && Storage::disk('public')->exists('plantillas/' . $plantilla->archivo)) {
+                Storage::disk('public')->delete('plantillas/' . $plantilla->archivo);
             }
 
-            $filename = time() . '_' . $request->file('archivo')->getClientOriginalName();
-            $path = $request->file('archivo')->storeAs('plantillas', $filename);
-            $data['archivo'] = $filename;
+            $archivo = $request->file('archivo');
+            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
+            $archivo->storeAs('plantillas', $nombreArchivo, 'public');
+            $plantilla->archivo = $nombreArchivo;
         }
 
         $plantilla->update($data);
