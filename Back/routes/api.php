@@ -13,6 +13,7 @@ use App\Http\Controllers\CompetenciaGenericoInstrumentacionController;
 use App\Http\Controllers\CompetenciaInstrumentacionController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\EdificioController;
+use App\Http\Controllers\EstadoPlantillaController;
 use App\Http\Controllers\EvaluacionCompetenciaInstrumentacionController;
 use App\Http\Controllers\EvaluacionCompetenciasController;
 use App\Http\Controllers\FechasClavePeriodoController;
@@ -22,11 +23,13 @@ use App\Http\Controllers\IndicadorAlcanceEvaluacionInstrumentacionController;
 use App\Http\Controllers\IndicadorAlcanceInstrumentacionController;
 use App\Http\Controllers\InstrumentacionController;
 use App\Http\Controllers\NivelDesempenoInstrumentacionController;
+use App\Http\Controllers\PlantillaController;
 use App\Http\Controllers\PractiasasignaturaController;
 use App\Http\Controllers\PracticaController;
 use App\Http\Controllers\ProyectoAsignaturaController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\TipoEventoController;
+use App\Http\Controllers\TipoPlantillaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AsignaturaController;
 use App\Http\Controllers\MaestroController;
@@ -272,6 +275,38 @@ Route::prefix('indicadoresalcanceevaluacioninstrumentacion')->group(function () 
     Route::put('/{id}', [IndicadorAlcanceEvaluacionInstrumentacionController::class, 'updateOne']);
     Route::put('/M/U', [IndicadorAlcanceEvaluacionInstrumentacionController::class, 'updateMultiple']);
 });
+
+// Tipos de Plantilla
+Route::prefix('tiposplantilla')->group(function () {
+    Route::get('/', [TipoPlantillaController::class, 'index']);
+    Route::get('/{id}', [TipoPlantillaController::class, 'show']);
+    Route::post('/', [TipoPlantillaController::class, 'store']);
+    Route::put('/{id}', [TipoPlantillaController::class, 'update']);
+    Route::delete('/{id}', [TipoPlantillaController::class, 'destroy']);
+});
+
+// Estados de Plantilla
+Route::prefix('estadosplantilla')->group(function () {
+    Route::get('/', [EstadoPlantillaController::class, 'index']);
+    Route::get('/{id}', [EstadoPlantillaController::class, 'show']);
+    Route::post('/', [EstadoPlantillaController::class, 'store']);
+    Route::put('/{id}', [EstadoPlantillaController::class, 'update']);
+    Route::delete('/{id}', [EstadoPlantillaController::class, 'destroy']);
+});
+
+// Plantillas
+Route::prefix('plantillas')->group(function () {
+    Route::get('/', [PlantillaController::class, 'index']);
+    Route::get('/{id}', [PlantillaController::class, 'show']);
+    Route::post('/', [PlantillaController::class, 'store']);
+    Route::put('/{id}', [PlantillaController::class, 'update']);
+    Route::delete('/{id}', [PlantillaController::class, 'destroy']);
+    Route::put('/{id}/cambiar-estado', [PlantillaController::class, 'cambiarEstado']);
+    Route::get('/tipo/{tipoId}', [PlantillaController::class, 'porTipo']);
+    Route::get('/periodo/{periodoId}', [PlantillaController::class, 'porPeriodo']);
+    Route::get('/buscar', [PlantillaController::class, 'buscar']);
+});
+
 // routes/api.php
 Route::get('/enum/{tipo}', [App\Http\Controllers\EnumController::class, 'getValores']);
 

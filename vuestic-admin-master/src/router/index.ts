@@ -385,10 +385,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../pages/404.vue'),
   },
   {
-    name: '404',
-    path: '/404',
-    component: () => import('../pages/404.vue'),
-  },
+  name: 'plantilla',
+  path: '/plantilla',
+  component: () => import('../pages/Plantillas.vue'),
+},
+
+
 ]
 
 const router = createRouter({
