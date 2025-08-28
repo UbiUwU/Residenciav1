@@ -1,5 +1,4 @@
 <?php
-
 //http://localhost/Inicio%20de%20sesion/PlugginPDF2/generar_documento.php?tipo=libedocente&periodo_id=4&id_tabla=1
 require_once 'includes/db.php';
 require_once 'pdf.php';
@@ -15,7 +14,9 @@ $plantilla_id = $_GET['id'] ?? null;
 $tipo_plantilla = $_GET['tipo'] ?? null;
 $periodo_id = $_GET['periodo_id'] ?? null;
 $id_tabla = $_GET['id_tabla'] ?? null;
+$id_tarjeta = $_GET['id_tarjeta'] ?? null; // Nuevo parámetro opcional
 
+// Validar parámetros obligatorios
 if (!$tipo_plantilla || !$periodo_id || !$id_tabla) {
     die("Error: Los parámetros 'tipo', 'periodo_id' e 'id_tabla' son obligatorios.");
 }
@@ -48,8 +49,8 @@ try {
     $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
     $TBS->LoadTemplate($ruta_plantilla, OPENTBS_ALREADY_UTF8);
 
-    // Obtener datos según tipo, periodo e ID específico
-    $datos = obtenerDatosDesdeTabla($conn, $tipo_plantilla, $periodo_id, $id_tabla);
+    // Obtener datos según tipo, periodo e ID específico (incluyendo tarjeta si está disponible)
+    $datos = obtenerDatosDesdeTabla($conn, $tipo_plantilla, $periodo_id, $id_tabla, $id_tarjeta);
     
     if (empty($datos)) {
         die("Error: No se encontraron datos para el ID $id_tabla en la tabla $tipo_plantilla");

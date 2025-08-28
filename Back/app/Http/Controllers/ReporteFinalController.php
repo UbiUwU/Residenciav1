@@ -34,7 +34,7 @@ class ReporteFinalController extends Controller
             'datosEstaticos',
             'asignaturas' => function($query) {
                 $query->select('id_reportefinal_asignatura', 'id_reportefinal', 'clave_asignatura', 'clave_carrera', 
-                             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h');
+                             'a', 'b' , 'bco', 'c', 'd', 'e', 'f', 'g', 'h');
             },
             'asignaturas.asignatura' => function($query) {
                 $query->select('ClaveAsignatura', 'NombreAsignatura', 'Creditos');
@@ -101,6 +101,7 @@ class ReporteFinalController extends Controller
                 'asignaturas.*.clave_carrera' => 'required_with:asignaturas|exists:carreras,clavecarrera',
                 'asignaturas.*.a' => 'sometimes|integer|min:0',
                 'asignaturas.*.b' => 'sometimes|integer|min:0',
+                'asignaturas.*.bco' => 'sometimes|integer|min:0',
                 'asignaturas.*.c' => 'sometimes|numeric|min:0|max:100',
                 'asignaturas.*.d' => 'sometimes|integer|min:0',
                 'asignaturas.*.e' => 'sometimes|numeric|min:0|max:100',
@@ -144,6 +145,7 @@ class ReporteFinalController extends Controller
                         'clave_carrera' => $asignaturaData['clave_carrera'],
                         'a' => $asignaturaData['a'] ?? 0,
                         'b' => $asignaturaData['b'] ?? 0,
+                        'bco' => $asignaturaData['bco'] ?? 0,
                         'c' => $asignaturaData['c'] ?? 0,
                         'd' => $asignaturaData['d'] ?? 0,
                         'e' => $asignaturaData['e'] ?? 0,
@@ -193,7 +195,7 @@ class ReporteFinalController extends Controller
             'datosEstaticos',
             'asignaturas' => function($query) {
                 $query->select('id_reportefinal_asignatura', 'id_reportefinal', 'clave_asignatura', 'clave_carrera', 
-                             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h');
+                             'a', 'b', 'bco','c', 'd', 'e', 'f', 'g', 'h');
             },
             'asignaturas.asignatura' => function($query) {
                 $query->select('ClaveAsignatura', 'NombreAsignatura', 'Creditos');
@@ -262,7 +264,7 @@ class ReporteFinalController extends Controller
             'datosEstaticos',
             'asignaturas' => function($query) {
                 $query->select('id_reportefinal_asignatura', 'id_reportefinal', 'clave_asignatura', 'clave_carrera', 
-                             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h');
+                             'a', 'b','bco', 'c', 'd', 'e', 'f', 'g', 'h');
             },
             'asignaturas.asignatura' => function($query) {
                 $query->select('ClaveAsignatura', 'NombreAsignatura', 'Creditos');

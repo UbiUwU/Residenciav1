@@ -17,12 +17,13 @@ class ReporteFinalAsignatura extends Model
         'id_reportefinal',
         'clave_asignatura',
         'clave_carrera',
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'
+        'a', 'b', 'bco', 'c', 'd', 'e', 'f', 'g', 'h'
     ];
 
     protected $attributes = [
         'a' => 0, 'b' => 0, 'c' => 0, 'd' => 0, 
         'e' => 0, 'f' => 0, 'g' => 0, 'h' => 0,
+        'bco' => 0,
         'clave_carrera' => null
     ];
 
@@ -32,6 +33,7 @@ class ReporteFinalAsignatura extends Model
     'id_reportefinal' => 'integer',
     'a' => 'integer',
     'b' => 'integer',
+    'bco' => 'integer',
     'c' => 'decimal:2',
     'd' => 'integer',
     'e' => 'decimal:2',

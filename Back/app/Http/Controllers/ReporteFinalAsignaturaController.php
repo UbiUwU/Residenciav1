@@ -17,6 +17,7 @@ class ReporteFinalAsignaturaController extends Controller
             $validator = Validator::make($request->all(), [
                 'a' => 'sometimes|integer|min:0',
                 'b' => 'sometimes|integer|min:0',
+                'bco' => 'sometimes|integer|min:0',
                 'c' => 'sometimes|numeric|min:0|max:100',
                 'd' => 'sometimes|integer|min:0',
                 'e' => 'sometimes|numeric|min:0|max:100',
@@ -36,7 +37,7 @@ class ReporteFinalAsignaturaController extends Controller
             $asignatura = ReporteFinalAsignatura::findOrFail($id);
 
             // Actualizar solo los campos proporcionados
-            $asignatura->fill($request->only(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']));
+            $asignatura->fill($request->only(['a', 'b','bco', 'c', 'd', 'e', 'f', 'g', 'h']));
             $asignatura->save();
 
             // Recargar relaciones
@@ -89,14 +90,15 @@ class ReporteFinalAsignaturaController extends Controller
             $validator = Validator::make($request->all(), [
                 'asignaturas' => 'required|array',
                 'asignaturas.*.id_reportefinal_asignatura' => 'required|exists:reportefinal_asignatura,id_reportefinal_asignatura',
-                'asignaturas.*.A' => 'sometimes|integer|min:0',
-                'asignaturas.*.B' => 'sometimes|integer|min:0',
-                'asignaturas.*.C' => 'sometimes|numeric|min:0|max:100',
-                'asignaturas.*.D' => 'sometimes|integer|min:0',
-                'asignaturas.*.E' => 'sometimes|numeric|min:0|max:100',
-                'asignaturas.*.F' => 'sometimes|integer|min:0',
-                'asignaturas.*.G' => 'sometimes|numeric|min:0|max:100',
-                'asignaturas.*.H' => 'sometimes|numeric|min:0|max:100'
+                'asignaturas.*.a' => 'sometimes|integer|min:0',
+                'asignaturas.*.b' => 'sometimes|integer|min:0',
+                'asignaturas.*.bco' => 'sometimes|integer|min:0',
+                'asignaturas.*.c' => 'sometimes|numeric|min:0|max:100',
+                'asignaturas.*.d' => 'sometimes|integer|min:0',
+                'asignaturas.*.e' => 'sometimes|numeric|min:0|max:100',
+                'asignaturas.*.f' => 'sometimes|integer|min:0',
+                'asignaturas.*.g' => 'sometimes|numeric|min:0|max:100',
+                'asignaturas.*.h' => 'sometimes|numeric|min:0|max:100'
             ]);
 
             if ($validator->fails()) {
@@ -116,7 +118,7 @@ class ReporteFinalAsignaturaController extends Controller
 
                 // Actualizar solo los campos proporcionados
                 $asignatura->fill(array_filter($asignaturaData, function($key) {
-                    return in_array($key, ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
+                    return in_array($key, ['a', 'b', 'bco', 'c', 'd', 'e', 'f', 'g', 'h']);
                 }, ARRAY_FILTER_USE_KEY));
                 
                 $asignatura->save();
