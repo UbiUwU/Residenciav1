@@ -97,21 +97,130 @@ function procesarDatosLiberacionDocente($TBS, $datos)
  */
 function procesarDatosAvanceProgramatico($TBS, $datos)
 {
+    // Datos básicos del avance
     $TBS->MergeField('id_avance', $datos['id_avance'] ?? '');
     $TBS->MergeField('clave_asignatura', $datos['clave_asignatura'] ?? '');
     $TBS->MergeField('nombre_asignatura', $datos['nombre_asignatura'] ?? '');
+    $TBS->MergeField('creditos', $datos['Creditos'] ?? 0);
+    $TBS->MergeField('satca_teoricas', $datos['Satca_Teoricas'] ?? 0);
+    $TBS->MergeField('satca_practicas', $datos['Satca_Practicas'] ?? 0);
+    $TBS->MergeField('satca_total', $datos['Satca_Total'] ?? 0);
+    $TBS->MergeField('estado', $datos['estado'] ?? '');
+    // Datos de la carrera
+    $TBS->MergeField('clave_carrera', $datos['clavecarrera'] ?? '');
+    $TBS->MergeField('nombre_carrera', $datos['nombre_carrera'] ?? '');
+
+
+    // Datos del maestro
     $TBS->MergeField('tarjeta_profesor', $datos['tarjeta_profesor'] ?? '');
-    $TBS->MergeField('nombre_profesor', $datos['nombre_profesor'] ?? '');
+    $TBS->MergeField('nombre_maestro', $datos['nombre_maestro'] ?? '');
+    $TBS->MergeField('apellido_paterno', $datos['apellidopaterno'] ?? '');
+    $TBS->MergeField('apellido_materno', $datos['apellidomaterno'] ?? '');
     $TBS->MergeField(
-        'nombre_completo_profesor',
-        ($datos['nombre_profesor'] ?? '') . ' ' .
+        'nombre_completo_maestro',
+        ($datos['nombre_maestro'] ?? '') . ' ' .
         ($datos['apellidopaterno'] ?? '') . ' ' .
         ($datos['apellidomaterno'] ?? '')
     );
+
+    
+    // Datos del departamento
+    $TBS->MergeField('departamento', $datos['departamento'] ?? '');
+    $TBS->MergeField('departamento_abrev', $datos['departamento_abrev'] ?? '');
+
+    // Datos del periodo escolar
     $TBS->MergeField('periodo_nombre', $datos['nombre_periodo'] ?? '');
     $TBS->MergeField('periodo_codigo', $datos['codigoperiodo'] ?? '');
+    $TBS->MergeField('periodo_inicio', $datos['fecha_inicio'] ?? '');
+    $TBS->MergeField('periodo_fin', $datos['fecha_fin'] ?? '');
+
+    // Información del horario
+    $TBS->MergeField('clave_grupo', $datos['clavegrupo'] ?? '');
+    $TBS->MergeField('clave_aula', $datos['claveaula'] ?? '');
+
+    error_log("=== ESTRUCTURA DE DATOS TEMAS ===");
+    error_log(print_r($datos['temas'], true));
+    error_log("=================================");
+
+    // Procesar temas y subtemas
+    if (!empty($datos['temas'])) {
+        foreach ($datos['temas'] as &$tema) {
+            // Formatear porcentaje
+            $tema['porcentaje_formateado'] = number_format($tema['porcentaje_aprobacion'], 2) . '%';
+            
+            // Estado del tema
+            $tema['estado_tema'] = $tema['porcentaje_aprobacion'] >= 100 ? 'COMPLETADO' : 'EN PROGRESO';
+            
+            // Formatear fechas
+            if (!empty($tema['fecha_inicio'])) {
+                $tema['fecha_inicio_formateada'] = date('d/m/Y', strtotime($tema['fecha_inicio']));
+            }
+            if (!empty($tema['fecha_fin'])) {
+                $tema['fecha_fin_formateada'] = date('d/m/Y', strtotime($tema['fecha_fin']));
+            }
+            if (!empty($tema['fecha_inicio_real'])) {
+                $tema['fecha_inicio_real_formateada'] = date('d/m/Y', strtotime($tema['fecha_inicio_real']));
+            }
+            if (!empty($tema['fecha_fin_real'])) {
+                $tema['fecha_fin_real_formateada'] = date('d/m/Y', strtotime($tema['fecha_fin_real']));
+            }
+            if (!empty($tema['fecha_evaluacion'])) {
+                $tema['fecha_evaluacion_formateada'] = date('d/m/Y', strtotime($tema['fecha_evaluacion']));
+            }
+            if (!empty($tema['fecha_evaluacion_real'])) {
+                $tema['fecha_evaluacion_real_formateada'] = date('d/m/Y', strtotime($tema['fecha_evaluacion_real']));
+            }
+            
+            // Crear una cadena con todos los subtemas para mostrar como texto
+            $tema['lista_subtemas'] = '';
+            if (!empty($tema['subtemas'])) {
+                $subtemas_texto = [];
+                foreach ($tema['subtemas'] as $subtema) {
+                    $subtemas_texto[] = $subtema['orden_subtema'] . '. ' . $subtema['nombre_subtema'];
+                }
+                $tema['lista_subtemas'] = implode("\n", $subtemas_texto);
+            }
+        }
+        
+        
+        // Bloque principal de temas
+        $TBS->MergeBlock('tema', $datos['temas']);
+    }
+
+    // Procesar fechas clave
+    if (!empty($datos['fechas_clave'])) {
+        foreach ($datos['fechas_clave'] as &$fecha) {
+            if (!empty($fecha['fecha_prevista'])) {
+                $fecha['fecha_prevista_formateada'] = date('d/m/Y', strtotime($fecha['fecha_prevista']));
+            }
+            if (!empty($fecha['fecha_real'])) {
+                $fecha['fecha_real_formateada'] = date('d/m/Y', strtotime($fecha['fecha_real']));
+            }
+        }
+        $TBS->MergeBlock('fecha_clave', $datos['fechas_clave']);
+    }
+
+    // Procesar estadísticas
+    if (!empty($datos['estadisticas'])) {
+        $TBS->MergeField('total_temas', $datos['estadisticas']['total_temas'] ?? 0);
+        $TBS->MergeField('temas_completados', $datos['estadisticas']['temas_completados'] ?? 0);
+        $TBS->MergeField('porcentaje_total', $datos['estadisticas']['porcentaje_total'] ?? 0);
+        $TBS->MergeField('promedio_aprobacion', $datos['estadisticas']['promedio_aprobacion'] ?? 0);
+        $TBS->MergeField('temas_pendientes_firma', $datos['estadisticas']['temas_pendientes_firma'] ?? 0);
+    }
+
+    // Información de firmas
+    $TBS->MergeField('requiere_firma_jefe', $datos['requiere_firma_jefe'] ? 'SÍ' : 'NO');
+    $TBS->MergeField('firma_profesor', $datos['firma_profesor'] ?? 'PENDIENTE');
+    $TBS->MergeField('firma_jefe_carrera', $datos['firma_jefe_carrera'] ?? 'PENDIENTE');
+
+    // Fechas del avance
     $TBS->MergeField('fecha_creacion', $datos['fecha_creacion'] ?? '');
-    $TBS->MergeField('estado', $datos['estado'] ?? '');
+    $TBS->MergeField('fecha_ultima_actualizacion', $datos['fecha_ultima_actualizacion'] ?? '');
+
+    // Fecha actual
+    $TBS->MergeField('fecha_actual', date('d/m/Y'));
+    $TBS->MergeField('hora_actual', date('H:i:s'));
 }
 
 /**
@@ -129,42 +238,44 @@ function procesarDatosInstrumentacion($TBS, $datos)
 }
 
 // Funciones de procesamiento para otros tipos de plantillas...
-function procesarDatosReporteFinal($TBS, $datos) {
+function procesarDatosReporteFinal($TBS, $datos)
+{
     // Datos básicos del reporte
     $TBS->MergeField('id_reportefinal', $datos['id_reportefinal'] ?? '');
     $TBS->MergeField('estado', $datos['estado'] ?? '');
-    
+
     // Datos del maestro
     $TBS->MergeField('tarjeta_profesor', $datos['tarjeta_profesor'] ?? '');
     $TBS->MergeField('nombre_maestro', $datos['nombre_maestro'] ?? '');
     $TBS->MergeField('apellido_paterno', $datos['apellidopaterno'] ?? '');
     $TBS->MergeField('apellido_materno', $datos['apellidomaterno'] ?? '');
-    $TBS->MergeField('nombre_completo_maestro', 
-        ($datos['nombre_maestro'] ?? '') . ' ' . 
-        ($datos['apellidopaterno'] ?? '') . ' ' . 
+    $TBS->MergeField(
+        'nombre_completo_maestro',
+        ($datos['nombre_maestro'] ?? '') . ' ' .
+        ($datos['apellidopaterno'] ?? '') . ' ' .
         ($datos['apellidomaterno'] ?? '')
     );
-    
+
     // Datos del departamento
     $TBS->MergeField('departamento', $datos['departamento'] ?? '');
     $TBS->MergeField('departamento_abrev', $datos['departamento_abrev'] ?? '');
-    
+
     // Datos del periodo escolar
     $TBS->MergeField('periodo_nombre', $datos['nombre_periodo'] ?? '');
     $TBS->MergeField('periodo_codigo', $datos['codigoperiodo'] ?? '');
     $TBS->MergeField('periodo_inicio', $datos['fecha_inicio'] ?? '');
     $TBS->MergeField('periodo_fin', $datos['fecha_fin'] ?? '');
-    
+
     // Datos estáticos
     $TBS->MergeField('numero_grupos_atendidos', $datos['numero_grupos_atendidos'] ?? 0);
     $TBS->MergeField('numero_estudiantes', $datos['numero_estudiantes'] ?? 0);
     $TBS->MergeField('numero_asignaturas_diferentes', $datos['numero_asignaturas_diferentes'] ?? 0);
-    
+
     // Procesar asignaturas para la plantilla (en formato tabla)
     if (!empty($datos['asignaturas'])) {
         $TBS->MergeBlock('asignatura', $datos['asignaturas']);
     }
-    
+
     // Procesar totales
     if (!empty($datos['totales'])) {
         $TBS->MergeField('total_a', $datos['totales']['total_a'] ?? 0);
@@ -178,7 +289,7 @@ function procesarDatosReporteFinal($TBS, $datos) {
         $TBS->MergeField('total_h', $datos['totales']['total_h'] ?? 0);
         $TBS->MergeField('total_asignaturas', $datos['totales']['total_asignaturas'] ?? 0);
     }
-    
+
     // Fecha actual
     $TBS->MergeField('fecha_actual', date('d/m/Y'));
     $TBS->MergeField('hora_actual', date('H:i:s'));
@@ -241,7 +352,8 @@ function procesarDatosLiberacionAcademica($TBS, $datos)
 }
 
 
-function procesarDatosComisiones($TBS, $datos) {
+function procesarDatosComisiones($TBS, $datos)
+{
     // Datos básicos de la comisión
     $TBS->MergeField('id_comision', $datos['id_comision'] ?? '');
     $TBS->MergeField('folio', $datos['folio'] ?? '');
@@ -254,32 +366,33 @@ function procesarDatosComisiones($TBS, $datos) {
     $TBS->MergeField('tipo_comision', $datos['tipo_comision'] ?? '');
     $TBS->MergeField('permiso_constancia', $datos['permiso_constancia'] ? 'SÍ' : 'NO');
     $TBS->MergeField('tipo_evento', $datos['tipo_evento'] ?? '');
-    
+
     // Datos del periodo escolar
     $TBS->MergeField('periodo_nombre', $datos['nombre_periodo'] ?? '');
     $TBS->MergeField('periodo_codigo', $datos['codigoperiodo'] ?? '');
     $TBS->MergeField('periodo_inicio', $datos['fecha_inicio'] ?? '');
     $TBS->MergeField('periodo_fin', $datos['fecha_fin'] ?? '');
-    
+
     // Datos del maestro
     $TBS->MergeField('tarjeta_maestro', $datos['tarjeta'] ?? '');
     $TBS->MergeField('nombre_maestro', $datos['nombre_maestro'] ?? '');
     $TBS->MergeField('apellido_paterno', $datos['apellidopaterno'] ?? '');
     $TBS->MergeField('apellido_materno', $datos['apellidomaterno'] ?? '');
-    $TBS->MergeField('nombre_completo_maestro', 
-        ($datos['nombre_maestro'] ?? '') . ' ' . 
-        ($datos['apellidopaterno'] ?? '') . ' ' . 
+    $TBS->MergeField(
+        'nombre_completo_maestro',
+        ($datos['nombre_maestro'] ?? '') . ' ' .
+        ($datos['apellidopaterno'] ?? '') . ' ' .
         ($datos['apellidomaterno'] ?? '')
     );
-    
+
     // Datos del departamento
     $TBS->MergeField('departamento', $datos['departamento'] ?? '');
     $TBS->MergeField('departamento_abrev', $datos['departamento_abrev'] ?? '');
-    
+
     // Duración total
     $TBS->MergeField('duracion_total', $datos['duracion_total'] ?? 0);
     $TBS->MergeField('duracion_total_horas', round($datos['duracion_total'] ?? 0, 2));
-    
+
     // Procesar fechas de la comisión
     if (!empty($datos['fechas'])) {
         foreach ($datos['fechas'] as &$fecha) {
@@ -293,7 +406,7 @@ function procesarDatosComisiones($TBS, $datos) {
             if (!empty($fecha['hora_fin'])) {
                 $fecha['hora_fin_formateada'] = date('H:i', strtotime($fecha['hora_fin']));
             }
-            
+
             // Calcular duración de cada fecha
             if (!empty($fecha['duracion'])) {
                 $fecha['duracion_horas'] = convertirIntervaloAHoras($fecha['duracion']);
@@ -308,11 +421,11 @@ function procesarDatosComisiones($TBS, $datos) {
         }
         $TBS->MergeBlock('fecha_comision', $datos['fechas']);
     }
-    
+
     // Calcular información resumen
     $total_dias = count($datos['fechas'] ?? []);
     $TBS->MergeField('total_dias', $total_dias);
-    
+
     // Fecha actual
     $TBS->MergeField('fecha_actual', date('d/m/Y'));
     $TBS->MergeField('hora_actual', date('H:i:s'));

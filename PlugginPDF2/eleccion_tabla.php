@@ -72,12 +72,16 @@ function obtenerPlantillaPorId($conn, $plantilla_id, $tipo_id)
  */
 function obtenerDatosDesdeTabla($conn, $tipo_plantilla, $periodo_id, $id_tabla, $id_tarjeta = null)
 {
+
+    
     // Validar que el tipo de plantilla es válido
     $tipos_validos = ['avance', 'instrumentacion', 'reportefinal', 'libedocente', 'libeacademica', 'comision'];
 
     if (!in_array($tipo_plantilla, $tipos_validos)) {
         throw new Exception("Tipo de plantilla no válido: $tipo_plantilla");
     }
+
+    
 
     // Delegar a la función específica según el tipo de plantilla
     switch ($tipo_plantilla) {
@@ -101,6 +105,7 @@ function obtenerDatosDesdeTabla($conn, $tipo_plantilla, $periodo_id, $id_tabla, 
         default:
             throw new Exception("Tipo de plantilla no implementado: $tipo_plantilla");
     }
+    
 }
 
 function obtenerInfoPeriodo($conn, $periodo_id)
@@ -189,31 +194,291 @@ function obtenerDetallesActividades($conn, $id_liberacion)
 
 /**
  * Función para obtener datos de avance programático
- */
-function obtenerDatosAvanceProgramatico($conn, $id_avance, $periodo_id)
-{
+ */function obtenerDatosAvanceProgramatico($conn, $id_avance, $periodo_id, $id_tarjeta = null) {
     $query = "
         SELECT 
-            a.*,
-            m.nombre as nombre_profesor,
+            a.id_avance,
+            a.clave_asignatura,
+            a.tarjeta_profesor,
+            a.id_periodo_escolar,
+            a.fecha_creacion,
+            a.fecha_ultima_actualizacion,
+            a.firma_profesor,
+            a.firma_jefe_carrera,
+            a.requiere_firma_jefe,
+            a.estado,
+            a.clave_horario,
+            asi.\"NombreAsignatura\" as nombre_asignatura,
+            asi.\"Creditos\",
+            asi.\"Satca_Teoricas\",
+            asi.\"Satca_Practicas\",
+            asi.\"Satca_Total\",
+            m.nombre as nombre_maestro,
             m.apellidopaterno,
             m.apellidomaterno,
-            asi.nombre_asignatura,
+            d.nombre as departamento,
+            d.abreviacion as departamento_abrev,
             pe.nombre_periodo,
-            pe.codigoperiodo
+            pe.codigoperiodo,
+            pe.fecha_inicio,
+            pe.fecha_fin,
+            -- Información del horario
+            ham.clavegrupo,
+            ham.claveaula,
+            ham.lunes_hi, ham.lunes_hf,
+            ham.martes_hi, ham.martes_hf,
+            ham.miercoles_hi, ham.miercoles_hf,
+            ham.jueves_hi, ham.jueves_hf,
+            ham.viernes_hi, ham.viernes_hf,
+            ham.sabado_hi, ham.sabado_hf,
+            -- Información de la carrera
+            c.clavecarrera,
+            c.nombre as nombre_carrera
         FROM avance a
+        INNER JOIN asignatura asi ON a.clave_asignatura = asi.\"ClaveAsignatura\"
         INNER JOIN maestros m ON a.tarjeta_profesor = m.tarjeta
-        INNER JOIN asignatura asi ON a.clave_asignatura = asi.ClaveAsignatura
+        INNER JOIN departamentos d ON m.id_departamento = d.id_departamento
         INNER JOIN periodo_escolar pe ON a.id_periodo_escolar = pe.id_periodo_escolar
-        WHERE a.id_avance = :id_avance AND a.id_periodo_escolar = :periodo_id
+        LEFT JOIN horarioasignatura_maestro ham ON a.clave_horario = ham.clavehorario
+        LEFT JOIN asignatura_carrera ac ON a.clave_asignatura = ac.\"Clave_Asignatura\"
+        LEFT JOIN carreras c ON ac.\"Clave_Carrera\" = c.clavecarrera
+        WHERE a.id_avance = :id_avance 
+        AND a.id_periodo_escolar = :periodo_id
     ";
-
+    
+    // Si se proporciona tarjeta, validar que el avance pertenece al maestro
+    if ($id_tarjeta) {
+        $query .= " AND a.tarjeta_profesor = :tarjeta_maestro";
+    }
+    
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id_avance', $id_avance, PDO::PARAM_INT);
     $stmt->bindParam(':periodo_id', $periodo_id, PDO::PARAM_INT);
+    
+    if ($id_tarjeta) {
+        $stmt->bindParam(':tarjeta_maestro', $id_tarjeta, PDO::PARAM_INT);
+    }
+    
     $stmt->execute();
+    
+    $avance = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($avance) {
+        // Obtener detalles del avance (temas)
+        $avance['detalles'] = obtenerDetallesAvance($conn, $id_avance);
+        
+        // Obtener fechas clave del avance
+        $avance['fechas_clave'] = obtenerFechasClaveAvance($conn, $id_avance);
+        // Obtener temas, subtemas y fechas
+        $avance['temas_subtemas_fechas'] = obtenerTemasSubtemasFechas($conn, $id_avance);
+        //
+        
+        $datosTemasCrudos = obtenerTemasSubtemasFechas($conn, $id_avance);
+        $avance['temas'] = organizarTemasSubtemas($datosTemasCrudos);
+        // Calcular estadísticas
+        $avance['estadisticas'] = calcularEstadisticasAvance($avance['detalles']);
+    }
+    
+    return $avance;
+}
 
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+/**
+ * Función para obtener los detalles (temas) de un avance
+ */
+function obtenerDetallesAvance($conn, $id_avance) {
+    $query = "
+        SELECT 
+            ad.id_avance_detalle,
+            ad.id_tema,
+            ad.porcentaje_aprobacion,
+            ad.requiere_firma_docente,
+            ad.observaciones,
+            ad.created_at,
+            ad.updated_at,
+            t.\"Nombre_Tema\" as nombre_tema,
+            t.\"Numero\" as numero_tema,
+            -- Obtener fechas programadas y reales
+            (
+                SELECT JSON_AGG(
+                    JSON_BUILD_OBJECT(
+                        'fecha_inicio', adf.fecha_inicio,
+                        'fecha_fin', adf.fecha_fin,
+                        'fecha_inicio_real', adf.fecha_inicio_real,
+                        'fecha_fin_real', adf.fecha_fin_real,
+                        'fecha_evaluacion', adf.fecha_evaluacion,
+                        'fecha_evaluacion_real', adf.fecha_evaluacion_real
+                    )
+                )
+                FROM avance_detalles_fechas adf
+                WHERE adf.id_avance_detalle = ad.id_avance_detalle
+            ) as fechas
+        FROM avance_detalles ad
+        LEFT JOIN tema t ON ad.id_tema = t.\"id_Tema\"
+        WHERE ad.id_avance = :id_avance
+        ORDER BY t.\"Numero\", ad.id_avance_detalle
+    ";
+    
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':id_avance', $id_avance, PDO::PARAM_INT);
+    $stmt->execute();
+    
+    $detalles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Procesar fechas JSON
+    foreach ($detalles as &$detalle) {
+        if (!empty($detalle['fechas'])) {
+            $detalle['fechas'] = json_decode($detalle['fechas'], true);
+        }
+    }
+    
+    return $detalles;
+}
+
+function obtenerTemasSubtemasFechas($conn, $id_avance) {
+    $query = "
+        SELECT 
+            t.\"id_Tema\",
+            t.\"Numero\" AS numero_tema,
+            t.\"Nombre_Tema\" AS nombre_tema,
+            s.\"id_Subtema\",
+            s.\"Nombre_Subtema\" AS nombre_subtema,
+            s.\"Orden\" AS orden_subtema,
+            ad.id_avance_detalle,
+            ad.porcentaje_aprobacion,
+            ad.requiere_firma_docente,
+            ad.observaciones,
+            adf.fecha_inicio,
+            adf.fecha_fin,
+            adf.fecha_inicio_real,
+            adf.fecha_fin_real,
+            adf.fecha_evaluacion,
+            adf.fecha_evaluacion_real
+        FROM avance_detalles ad
+        LEFT JOIN tema t ON ad.id_tema = t.\"id_Tema\"
+        LEFT JOIN subtema s ON s.\"Tema_id\" = t.\"id_Tema\"
+        LEFT JOIN avance_detalles_fechas adf ON adf.id_avance_detalle = ad.id_avance_detalle
+        WHERE ad.id_avance = :id_avance
+        ORDER BY t.\"Numero\", s.\"Orden\"
+    ";
+    
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':id_avance', $id_avance, PDO::PARAM_INT);
+    $stmt->execute();
+    
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/**
+ * Función para organizar los datos en estructura jerárquica (temas -> subtemas)
+ */
+function organizarTemasSubtemas($datosCrudos) {
+    $temasOrganizados = [];
+    
+    foreach ($datosCrudos as $fila) {
+        $idTema = $fila['id_Tema'];
+        
+        // Si es un nuevo tema, inicializarlo
+        if (!isset($temasOrganizados[$idTema])) {
+            $temasOrganizados[$idTema] = [
+                'id_Tema' => $fila['id_Tema'],
+                'numero_tema' => $fila['numero_tema'],
+                'nombre_tema' => $fila['nombre_tema'],
+                'id_avance_detalle' => $fila['id_avance_detalle'],
+                'porcentaje_aprobacion' => $fila['porcentaje_aprobacion'],
+                'requiere_firma_docente' => $fila['requiere_firma_docente'],
+                'observaciones' => $fila['observaciones'],
+                'fecha_inicio' => $fila['fecha_inicio'],
+                'fecha_fin' => $fila['fecha_fin'],
+                'fecha_inicio_real' => $fila['fecha_inicio_real'],
+                'fecha_fin_real' => $fila['fecha_fin_real'],
+                'fecha_evaluacion' => $fila['fecha_evaluacion'],
+                'fecha_evaluacion_real' => $fila['fecha_evaluacion_real'],
+                'subtemas' => []
+            ];
+        }
+        
+        // Agregar subtema si existe
+        if (!empty($fila['id_Subtema'])) {
+            $temasOrganizados[$idTema]['subtemas'][] = [
+                'id_Subtema' => $fila['id_Subtema'],
+                'nombre_subtema' => $fila['nombre_subtema'],
+                'orden_subtema' => $fila['orden_subtema']
+            ];
+        }
+    }
+    
+    return array_values($temasOrganizados);
+}
+
+
+
+/**
+ * Función para obtener las fechas clave de un avance
+ */
+function obtenerFechasClaveAvance($conn, $id_avance) {
+    $query = "
+        SELECT 
+            af.id_avance_fecha,
+            af.id_fecha_clave,
+            af.observaciones,
+            af.fecha_real,
+            fcp.nombre_fecha as nombre_fecha_clave,
+            fcp.fecha as fecha_prevista,
+            fcp.tipo_fecha_clave as tipo
+        FROM avance_fechas af
+        INNER JOIN fechas_clave_periodo fcp ON af.id_fecha_clave = fcp.id_fecha_clave
+        WHERE af.id_avance = :id_avance
+        ORDER BY fcp.fecha
+    ";
+    
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':id_avance', $id_avance, PDO::PARAM_INT);
+    $stmt->execute();
+    
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+/**
+ * Función para calcular estadísticas del avance
+ */
+function calcularEstadisticasAvance($detalles) {
+    $estadisticas = [
+        'total_temas' => 0,
+        'temas_completados' => 0,
+        'porcentaje_total' => 0,
+        'promedio_aprobacion' => 0,
+        'temas_pendientes_firma' => 0
+    ];
+    
+    if (empty($detalles)) {
+        return $estadisticas;
+    }
+    
+    $estadisticas['total_temas'] = count($detalles);
+    $suma_porcentajes = 0;
+    
+    foreach ($detalles as $detalle) {
+        if ($detalle['porcentaje_aprobacion'] >= 100) {
+            $estadisticas['temas_completados']++;
+        }
+        
+        $suma_porcentajes += $detalle['porcentaje_aprobacion'];
+        
+        if ($detalle['requiere_firma_docente']) {
+            $estadisticas['temas_pendientes_firma']++;
+        }
+    }
+    
+    $estadisticas['porcentaje_total'] = $estadisticas['total_temas'] > 0 
+        ? round(($estadisticas['temas_completados'] / $estadisticas['total_temas']) * 100, 2)
+        : 0;
+    
+    $estadisticas['promedio_aprobacion'] = $estadisticas['total_temas'] > 0
+        ? round($suma_porcentajes / $estadisticas['total_temas'], 2)
+        : 0;
+    
+    return $estadisticas;
 }
 
 /**
