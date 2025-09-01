@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CargaAcademicaDetalle;
 use App\Models\HorarioAsignaturaMaestro;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
@@ -200,6 +201,170 @@ class HorarioAsignaturaMaestroController extends Controller
             'periodos_count' => $horariosAgrupados->count()
         ], 200);
     }
+
+    public function indexAlumnosByHorario($clavehorario)
+    {
+        // Validar el parámetro
+        $validator = Validator::make(
+            ['clavehorario' => $clavehorario],
+            [
+                'clavehorario' => 'required|integer|exists:horarioasignatura_maestro,clavehorario'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parámetro inválido',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Obtener el horario con los alumnos inscritos
+        $horario = HorarioAsignaturaMaestro::with([
+            'maestro' => function ($query) {
+                $query->soloNombre();
+            },
+            'aula',
+            'grupo',
+            'asignatura',
+            'periodoEscolar',
+            'cargaDetalles.cargaGeneral.alumno' => function ($query) {
+                $query->select('numerocontrol', 'nombre', 'apellidopaterno', 'apellidomaterno');
+            }
+        ])->find($clavehorario);
+
+        if (!$horario) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Horario no encontrado'
+            ], 404);
+        }
+
+        // Extraer y formatear la lista de alumnos
+        $alumnos = collect();
+
+        foreach ($horario->cargaDetalles as $detalle) {
+            if ($detalle->cargaGeneral && $detalle->cargaGeneral->alumno) {
+                $alumnos->push([
+                    'idcargageneral' => $detalle->cargaGeneral->idcargageneral,
+                    'idcargadetalle' => $detalle->idcargadetalle,
+                    'alumno' => $detalle->cargaGeneral->alumno,
+                    'numerocontrol' => $detalle->cargaGeneral->alumno->numerocontrol,
+                    'nombre_completo' => $detalle->cargaGeneral->alumno->nombre . ' ' .
+                        $detalle->cargaGeneral->alumno->apellidopaterno . ' ' .
+                        $detalle->cargaGeneral->alumno->apellidomaterno
+                ]);
+            }
+        }
+
+        // Información del horario
+        $infoHorario = [
+            'clavehorario' => $horario->clavehorario,
+            'asignatura' => $horario->asignatura ? $horario->asignatura->NombreAsignatura : null,
+            'claveasignatura' => $horario->claveasignatura,
+            'clavegrupo' => $horario->clavegrupo,
+            'maestro' => $horario->maestro ? $horario->maestro->nombre_completo : null,
+            'tarjeta' => $horario->tarjeta,
+            'periodo' => $horario->periodoEscolar ? $horario->periodoEscolar->nombre_periodo : null,
+            'idperiodoescolar' => $horario->idperiodoescolar
+        ];
+
+        return response()->json([
+            'success' => true,
+            'horario' => $infoHorario,
+            'alumnos' => $alumnos,
+            'total_alumnos' => $alumnos->count(),
+            'data' => [
+                'horario_info' => $infoHorario,
+                'alumnos_list' => $alumnos
+            ]
+        ], 200);
+    }
+
+    // Versión alternativa que devuelve solo la lista de alumnos (más ligera)
+    public function indexAlumnosByHorarioSimple($clavehorario)
+    {
+        // Validar el parámetro
+        $validator = Validator::make(
+            ['clavehorario' => $clavehorario],
+            [
+                'clavehorario' => 'required|integer|exists:horarioasignatura_maestro,clavehorario'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parámetro inválido',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Obtener solo los alumnos del horario (consulta más eficiente)
+        $alumnos = CargaAcademicaDetalle::with([
+            'cargaGeneral.alumno:numerocontrol,nombre,apellidopaterno,apellidomaterno'
+        ])
+            ->where('clavehorario', $clavehorario)
+            ->get()
+            ->map(function ($detalle) {
+                if ($detalle->cargaGeneral && $detalle->cargaGeneral->alumno) {
+                    return [
+                        'idcargadetalle' => $detalle->idcargadetalle,
+                        'idcargageneral' => $detalle->cargaGeneral->idcargageneral,
+                        'numerocontrol' => $detalle->cargaGeneral->alumno->numerocontrol,
+                        'nombre' => $detalle->cargaGeneral->alumno->nombre,
+                        'apellido_paterno' => $detalle->cargaGeneral->alumno->apellidopaterno,
+                        'apellido_materno' => $detalle->cargaGeneral->alumno->apellidomaterno,
+                        'nombre_completo' => $detalle->cargaGeneral->alumno->nombre . ' ' .
+                            $detalle->cargaGeneral->alumno->apellidopaterno . ' ' .
+                            $detalle->cargaGeneral->alumno->apellidomaterno
+                    ];
+                }
+                return null;
+            })
+            ->filter() // Eliminar elementos null
+            ->values(); // Reindexar array
+
+        // Obtener información básica del horario
+        $horarioInfo = HorarioAsignaturaMaestro::with([
+            'asignatura:ClaveAsignatura,NombreAsignatura',
+            'grupo:clavegrupo',
+            'maestro:tarjeta,nombre',
+            'aula:claveaula',
+        ])
+            ->find($clavehorario, [
+                'clavehorario',
+                'claveasignatura',
+                'clavegrupo',
+                'tarjeta',
+                'idperiodoescolar',
+                'claveaula'
+            ]);
+
+        if (!$horarioInfo) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Horario no encontrado'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'horario_info' => [
+                'clavehorario' => $horarioInfo->clavehorario,
+                'asignatura' => $horarioInfo->asignatura ? $horarioInfo->asignatura->NombreAsignatura : null,
+                'claveasignatura' => $horarioInfo->claveasignatura,
+                'clavegrupo' => $horarioInfo->clavegrupo,
+                'maestro' => $horarioInfo->maestro ? $horarioInfo->maestro->nombre : null,
+                'tarjeta' => $horarioInfo->tarjeta,
+                'claveaula' => $horarioInfo->aula ? $horarioInfo->aula->claveaula : null,
+            ],
+            'alumnos' => $alumnos,
+            'total_alumnos' => $alumnos->count()
+        ], 200);
+    }
+
     // Crear un nuevo horario
     public function store(Request $request)
     {

@@ -49,11 +49,13 @@ use App\Http\Controllers\HorarioAsignaturaMaestroController;
 use App\Http\Controllers\AvanceDetalleController;
 use App\Http\Controllers\AvanceDetalleFechaController;
 use App\Http\Controllers\AvanceFechaController;
+use App\Http\Controllers\Api\AlumnoController;
 use App\Http\Controllers\AlumnoReworkController;
 use App\Http\Controllers\LiberacionAcademicaController;
 use App\Http\Controllers\LiberacionAcademicaDetalleController;
 use App\Http\Controllers\LiberacionDocenteController;
 use App\Http\Controllers\LiberacionDocenteDetalleController;
+
 
 // Rutas para LiberacionDocente
 
@@ -538,6 +540,7 @@ Route::prefix('cargadetalles')->group(function () {
     Route::post('/', [CargaAcademicaDetalleController::class, 'store']);         // Crear nueva
     Route::put('/{id}', [CargaAcademicaDetalleController::class, 'update']);     // Actualizar
     Route::delete('/{id}', [CargaAcademicaDetalleController::class, 'destroy']); // Eliminar
+    Route::get('alumnoslista/{clavehorario}', [CargaAcademicaDetalleController::class, 'indexAlumnosByHorario']);
 });
 
 Route::prefix('comisiones')->group(function () {
@@ -619,6 +622,8 @@ Route::prefix('horario')->group(function () {
     Route::get('/{idperiodoescolar}/maestro/{tarjeta}', [HorarioAsignaturaMaestroController::class, 'indexByPeriodoAndMaestro']);
     Route::get('/periodo/{idperiodoescolar}/carrera/{clavecarrera}', [HorarioAsignaturaMaestroController::class, 'indexByPeriodoAndCarrera']);
     Route::get('/maestro/{tarjeta}', [HorarioAsignaturaMaestroController::class, 'indexByMaestro']);
+    Route::get('/alumnos/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'indexAlumnosByHorario']);
+Route::get('/alumnoss/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'indexAlumnosByHorarioSimple']);
 });
 
 
@@ -655,7 +660,6 @@ Route::prefix('maestro')->group(function () {
     Route::get('/edificios', [MaestroMController::class, 'getEdificios']);
 });
 
-use App\Http\Controllers\Api\AlumnoController;
 
 Route::prefix('alumno')->group(function () {
     Route::get('/horario/{numeroControl}', [AlumnoController::class, 'getHorario']);

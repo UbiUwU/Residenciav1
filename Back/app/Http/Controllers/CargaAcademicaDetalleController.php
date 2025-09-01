@@ -88,7 +88,39 @@ class CargaAcademicaDetalleController extends Controller
             ], 500);
         }
     }
+    public function indexAlumnosByHorario($clavehorario)
+    {
+        $validator = Validator::make(
+            ['clavehorario' => $clavehorario],
+            [
+                'clavehorario' => 'required|string|exists:horario_asignatura_maestro,clavehorario'
+            ]
+        );
 
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parámetro inválido',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $alumnos = CargaAcademicaDetalle::with([
+            'cargaGeneral.alumno:numerocontrol,nombre,apellidopaterno,apellidomaterno'
+        ])
+            ->where('clavehorario', $clavehorario)
+            ->get()
+            ->pluck('cargaGeneral.alumno')
+            ->filter()
+            ->values();
+
+        return response()->json([
+            'success' => true,
+            'data' => $alumnos,
+            'count' => $alumnos->count(),
+            'clavehorario' => $clavehorario
+        ], 200);
+    }
     /**
      * Display the specified resource.
      */
