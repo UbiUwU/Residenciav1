@@ -150,6 +150,56 @@ class HorarioAsignaturaMaestroController extends Controller
         ], 200);
     }
 
+    public function indexByMaestro($tarjeta)
+    {
+        // Validar el parámetro
+        $validator = Validator::make(
+            ['tarjeta' => $tarjeta],
+            [
+                'tarjeta' => 'required|string|exists:maestros,tarjeta'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parámetro inválido',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $horarios = HorarioAsignaturaMaestro::with([
+            'maestro' => function ($query) {
+                $query->soloNombre();
+            },
+            'aula',
+            'grupo',
+            'asignatura',
+            'periodoEscolar'
+        ])
+            ->where('tarjeta', $tarjeta)
+            ->orderBy('idperiodoescolar')
+            ->orderBy('claveasignatura')
+            ->get();
+
+        if ($horarios->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'No se encontraron horarios para el maestro especificado',
+                'data' => [],
+                'count' => 0
+            ], 200);
+        }
+        // Agrupar horarios por período escolar para mejor organización
+        $horariosAgrupados = $horarios->groupBy('idperiodoescolar');
+
+        return response()->json([
+            'success' => true,
+            'data' => $horariosAgrupados,
+            'count' => $horarios->count(),
+            'periodos_count' => $horariosAgrupados->count()
+        ], 200);
+    }
     // Crear un nuevo horario
     public function store(Request $request)
     {

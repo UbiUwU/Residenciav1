@@ -618,6 +618,7 @@ Route::prefix('horario')->group(function () {
     Route::delete('/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'destroy']); // Eliminar horario
     Route::get('/{idperiodoescolar}/maestro/{tarjeta}', [HorarioAsignaturaMaestroController::class, 'indexByPeriodoAndMaestro']);
     Route::get('/periodo/{idperiodoescolar}/carrera/{clavecarrera}', [HorarioAsignaturaMaestroController::class, 'indexByPeriodoAndCarrera']);
+    Route::get('/maestro/{tarjeta}', [HorarioAsignaturaMaestroController::class, 'indexByMaestro']);
 });
 
 
