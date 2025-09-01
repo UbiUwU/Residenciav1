@@ -2,6 +2,7 @@
 //http://localhost/Inicio%20de%20sesion/PlugginPDF2/generar_documento.php?tipo=libedocente&periodo_id=4&id_tabla=1
 //http://localhost/Inicio%20de%20sesion/PlugginPDF2/generar_documento.php?tipo=avance&periodo_id=4&id_tabla=1
 //http://sii.tiqroo.com/PlugginPDF2/generar_documento.php?tipo=comision&periodo_id=2&id_tabla=1&id_tarjeta=10001001
+
 require_once 'includes/db.php';
 require_once 'pdf.php';
 require_once 'tbs_3152/tbs_class.php';
