@@ -40,6 +40,8 @@ class InventarioController extends Controller
         return response()->json(['success' => true, 'estado' => 'ocupado']);
     }
 
+
+
     // 4. Liberar equipo (estado: disponible)
     public function liberarEquipo($inventario)
     {
@@ -48,5 +50,23 @@ class InventarioController extends Controller
             WHERE numeroinventario = ?", [$inventario]);
 
         return response()->json(['success' => true, 'estado' => 'disponible']);
+    }
+
+    // 5. eliminar reserva de equipo
+    public function eliminarReserva($inventario)
+    {
+        DB::delete("delete from public.reservacionalumnos 
+        where numeroinventario=?", [$inventario]);
+        return response()->json(['success' => true, 'mensaje' => 'Reserva eliminada']);
+    }
+
+    //5.- cambiar estado a esperando aprovacion
+    public function marcarEsperandoAprovacion($inventario)
+    {
+        DB::update("
+            UPDATE computadora SET estado = 'Esperando aprobacion' 
+            WHERE numeroinventario = ?", [$inventario]);
+
+        return response()->json(['success' => true, 'estado' => 'Esperando aprovacion']);
     }
 }

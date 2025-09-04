@@ -658,6 +658,7 @@ Route::prefix('maestro')->group(function () {
     Route::post('/bitacora', [MaestroMController::class, 'registrarBitacora']);
     Route::get('/aulas', [MaestroMController::class, 'getAulas']);
     Route::get('/edificios', [MaestroMController::class, 'getEdificios']);
+    Route::get('/{tarjeta}', [MaestroMController::class, 'GetMaestro']);
 });
 
 
@@ -686,6 +687,14 @@ Route::prefix('alumno')->group(function () {
 
 });
 
+Route::prefix('admin')->group(function () {
+    Route::get('/horario-aula/{claveAula}', [AlumnoController::class, 'getHorarioAula']);
+    Route::get('/bitacora-alumnos', [AlumnoController::class, 'getallBitacoraAlumno']);
+    Route::get('/bitacora-maestros', [MaestroMController::class, 'getallBitacoraMaestro']);
+
+});
+
+
 use App\Http\Controllers\Api\InventarioController;
 
 Route::prefix('inventario')->group(function () {
@@ -693,6 +702,15 @@ Route::prefix('inventario')->group(function () {
     Route::put('/equipo/{inventario}/reservado', [InventarioController::class, 'marcarReservado']);
     Route::put('/equipo/{inventario}/ocupado', [InventarioController::class, 'marcarOcupado']);
     Route::put('/equipo/{inventario}/liberar', [InventarioController::class, 'liberarEquipo']);
+    Route::put('/equipo/{inventario}/aprobar', [InventarioController::class, 'marcarEsperandoAprovacion']);
+    Route::delete('/equipo/{inventario}/eliminar-reserva', [InventarioController::class, 'eliminarReserva']);
+});
+
+Route::prefix('aulas')->group(function () {
+    Route::put('/{claveaula}/reservado', [MaestroMController::class, 'marcarReservado']);
+    Route::put('/{claveaula}/ocupado', [MaestroMController::class, 'marcarOcupado']);
+    Route::put('/{claveaula}/liberar', [MaestroMController::class, 'liberarAula']);
+    Route::put('/{claveaula}/aprobar', [MaestroMController::class, 'esperandoAprobacion']);
 });
 
 use App\Http\Controllers\Api\AuthController;
@@ -708,6 +726,10 @@ Route::prefix('notificaciones')->group(function () {
     Route::get('/', [NotificacionesController::class, 'index']);
     Route::get('/{Usuario_id}', [NotificacionesController::class, 'show']);
     Route::post('/', [NotificacionesController::class, 'store']);
+    Route::post('/insertar', [NotificacionesController::class, 'insertNotificacionUsuario']);
     Route::put('/{id}', [NotificacionesController::class, 'update']);
     Route::delete('/{id}', [NotificacionesController::class, 'destroy']);
-});
+
+    
+}
+);

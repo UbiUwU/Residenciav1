@@ -23,7 +23,7 @@ class AlumnoController extends Controller
     // Obtener un alumno por número de control
     public function show($numeroControl)
     {
-        $alumno = DB::select("SELECT * FROM get_alumno_by_id(?)", [$numeroControl]);
+        $alumno = DB::select("select * from alumnos where numerocontrol = ?", [$numeroControl]);
 
         if (empty($alumno)) {
             return response()->json([
@@ -371,77 +371,88 @@ class AlumnoController extends Controller
 
     // 11. Registrar en bitácora
     public function registrarBitacora(Request $request)
-    {
+{
         $request->validate([
-            'numerocontrol' => 'required',
-            'numeroinventario' => 'required'
-        ]);
+        'numerocontrol' => 'required',
+        'numeroinventario' => 'required',
+        'horaEntrada' => 'required|date_format:Y-m-d H:i:s',
+        'horaSalida' => 'required|date_format:Y-m-d H:i:s',
+        'tiempoUso' => 'required'
+    ]);
 
-        DB::select("SELECT * FROM insert_bitacora_alumno(?, ?)", [
+    // Insertar en la base de datos
+    DB::insert(
+        "INSERT INTO public.bitacora_alumnos (
+            hora_entrada, hora_salida, tiempo_uso, numerocontrol, numeroinventario
+        ) VALUES (?, ?, ?, ?, ?)",
+        [
+            $request->horaEntrada,
+            $request->horaSalida,
+            $request->tiempoUso,
             $request->numerocontrol,
             $request->numeroinventario
-        ]);
+        ]
+    );
 
-        return response()->json(['success' => true, 'message' => 'Bitácora registrada']);
-    }
-    public function cerrarBitacora(Request $request)
-    {
-        $request->validate([
-            'id_bitacora_alumno' => 'required|integer'
-        ]);
-
-        $result = DB::select("SELECT * FROM close_bitacora_alumno(?)", [
-            $request->id_bitacora_alumno
-        ]);
-
-        if (empty($result)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al cerrar la bitácora.'
-            ], 400);
-        }
-
-        $row = $result[0];
-
-        return response()->json([
-            'success' => $row->tiempo_uso !== null,
-            'message' => $row->mensaje,
-            'tiempo_uso' => $row->tiempo_uso ?? null
-        ]);
-    }
-
-    public function verBitacoraAlumno(Request $request)
-    {
-        $request->validate([
-            'numerocontrol' => 'required|integer'
-        ]);
-
-        $bitacora = DB::select("
-        SELECT 
-            id_bitacora_alumno,
-            numerocontrol,
-            numeroinventario,
-            hora_entrada,
-            hora_salida,
-            tiempo_uso
-        FROM bitacora_alumnos
-        WHERE numerocontrol = ?
-        ORDER BY hora_entrada DESC
-    ", [$request->numerocontrol]);
-
-        if (empty($bitacora)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontraron registros en la bitácora para este alumno.'
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Bitácora encontrada.',
-            'data' => $bitacora
-        ]);
-    }
+    return response()->json([
+        'success' => true,
+        'message' => 'Bitácora registrada'
+    ]);
+}
 
 
+
+
+
+    //horario por aulas admin
+public function getHorarioAula($claveAula)
+{
+    $horario = DB::select("
+        SELECT jsonb_agg(
+            jsonb_strip_nulls(
+                jsonb_build_object(
+                    'Asignatura', m.\"NombreAsignatura\",
+                    'Aula', au.Nombre,
+                    'Profesor',  COALESCE(mtros.Nombre, '') || ' ' || 
+                                COALESCE(mtros.apellidopaterno, '') || ' ' || 
+                                COALESCE(mtros.apellidomaterno, ''),
+                    'Inicio Lunes', hm.lunes_hi,
+                    'Fin Lunes', hm.lunes_hf,
+                    'Inicio Martes', hm.martes_hi,
+                    'Fin Martes', hm.martes_hf,
+                    'Inicio Miercoles', hm.miercoles_hi,
+                    'Fin Miercoles', hm.miercoles_hf,
+                    'Inicio Jueves', hm.jueves_hi,
+                    'Fin Jueves', hm.jueves_hf,
+                    'Inicio Viernes', hm.viernes_hi,
+                    'Fin Viernes', hm.viernes_hf,
+                    'Inicio Sabado', hm.sabado_hi,
+                    'Fin Sabado', hm.sabado_hf
+                )
+            )
+        ) AS horario_aula
+        FROM HorarioAsignatura_Maestro hm
+        JOIN Asignatura m ON hm.ClaveAsignatura = m.\"ClaveAsignatura\"
+        JOIN Aulas au ON hm.ClaveAula = au.ClaveAula
+        JOIN Maestros mtros ON hm.tarjeta = mtros.tarjeta
+        WHERE hm.ClaveAula = ?
+    ", [$claveAula]);
+
+    return response()->json([
+        'success' => true,
+        'aula' => $claveAula,
+        'horario' => $horario[0]->horario_aula ?? []
+    ]);
+}
+
+public function getallBitacoraAlumno()
+{
+    $Bitacoraalumnos = DB::select("select * from bitacora_alumnos");
+
+    return response()->json([
+        'success' => true,
+        'data' => $Bitacoraalumnos
+    ]);
+
+}
 }
