@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\DB;
 
 class MaestroMController extends Controller
 {
+
+    public function GetMaestro($tarjeta){
+        $maestro = DB::select("SELECT * FROM public.maestros where tarjeta=?", [$tarjeta]);
+        return response()->json($maestro);
+    }
+
+
     // 1. Obtener horario del maestro
     public function getHorario($tarjeta)
 {
@@ -62,7 +69,7 @@ class MaestroMController extends Controller
         ]);
 
         $data = DB::select("
-            SELECT rm.claveaula, a.claveedificio, a.nombre, 
+            SELECT rm.claveaula, a.claveedificio, a.nombre, a.estado, 
                    rm.fechareservacion, rm.horainicio, TO_CHAR(rm.horafin, 'HH24:MI') as hora_fin
             FROM reservacionmaestros rm
             JOIN aulas a ON rm.claveaula = a.claveaula
@@ -164,4 +171,52 @@ class MaestroMController extends Controller
         return response()->json($edificios);                            
     }
 
+    public function marcarReservado($clave_aula)
+    {
+        DB::update("
+            UPDATE aulas
+SET estado = 'reservado' where claveaula= ?;", [$clave_aula]);
+
+        return response()->json(['success' => true, 'estado' => ' aula reservada']);
+    }   
+    
+    public function marcarOcupado($clave_aula)
+    {
+        DB::update("
+            UPDATE aulas
+SET estado = 'ocupado' where claveaula= ?;", [$clave_aula]);
+
+        return response()->json(['success' => true, 'estado' => ' aula ocupada']);
+    }
+
+    public function liberarAula($clave_aula)
+    {
+        DB::update("
+            UPDATE aulas
+SET estado = 'disponible' where claveaula= ?;", [$clave_aula]);
+
+        return response()->json(['success' => true, 'estado' => ' aula disponible']);
+    }
+
+    public function esperandoAprobacion($clave_aula)
+    {
+        DB::update("
+            UPDATE aulas
+SET estado = 'Esperando aprobacion' where claveaula= ?;", [$clave_aula]);
+
+
+        return response()->json(['success' => true, 'estado' => ' aula esperando aprobacion']);
+    }  
+
+
+    public function getallBitacoraMaestro()
+{
+    $BitacoraMaestros = DB::select("select * from bitacora_maestros");
+
+    return response()->json([
+        'success' => true,
+        'data' => $BitacoraMaestros
+    ]);
+
+}
 }

@@ -63,7 +63,7 @@ ORDER BY
             return response()->json([
                 'success' => false,
                 'message' => 'No se encontraron notificaciones para este usuario.'
-            ], 404);
+            ]);
         }
         return response()->json([
             'success' => true,
@@ -114,4 +114,79 @@ ORDER BY
     {
         
     }
+
+    //insertar notificacion de usuario
+    
+public function insertNotificacionUsuario(Request $request)
+{
+    $validatedData = $request->validate([
+        'titulo' => 'required|string|max:200',
+        'mensaje' => 'required|string',
+        'tipo_notificacion_id' => 'required|integer|exists:tiponotificaciones,idtiponotificaciones',
+        'fecha_hora' => 'required|date',
+        'usuarios' => 'required|array',
+        'usuarios.*' => 'integer|exists:usuarios,idusuario',
+        'carreras' => 'nullable|array',
+        'carreras.*' => 'string|exists:carreras,clave'
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        // Insertar notificación
+        $notificacionId = DB::selectOne("
+            INSERT INTO notificaciones (titulonotificaciones, mensaje, idtiponotificaciones, fechahoranotificacion, fechacreacion)
+            VALUES (?, ?, ?, ?, ?)
+            RETURNING idnotificaciones",
+            [
+                $validatedData['titulo'],
+                $validatedData['mensaje'],
+                $validatedData['tipo_notificacion_id'],
+                $validatedData['fecha_hora'],
+                now()
+            ]
+        )->idnotificaciones;
+
+        // Insertar usuarios relacionados
+        if (!empty($validatedData['usuarios'])) {
+            $usuariosValues = array_map(function($usuarioId) use ($notificacionId) {
+                return "({$notificacionId}, {$usuarioId})";
+            }, $validatedData['usuarios']);
+
+            DB::insert("
+                INSERT INTO notificacionesusuario (idnotificaciones, idusuario)
+                VALUES " . implode(',', $usuariosValues)
+            );
+        }
+
+        // Insertar carreras relacionadas
+        if (!empty($validatedData['carreras'])) {
+            $carrerasValues = array_map(function($carreraClave) use ($notificacionId) {
+                return "({$notificacionId}, '{$carreraClave}')";
+            }, $validatedData['carreras']);
+
+            DB::insert("
+                INSERT INTO notificacionescarrera (idnotificaciones, clavecarrera)
+                VALUES " . implode(',', $carrerasValues)
+            );
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Notificación creada exitosamente',
+            'notificacion_id' => $notificacionId
+        ], 200);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al crear la notificación',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
 }

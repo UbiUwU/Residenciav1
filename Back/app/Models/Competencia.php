@@ -12,16 +12,26 @@ class Competencia extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'Clave_Asignatura',
+        'ClaveAsignatura',
         'Descripcion',
-        'Tipo_Competencia',
+        'Tipo_Competencia'
     ];
 
-    /**
-     * Relación con Asignatura
-     */
+    protected $casts = [
+        'Tipo_Competencia' => 'string'
+    ];
+
     public function asignatura(): BelongsTo
     {
-        return $this->belongsTo(Asignatura::class, 'Clave_Asignatura', 'ClaveAsignatura');
+        return $this->belongsTo(Asignatura::class, 'ClaveAsignatura', 'ClaveAsignatura');
     }
+
+    // En el modelo Competencia
+public function scopeGenericasOEspecificas($query)
+{
+    return $query->where(function($q) {
+        $q->whereRaw("'Generica' = ANY(\"Tipo_Competencia\")")
+          ->orWhereRaw("'Específica' = ANY(\"Tipo_Competencia\")");
+    });
+}
 }

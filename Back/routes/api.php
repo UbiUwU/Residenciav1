@@ -1,14 +1,35 @@
 <?php
 
+use App\Http\Controllers\ActividadAprendizajeTemaController;
+use App\Http\Controllers\ActividadEnsenanzaInstrumentacionController;
+use App\Http\Controllers\ApoyoDidacticoInstrumentacionController;
+use App\Http\Controllers\CalendarizacionEvaluacionInstrumentacionController;
 use App\Http\Controllers\CatalogoTiposFechaController;
 use App\Http\Controllers\ComisionController;
 use App\Http\Controllers\CompetenciaController;
+use App\Http\Controllers\CompetenciaEspecificaTemaController;
+use App\Http\Controllers\CompetenciaGenericaTemaController;
+use App\Http\Controllers\CompetenciaGenericoInstrumentacionController;
+use App\Http\Controllers\CompetenciaInstrumentacionController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\EdificioController;
+use App\Http\Controllers\EstadoPlantillaController;
+use App\Http\Controllers\EvaluacionCompetenciaInstrumentacionController;
+use App\Http\Controllers\EvaluacionCompetenciasController;
 use App\Http\Controllers\FechasClavePeriodoController;
+use App\Http\Controllers\FuentesInformacionController;
+use App\Http\Controllers\IndicadorAlcanceController;
+use App\Http\Controllers\IndicadorAlcanceEvaluacionInstrumentacionController;
+use App\Http\Controllers\IndicadorAlcanceInstrumentacionController;
+use App\Http\Controllers\InstrumentacionController;
+use App\Http\Controllers\NivelDesempenoInstrumentacionController;
+use App\Http\Controllers\PlantillaController;
+use App\Http\Controllers\PractiasasignaturaController;
 use App\Http\Controllers\PracticaController;
+use App\Http\Controllers\ProyectoAsignaturaController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\TipoEventoController;
+use App\Http\Controllers\TipoPlantillaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AsignaturaController;
 use App\Http\Controllers\MaestroController;
@@ -28,7 +49,265 @@ use App\Http\Controllers\HorarioAsignaturaMaestroController;
 use App\Http\Controllers\AvanceDetalleController;
 use App\Http\Controllers\AvanceDetalleFechaController;
 use App\Http\Controllers\AvanceFechaController;
+use App\Http\Controllers\Api\AlumnoController;
+use App\Http\Controllers\AlumnoReworkController;
+use App\Http\Controllers\LiberacionAcademicaController;
+use App\Http\Controllers\LiberacionAcademicaDetalleController;
+use App\Http\Controllers\LiberacionDocenteController;
+use App\Http\Controllers\LiberacionDocenteDetalleController;
 
+
+// Rutas para LiberacionDocente
+
+Route::prefix('liberacionesdocentes')->group(function () {
+    Route::get('', [LiberacionDocenteController::class, 'index']);
+    Route::post('', [LiberacionDocenteController::class, 'store']);
+    Route::get('/{id}', [LiberacionDocenteController::class, 'show']);
+    Route::put('/{id}', [LiberacionDocenteController::class, 'update']);
+    Route::delete('/{id}', [LiberacionDocenteController::class, 'destroy']);
+    Route::put('/{id}/estado', [LiberacionDocenteController::class, 'cambiarEstadoLiberacion']);
+    Route::get('/departamento/{id_departamento}', [LiberacionDocenteController::class, 'indexByDepartamento']);
+    Route::get('/periodo/{id_periodo_escolar}', [LiberacionDocenteController::class, 'indexByPeriodo']);
+    Route::get('/departamento/{id_departamento}/periodo/{id_periodo_escolar}', [LiberacionDocenteController::class, 'indexByDepartamentoPeriodo']);
+    Route::get('/maestro/{tarjeta_maestro}', [LiberacionDocenteController::class, 'indexByMaestro']);
+    Route::get('/maestro/{tarjeta_maestro}/periodo/{id_periodo_escolar}', [LiberacionDocenteController::class, 'indexByMaestroPeriodo']);
+
+});
+
+Route::prefix('liberacionesdocentesde')->group(function () {
+// Rutas para LiberacionDocenteDetalleController
+Route::post('/{id_liberacion}', [LiberacionDocenteDetalleController::class, 'store']);
+Route::put('/{id}', [LiberacionDocenteDetalleController::class, 'update']);
+Route::delete('/{id}', [LiberacionDocenteDetalleController::class, 'destroy']);
+Route::post('/M/{id_liberacion}', [LiberacionDocenteDetalleController::class, 'storeMultiple']);
+Route::put('/MUpdate/{id_liberacion}', [LiberacionDocenteDetalleController::class, 'updateMultiple']);
+Route::put('liberacionesdocentes/detalles/{id}/estado', [LiberacionDocenteDetalleController::class, 'updateEstado']);
+});
+
+
+Route::prefix('liberacionesacademicas')->group(function () {
+Route::get('/', [LiberacionAcademicaController::class, 'index']);
+Route::get('/departamento/{id_departamento}', [LiberacionAcademicaController::class, 'indexByDepartamento']);
+Route::get('/periodo/{id_periodo_escolar}', [LiberacionAcademicaController::class, 'indexByPeriodo']);
+Route::get('/departamento/{id_departamento}/periodo/{id_periodo_escolar}', [LiberacionAcademicaController::class, 'indexByDepartamentoPeriodo']);
+Route::get('/maestro/{tarjeta_maestro}', [LiberacionAcademicaController::class, 'indexByMaestro']);
+Route::get('/maestro/{tarjeta_maestro}/periodo/{id_periodo_escolar}', [LiberacionAcademicaController::class, 'indexByMaestroPeriodo']);
+Route::post('/', [LiberacionAcademicaController::class, 'store']);
+Route::get('/{id}', [LiberacionAcademicaController::class, 'show']);
+Route::put('/{id}', [LiberacionAcademicaController::class, 'update']);
+Route::delete('/{id}', [LiberacionAcademicaController::class, 'destroy']);
+Route::put('/{id}/estado', [LiberacionAcademicaController::class, 'cambiarEstadoLiberacion']);
+});
+
+
+Route::prefix('liberacionesacademicasde')->group(function () {
+    Route::post('/{id_liberacion}', [LiberacionAcademicaDetalleController::class, 'store']);
+Route::put('/{id}', [LiberacionAcademicaDetalleController::class, 'update']);
+Route::delete('/{id}', [LiberacionAcademicaDetalleController::class, 'destroy']);
+Route::post('/M/{id_liberacion}', [LiberacionAcademicaDetalleController::class, 'storeMultiple']);
+Route::put('/MUpdate/{id_liberacion}', [LiberacionAcademicaDetalleController::class, 'updateMultiple']);
+Route::put('/detalles/{id}/estado', [LiberacionAcademicaDetalleController::class, 'updateEstado']);
+});
+
+Route::prefix('competenciasgenericastemas')->group(function () {
+    Route::post('/', [CompetenciaGenericaTemaController::class, 'createOne']);
+    Route::post('/M', [CompetenciaGenericaTemaController::class, 'createMultiple']);
+    Route::put('/{id}', [CompetenciaGenericaTemaController::class, 'updateOne']);
+    Route::put('/M/U', [CompetenciaGenericaTemaController::class, 'updateMultiple']);
+    Route::delete('/{id}', [CompetenciaGenericaTemaController::class, 'deleteOne']);
+});
+
+Route::prefix('competenciasespecificastemas')->group(function () {
+    Route::post('/', [CompetenciaEspecificaTemaController::class, 'createOne']);
+    Route::post('/M', [CompetenciaEspecificaTemaController::class, 'createMultiple']);
+    Route::put('/{id}', [CompetenciaEspecificaTemaController::class, 'updateOne']);
+    Route::put('/M/U', [CompetenciaEspecificaTemaController::class, 'updateMultiple']);
+    Route::delete('/{id}', [CompetenciaEspecificaTemaController::class, 'deleteOne']);
+});
+
+Route::prefix('actividadesaprendizajetemas')->group(function () {
+    Route::post('/', [ActividadAprendizajeTemaController::class, 'createOne']);
+    Route::post('/M', [ActividadAprendizajeTemaController::class, 'createMultiple']);
+    Route::put('/{id}', [ActividadAprendizajeTemaController::class, 'updateOne']);
+    Route::put('/M/U', [ActividadAprendizajeTemaController::class, 'updateMultiple']);
+    Route::delete('/{id}', [ActividadAprendizajeTemaController::class, 'deleteOne']);
+});
+
+Route::prefix('practicastema')->group(function () {
+    Route::post('/', [PractiasasignaturaController::class, 'createOne']);
+    Route::post('/M', [PractiasasignaturaController::class, 'createMultiple']);
+    Route::put('/{id}', [PractiasasignaturaController::class, 'updateOne']);
+    Route::put('/M/U', [PractiasasignaturaController::class, 'updateMultiple']);
+    Route::delete('/{id}', [PractiasasignaturaController::class, 'deleteOne']);
+});
+
+// Rutas para Fuentes de Información
+Route::prefix('fuentesinformacion')->group(function () {
+    Route::post('/', [FuentesInformacionController::class, 'createOne']);
+    Route::post('/M/', [FuentesInformacionController::class, 'createMultiple']);
+    Route::put('/{id}', [FuentesInformacionController::class, 'updateOne']);
+    Route::put('/M/U', [FuentesInformacionController::class, 'updateMultiple']);
+    Route::delete('/{id}', [FuentesInformacionController::class, 'deleteOne']);
+});
+
+// Rutas para Evaluación por Competencias
+Route::prefix('evaluacioncompetencias')->group(function () {
+    Route::post('/', [EvaluacionCompetenciasController::class, 'createOne']);
+    Route::post('/M/', [EvaluacionCompetenciasController::class, 'createMultiple']);
+    Route::put('/{id}', [EvaluacionCompetenciasController::class, 'updateOne']);
+    Route::put('/M/U', [EvaluacionCompetenciasController::class, 'updateMultiple']);
+    Route::delete('/{id}', [EvaluacionCompetenciasController::class, 'deleteOne']);
+});
+
+Route::prefix('proyectosasignatura')->group(function () {
+    Route::post('/', [ProyectoAsignaturaController::class, 'createOne']);
+    Route::post('/M', [ProyectoAsignaturaController::class, 'createMultiple']);
+    Route::put('/{id}', [ProyectoAsignaturaController::class, 'updateOne']);
+    Route::put('/M/U', [ProyectoAsignaturaController::class, 'updateMultiple']);
+    Route::delete('/{id}', [ProyectoAsignaturaController::class, 'deleteOne']);
+    Route::get('/asignatura/{claveAsignatura}', [ProyectoAsignaturaController::class, 'getByAsignatura']);
+});
+
+Route::prefix('competencias')->group(function () {
+    Route::post('/', [CompetenciaController::class, 'createOne']);
+    Route::post('/M', [CompetenciaController::class, 'createMultiple']);
+    Route::put('/{id}', [CompetenciaController::class, 'updateOne']);
+    Route::put('/M/U', [CompetenciaController::class, 'updateMultiple']);
+    Route::delete('/{id}', [CompetenciaController::class, 'deleteOne']);
+
+});
+
+
+Route::prefix('calendarizacionesinstrumentacion')->group(function () {
+    Route::post('/', [CalendarizacionEvaluacionInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [CalendarizacionEvaluacionInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [CalendarizacionEvaluacionInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [CalendarizacionEvaluacionInstrumentacionController::class, 'updateMultiple']);
+});
+
+Route::prefix('apoyosdidacticosinstrumentacion')->group(function () {
+    Route::post('/', [ApoyoDidacticoInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [ApoyoDidacticoInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [ApoyoDidacticoInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [ApoyoDidacticoInstrumentacionController::class, 'updateMultiple']);
+});
+
+
+Route::prefix('instrumentacion')->group(function () {
+    // Index
+    Route::get('/', [InstrumentacionController::class, 'indexCompleto']);
+    Route::get('/Clean', [InstrumentacionController::class, 'indexBasico']);
+    
+    // Búsquedas específicas
+    Route::get('/periodo/{idPeriodo}', [InstrumentacionController::class, 'buscarPorPeriodo']);
+    Route::get('/maestro/{tarjetaMaestro}', [InstrumentacionController::class, 'buscarPorMaestro']);
+    Route::get('/departamento/{idDepartamento}', [InstrumentacionController::class, 'buscarPorDepartamento']);
+    Route::get('/carrera/{claveCarrera}', [InstrumentacionController::class, 'buscarPorCarrera']);
+    Route::get('/buscar', [InstrumentacionController::class, 'buscarCombinada']);
+    
+    // CRUD básico
+    Route::post('/', [InstrumentacionController::class, 'create']);
+    Route::put('/{id}', [InstrumentacionController::class, 'update']);
+    Route::get('/{id}', [InstrumentacionController::class, 'show']);
+});
+
+
+
+
+// Competencias de Instrumentación
+Route::prefix('competenciasinstrumentacion')->group(function () {
+    Route::post('/', [CompetenciaInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [CompetenciaInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [CompetenciaInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [CompetenciaInstrumentacionController::class, 'updateMultiple']);
+});
+
+// Competencias Genéricas de Instrumentación
+Route::prefix('competenciasgenericasinstrumentacion')->group(function () {
+    Route::post('/', [CompetenciaGenericoInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [CompetenciaGenericoInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [CompetenciaGenericoInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [CompetenciaGenericoInstrumentacionController::class, 'updateMultiple']);
+});
+
+// Actividades de Enseñanza de Instrumentación
+Route::prefix('actividadesensenanzainstrumentacion')->group(function () {
+    Route::post('/', [ActividadEnsenanzaInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [ActividadEnsenanzaInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [ActividadEnsenanzaInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [ActividadEnsenanzaInstrumentacionController::class, 'updateMultiple']);
+});
+
+// Indicadores de Alcance de Instrumentación
+Route::prefix('indicadoresalcanceinstrumentacion')->group(function () {
+    Route::post('/', [IndicadorAlcanceInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [IndicadorAlcanceInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [IndicadorAlcanceInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [IndicadorAlcanceInstrumentacionController::class, 'updateMultiple']);
+});
+
+// Niveles de Desempeño de Instrumentación
+Route::prefix('nivelesdesempenoinstrumentacion')->group(function () {
+    Route::post('/', [NivelDesempenoInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [NivelDesempenoInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [NivelDesempenoInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [NivelDesempenoInstrumentacionController::class, 'updateMultiple']);
+});
+
+// Indicadores de Alcance (para niveles de desempeño)
+Route::prefix('indicadoresalcance')->group(function () {
+    Route::post('/', [IndicadorAlcanceController::class, 'createOne']);
+    Route::post('/M', [IndicadorAlcanceController::class, 'createMultiple']);
+    Route::put('/{id}', [IndicadorAlcanceController::class, 'updateOne']);
+    Route::put('/M/U', [IndicadorAlcanceController::class, 'updateMultiple']);
+});
+
+// Evaluaciones de Competencias de Instrumentación
+Route::prefix('evaluacionescompetenciasinstrumentacion')->group(function () {
+    Route::post('/', [EvaluacionCompetenciaInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [EvaluacionCompetenciaInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [EvaluacionCompetenciaInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [EvaluacionCompetenciaInstrumentacionController::class, 'updateMultiple']);
+});
+
+// Indicadores de Alcance para Evaluación de Instrumentación
+Route::prefix('indicadoresalcanceevaluacioninstrumentacion')->group(function () {
+    Route::post('/', [IndicadorAlcanceEvaluacionInstrumentacionController::class, 'createOne']);
+    Route::post('/M', [IndicadorAlcanceEvaluacionInstrumentacionController::class, 'createMultiple']);
+    Route::put('/{id}', [IndicadorAlcanceEvaluacionInstrumentacionController::class, 'updateOne']);
+    Route::put('/M/U', [IndicadorAlcanceEvaluacionInstrumentacionController::class, 'updateMultiple']);
+});
+
+// Tipos de Plantilla
+Route::prefix('tiposplantilla')->group(function () {
+    Route::get('/', [TipoPlantillaController::class, 'index']);
+    Route::get('/{id}', [TipoPlantillaController::class, 'show']);
+    Route::post('/', [TipoPlantillaController::class, 'store']);
+    Route::put('/{id}', [TipoPlantillaController::class, 'update']);
+    Route::delete('/{id}', [TipoPlantillaController::class, 'destroy']);
+});
+
+// Estados de Plantilla
+Route::prefix('estadosplantilla')->group(function () {
+    Route::get('/', [EstadoPlantillaController::class, 'index']);
+    Route::get('/{id}', [EstadoPlantillaController::class, 'show']);
+    Route::post('/', [EstadoPlantillaController::class, 'store']);
+    Route::put('/{id}', [EstadoPlantillaController::class, 'update']);
+    Route::delete('/{id}', [EstadoPlantillaController::class, 'destroy']);
+});
+
+// Plantillas
+Route::prefix('plantillas')->group(function () {
+    Route::get('/', [PlantillaController::class, 'index']);
+    Route::get('/{id}', [PlantillaController::class, 'show']);
+    Route::post('/', [PlantillaController::class, 'store']);
+    Route::put('/{id}', [PlantillaController::class, 'update']);
+    Route::delete('/{id}', [PlantillaController::class, 'destroy']);
+    Route::put('/{id}/cambiar-estado', [PlantillaController::class, 'cambiarEstado']);
+    Route::get('/tipo/{tipoId}', [PlantillaController::class, 'porTipo']);
+    Route::get('/periodo/{periodoId}', [PlantillaController::class, 'porPeriodo']);
+    Route::get('/buscar', [PlantillaController::class, 'buscar']);
+});
 
 // routes/api.php
 Route::get('/enum/{tipo}', [App\Http\Controllers\EnumController::class, 'getValores']);
@@ -74,7 +353,36 @@ Route::prefix('maestros')->group(function () {
     Route::put('/{id}', [MaestroController::class, 'update']); // Actualizar
     Route::delete('/{id}', [MaestroController::class, 'destroy']); // Eliminar
     Route::get('/ListaM/{tarjeta}', [MaestroController::class, 'ListaM']);
+    Route::get('/departamento/{idDepartamento}', [MaestroController::class, 'indexByDepartamentoBasic']);
 });
+
+use App\Http\Controllers\EstadisticasMaestroController;
+
+Route::get('/estadisticasmaestro/tarjeta/{tarjeta}/periodo/{id_periodo_escolar}', [EstadisticasMaestroController::class, 'estadisticasPorPeriodo']);
+
+use App\Http\Controllers\ReporteFinalController;
+
+// Rutas para ReporteFinal
+Route::get('reportesfinale', [ReporteFinalController::class, 'index']);
+Route::post('reportesfinale', [ReporteFinalController::class, 'store']);
+Route::get('reportesfinale/{id}', [ReporteFinalController::class, 'show']);
+Route::put('reportesfinale/{id}', [ReporteFinalController::class, 'update']);
+Route::delete('reportesfinale/{id}', [ReporteFinalController::class, 'destroy']);
+
+// Rutas adicionales
+Route::get('reportesfinales/maestro/{tarjeta}/periodo/{id_periodo_escolar}', [ReporteFinalController::class, 'getByMaestroPeriodo']);
+Route::put('reportesfinales/{id}/cambiar-estado', [ReporteFinalController::class, 'cambiarEstado']);
+
+use App\Http\Controllers\DatosEstaticosReporteFinalController;
+use App\Http\Controllers\ReporteFinalAsignaturaController;
+
+Route::put('DatosReportefinal/{id_reportefinal}', [DatosEstaticosReporteFinalController::class, 'update']);
+Route::delete('DatosReportefinal/{id_reportefinal}/datos-estaticos', [DatosEstaticosReporteFinalController::class, 'destroy']);
+
+Route::put('asignaturasReporteFinales/{id}', [ReporteFinalAsignaturaController::class, 'update']);
+Route::delete('reportes-finales/asignaturas/{id}', [ReporteFinalAsignaturaController::class, 'destroy']);
+Route::put('asignaturasReporteFinales/M/{id_reportefinal}', [ReporteFinalAsignaturaController::class, 'updateMultiple']);
+
 
 Route::prefix('carreras')->group(function () {
     Route::get('/', [CarreraController::class, 'index']);
@@ -126,20 +434,23 @@ Route::prefix('horarios')->group(function () {
     Route::delete('/{clave_horario}', [HorarioController::class, 'destroy']);
 });
 
-    //Rutas para los datos generales de la materia
+//Rutas para los datos generales de la materia
 Route::prefix('asignaturas')->group(function () {
-    Route::get('/', [AsignaturaController::class, 'index']);               // Listar todas
+    Route::get('/', [AsignaturaController::class, 'index']);
+    Route::get('/clean', [AsignaturaController::class, 'indexC']);           // Listar todas
+    Route::get('/carrera/{clavecarrera}', [AsignaturaController::class, 'indexByCarrera']); // Filtrar por carrera
     Route::get('/{ClaveAsignatura}', [AsignaturaController::class, 'show']); // Mostrar 1
     Route::post('/', [AsignaturaController::class, 'store']);              // Crear nueva
     Route::put('/{ClaveAsignatura}', [AsignaturaController::class, 'update']); // Actualizar
     Route::delete('/{ClaveAsignatura}', [AsignaturaController::class, 'destroy']); // Eliminar
+
 
     Route::get('/maestro/{clave}', [AsignaturaController::class, 'getByTarjetaComplete']);
     Route::get('/grupos/{clave}', [AsignaturaController::class, 'getDetalleGruposByTarjeta']);
     Route::get('/complete/{clave}', [AsignaturaController::class, 'getByClaveComplete']);
     //Reporte
     Route::get('/asignaturas/generate-pdf', [AsignaturaController::class, 'generatePDF']);
-   
+
 });
 
 Route::prefix('presentacion')->group(function () {
@@ -156,9 +467,6 @@ Route::delete('/diseno/{id}', [DisenoController::class, 'destroy']);
 Route::put('/diseno/participantes/{id}', [DisenoController::class, 'updateParticipantes']);
 Route::delete('/diseno/{id}/participante/{participante_id}', [DisenoController::class, 'eliminarParticipante']);
 
-Route::post('/competencias', [CompetenciaController::class, 'store']);
-Route::put('/competencias/{id}', [CompetenciaController::class, 'update']);
-Route::delete('/competencias/{id}', [CompetenciaController::class, 'destroy']);
 
 Route::post('/practicas', [PracticaController::class, 'store']);
 Route::put('/practicas/{id}', [PracticaController::class, 'update']);
@@ -215,12 +523,39 @@ use App\Http\Controllers\CalificacionUnidadController;
 Route::post('/calificaciones', [CalificacionUnidadController::class, 'store']);
 Route::get('/calificaciones/reporte/{tarjeta}', [CalificacionUnidadController::class, 'getDetalleGruposPorCarrera']);
 
+
+Route::prefix('alumnosR')->group(function () {
+    Route::get('/', [AlumnoReworkController::class, 'index']);           // Listar todas
+    Route::get('/{id}', [AlumnoReworkController::class, 'show']);       // Mostrar 1
+    Route::post('/', [AlumnoReworkController::class, 'store']);         // Crear nueva
+    Route::put('/{id}', [AlumnoReworkController::class, 'update']);     // Actualizar
+    Route::delete('/{id}', [AlumnoReworkController::class, 'destroy']); // Eliminar
+});
+
+use App\Http\Controllers\CargaAcademicaDetalleController;
+
+Route::prefix('cargadetalles')->group(function () {
+    Route::get('/', [CargaAcademicaDetalleController::class, 'index']);           // Listar todas
+    Route::get('/{id}', [CargaAcademicaDetalleController::class, 'show']);       // Mostrar 1
+    Route::post('/', [CargaAcademicaDetalleController::class, 'store']);         // Crear nueva
+    Route::put('/{id}', [CargaAcademicaDetalleController::class, 'update']);     // Actualizar
+    Route::delete('/{id}', [CargaAcademicaDetalleController::class, 'destroy']); // Eliminar
+    Route::get('alumnoslista/{clavehorario}', [CargaAcademicaDetalleController::class, 'indexAlumnosByHorario']);
+});
+
 Route::prefix('comisiones')->group(function () {
     Route::get('/', [ComisionController::class, 'index']);           // Listar todas
+    Route::get('/clean', [ComisionController::class, 'indexClean']); // Listar todas sin relaciones
     Route::get('/{id}', [ComisionController::class, 'show']);       // Mostrar 1
     Route::post('/', [ComisionController::class, 'store']);         // Crear nueva
     Route::put('/{id}', [ComisionController::class, 'update']);     // Actualizar
     Route::delete('/{id}', [ComisionController::class, 'destroy']); // Eliminar
+    // Comisiones por período
+    Route::get('periodo/{idPeriodoEscolar}', [ComisionController::class, 'indexByPeriodo']);
+    // Comisiones por maestro
+    Route::get('maestro/{tarjetaMaestro}', [ComisionController::class, 'indexByMaestro']);
+    // Comisiones por período y maestro
+    Route::get('/periodo/{idPeriodoEscolar}/{tarjetaMaestro}', [ComisionController::class, 'indexByPeriodoAndMaestro']);
 });
 
 Route::prefix('roles')->group(function () {
@@ -284,6 +619,11 @@ Route::prefix('horario')->group(function () {
     Route::post('/', [HorarioAsignaturaMaestroController::class, 'store']);          // Crear nuevo horario
     Route::put('/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'update']); // Actualizar horario
     Route::delete('/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'destroy']); // Eliminar horario
+    Route::get('/{idperiodoescolar}/maestro/{tarjeta}', [HorarioAsignaturaMaestroController::class, 'indexByPeriodoAndMaestro']);
+    Route::get('/periodo/{idperiodoescolar}/carrera/{clavecarrera}', [HorarioAsignaturaMaestroController::class, 'indexByPeriodoAndCarrera']);
+    Route::get('/maestro/{tarjeta}', [HorarioAsignaturaMaestroController::class, 'indexByMaestro']);
+    Route::get('/alumnos/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'indexAlumnosByHorario']);
+Route::get('/alumnoss/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'indexAlumnosByHorarioSimple']);
 });
 
 
@@ -318,9 +658,9 @@ Route::prefix('maestro')->group(function () {
     Route::post('/bitacora', [MaestroMController::class, 'registrarBitacora']);
     Route::get('/aulas', [MaestroMController::class, 'getAulas']);
     Route::get('/edificios', [MaestroMController::class, 'getEdificios']);
+    Route::get('/{tarjeta}', [MaestroMController::class, 'GetMaestro']);
 });
 
-use App\Http\Controllers\Api\AlumnoController;
 
 Route::prefix('alumno')->group(function () {
     Route::get('/horario/{numeroControl}', [AlumnoController::class, 'getHorario']);
@@ -347,6 +687,14 @@ Route::prefix('alumno')->group(function () {
 
 });
 
+Route::prefix('admin')->group(function () {
+    Route::get('/horario-aula/{claveAula}', [AlumnoController::class, 'getHorarioAula']);
+    Route::get('/bitacora-alumnos', [AlumnoController::class, 'getallBitacoraAlumno']);
+    Route::get('/bitacora-maestros', [MaestroMController::class, 'getallBitacoraMaestro']);
+
+});
+
+
 use App\Http\Controllers\Api\InventarioController;
 
 Route::prefix('inventario')->group(function () {
@@ -354,6 +702,15 @@ Route::prefix('inventario')->group(function () {
     Route::put('/equipo/{inventario}/reservado', [InventarioController::class, 'marcarReservado']);
     Route::put('/equipo/{inventario}/ocupado', [InventarioController::class, 'marcarOcupado']);
     Route::put('/equipo/{inventario}/liberar', [InventarioController::class, 'liberarEquipo']);
+    Route::put('/equipo/{inventario}/aprobar', [InventarioController::class, 'marcarEsperandoAprovacion']);
+    Route::delete('/equipo/{inventario}/eliminar-reserva', [InventarioController::class, 'eliminarReserva']);
+});
+
+Route::prefix('aulas')->group(function () {
+    Route::put('/{claveaula}/reservado', [MaestroMController::class, 'marcarReservado']);
+    Route::put('/{claveaula}/ocupado', [MaestroMController::class, 'marcarOcupado']);
+    Route::put('/{claveaula}/liberar', [MaestroMController::class, 'liberarAula']);
+    Route::put('/{claveaula}/aprobar', [MaestroMController::class, 'esperandoAprobacion']);
 });
 
 use App\Http\Controllers\Api\AuthController;
@@ -365,10 +722,14 @@ Route::post('/cambiar-contrasena', [AuthController::class, 'changePassword']);
 
 use App\Http\Controllers\Api\NotificacionesController;
 
-Route::prefix ('notificaciones')->group(function (){
+Route::prefix('notificaciones')->group(function () {
     Route::get('/', [NotificacionesController::class, 'index']);
     Route::get('/{Usuario_id}', [NotificacionesController::class, 'show']);
     Route::post('/', [NotificacionesController::class, 'store']);
+    Route::post('/insertar', [NotificacionesController::class, 'insertNotificacionUsuario']);
     Route::put('/{id}', [NotificacionesController::class, 'update']);
     Route::delete('/{id}', [NotificacionesController::class, 'destroy']);
-});
+
+    
+}
+);

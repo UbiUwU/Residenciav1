@@ -39,5 +39,12 @@ class PeriodoEscolar extends Model
     {
         return $query->select('id_periodo_escolar', 'codigoperiodo', 'nombre_periodo', 'fecha_inicio', 'fecha_fin', 'estado');
     }
-
+    public function liberacionesDocentes(): HasMany
+    {
+        return $this->hasMany(LiberacionDocente::class, 'id_periodo_escolar', 'id_periodo_escolar');
+    }
+    public function liberacionesAcademicas(): HasMany
+    {
+        return $this->hasMany(LiberacionAcademica::class, 'id_periodo_escolar', 'id_periodo_escolar');
+    }
 }

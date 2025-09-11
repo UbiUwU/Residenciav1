@@ -3,27 +3,80 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asignatura;
+use App\Models\Carrera;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class AsignaturaController extends Controller
 {
     // Listar todas las asignaturas
     public function index()
     {
-        $asignaturas = Asignatura::with('carreras','presentacion')->get();
+        $asignaturas = Asignatura::with('carreras')->get();
+        return response()->json($asignaturas, 200);
+    }
+
+    public function indexC()
+    {
+        $asignaturas = Asignatura::all();
         return response()->json($asignaturas, 200);
     }
 
     // Mostrar una asignatura específica
     public function show($ClaveAsignatura)
     {
-        $asignatura = Asignatura::with('carreras', 'presentacion', 'temasConSubtemas')->find($ClaveAsignatura);
+        $asignatura = Asignatura::with([
+            'carreras',
+            'presentacion',
+            'competencias',
+            'temasConSubtemas' => function ($query) {
+                $query->with([
+                    'competenciasGenericas',
+                    'competenciasEspecificas',
+                    'actividadesAprendizaje'
+                ]);
+            },
+            'practias',
+            'evaluacionesCompetencias',
+            'fuentesInformacion'
+        ])->find($ClaveAsignatura);
+
         if (!$asignatura) {
             return response()->json(['message' => 'Asignatura no encontrada'], 404);
         }
         return response()->json($asignatura, 200);
+    }
+    public function indexByCarrera($clavecarrera)
+    {
+        // Validar que la carrera exista
+        $validator = Validator::make(
+            ['clavecarrera' => $clavecarrera],
+            ['clavecarrera' => 'required|string|exists:carreras,clavecarrera']
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Carrera no encontrada',
+                'errors' => $validator->errors()
+            ], 404);
+        }
+
+        // Filtrar asignaturas por carrera (solo datos de asignatura, sin relaciones)
+        $asignaturas = Asignatura::whereHas('carreras', function ($query) use ($clavecarrera) {
+            $query->where('clavecarrera', $clavecarrera);
+        })->get();
+
+        // Obtener el nombre de la carrera para la respuesta
+        $carrera = Carrera::where('clavecarrera', $clavecarrera)->first();
+
+        return response()->json([
+            'success' => true,
+            'data' => $asignaturas,
+            'count' => $asignaturas->count()
+        ], 200);
     }
 
     // Crear una nueva asignatura

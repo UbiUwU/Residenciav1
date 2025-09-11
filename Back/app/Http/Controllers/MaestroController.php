@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Departamento;
 use App\Models\Maestro;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class MaestroController extends Controller
 {
@@ -23,6 +25,53 @@ class MaestroController extends Controller
         $maestros = Maestro::InfoBasicaMaestros()->get();
 
         return response()->json($maestros);
+    }
+    public function indexByDepartamentoBasic($idDepartamento)
+    {
+        // Validar que el departamento exista
+        $validator = Validator::make(
+            ['id_departamento' => $idDepartamento],
+            ['id_departamento' => 'required|integer|exists:departamentos,id_departamento']
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Departamento no encontrado',
+                'errors' => $validator->errors()
+            ], 404);
+        }
+
+        // Filtrar maestros por departamento con información básica
+        $maestros = Maestro::InfoBasicaMaestros()
+            ->where('maestros.id_departamento', $idDepartamento)
+            ->get();
+
+        // Obtener información del departamento
+        $departamento = Departamento::find($idDepartamento);
+
+        if ($maestros->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'No hay maestros en este departamento',
+                'data' => [],
+                'count' => 0,
+                'departamento' => [
+                    'id' => $departamento->id_departamento,
+                    'nombre' => $departamento->nombre
+                ]
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $maestros,
+            'count' => $maestros->count(),
+            'departamento' => [
+                'id' => $departamento->id_departamento,
+                'nombre' => $departamento->nombre
+            ]
+        ], 200);
     }
 
     public function show($tarjeta)

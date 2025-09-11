@@ -34,4 +34,24 @@ class Tema extends Model
     {
         return $this->subtemas()->with('hijosRecursivos');
     }
+
+    public function competenciasGenericas(): HasMany
+    {
+        return $this->hasMany(CompetenciaGenericaTema::class, 'id_Tema', 'id_Tema')
+            ->orderBy('orden');
+    }
+
+    public function competenciasEspecificas(): HasMany
+    {
+        return $this->hasMany(CompetenciaEspecificaTema::class, 'id_Tema', 'id_Tema')
+            ->orderBy('orden');
+    }
+
+    public function actividadesAprendizaje(): HasMany
+    {
+        return $this->hasMany(ActividadAprendizajeTema::class, 'id_Tema', 'id_Tema')
+            ->orderBy('orden');
+    }
+
+
 }
