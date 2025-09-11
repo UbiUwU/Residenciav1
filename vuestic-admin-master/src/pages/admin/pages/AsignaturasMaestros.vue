@@ -8,19 +8,23 @@
 
     <div v-if="loading" class="loading">Cargando asignaturas...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
-    <div v-else-if="asignaturas.length === 0" class="no-data">
-      Este maestro no tiene asignaturas registradas.
-    </div>
+    <div v-else-if="asignaturas.length === 0" class="no-data">Este maestro no tiene asignaturas registradas.</div>
 
     <div v-else class="asignaturas-grid">
-      <div v-for="asignatura in asignaturas" :key="asignatura.ClaveAsignatura + '-' + asignatura.Grupo" class="asignatura-card">
+      <div
+        v-for="asignatura in asignaturas"
+        :key="asignatura.ClaveAsignatura + '-' + asignatura.Grupo"
+        class="asignatura-card"
+      >
         <div class="asignatura-header" @click="toggleDetalle(asignatura.ClaveAsignatura)">
           <h3>{{ asignatura.ClaveAsignatura }} - {{ asignatura.NombreAsignatura }}</h3>
           <div class="asignatura-info">
             <span>Grupo: {{ asignatura.Grupo }}</span>
             <span>Créditos: {{ asignatura.Creditos }}</span>
             <span>
-              SATCA: {{ asignatura.Satca_Total }} (T:{{ asignatura.Satca_Teoricas }}, P:{{ asignatura.Satca_Practicas }})
+              SATCA: {{ asignatura.Satca_Total }} (T:{{ asignatura.Satca_Teoricas }}, P:{{
+                asignatura.Satca_Practicas
+              }})
             </span>
           </div>
         </div>
@@ -65,8 +69,7 @@ const fetchAsignaturas = async () => {
         Satca_Practicas: item.informacionbasica.satca.practicas,
         Satca_Total: item.informacionbasica.satca.total,
         Grupo: item.aulas_grupos_periodos?.[0]?.grupo || 'Sin grupo',
-      })
-      )
+      }))
     } else {
       asignaturas.value = []
     }

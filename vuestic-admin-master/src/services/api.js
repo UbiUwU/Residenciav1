@@ -103,23 +103,6 @@ export default {
     return apiClient.delete(`/roles/${id}`)
   },
 
-  // períodos
-  getPeriodos() {
-    return apiClient.get('/periodos-escolares')
-  },
-
-  crearPeriodo(data) {
-    return apiClient.post('/periodos-escolares', data)
-  },
-
-  actualizarPeriodo(id, data) {
-    return apiClient.put(`/periodos-escolares/${id}`, data)
-  },
-
-  eliminarPeriodo(id) {
-    return apiClient.delete(`/periodos-escolares/${id}`)
-  },
-
   // Obtener todas las asignaturas
   getAsignaturas() {
     return apiClient.get('/asignaturas')
@@ -221,17 +204,58 @@ export default {
   },
 
   //Eventos
-  getevento(){
+  getevento() {
     return apiClient.get(`/tipoevento`)
   },
 
+  crearEvento(data) {
+    return apiClient.post(`/tipoevento`, data)
+  },
+
   //Periodos
-  getPeriodo(){
+  getPeriodo() {
     return apiClient.get(`/periodos`)
   },
 
-  getEstado(){
+  crearPeriodo(data) {
+    return apiClient.post('/periodos', data)
+  },
+
+  actualizarPeriodo(id, data) {
+    return apiClient.put(`/periodos/${id}`, data)
+  },
+
+  eliminarPeriodo(id) {
+    return apiClient.delete(`/periodos/${id}`)
+  },
+
+  getEstado() {
     return apiClient.get(`/enum/origen_enum`)
   },
 
+  //Aula
+  getAula() {
+    return apiClient.get(`/aulas`)
+  },
+
+  //Grupo
+  getGrupo() {
+    return apiClient.get(`/grupos`)
+  },
+
+  crearUsuario(data) {
+    return apiClient.post('/usuarios', data)
+  },
+
+  getUsuarios() {
+    return apiClient.get(`/usuarios`)
+  },
+
+  eliminarUsuario(idusuario) {
+    return apiClient.delete(`/usuarios/${idusuario}`)
+  },
+
+  actualizarUsuario(idusuario, data) {
+    return apiClient.put(`/usuarios/${idusuario}`, data)
+  },
 }

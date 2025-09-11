@@ -6,7 +6,7 @@
         <div>
           <h1 class="va-h3">Bienvenido, Profesor {{ nombreProfesor }}</h1>
           <p class="text-gray-500">Resumen de tus actividades académicas</p>
-         <h1> {{ periodoSeleccionado }}</h1>
+          <h1>{{ periodoSeleccionado }}</h1>
         </div>
       </VaCardContent>
     </VaCard>
@@ -548,7 +548,6 @@ const eliminarAlerta = (index) => {
 const seleccionAsignaturaCambiada = (selectedItems) => {
   console.log('Asignaturas seleccionadas:', selectedItems)
 }
-
 
 // Inicialización de gráficos
 onMounted(() => {

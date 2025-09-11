@@ -1,5 +1,5 @@
 <template>
-    <div class="boton-regresar">
+  <div class="boton-regresar">
     <button @click="handleRegresar">← Regresar</button>
   </div>
   <div>
@@ -125,12 +125,11 @@ const handleRegresar = () => {
 
 onMounted(async () => {
   try {
-        console.log('Tarjeta:', tarjeta)
+    console.log('Tarjeta:', tarjeta)
     const response = await api.getAvancesMaestro(tarjeta)
     const avances = response.data as Array<any>
-    avanceFiltrado.value = avances.find(avance =>
-      avance.clave_asignatura === claveAsignatura &&
-      avance.clave_grupo === grupo
+    avanceFiltrado.value = avances.find(
+      (avance) => avance.clave_asignatura === claveAsignatura && avance.clave_grupo === grupo,
     )
     idAvanceDetalle.value = avanceFiltrado.value?.detalles?.[0]?.id_avance_detalle || null
   } catch (error) {

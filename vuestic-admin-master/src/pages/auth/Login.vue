@@ -1,9 +1,7 @@
 <template>
   <VaForm ref="form" @submit.prevent="submit">
     <h1 class="font-semibold text-4xl mb-4">Inicio Sesión</h1>
-    <p class="text-base mb-4 leading-5">
-      ¡Bienvenido, inicia sesión con tus credenciales!
-    </p>
+    <p class="text-base mb-4 leading-5">¡Bienvenido, inicia sesión con tus credenciales!</p>
 
     <!-- Email Input -->
     <VaInput
@@ -29,8 +27,6 @@
         </template>
       </VaInput>
     </VaValue>
-
-   
 
     <div class="flex justify-center mt-4">
       <VaButton class="w-full" :loading="loading" @click="submit">Iniciar sesión</VaButton>

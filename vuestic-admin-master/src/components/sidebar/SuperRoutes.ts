@@ -19,18 +19,33 @@ export const SuperRoutes: INavigationRoute[] = [
     },
     children: [
       {
-        name: 'admin-roles',
+        name: 'super-roles',
         displayName: 'Roles',
         meta: { allowedRoles: [5] },
       },
       {
-        name: 'admin-periodos',
+        name: 'super-periodos',
         displayName: 'Periodos',
+        meta: { allowedRoles: [5] },
+      },
+      {
+        name: 'super-maestros',
+        displayName: 'Maestros',
+        meta: { allowedRoles: [5] },
+      },
+      {
+        name: 'super-evento',
+        displayName: 'Evento',
         meta: { allowedRoles: [5] },
       },
       {
         name: 'asignaturas',
         displayName: 'Asignaturas',
+        meta: { allowedRoles: [5] },
+      },
+      {
+        name: 'super-usuario',
+        displayName: 'Añadir Usuario',
         meta: { allowedRoles: [5] },
       },
     ],

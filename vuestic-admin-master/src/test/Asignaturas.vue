@@ -52,7 +52,7 @@
               :rules="[(v) => !!v || 'Campo requerido']"
             />
 
-            <VaSelect v-model="form.clave_carrera" :options="opcionesCarreras" label="Carrera" class="mb-4" />
+            <VaSelect v-model="form.carreras" :options="opcionesCarreras" label="Carreras" class="mb-4" multiple />
 
             <VaInput
               v-model="form.semestre"
@@ -118,7 +118,7 @@ interface FormularioAsignatura {
   creditos: number
   horas_teoricas: number
   horas_practicas: number
-  clave_carrera: string | { text: string; value: string }
+  carreras: Array<string | { text: string; value: string }> // puede venir como objeto o string
   semestre: number
   posicion: number
 }
@@ -129,7 +129,7 @@ const form = ref<FormularioAsignatura>({
   creditos: 0,
   horas_teoricas: 0,
   horas_practicas: 0,
-  clave_carrera: '',
+  carreras: [],
   semestre: 1,
   posicion: 1,
 })
@@ -139,7 +139,19 @@ const cargarAsignaturas = async () => {
   cargandoAsignaturas.value = true
   try {
     const response = await api.getAsignaturas()
-    asignaturas.value = response.data
+    asignaturas.value = response.data.map((a: any) => ({
+      claveasignatura: a.ClaveAsignatura,
+      nombreasignatura: a.NombreAsignatura,
+      creditos: a.Creditos,
+      satca_teoricas: a.Satca_Teoricas,
+      satca_practicas: a.Satca_Practicas,
+      satca_total: a.Satca_Total,
+      // Tomamos la primera carrera si existe
+      clavecarrera: a.carreras[0]?.clavecarrera || '',
+      semestre: a.carreras[0]?.pivot?.Semestre || 0,
+      posicion: a.carreras[0]?.pivot?.Posicion || 0,
+      raw: a, // guardamos el objeto completo por si lo necesitas
+    }))
   } finally {
     cargandoAsignaturas.value = false
   }
@@ -155,11 +167,20 @@ const cargarCarreras = async () => {
 
 const guardarAsignatura = async () => {
   try {
-    // Asegura que 'clave_carrera' sea string
+    const carrerasProcesadas = form.value.carreras.map((c: any) => (typeof c === 'object' ? c.value : c))
+
     const datosProcesados = {
-      ...form.value,
-      clave_carrera:
-        typeof form.value.clave_carrera === 'object' ? form.value.clave_carrera.value : form.value.clave_carrera,
+      ClaveAsignatura: form.value.clave_asignatura,
+      NombreAsignatura: form.value.nombre,
+      Creditos: form.value.creditos,
+      Satca_Teoricas: form.value.horas_teoricas,
+      Satca_Practicas: form.value.horas_practicas,
+      Satca_Total: form.value.horas_teoricas + form.value.horas_practicas,
+      carreras: carrerasProcesadas.map((clave: string) => ({
+        clavecarrera: clave,
+        Semestre: form.value.semestre,
+        Posicion: form.value.posicion,
+      })),
     }
 
     if (esEdicion.value && claveAsignaturaEditando.value) {
@@ -170,8 +191,6 @@ const guardarAsignatura = async () => {
 
     mostrarModalAsignatura.value = false
     await cargarAsignaturas()
-
-    // Reiniciar estado
     esEdicion.value = false
     claveAsignaturaEditando.value = null
   } catch (error: any) {
@@ -197,7 +216,7 @@ const abrirModalEditar = (asignatura: any) => {
     creditos: asignatura.creditos,
     horas_teoricas: asignatura.satca_teoricas,
     horas_practicas: asignatura.satca_practicas,
-    clave_carrera: asignatura.clavecarrera,
+    carreras: asignatura.raw.carreras.map((c: any) => c.clavecarrera),
     semestre: asignatura.semestre,
     posicion: asignatura.posicion,
   }

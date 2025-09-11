@@ -1,8 +1,8 @@
 <template>
   <div class="p-4">
-    <va-card>
-      <va-card-title>Calendario Interactivo</va-card-title>
-      <va-card-content>
+    <VaCard>
+      <VaCardTitle>Calendario Interactivo</VaCardTitle>
+      <VaCardContent>
         <table class="calendar-table">
           <thead>
             <tr>
@@ -25,16 +25,16 @@
             </tr>
           </tbody>
         </table>
-      </va-card-content>
-    </va-card>
+      </VaCardContent>
+    </VaCard>
 
-    <va-modal v-model="showModal" hide-default-actions>
+    <VaModal v-model="showModal" hide-default-actions>
       <template #header>
         <h3>Asignar actividad</h3>
       </template>
-      <va-input v-model="activityInput" label="Actividad" class="mb-4" />
-      <va-button @click="saveActivity" color="primary">Guardar</va-button>
-    </va-modal>
+      <VaInput v-model="activityInput" label="Actividad" class="mb-4" />
+      <VaButton color="primary" @click="saveActivity">Guardar</VaButton>
+    </VaModal>
   </div>
 </template>
 
@@ -119,7 +119,7 @@ watch(
     localStorage.setItem('horarioGuardado', JSON.stringify(newVal))
     console.log('Horario guardado en localStorage:', newVal)
   },
-  { deep: true }
+  { deep: true },
 )
 </script>
 
