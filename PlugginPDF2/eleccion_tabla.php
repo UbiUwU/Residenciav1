@@ -429,26 +429,7 @@ function obtenerDetallesAvance($conn, $id_avance) {
  */
 function obtenerDatosInstrumentacion($conn, $id_instrumentacion, $periodo_id)
 {
-    $query = "
-        SELECT 
-            i.*,
-            m.nombre as nombre_profesor,
-            m.apellidopaterno,
-            m.apellidomaterno,
-            pe.nombre_periodo,
-            pe.codigoperiodo
-        FROM instrumentacion i
-        INNER JOIN maestros m ON i.tarjeta_profesor = m.tarjeta
-        INNER JOIN periodo_escolar pe ON i.id_periodo_escolar = pe.id_periodo_escolar
-        WHERE i.id_instrumentacion = :id_instrumentacion AND i.id_periodo_escolar = :periodo_id
-    ";
-
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':id_instrumentacion', $id_instrumentacion, PDO::PARAM_INT);
-    $stmt->bindParam(':periodo_id', $periodo_id, PDO::PARAM_INT);
-    $stmt->execute();
-
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+ 
 }
 
 /**

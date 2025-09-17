@@ -81,9 +81,6 @@ class Asignatura extends Model
         return $this->hasMany(ProyectoAsignatura::class, 'ClaveAsignatura', 'ClaveAsignatura')
             ->orderBy('orden');
     }
-
-    
-
     public function competenciasEspecificas(): HasMany
     {
         return $this->competencias()->where('Tipo_Competencia', 'Específica');
