@@ -11,7 +11,7 @@ function procesarDatosParaPlantilla($TBS, $datos, $tipo_plantilla)
     // Agregar información común a todos los documentos
     $TBS->MergeField('fecha_generacion', date('d/m/Y'));
     $TBS->MergeField('hora_generacion', date('H:i:s'));
-
+    global $conn;
     // Delegar al procesador específico según el tipo de plantilla
     switch ($tipo_plantilla) {
         case 'libedocente':
@@ -19,7 +19,7 @@ function procesarDatosParaPlantilla($TBS, $datos, $tipo_plantilla)
             break;
 
         case 'avance':
-            procesarDatosAvanceProgramatico($TBS, $datos);
+            procesarDatosAvanceProgramatico($TBS, $datos, $conn);
             break;
 
         case 'instrumentacion':
@@ -95,8 +95,10 @@ function procesarDatosLiberacionDocente($TBS, $datos)
 /**
  * Procesar datos para avance programático
  */
-function procesarDatosAvanceProgramatico($TBS, $datos)
+function procesarDatosAvanceProgramatico($TBS, $datos, $conn)
 {
+
+
     // Datos básicos del avance
     $TBS->MergeField('id_avance', $datos['id_avance'] ?? '');
     $TBS->MergeField('clave_asignatura', $datos['clave_asignatura'] ?? '');
@@ -106,10 +108,10 @@ function procesarDatosAvanceProgramatico($TBS, $datos)
     $TBS->MergeField('satca_practicas', $datos['Satca_Practicas'] ?? 0);
     $TBS->MergeField('satca_total', $datos['Satca_Total'] ?? 0);
     $TBS->MergeField('estado', $datos['estado'] ?? '');
+
     // Datos de la carrera
     $TBS->MergeField('clave_carrera', $datos['clavecarrera'] ?? '');
     $TBS->MergeField('nombre_carrera', $datos['nombre_carrera'] ?? '');
-
 
     // Datos del maestro
     $TBS->MergeField('tarjeta_profesor', $datos['tarjeta_profesor'] ?? '');
@@ -123,7 +125,6 @@ function procesarDatosAvanceProgramatico($TBS, $datos)
         ($datos['apellidomaterno'] ?? '')
     );
 
-    
     // Datos del departamento
     $TBS->MergeField('departamento', $datos['departamento'] ?? '');
     $TBS->MergeField('departamento_abrev', $datos['departamento_abrev'] ?? '');
@@ -137,90 +138,122 @@ function procesarDatosAvanceProgramatico($TBS, $datos)
     // Información del horario
     $TBS->MergeField('clave_grupo', $datos['clavegrupo'] ?? '');
     $TBS->MergeField('clave_aula', $datos['claveaula'] ?? '');
+    $TBS->MergeField('clave_horario', $datos['clave_horario'] ?? '');
 
-    error_log("=== ESTRUCTURA DE DATOS TEMAS ===");
-    error_log(print_r($datos['temas'], true));
-    error_log("=================================");
+    // Horario por días (formatear horas si es necesario)
+    $TBS->MergeField('lunes_hi', formatearHora($datos['lunes_hi'] ?? ''));
+    $TBS->MergeField('lunes_hf', formatearHora($datos['lunes_hf'] ?? ''));
+    $TBS->MergeField('martes_hi', formatearHora($datos['martes_hi'] ?? ''));
+    $TBS->MergeField('martes_hf', formatearHora($datos['martes_hf'] ?? ''));
+    $TBS->MergeField('miercoles_hi', formatearHora($datos['miercoles_hi'] ?? ''));
+    $TBS->MergeField('miercoles_hf', formatearHora($datos['miercoles_hf'] ?? ''));
+    $TBS->MergeField('jueves_hi', formatearHora($datos['jueves_hi'] ?? ''));
+    $TBS->MergeField('jueves_hf', formatearHora($datos['jueves_hf'] ?? ''));
+    $TBS->MergeField('viernes_hi', formatearHora($datos['viernes_hi'] ?? ''));
+    $TBS->MergeField('viernes_hf', formatearHora($datos['viernes_hf'] ?? ''));
+    $TBS->MergeField('sabado_hi', formatearHora($datos['sabado_hi'] ?? ''));
+    $TBS->MergeField('sabado_hf', formatearHora($datos['sabado_hf'] ?? ''));
 
-    // Procesar temas y subtemas
-    if (!empty($datos['temas'])) {
-        foreach ($datos['temas'] as &$tema) {
-            // Formatear porcentaje
-            $tema['porcentaje_formateado'] = number_format($tema['porcentaje_aprobacion'], 2) . '%';
-            
-            // Estado del tema
-            $tema['estado_tema'] = $tema['porcentaje_aprobacion'] >= 100 ? 'COMPLETADO' : 'EN PROGRESO';
-            
-            // Formatear fechas
-            if (!empty($tema['fecha_inicio'])) {
-                $tema['fecha_inicio_formateada'] = date('d/m/Y', strtotime($tema['fecha_inicio']));
-            }
-            if (!empty($tema['fecha_fin'])) {
-                $tema['fecha_fin_formateada'] = date('d/m/Y', strtotime($tema['fecha_fin']));
-            }
-            if (!empty($tema['fecha_inicio_real'])) {
-                $tema['fecha_inicio_real_formateada'] = date('d/m/Y', strtotime($tema['fecha_inicio_real']));
-            }
-            if (!empty($tema['fecha_fin_real'])) {
-                $tema['fecha_fin_real_formateada'] = date('d/m/Y', strtotime($tema['fecha_fin_real']));
-            }
-            if (!empty($tema['fecha_evaluacion'])) {
-                $tema['fecha_evaluacion_formateada'] = date('d/m/Y', strtotime($tema['fecha_evaluacion']));
-            }
-            if (!empty($tema['fecha_evaluacion_real'])) {
-                $tema['fecha_evaluacion_real_formateada'] = date('d/m/Y', strtotime($tema['fecha_evaluacion_real']));
-            }
-            
-            // Crear una cadena con todos los subtemas para mostrar como texto
-            $tema['lista_subtemas'] = '';
-            if (!empty($tema['subtemas'])) {
-                $subtemas_texto = [];
-                foreach ($tema['subtemas'] as $subtema) {
-                    $subtemas_texto[] = $subtema['orden_subtema'] . '. ' . $subtema['nombre_subtema'];
-                }
-                $tema['lista_subtemas'] = implode("\n", $subtemas_texto);
-            }
-        }
-        
-        
-        // Bloque principal de temas
-        $TBS->MergeBlock('tema', $datos['temas']);
-    }
+    // Información de días con clases (para mostrar en el horario resumido)
+    $diasClase = [];
+    if (!empty($datos['lunes_hi']))
+        $diasClase[] = 'Lunes';
+    if (!empty($datos['martes_hi']))
+        $diasClase[] = 'Martes';
+    if (!empty($datos['miercoles_hi']))
+        $diasClase[] = 'Miércoles';
+    if (!empty($datos['jueves_hi']))
+        $diasClase[] = 'Jueves';
+    if (!empty($datos['viernes_hi']))
+        $diasClase[] = 'Viernes';
+    if (!empty($datos['sabado_hi']))
+        $diasClase[] = 'Sábado';
 
-    // Procesar fechas clave
-    if (!empty($datos['fechas_clave'])) {
-        foreach ($datos['fechas_clave'] as &$fecha) {
-            if (!empty($fecha['fecha_prevista'])) {
-                $fecha['fecha_prevista_formateada'] = date('d/m/Y', strtotime($fecha['fecha_prevista']));
-            }
-            if (!empty($fecha['fecha_real'])) {
-                $fecha['fecha_real_formateada'] = date('d/m/Y', strtotime($fecha['fecha_real']));
-            }
-        }
-        $TBS->MergeBlock('fecha_clave', $datos['fechas_clave']);
-    }
-
-    // Procesar estadísticas
-    if (!empty($datos['estadisticas'])) {
-        $TBS->MergeField('total_temas', $datos['estadisticas']['total_temas'] ?? 0);
-        $TBS->MergeField('temas_completados', $datos['estadisticas']['temas_completados'] ?? 0);
-        $TBS->MergeField('porcentaje_total', $datos['estadisticas']['porcentaje_total'] ?? 0);
-        $TBS->MergeField('promedio_aprobacion', $datos['estadisticas']['promedio_aprobacion'] ?? 0);
-        $TBS->MergeField('temas_pendientes_firma', $datos['estadisticas']['temas_pendientes_firma'] ?? 0);
-    }
+    $TBS->MergeField('dias_clase', implode(', ', $diasClase));
+    $TBS->MergeField('total_dias_clase', count($diasClase));
 
     // Información de firmas
     $TBS->MergeField('requiere_firma_jefe', $datos['requiere_firma_jefe'] ? 'SÍ' : 'NO');
-    $TBS->MergeField('firma_profesor', $datos['firma_profesor'] ?? 'PENDIENTE');
-    $TBS->MergeField('firma_jefe_carrera', $datos['firma_jefe_carrera'] ?? 'PENDIENTE');
+    $TBS->MergeField('firma_profesor', $datos['firma_profesor'] ? 'FIRMADO' : 'PENDIENTE');
+    $TBS->MergeField('firma_jefe_carrera', $datos['firma_jefe_carrera'] ? 'FIRMADO' : 'PENDIENTE');
 
     // Fechas del avance
-    $TBS->MergeField('fecha_creacion', $datos['fecha_creacion'] ?? '');
-    $TBS->MergeField('fecha_ultima_actualizacion', $datos['fecha_ultima_actualizacion'] ?? '');
+    $TBS->MergeField('fecha_creacion', formatearFecha($datos['fecha_creacion'] ?? ''));
+    $TBS->MergeField('fecha_ultima_actualizacion', formatearFecha($datos['fecha_ultima_actualizacion'] ?? ''));
 
-    // Fecha actual
+    // Fecha y hora actual
     $TBS->MergeField('fecha_actual', date('d/m/Y'));
     $TBS->MergeField('hora_actual', date('H:i:s'));
+    // Procesar detalles (temas y subtemas) si existen
+    if (!empty($datos['detalles'])) {
+    $temasParaTemplate = [];
+
+    foreach ($datos['detalles'] as $index => $tema) {
+        $temaParaTemplate = [
+            'id_avance_detalle' => $tema['id_avance_detalle'],
+            'id_tema' => $tema['id_tema'],
+            'porcentaje_aprobacion' => $tema['porcentaje_aprobacion'],
+            'requiere_firma_docente' => $tema['requiere_firma_docente'],
+            'observaciones' => $tema['observaciones'],
+            'nombre_tema' => $tema['nombre_tema'],
+            'numero_tema' => $tema['numero_tema'],
+            'index' => $index + 1,
+        ];
+
+        // Procesar fechas
+        if (!empty($tema['fechas'][0])) {
+            $temaParaTemplate['fecha'] = $tema['fechas'][0];
+        } else {
+            $temaParaTemplate['fecha'] = [
+                'fecha_inicio' => '',
+                'fecha_fin' => '',
+                'fecha_inicio_real' => '',
+                'fecha_fin_real' => '',
+                'fecha_evaluacion' => '',
+                'fecha_evaluacion_real' => ''
+            ];
+        }
+
+        // Obtener subtemas y convertirlos a string para el template
+        $subtemasDelTema = obtenerSubtemas($conn, $tema['id_tema']);
+        $subtemasTexto = '';
+        
+        foreach ($subtemasDelTema as $subtema) {
+            if (!empty($subtema['Nombre_Subtema'])) {
+                $subtemasTexto .= "" . $subtema['Orden'] . "." . $subtema['Nombre_Subtema'] . "\n";
+            }
+        }
+        
+        $temaParaTemplate['subtemas_texto'] = $subtemasTexto;
+        $temasParaTemplate[] = $temaParaTemplate;
+    }
+
+    // Merge del bloque principal de temas
+    $TBS->MergeBlock('bloque_temas', $temasParaTemplate);
+}
+}
+
+// Función auxiliar para formatear horas
+function formatearHora($hora)
+{
+    if (empty($hora))
+        return '';
+
+    // Si la hora viene en formato de tiempo de PostgreSQL
+    if (strpos($hora, ':') !== false) {
+        return date('H:i', strtotime($hora));
+    }
+
+    return $hora;
+}
+
+// Función auxiliar para formatear fechas
+function formatearFecha($fecha)
+{
+    if (empty($fecha))
+        return '';
+
+    return date('d/m/Y', strtotime($fecha));
 }
 
 /**
