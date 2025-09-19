@@ -12,6 +12,7 @@ use App\Http\Controllers\CompetenciaGenericaTemaController;
 use App\Http\Controllers\CompetenciaGenericoInstrumentacionController;
 use App\Http\Controllers\CompetenciaInstrumentacionController;
 use App\Http\Controllers\DepartamentoController;
+use App\Http\Controllers\DisenioCurricularController;
 use App\Http\Controllers\EdificioController;
 use App\Http\Controllers\EstadoPlantillaController;
 use App\Http\Controllers\EvaluacionCompetenciaInstrumentacionController;
@@ -41,7 +42,6 @@ use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\AulaController;
 use App\Http\Controllers\PresentacionController;
-use App\Http\Controllers\DisenoController;
 use App\Http\Controllers\AvanceController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\UsuarioController;
@@ -144,18 +144,18 @@ Route::prefix('practicastema')->group(function () {
 // Rutas para Fuentes de Información
 Route::prefix('fuentesinformacion')->group(function () {
     Route::post('/', [FuentesInformacionController::class, 'createOne']);
-    Route::post('/M/', [FuentesInformacionController::class, 'createMultiple']);
+    Route::post('/M', [FuentesInformacionController::class, 'createMultiple']);
     Route::put('/{id}', [FuentesInformacionController::class, 'updateOne']);
-    Route::put('/M/U', [FuentesInformacionController::class, 'updateMultiple']);
+    Route::put('/M/U/', [FuentesInformacionController::class, 'updateMultiple']);
     Route::delete('/{id}', [FuentesInformacionController::class, 'deleteOne']);
 });
 
 // Rutas para Evaluación por Competencias
 Route::prefix('evaluacioncompetencias')->group(function () {
     Route::post('/', [EvaluacionCompetenciasController::class, 'createOne']);
-    Route::post('/M/', [EvaluacionCompetenciasController::class, 'createMultiple']);
+    Route::post('/M', [EvaluacionCompetenciasController::class, 'createMultiple']);
     Route::put('/{id}', [EvaluacionCompetenciasController::class, 'updateOne']);
-    Route::put('/M/U', [EvaluacionCompetenciasController::class, 'updateMultiple']);
+    Route::put('/M/U/', [EvaluacionCompetenciasController::class, 'updateMultiple']);
     Route::delete('/{id}', [EvaluacionCompetenciasController::class, 'deleteOne']);
 });
 
@@ -163,7 +163,7 @@ Route::prefix('proyectosasignatura')->group(function () {
     Route::post('/', [ProyectoAsignaturaController::class, 'createOne']);
     Route::post('/M', [ProyectoAsignaturaController::class, 'createMultiple']);
     Route::put('/{id}', [ProyectoAsignaturaController::class, 'updateOne']);
-    Route::put('/M/U', [ProyectoAsignaturaController::class, 'updateMultiple']);
+    Route::put('/M/U/', [ProyectoAsignaturaController::class, 'updateMultiple']);
     Route::delete('/{id}', [ProyectoAsignaturaController::class, 'deleteOne']);
     Route::get('/asignatura/{claveAsignatura}', [ProyectoAsignaturaController::class, 'getByAsignatura']);
 });
@@ -172,7 +172,7 @@ Route::prefix('competencias')->group(function () {
     Route::post('/', [CompetenciaController::class, 'createOne']);
     Route::post('/M', [CompetenciaController::class, 'createMultiple']);
     Route::put('/{id}', [CompetenciaController::class, 'updateOne']);
-    Route::put('/M/U', [CompetenciaController::class, 'updateMultiple']);
+    Route::put('/M/U/', [CompetenciaController::class, 'updateMultiple']);
     Route::delete('/{id}', [CompetenciaController::class, 'deleteOne']);
 
 });
@@ -210,9 +210,6 @@ Route::prefix('instrumentacion')->group(function () {
     Route::put('/{id}', [InstrumentacionController::class, 'update']);
     Route::get('/{id}', [InstrumentacionController::class, 'show']);
 });
-
-
-
 
 // Competencias de Instrumentación
 Route::prefix('competenciasinstrumentacion')->group(function () {
@@ -454,19 +451,26 @@ Route::prefix('asignaturas')->group(function () {
 });
 
 Route::prefix('presentacion')->group(function () {
-    Route::get('/', [PresentacionController::class, 'index']);
     Route::get('/{claveAsignatura}', [PresentacionController::class, 'show']);
-    Route::post('/', [PresentacionController::class, 'store']);
-    Route::put('/{id}', [PresentacionController::class, 'update']);
-    Route::delete('/{id}', [PresentacionController::class, 'destroy']);
+    Route::post('/{claveAsignatura}', [PresentacionController::class, 'store']);
+    Route::put('/{claveAsignatura}', [PresentacionController::class, 'update']);
+    Route::delete('/{claveAsignatura}', [PresentacionController::class, 'destroy']);
+    Route::get('/{claveAsignatura}/exists', [PresentacionController::class, 'exists']);
 });
 
-Route::post('/diseno', [DisenoController::class, 'store']);
-Route::put('/diseno/{id}', [DisenoController::class, 'update']);
-Route::delete('/diseno/{id}', [DisenoController::class, 'destroy']);
-Route::put('/diseno/participantes/{id}', [DisenoController::class, 'updateParticipantes']);
-Route::delete('/diseno/{id}/participante/{participante_id}', [DisenoController::class, 'eliminarParticipante']);
-
+Route::prefix('disenioasignatura')->group(function () {
+    Route::get('/', [DisenioCurricularController::class, 'index']);
+    Route::get('/asignatura/{claveAsignatura}', [DisenioCurricularController::class, 'porAsignatura']);
+    Route::get('/{id}', [DisenioCurricularController::class, 'show']);
+    Route::post('/', [DisenioCurricularController::class, 'store']);
+    Route::put('/{id}', [DisenioCurricularController::class, 'update']);
+    Route::delete('/{id}', [DisenioCurricularController::class, 'destroy']);
+    
+    // Rutas para participantes
+    Route::get('/participantes/{id}', [DisenioCurricularController::class, 'participantes']);
+    Route::post('/participantes/{id}', [DisenioCurricularController::class, 'agregarParticipante']);
+    Route::delete('/{idDisenio}/participantes/{idParticipante}', [DisenioCurricularController::class, 'eliminarParticipante']);
+});
 
 Route::post('/practicas', [PracticaController::class, 'store']);
 Route::put('/practicas/{id}', [PracticaController::class, 'update']);
@@ -495,18 +499,21 @@ Route::prefix('fuente')->group(function () {
 
 use App\Http\Controllers\TemaController;
 
-Route::post('/tema', [TemaController::class, 'store']);
-Route::put('/tema/{id}', [TemaController::class, 'update']);
-Route::delete('/tema/{id}', [TemaController::class, 'destroy']);
-Route::get('/tema', [TemaController::class, 'index']);
-Route::get('/tema/{id}', [TemaController::class, 'show']);
-Route::get('/temaSub/{claveAsignatura}', [TemaController::class, 'obtenerTemasYSubtemasPorAsignatura']);
-
-use App\Http\Controllers\SubtemaController;
-
-Route::post('/subtema', [SubtemaController::class, 'store']);
-Route::put('/subtema/{id}', [SubtemaController::class, 'update']);
-Route::delete('/subtema/{id}', [SubtemaController::class, 'destroy']);
+Route::prefix('temas')->group(function () {
+    // Rutas para temas
+    Route::get('/{claveAsignatura}', [TemaController::class, 'indexTemas']);
+    Route::get('/estructura/{claveAsignatura}', [TemaController::class, 'estructuraCompleta']);
+    Route::get('/show/{idTema}', [TemaController::class, 'showTema']);
+    Route::post('/{claveAsignatura}', [TemaController::class, 'storeTema']);
+    Route::put('/{idTema}', [TemaController::class, 'updateTema']);
+    Route::delete('/{idTema}', [TemaController::class, 'destroyTema']);
+    
+    // Rutas para subtemas
+    Route::get('/subtema/{idSubtema}', [TemaController::class, 'showSubtema']);
+    Route::post('/subtemas/{idTema}', [TemaController::class, 'storeSubtema']);
+    Route::put('/subtemas/{idSubtema}', [TemaController::class, 'updateSubtema']);
+    Route::delete('/subtemas/{idSubtema}', [TemaController::class, 'destroySubtema']);
+});
 
 use App\Http\Controllers\CompetenciaTemaController;
 

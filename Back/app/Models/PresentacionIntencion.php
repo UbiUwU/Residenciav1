@@ -8,10 +8,11 @@ class PresentacionIntencion extends Model
 {
     protected $table = 'presentacion_intencion';
     protected $primaryKey = 'id_Intencion';
-
+    public $timestamps = false;
     protected $fillable = [
+        'id_Intencion', 
         'id_Presentacion',
-        'Orden', 
+        'Orden',
         'Tema',
         'Descripcion'
     ];

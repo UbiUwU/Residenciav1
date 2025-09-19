@@ -9,6 +9,7 @@ class Presentacion extends Model
 {
     protected $table = 'presentacion';
     protected $primaryKey = 'id_Presentacion';
+    public $timestamps = false;
 
     protected $fillable = [
         'Clave_Asignatura'

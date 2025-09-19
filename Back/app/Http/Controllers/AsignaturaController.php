@@ -31,6 +31,7 @@ class AsignaturaController extends Controller
             'carreras',
             'presentacion',
             'competencias',
+            'diseniosCurriculares.participantes',
             'temasConSubtemas' => function ($query) {
                 $query->with([
                     'competenciasGenericas',
@@ -39,6 +40,7 @@ class AsignaturaController extends Controller
                 ]);
             },
             'practias',
+            'proyectos',
             'evaluacionesCompetencias',
             'fuentesInformacion'
         ])->find($ClaveAsignatura);
