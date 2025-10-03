@@ -2,8 +2,9 @@
   <div class="boton-regresar">
     <button @click="handleRegresar">← Regresar</button>
   </div>
-  <div>
-    <VaCard v-if="avanceFiltrado">
+
+  <div v-if="avanceFiltrado">
+    <VaCard>
       <VaCardTitle>
         <div class="flex justify-between">
           <span class="font-bold text-lg">Avance programático</span>
@@ -70,6 +71,7 @@
           </VaButton>
         </div>
 
+        <!-- Observaciones -->
         <VaCard v-if="mostrarObservaciones" class="mt-4">
           <VaCardTitle class="flex items-center">
             <VaIcon name="note" class="mr-2" />
@@ -94,10 +96,11 @@
         </VaCard>
       </VaCardContent>
     </VaCard>
-    <VaCard v-else class="p-4 text-center">
-      <p class="text-lg font-semibold text-gray-700">No tiene avance programático</p>
-    </VaCard>
   </div>
+
+  <VaCard v-else class="p-4 text-center">
+    <p class="text-lg font-semibold text-gray-700">No tiene avance programático</p>
+  </VaCard>
 </template>
 
 <script setup lang="ts">
@@ -106,102 +109,140 @@ import { useRoute, useRouter } from 'vue-router'
 import api from '../../../services/api'
 import { useToast } from 'vuestic-ui'
 
+interface AvanceDetalle {
+  id_avance_detalle: number
+  unidad: string | number
+  temas: string
+  fecha_inicio: string
+  fecha_fin: string
+}
+
+interface Avance {
+  detalles: AvanceDetalle[]
+  nombre_profesor: string
+  nombre_asignatura: string
+  clave_asignatura: string
+  periodo: string
+  firma_profesor: string
+  firma_jefe: string
+  estado: string
+  fecha_creacion: string
+  id_avance?: number
+}
+
 const route = useRoute()
 const router = useRouter()
 const tarjeta = route.params.tarjeta as string
 const grupo = (route.params.grupo as string)?.replaceAll('%20', ' ').trim()
 const claveAsignatura = (route.params.clave_asignatura as string)?.replaceAll('%20', ' ').trim()
-
+const idPeriodoEscolar = Number(route.params.periodo)
 const toast = useToast()
 
-const avanceFiltrado = ref<any>(null)
+const avanceFiltrado = ref<Avance | null>(null)
 const observaciones = ref('')
 const mostrarObservaciones = ref(false)
-const idAvanceDetalle = ref<number | null>(null)
+const idAvance = ref<number | null>(null)
 
-const handleRegresar = () => {
-  router.back()
-}
+const handleRegresar = () => router.back()
 
 onMounted(async () => {
   try {
-    console.log('Tarjeta:', tarjeta)
-    const response = await api.getAvancesMaestro(tarjeta)
+    const response = await api.getAvance()
     const avances = response.data as Array<any>
-    avanceFiltrado.value = avances.find(
-      (avance) => avance.clave_asignatura === claveAsignatura && avance.clave_grupo === grupo,
+    console.log('Respuesta completa del backend:', response.data)
+
+    const encontrado = avances.find(
+      (avance) =>
+        avance.tarjeta_profesor === Number(tarjeta) &&
+        avance.horario.clavegrupo === grupo &&
+        avance.clave_asignatura === claveAsignatura &&
+        avance.id_periodo_escolar === idPeriodoEscolar,
     )
-    idAvanceDetalle.value = avanceFiltrado.value?.detalles?.[0]?.id_avance_detalle || null
+
+    if (!encontrado) {
+      toast.notify({ message: 'No se encontró avance para este grupo/asignatura.', color: 'warning' })
+      return
+    }
+
+    // Mapear los datos correctamente
+    avanceFiltrado.value = {
+      detalles: (encontrado.detalles || []).map((d: any) => ({
+        id_avance_detalle: d.id_avance_detalle,
+        unidad: d.id_tema,
+        temas: d.observaciones,
+        fecha_inicio: d.created_at?.split('T')[0] || 'N/A',
+        fecha_fin: d.updated_at?.split('T')[0] || 'N/A',
+      })),
+      nombre_profesor: `${encontrado.profesor.nombre} ${encontrado.profesor.apellidopaterno} ${encontrado.profesor.apellidomaterno}`,
+      nombre_asignatura: encontrado.asignatura.NombreAsignatura,
+      periodo: encontrado.periodo_escolar.nombre_periodo,
+      firma_jefe: encontrado.firma_jefe_carrera,
+      firma_profesor: encontrado.firma_profesor,
+      clave_asignatura: encontrado.clave_asignatura,
+      estado: encontrado.estado,
+      fecha_creacion: encontrado.fecha_creacion,
+      id_avance: encontrado.id_avance,
+    }
+
+    console.log('Avance filtrado:', avanceFiltrado.value)
+    idAvance.value = encontrado.id_avance || null
   } catch (error) {
+    console.error('Error al obtener avances:', error)
     toast.notify({ message: 'Error al obtener datos del avance programático', color: 'danger' })
-    console.error(error)
   }
 })
 
-const volver = () => {
-  router.back()
-}
+// Funciones para botones
+const volver = () => router.back()
 
 const marcarRevisado = async () => {
-  if (!idAvanceDetalle.value) return alert('No se encontró el ID del detalle de avance.')
-
+  const id = idAvance.value
+  if (!id) return alert('No se encontró el ID del avance.')
   try {
-    await api.actualizarAvance(idAvanceDetalle.value, {
-      estado: 'En Revisión',
-      detalles: [],
-    })
+    await api.actualizarAvance(id, { estado: 'enviado', detalles: [] })
     toast.notify({ message: 'Documento marcado como REVISADO.', color: 'success' })
   } catch (error) {
-    console.error('Error marcarRevisado:', error)
+    console.error(error)
     toast.notify({ message: 'Error al marcar como revisado.', color: 'danger' })
   }
 }
 
 const marcarCorrecto = async () => {
-  if (!idAvanceDetalle.value) return alert('No se encontró el ID del detalle de avance.')
-
+  const id = idAvance.value
+  if (!id) return alert('No se encontró el ID del avance.')
   try {
-    await api.actualizarAvance(idAvanceDetalle.value, {
-      estado: 'Aprobado',
-      detalles: [],
-    })
+    await api.actualizarAvance(id, { estado: 'firmado', detalles: [] })
     toast.notify({ message: 'Documento marcado como CORRECTO.', color: 'success' })
   } catch (error) {
-    console.error('Error marcarCorrecto:', error)
+    console.error(error)
     toast.notify({ message: 'Error al marcar como correcto.', color: 'danger' })
+  }
+}
+
+const enviarCorrecciones = async () => {
+  const id = idAvance.value
+  if (!id) return alert('No se encontró el ID del avance.')
+  if (!observaciones.value.trim()) return alert('Por favor, escribe las observaciones.')
+
+  try {
+    await api.actualizarAvance(id, {
+      estado: 'rechazado',
+      detalles: [{ id_avance_detalle: id, observaciones: observaciones.value }],
+    })
+    toast.notify({ message: 'Observaciones enviadas para corrección.', color: 'success' })
+    observaciones.value = ''
+    mostrarObservaciones.value = false
+  } catch (error) {
+    console.error(error)
+    toast.notify({ message: 'Error al enviar las observaciones.', color: 'danger' })
   }
 }
 
 const toggleObservaciones = () => {
   mostrarObservaciones.value = !mostrarObservaciones.value
 }
-
-const enviarCorrecciones = async () => {
-  if (!idAvanceDetalle.value) return alert('No se encontró el ID del detalle de avance.')
-  if (observaciones.value.trim() === '') {
-    alert('Por favor, escribe las observaciones antes de enviar.')
-    return
-  }
-
-  try {
-    await api.actualizarAvance(idAvanceDetalle.value, {
-      estado: 'Rechazado',
-      detalles: [
-        {
-          id_avance_detalle: idAvanceDetalle.value,
-          observaciones: observaciones.value,
-        },
-      ],
-    })
-    toast.notify({ message: 'Observaciones enviadas para corrección.', color: 'success' })
-    observaciones.value = ''
-    mostrarObservaciones.value = false
-  } catch (error) {
-    console.error('Error enviarCorrecciones:', error)
-    toast.notify({ message: 'Error al enviar las observaciones.', color: 'danger' })
-  }
-}
 </script>
+
 <style>
 .boton-regresar {
   position: sticky;

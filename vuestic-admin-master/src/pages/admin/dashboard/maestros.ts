@@ -1,5 +1,4 @@
 import { ref } from 'vue'
-// 👇 Usa el tipo explícito para decirle a TS que tu apiClient tiene esas funciones
 import apiClient from '../../../services/api'
 
 interface Maestro {
@@ -21,30 +20,34 @@ export function useMaestrosConAsignaturas() {
 
     try {
       const response = await apiClient.getMaestros()
-      const maestrosRaw = response.data as any[]
+      const maestrosRaw = response.data as { tarjeta: string; nombre: string }[]
 
-      const maestrosFiltrados: Maestro[] = []
+      // Ejecuta todas las peticiones de asignaturas en paralelo
+      const maestrosProcesados = await Promise.all(
+        maestrosRaw.map(async (m) => {
+          try {
+            const asignaturasResp = await apiClient.getAsignaturaByTarjetaCompleta(m.tarjeta)
 
-      for (const m of maestrosRaw) {
-        try {
-          const asignaturasResp = await apiClient.getAsignaturaByTarjetaCompleta(m.tarjeta)
-          const asignaturas = asignaturasResp.data
+            // Aplana los periodos: { "3": [ ... ] } → [ ... ]
+            const periodos = asignaturasResp.data?.data || {}
+            const asignaturasArray = Object.values(periodos).flat() as any[]
 
-          if (Array.isArray(asignaturas) && asignaturas.length > 0) {
-            maestrosFiltrados.push({
+            return {
               tarjeta: m.tarjeta,
               nombre: m.nombre,
-              asignaturas: asignaturas.length,
+              asignaturas: asignaturasArray.length,
               avance: Math.floor(Math.random() * 100),
               estado: ['Pendiente', 'En progreso', 'Completado'][Math.floor(Math.random() * 3)],
-            })
+            } as Maestro
+          } catch (asigError) {
+            console.warn(`No se pudieron obtener asignaturas para ${m.tarjeta}:`, asigError)
+            return null
           }
-        } catch (asigError) {
-          console.warn(`No se pudieron obtener asignaturas para ${m.tarjeta}:`, asigError)
-        }
-      }
+        }),
+      )
 
-      maestros.value = maestrosFiltrados.filter((m: Maestro) => m.asignaturas > 0)
+      // Filtra maestros con al menos una asignatura válida
+      maestros.value = maestrosProcesados.filter((m): m is Maestro => m !== null && m.asignaturas > 0)
     } catch (err: any) {
       console.error('Error:', err)
       if (err.message?.includes('net::ERR_NETWORK_CHANGED')) {
@@ -59,6 +62,7 @@ export function useMaestrosConAsignaturas() {
     }
   }
 
+  // Llama al cargar
   fetchMaestrosConAsignaturas()
 
   return {

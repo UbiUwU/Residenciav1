@@ -234,7 +234,7 @@ const routes: Array<RouteRecordRaw> = [
         component: InstrumentacionComponent,
       },
       {
-        path: '/avance/:tarjeta/:grupo/:clave_asignatura',
+        path: '/avance/:tarjeta/:periodo/:grupo/:clave_asignatura',
         name: 'avance',
         component: AvanceComponent,
       },
@@ -252,6 +252,13 @@ const routes: Array<RouteRecordRaw> = [
         name: 'admin-reporte',
         path: 'admin-reporte',
         component: () => import('../pages/admin/pages/ReporteFinal.vue'),
+      },
+
+      {
+        path: '/alumnos/:clavegrupo/:claveasignatura',
+        name: 'alumnos',
+        component: () => import('../pages/admin/pages/AlumnosAsignatura.vue'),
+        props: true,
       },
     ],
   },
@@ -397,12 +404,10 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../pages/404.vue'),
   },
   {
-  name: 'plantilla',
-  path: '/plantilla',
-  component: () => import('../pages/Plantillas.vue'),
-},
-
-
+    name: 'plantilla',
+    path: '/plantilla',
+    component: () => import('../pages/Plantillas.vue'),
+  },
 ]
 
 const router = createRouter({
