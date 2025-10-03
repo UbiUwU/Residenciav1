@@ -8,8 +8,9 @@ class PresentacionCaracterizacion extends Model
 {
     protected $table = 'presentacion_caracterizacion';
     protected $primaryKey = 'id_Caracterizacion';
-
+    public $timestamps = false;
     protected $fillable = [
+        'id_Caracterizacion', 
         'id_Presentacion',
         'Orden',
         'Punto'

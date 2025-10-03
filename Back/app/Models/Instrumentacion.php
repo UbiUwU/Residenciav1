@@ -66,4 +66,9 @@ class Instrumentacion extends Model
     {
         return $this->hasMany(CalendarizacionEvaluacionInstrumentacion::class, 'id_instrumentacion', 'id_instrumentacion');
     }
+    public function temasConSubtemas()
+    {
+        return $this->hasMany(Tema::class, 'Clave_Asignatura', 'ClaveAsignatura')
+            ->with('subtemasRecursivos');
+    }
 }

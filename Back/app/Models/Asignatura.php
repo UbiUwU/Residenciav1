@@ -47,7 +47,10 @@ class Asignatura extends Model
                 }
             ]);
     }
-
+    public function diseniosCurriculares(): HasMany
+    {
+        return $this->hasMany(DisenioCurricular::class, 'ClaveAsignatura', 'ClaveAsignatura');
+    }
     public function temasConSubtemas()
     {
         return $this->hasMany(Tema::class, 'Clave_Asignatura', 'ClaveAsignatura')
@@ -71,7 +74,7 @@ class Asignatura extends Model
             ->orderBy('orden');
     }
 
-     public function competencias(): HasMany
+    public function competencias(): HasMany
     {
         return $this->hasMany(Competencia::class, 'ClaveAsignatura', 'ClaveAsignatura');
     }
@@ -81,9 +84,6 @@ class Asignatura extends Model
         return $this->hasMany(ProyectoAsignatura::class, 'ClaveAsignatura', 'ClaveAsignatura')
             ->orderBy('orden');
     }
-
-    
-
     public function competenciasEspecificas(): HasMany
     {
         return $this->competencias()->where('Tipo_Competencia', 'Específica');

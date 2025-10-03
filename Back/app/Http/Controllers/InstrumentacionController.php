@@ -48,12 +48,12 @@ class InstrumentacionController extends Controller
             'asignatura.ClaveAsignatura',
             'departamentos.nombre'
         )
-        ->join('maestros', 'instrumentacion.tarjeta_profesor', '=', 'maestros.tarjeta')
-        ->join('periodo_escolar', 'instrumentacion.id_periodo_escolar', '=', 'periodo_escolar.id_periodo_escolar')
-        ->join('carreras', 'instrumentacion.clavecarrera', '=', 'carreras.clavecarrera')
-        ->join('asignatura', 'instrumentacion.ClaveAsignatura', '=', 'asignatura.ClaveAsignatura')
-        ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento')
-        ->get();
+            ->join('maestros', 'instrumentacion.tarjeta_profesor', '=', 'maestros.tarjeta')
+            ->join('periodo_escolar', 'instrumentacion.id_periodo_escolar', '=', 'periodo_escolar.id_periodo_escolar')
+            ->join('carreras', 'instrumentacion.clavecarrera', '=', 'carreras.clavecarrera')
+            ->join('asignatura', 'instrumentacion.ClaveAsignatura', '=', 'asignatura.ClaveAsignatura')
+            ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento')
+            ->get();
 
         return response()->json([
             'data' => $instrumentaciones
@@ -76,12 +76,12 @@ class InstrumentacionController extends Controller
             'asignatura.ClaveAsignatura',
             'departamentos.nombre'
         )
-        ->join('maestros', 'instrumentacion.tarjeta_profesor', '=', 'maestros.tarjeta')
-        ->join('periodo_escolar', 'instrumentacion.id_periodo_escolar', '=', 'periodo_escolar.id_periodo_escolar')
-        ->join('carreras', 'instrumentacion.clavecarrera', '=', 'carreras.clavecarrera')
-        ->join('asignatura', 'instrumentacion.ClaveAsignatura', '=', 'asignatura.ClaveAsignatura')
-        ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento')
-        ->get();
+            ->join('maestros', 'instrumentacion.tarjeta_profesor', '=', 'maestros.tarjeta')
+            ->join('periodo_escolar', 'instrumentacion.id_periodo_escolar', '=', 'periodo_escolar.id_periodo_escolar')
+            ->join('carreras', 'instrumentacion.clavecarrera', '=', 'carreras.clavecarrera')
+            ->join('asignatura', 'instrumentacion.ClaveAsignatura', '=', 'asignatura.ClaveAsignatura')
+            ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento')
+            ->get();
 
 
         return response()->json([
@@ -105,12 +105,12 @@ class InstrumentacionController extends Controller
             'asignatura.ClaveAsignatura',
             'departamentos.nombre'
         )
-        ->join('maestros', 'instrumentacion.tarjeta_profesor', '=', 'maestros.tarjeta')
-        ->join('periodo_escolar', 'instrumentacion.id_periodo_escolar', '=', 'periodo_escolar.id_periodo_escolar')
-        ->join('carreras', 'instrumentacion.clavecarrera', '=', 'carreras.clavecarrera')
-        ->join('asignatura', 'instrumentacion.ClaveAsignatura', '=', 'asignatura.ClaveAsignatura')
-        ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento')
-        ->get();
+            ->join('maestros', 'instrumentacion.tarjeta_profesor', '=', 'maestros.tarjeta')
+            ->join('periodo_escolar', 'instrumentacion.id_periodo_escolar', '=', 'periodo_escolar.id_periodo_escolar')
+            ->join('carreras', 'instrumentacion.clavecarrera', '=', 'carreras.clavecarrera')
+            ->join('asignatura', 'instrumentacion.ClaveAsignatura', '=', 'asignatura.ClaveAsignatura')
+            ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento')
+            ->get();
 
         return response()->json([
             'data' => $instrumentaciones
@@ -133,12 +133,12 @@ class InstrumentacionController extends Controller
             'asignatura.ClaveAsignatura',
             'departamentos.nombre'
         )
-        ->join('maestros', 'instrumentacion.tarjeta_profesor', '=', 'maestros.tarjeta')
-        ->join('periodo_escolar', 'instrumentacion.id_periodo_escolar', '=', 'periodo_escolar.id_periodo_escolar')
-        ->join('carreras', 'instrumentacion.clavecarrera', '=', 'carreras.clavecarrera')
-        ->join('asignatura', 'instrumentacion.ClaveAsignatura', '=', 'asignatura.ClaveAsignatura')
-        ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento')
-        ->get();
+            ->join('maestros', 'instrumentacion.tarjeta_profesor', '=', 'maestros.tarjeta')
+            ->join('periodo_escolar', 'instrumentacion.id_periodo_escolar', '=', 'periodo_escolar.id_periodo_escolar')
+            ->join('carreras', 'instrumentacion.clavecarrera', '=', 'carreras.clavecarrera')
+            ->join('asignatura', 'instrumentacion.ClaveAsignatura', '=', 'asignatura.ClaveAsignatura')
+            ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento')
+            ->get();
 
 
         return response()->json([
@@ -162,12 +162,12 @@ class InstrumentacionController extends Controller
             'asignatura.ClaveAsignatura',
             'departamentos.nombre'
         )
-        ->join('maestros', 'instrumentacion.tarjeta_profesor', '=', 'maestros.tarjeta')
-        ->join('periodo_escolar', 'instrumentacion.id_periodo_escolar', '=', 'periodo_escolar.id_periodo_escolar')
-        ->join('carreras', 'instrumentacion.clavecarrera', '=', 'carreras.clavecarrera')
-        ->join('asignatura', 'instrumentacion.ClaveAsignatura', '=', 'asignatura.ClaveAsignatura')
-        ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento')
-        ->get();
+            ->join('maestros', 'instrumentacion.tarjeta_profesor', '=', 'maestros.tarjeta')
+            ->join('periodo_escolar', 'instrumentacion.id_periodo_escolar', '=', 'periodo_escolar.id_periodo_escolar')
+            ->join('carreras', 'instrumentacion.clavecarrera', '=', 'carreras.clavecarrera')
+            ->join('asignatura', 'instrumentacion.ClaveAsignatura', '=', 'asignatura.ClaveAsignatura')
+            ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento')
+            ->get();
 
         return response()->json([
             'data' => $instrumentaciones
@@ -175,57 +175,57 @@ class InstrumentacionController extends Controller
     }
 
     // Búsqueda combinada con múltiples parámetros
-public function buscarCombinada(Request $request)
-{
-    $query = Instrumentacion::select(
-        'instrumentacion.id_instrumentacion',
-        'instrumentacion.estado',
-        'instrumentacion.fecha_creacion',
-        'maestros.nombre as nombre_maestro',
-        'maestros.apellidopaterno as apellido_paterno_maestro',
-        'maestros.apellidomaterno as apellido_materno_maestro',
-        'periodo_escolar.nombre_periodo as periodo_escolar',
-        'carreras.nombre as nombre_carrera',
-        'asignatura.NombreAsignatura',
-        'asignatura.ClaveAsignatura',
-        'departamentos.nombre as nombre_departamento'
-    )
-    ->join('maestros', 'instrumentacion.tarjeta_profesor', '=', 'maestros.tarjeta')
-    ->join('periodo_escolar', 'instrumentacion.id_periodo_escolar', '=', 'periodo_escolar.id_periodo_escolar')
-    ->join('carreras', 'instrumentacion.clavecarrera', '=', 'carreras.clavecarrera')
-    ->join('asignatura', 'instrumentacion.ClaveAsignatura', '=', 'asignatura.ClaveAsignatura')
-    ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento');
+    public function buscarCombinada(Request $request)
+    {
+        $query = Instrumentacion::select(
+            'instrumentacion.id_instrumentacion',
+            'instrumentacion.estado',
+            'instrumentacion.fecha_creacion',
+            'maestros.nombre as nombre_maestro',
+            'maestros.apellidopaterno as apellido_paterno_maestro',
+            'maestros.apellidomaterno as apellido_materno_maestro',
+            'periodo_escolar.nombre_periodo as periodo_escolar',
+            'carreras.nombre as nombre_carrera',
+            'asignatura.NombreAsignatura',
+            'asignatura.ClaveAsignatura',
+            'departamentos.nombre as nombre_departamento'
+        )
+            ->join('maestros', 'instrumentacion.tarjeta_profesor', '=', 'maestros.tarjeta')
+            ->join('periodo_escolar', 'instrumentacion.id_periodo_escolar', '=', 'periodo_escolar.id_periodo_escolar')
+            ->join('carreras', 'instrumentacion.clavecarrera', '=', 'carreras.clavecarrera')
+            ->join('asignatura', 'instrumentacion.ClaveAsignatura', '=', 'asignatura.ClaveAsignatura')
+            ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento');
 
-    if ($request->has('id_periodo_escolar')) {
-        $query->where('instrumentacion.id_periodo_escolar', $request->periodoc);
+        if ($request->has('id_periodo_escolar')) {
+            $query->where('instrumentacion.id_periodo_escolar', $request->periodoc);
+        }
+
+        if ($request->has('tarjeta_profesor')) {
+            $query->where('instrumentacion.tarjeta_profesor', $request->tarjetac);
+        }
+
+        if ($request->has('id_departamento')) {
+            $query->where('instrumentacion.id_departamento', $request->departamentoc);
+        }
+
+        if ($request->has('clavecarrera')) {
+            $query->where('instrumentacion.clavecarrera', $request->clavecarrerac);
+        }
+
+        if ($request->has('ClaveAsignatura')) {
+            $query->where('instrumentacion.ClaveAsignatura', $request->ClaveAsignaturac);
+        }
+
+        if ($request->has('estado')) {
+            $query->where('instrumentacion.estado', $request->estadoc);
+        }
+
+        $instrumentaciones = $query->get();
+
+        return response()->json([
+            'data' => $instrumentaciones
+        ]);
     }
-
-    if ($request->has('tarjeta_profesor')) {
-        $query->where('instrumentacion.tarjeta_profesor', $request->tarjetac);
-    }
-
-    if ($request->has('id_departamento')) {
-        $query->where('instrumentacion.id_departamento', $request->departamentoc);
-    }
-
-    if ($request->has('clavecarrera')) {
-        $query->where('instrumentacion.clavecarrera', $request->clavecarrerac);
-    }
-
-    if ($request->has('ClaveAsignatura')) {
-        $query->where('instrumentacion.ClaveAsignatura', $request->ClaveAsignaturac);
-    }
-
-    if ($request->has('estado')) {
-        $query->where('instrumentacion.estado', $request->estadoc);
-    }
-
-    $instrumentaciones = $query->get();
-
-    return response()->json([
-        'data' => $instrumentaciones
-    ]);
-}
 
     // Crear una nueva instrumentación
     public function create(Request $request)
@@ -270,7 +270,7 @@ public function buscarCombinada(Request $request)
         ]);
 
         $instrumentacion = Instrumentacion::findOrFail($id);
-        
+
         $instrumentacion->update($request->all());
 
         return response()->json([
@@ -284,16 +284,25 @@ public function buscarCombinada(Request $request)
     {
         $instrumentacion = Instrumentacion::with([
             'asignatura',
+            'asignatura.competencias',
+            'asignatura.presentacion.caracterizaciones',
+            'asignatura.presentacion.intenciones',
             'maestro',
             'carrera',
             'periodoEscolar',
             'departamento',
-            'competencias.tema',
-            'competencias.competenciasGenericas',
-            'competencias.actividadesEnsenanza',
-            'competencias.indicadoresAlcance',
-            'competencias.nivelesDesempeno.indicadoresAlcance',
-            'competencias.evaluaciones.indicadoresAlcance',
+            'competencias' => function ($query) {
+                $query->with([
+                    'tema',
+                    'tema.subtemas',
+                    'tema.actividadesAprendizaje',
+                    'competenciasGenericas',
+                    'actividadesEnsenanza',
+                    'indicadoresAlcance',
+                    'nivelesDesempeno.indicadoresAlcance',
+                    'evaluaciones.indicadoresAlcance',
+                ]);
+            },
             'apoyosDidacticos',
             'calendarizaciones'
         ])->findOrFail($id);
