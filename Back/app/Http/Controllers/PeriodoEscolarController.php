@@ -7,46 +7,94 @@ use Illuminate\Http\Request;
 
 class PeriodoEscolarController extends Controller
 {
-    // Obtener todos los periodos escolares
-    // Listar todos los periodos con sus fechas clave
     public function index()
     {
-        $periodos = PeriodoEscolar::with('fechasClaveConCatalogo')->get();
+        $periodos = PeriodoEscolar::with(['fechasClave', 'fechasClave.tipoFecha'])->get();
         return response()->json($periodos);
     }
-
     public function indexL()
     {
-        $periodos = PeriodoEscolar::periodos()
-            ->get();
+        $periodos = PeriodoEscolar::periodos()->get();
 
         return response()->json($periodos);
 
     }
-
-    public function indexLFC()
+    // En el Controller
+    public function indexClean()
     {
-        $periodos = PeriodoEscolar::periodos()
-            ->with([
-                'fechasClave' => function ($query) {
-                    $query->fechasClave(); 
-                }
-            ])
-            ->get();
+        $periodos = PeriodoEscolar::with(['fechasClave.tipoFecha'])->get();
 
-        return response()->json($periodos);
+        $cleanPeriodos = $periodos->map(function ($periodo) {
+            return [
+                'id_periodo_escolar' => $periodo->id_periodo_escolar,
+                'codigoperiodo' => $periodo->codigoperiodo,
+                'nombre_periodo' => $periodo->nombre_periodo,
+                'fecha_inicio' => $periodo->fecha_inicio,
+                'fecha_fin' => $periodo->fecha_fin,
+                'estado' => $periodo->estado,
+                'fechas_clave' => $periodo->fechasClave->map(function ($fecha) {
+                    return [
+                        'id_fecha_clave' => $fecha->id_fecha_clave,
+                        'nombre_fecha' => $fecha->nombre_fecha,
+                        'descripcion' => $fecha->descripcion,
+                        'fecha' => $fecha->fecha,
+                        'fecha_limite' => $fecha->fecha_limite,
+                        'obligatoria' => $fecha->es_obligatoria,
+                        'tipo_fecha' => $fecha->tipoFecha ? [
+                            'clave' => $fecha->tipoFecha->clave,
+                            'nombre' => $fecha->tipoFecha->nombre
+                        ] : null
+                    ];
+                })
+            ];
+        });
+
+        return response()->json($cleanPeriodos);
     }
-
-    // Obtener un periodo escolar específico con sus fechas clave
+    // Obtener un periodo escolar específico con sus fechas clave y tipos de fecha
     public function show($id)
     {
-        $periodo = PeriodoEscolar::with('fechasClaveConCatalogo')->find($id);
+        $periodo = PeriodoEscolar::with(['fechasClave', 'fechasClave.tipoFecha'])->find($id);
 
         if (!$periodo) {
             return response()->json(['message' => 'Periodo escolar no encontrado'], 404);
         }
 
         return response()->json($periodo);
+    }
+
+    public function showclean($id)
+    {
+        $periodo = PeriodoEscolar::with(['fechasClave.tipoFecha'])->find($id);
+
+        if (!$periodo) {
+            return response()->json(['message' => 'Periodo escolar no encontrado'], 404);
+        }
+
+        $cleanPeriodo = [
+            'id_periodo_escolar' => $periodo->id_periodo_escolar,
+            'codigoperiodo' => $periodo->codigoperiodo,
+            'nombre_periodo' => $periodo->nombre_periodo,
+            'fecha_inicio' => $periodo->fecha_inicio,
+            'fecha_fin' => $periodo->fecha_fin,
+            'estado' => $periodo->estado,
+            'fechas_clave' => $periodo->fechasClave->map(function ($fecha) {
+                return [
+                    'id_fecha_clave' => $fecha->id_fecha_clave,
+                    'nombre_fecha' => $fecha->nombre_fecha,
+                    'descripcion' => $fecha->descripcion,
+                    'fecha' => $fecha->fecha,
+                    'fecha_limite' => $fecha->fecha_limite,
+                    'obligatoria' => $fecha->es_obligatoria,
+                    'tipo_fecha' => $fecha->tipoFecha ? [
+                        'clave' => $fecha->tipoFecha->clave,
+                        'nombre' => $fecha->tipoFecha->nombre
+                    ] : null
+                ];
+            })
+        ];
+
+        return response()->json($cleanPeriodo);
     }
 
 

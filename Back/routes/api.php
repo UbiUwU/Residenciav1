@@ -398,9 +398,10 @@ Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
 Route::prefix('periodos')->group(function () {
     Route::post('/', [PeriodoEscolarController::class, 'store']);
     Route::get('/', [PeriodoEscolarController::class, 'index']);
-    Route::get('/clean', [PeriodoEscolarController::class, 'indexL']);
-    Route::get('/cleanfc', [PeriodoEscolarController::class, 'indexLFC']);
+    Route::get('/listas', [PeriodoEscolarController::class, 'indexL']);
+    Route::get('/listac', [PeriodoEscolarController::class, 'indexClean']);
     Route::get('/{id}', [PeriodoEscolarController::class, 'show']);
+    Route::get('/limpio/{id}', [PeriodoEscolarController::class, 'showclean']);
     Route::put('/{id}', [PeriodoEscolarController::class, 'update']);
     Route::delete('/{id}', [PeriodoEscolarController::class, 'destroy']);
 });

@@ -35,8 +35,8 @@ class AulaController extends Controller
             'claveaula' => 'required|string|max:20|unique:aulas,claveaula',
             'claveedificio' => 'required|string|exists:edificios,claveedificio',
             'nombre' => 'required|string|max:100',
-            'cantidadcomputadoras' => 'required|integer|min:0',
-            'horadisponible' => 'required|date_format:H:i:s',
+            'cantidadcomputadoras' => 'sometimes|integer|min:0',
+            'horadisponible' => 'sometimes|date_format:H:i:s',
             'estado' => 'required|string|in:activo,inactivo,pendiente,eliminado', // Agregado para manejar el estado del aula
         ]);
 

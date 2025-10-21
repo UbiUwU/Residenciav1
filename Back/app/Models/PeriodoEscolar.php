@@ -19,30 +19,26 @@ class PeriodoEscolar extends Model
         'estado'
     ];
 
-    // Relación con comisiones
     public function comisiones()
     {
         return $this->hasMany(Comision::class, 'id_periodo_escolar');
     }
+
     public function fechasClave(): HasMany
     {
         return $this->hasMany(FechasClavePeriodo::class, 'periodo_escolar_id');
-    }
-
-    // Acceso a la información del catálogo desde fechas_clave
-    public function fechasClaveConCatalogo()
-    {
-        return $this->fechasClave()->with('tipoCatalogo');
     }
 
     public function scopePeriodos($query)
     {
         return $query->select('id_periodo_escolar', 'codigoperiodo', 'nombre_periodo', 'fecha_inicio', 'fecha_fin', 'estado');
     }
+
     public function liberacionesDocentes(): HasMany
     {
         return $this->hasMany(LiberacionDocente::class, 'id_periodo_escolar', 'id_periodo_escolar');
     }
+
     public function liberacionesAcademicas(): HasMany
     {
         return $this->hasMany(LiberacionAcademica::class, 'id_periodo_escolar', 'id_periodo_escolar');

@@ -18,11 +18,8 @@ class CatalogoTiposFecha extends Model
         'es_activo',
     ];
 
-    /**
-     * Relación con las fechas clave
-     */
     public function fechasClave(): HasMany
     {
-        return $this->hasMany(FechasClavePeriodo::class, 'tipo_fecha_clave', 'clave');
+        return $this->hasMany(FechasClavePeriodo::class, 'id_tipo_fecha', 'id_tipo_fecha');
     }
 }
