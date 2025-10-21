@@ -138,7 +138,7 @@ export default {
   },
 
   getAsignaturaByTarjetaCompleta(clave) {
-    return apiClient.get(`/asignaturas/maestro/${clave}`)
+    return apiClient.get(`/horario/maestro/${clave}`)
   },
   ///////
   getDetalleGruposByTarjeta(clave) {
@@ -185,7 +185,7 @@ export default {
     return apiClient.get(`/ListaM/${tarjeta}`)
   },
   // Obtener todos los avances completos
-  getAvancesCompletos() {
+  getAvance() {
     return apiClient.get('/avance')
   },
 
@@ -236,6 +236,14 @@ export default {
   //Aula
   getAula() {
     return apiClient.get(`/aulas`)
+  },
+
+  getAlumnos() {
+    return apiClient.get(`/alumnosR/`)
+  },
+
+  getAlumnosPorAsignatura(numerocontrol) {
+    return apiClient.get(`/alumnosR/${numerocontrol}`)
   },
 
   //Grupo
