@@ -12,7 +12,7 @@ export function useMaestros() {
     try {
       const response = await apiClient.getMaestros()
       // Accede a los datos dentro de la clave 'data'
-      maestros.value = response.data.data
+      maestros.value = response.data
     } catch (err) {
       error.value = err as Error
     } finally {

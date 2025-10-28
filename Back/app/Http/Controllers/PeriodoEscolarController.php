@@ -2,106 +2,157 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PeriodoEscolar;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 
 class PeriodoEscolarController extends Controller
 {
-    // Crear nuevo período
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'codigoperiodo' => 'required|string|max:255',
-            'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-
-        try {
-            $result = DB::select(
-                "SELECT insert_periodo_escolar(?, ?, ?) as result",
-                [
-                    $request->codigoperiodo,
-                    $request->fecha_inicio,
-                    $request->fecha_fin
-                ]
-            );
-
-            return response()->json(['message' => $result[0]->result], 201);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-
-    // Obtener todos los períodos
     public function index()
     {
-        try {
-            $periodos = DB::select("SELECT * FROM get_all_periodos_escolares()");
-            return response()->json($periodos);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        $periodos = PeriodoEscolar::with(['fechasClave', 'fechasClave.tipoFecha'])->get();
+        return response()->json($periodos);
     }
+    public function indexL()
+    {
+        $periodos = PeriodoEscolar::periodos()->get();
 
-    // Obtener un período específico
+        return response()->json($periodos);
+
+    }
+    // En el Controller
+    public function indexClean()
+    {
+        $periodos = PeriodoEscolar::with(['fechasClave.tipoFecha'])->get();
+
+        $cleanPeriodos = $periodos->map(function ($periodo) {
+            return [
+                'id_periodo_escolar' => $periodo->id_periodo_escolar,
+                'codigoperiodo' => $periodo->codigoperiodo,
+                'nombre_periodo' => $periodo->nombre_periodo,
+                'fecha_inicio' => $periodo->fecha_inicio,
+                'fecha_fin' => $periodo->fecha_fin,
+                'estado' => $periodo->estado,
+                'fechas_clave' => $periodo->fechasClave->map(function ($fecha) {
+                    return [
+                        'id_fecha_clave' => $fecha->id_fecha_clave,
+                        'nombre_fecha' => $fecha->nombre_fecha,
+                        'descripcion' => $fecha->descripcion,
+                        'fecha' => $fecha->fecha,
+                        'fecha_limite' => $fecha->fecha_limite,
+                        'obligatoria' => $fecha->es_obligatoria,
+                        'tipo_fecha' => $fecha->tipoFecha ? [
+                            'clave' => $fecha->tipoFecha->clave,
+                            'nombre' => $fecha->tipoFecha->nombre
+                        ] : null
+                    ];
+                })
+            ];
+        });
+
+        return response()->json($cleanPeriodos);
+    }
+    // Obtener un periodo escolar específico con sus fechas clave y tipos de fecha
     public function show($id)
     {
-        try {
-            $periodo = DB::select("SELECT * FROM get_periodo_escolar_by_id(?)", [$id]);
-            
-            if (empty($periodo)) {
-                return response()->json(['message' => 'Período no encontrado'], 404);
-            }
+        $periodo = PeriodoEscolar::with(['fechasClave', 'fechasClave.tipoFecha'])->find($id);
 
-            return response()->json($periodo[0]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        if (!$periodo) {
+            return response()->json(['message' => 'Periodo escolar no encontrado'], 404);
         }
+
+        return response()->json($periodo);
     }
 
-    // Actualizar un período
-    public function update(Request $request, $id)
+    public function showclean($id)
     {
-        $validator = Validator::make($request->all(), [
+        $periodo = PeriodoEscolar::with(['fechasClave.tipoFecha'])->find($id);
+
+        if (!$periodo) {
+            return response()->json(['message' => 'Periodo escolar no encontrado'], 404);
+        }
+
+        $cleanPeriodo = [
+            'id_periodo_escolar' => $periodo->id_periodo_escolar,
+            'codigoperiodo' => $periodo->codigoperiodo,
+            'nombre_periodo' => $periodo->nombre_periodo,
+            'fecha_inicio' => $periodo->fecha_inicio,
+            'fecha_fin' => $periodo->fecha_fin,
+            'estado' => $periodo->estado,
+            'fechas_clave' => $periodo->fechasClave->map(function ($fecha) {
+                return [
+                    'id_fecha_clave' => $fecha->id_fecha_clave,
+                    'nombre_fecha' => $fecha->nombre_fecha,
+                    'descripcion' => $fecha->descripcion,
+                    'fecha' => $fecha->fecha,
+                    'fecha_limite' => $fecha->fecha_limite,
+                    'obligatoria' => $fecha->es_obligatoria,
+                    'tipo_fecha' => $fecha->tipoFecha ? [
+                        'clave' => $fecha->tipoFecha->clave,
+                        'nombre' => $fecha->tipoFecha->nombre
+                    ] : null
+                ];
+            })
+        ];
+
+        return response()->json($cleanPeriodo);
+    }
+
+
+    // Crear un nuevo periodo escolar
+    public function store(Request $request)
+    {
+        $request->validate([
             'codigoperiodo' => 'required|string|max:255',
+            'nombre_periodo' => 'required|string|max:255',
             'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio'
+            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+            'estado' => 'required|string|max:50',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
+        $periodo = PeriodoEscolar::create($request->all());
 
-        try {
-            $result = DB::select(
-                "SELECT update_periodo_escolar(?, ?, ?, ?) as result",
-                [
-                    $id,
-                    $request->codigoperiodo,
-                    $request->fecha_inicio,
-                    $request->fecha_fin
-                ]
-            );
-
-            return response()->json(['message' => $result[0]->result]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        return response()->json([
+            'message' => 'Periodo escolar creado exitosamente',
+            'data' => $periodo
+        ], 201);
     }
 
-    // Eliminar un período
+    // Actualizar un periodo escolar
+    public function update(Request $request, $id)
+    {
+        $periodo = PeriodoEscolar::find($id);
+
+        if (!$periodo) {
+            return response()->json(['message' => 'Periodo escolar no encontrado'], 404);
+        }
+
+        $request->validate([
+            'codigoperiodo' => 'sometimes|string|max:255',
+            'nombre_periodo' => 'sometimes|string|max:255',
+            'fecha_inicio' => 'sometimes|date',
+            'fecha_fin' => 'sometimes|date|after_or_equal:fecha_inicio',
+            'estado' => 'sometimes|string|max:50',
+        ]);
+
+        $periodo->update($request->all());
+
+        return response()->json([
+            'message' => 'Periodo escolar actualizado exitosamente',
+            'data' => $periodo
+        ]);
+    }
+
+    // Eliminar un periodo escolar
     public function destroy($id)
     {
-        try {
-            $result = DB::select("SELECT delete_periodo_escolar(?) as result", [$id]);
-            return response()->json(['message' => $result[0]->result]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        $periodo = PeriodoEscolar::find($id);
+
+        if (!$periodo) {
+            return response()->json(['message' => 'Periodo escolar no encontrado'], 404);
         }
+
+        $periodo->delete();
+
+        return response()->json(['message' => 'Periodo escolar eliminado exitosamente']);
     }
 }

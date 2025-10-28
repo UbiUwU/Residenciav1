@@ -2,64 +2,86 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Grupo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Database\QueryException;
 
 class GrupoController extends Controller
 {
+    // Listar todos los grupos
     public function index()
     {
-        $grupos = DB::select("SELECT * FROM get_all_grupos()");
-        return response()->json($grupos);
+        $grupos = Grupo::all();
+        return response()->json($grupos, 200);
     }
 
-    public function show($clave_grupo)
+    // Mostrar un grupo específico
+    public function show($clavegrupo)
     {
-        $grupo = DB::select("SELECT * FROM get_grupo_by_clave(?)", [$clave_grupo]);
-        if (empty($grupo)) {
+        $grupo = Grupo::find($clavegrupo);
+        if (!$grupo) {
             return response()->json(['message' => 'Grupo no encontrado'], 404);
         }
-        return response()->json($grupo[0]);
+        return response()->json($grupo, 200);
     }
 
+    // Crear un nuevo grupo
     public function store(Request $request)
     {
         $request->validate([
-            'ClaveGrupo' => 'required|string|max:20',
-            'Nombre' => 'required|string|max:100',
-            'Descripcion' => 'nullable|string|max:255',
+            'clavegrupo' => 'required|string|max:20|unique:grupos,clavegrupo',
+            'nombre' => 'required|string|max:100',
+            'descripcion' => 'required|string|max:255',
         ]);
 
-        $response = DB::select("SELECT insert_grupo(?, ?, ?) AS message", [
-            $request->ClaveGrupo,
-            $request->Nombre,
-            $request->Descripcion ?? '',
-        ]);
-
-        return response()->json(['message' => $response[0]->message]);
+        try {
+            $grupo = Grupo::create($request->only(['clavegrupo', 'nombre', 'descripcion']));
+            return response()->json([
+                'message' => 'Grupo creado exitosamente',
+                'grupo' => $grupo
+            ], 201);
+        } catch (QueryException $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
 
-    public function update(Request $request, $clave_grupo)
+    // Actualizar un grupo existente
+    public function update(Request $request, $clavegrupo)
     {
+        $grupo = Grupo::find($clavegrupo);
+        if (!$grupo) {
+            return response()->json(['message' => 'Grupo no encontrado'], 404);
+        }
+
         $request->validate([
-            'Nombre' => 'required|string|max:100',
-            'Descripcion' => 'nullable|string|max:255',
+            'nombre' => 'sometimes|required|string|max:100',
+            'descripcion' => 'sometimes|required|string|max:255',
         ]);
 
-        $response = DB::select("SELECT update_grupo(?, ?, ?) AS message", [
-            $clave_grupo,
-            $request->Nombre,
-            $request->Descripcion ?? '',
-        ]);
-
-        return response()->json(['message' => $response[0]->message]);
+        try {
+            $grupo->update($request->only(['nombre', 'descripcion']));
+            return response()->json([
+                'message' => 'Grupo actualizado exitosamente',
+                'grupo' => $grupo
+            ], 200);
+        } catch (QueryException $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
 
-    public function destroy($clave_grupo)
+    // Eliminar un grupo
+    public function destroy($clavegrupo)
     {
-        $response = DB::select("SELECT delete_grupo(?) AS message", [$clave_grupo]);
-        return response()->json(['message' => $response[0]->message]);
+        $grupo = Grupo::find($clavegrupo);
+        if (!$grupo) {
+            return response()->json(['message' => 'Grupo no encontrado'], 404);
+        }
+
+        try {
+            $grupo->delete();
+            return response()->json(['message' => 'Grupo eliminado exitosamente'], 200);
+        } catch (QueryException $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
 }

@@ -103,23 +103,6 @@ export default {
     return apiClient.delete(`/roles/${id}`)
   },
 
-  // períodos
-  getPeriodos() {
-    return apiClient.get('/periodos-escolares')
-  },
-
-  crearPeriodo(data) {
-    return apiClient.post('/periodos-escolares', data)
-  },
-
-  actualizarPeriodo(id, data) {
-    return apiClient.put(`/periodos-escolares/${id}`, data)
-  },
-
-  eliminarPeriodo(id) {
-    return apiClient.delete(`/periodos-escolares/${id}`)
-  },
-
   // Obtener todas las asignaturas
   getAsignaturas() {
     return apiClient.get('/asignaturas')
@@ -155,7 +138,7 @@ export default {
   },
 
   getAsignaturaByTarjetaCompleta(clave) {
-    return apiClient.get(`/asignaturas/maestro/${clave}`)
+    return apiClient.get(`/horario/maestro/${clave}`)
   },
   ///////
   getDetalleGruposByTarjeta(clave) {
@@ -202,8 +185,12 @@ export default {
     return apiClient.get(`/ListaM/${tarjeta}`)
   },
   // Obtener todos los avances completos
-  getAvancesCompletos() {
+  getAvance() {
     return apiClient.get('/avance')
+  },
+
+  getAvancesMaestro(tarjeta) {
+    return apiClient.get(`/avance/${tarjeta}`)
   },
 
   // Crear un nuevo avance
@@ -214,5 +201,69 @@ export default {
   // Actualizar un avance existente
   actualizarAvance(id, data) {
     return apiClient.put(`/avance/${id}`, data)
+  },
+
+  //Eventos
+  getevento() {
+    return apiClient.get(`/tipoevento`)
+  },
+
+  crearEvento(data) {
+    return apiClient.post(`/tipoevento`, data)
+  },
+
+  //Periodos
+  getPeriodo() {
+    return apiClient.get(`/periodos`)
+  },
+
+  crearPeriodo(data) {
+    return apiClient.post('/periodos', data)
+  },
+
+  actualizarPeriodo(id, data) {
+    return apiClient.put(`/periodos/${id}`, data)
+  },
+
+  eliminarPeriodo(id) {
+    return apiClient.delete(`/periodos/${id}`)
+  },
+
+  getEstado() {
+    return apiClient.get(`/enum/origen_enum`)
+  },
+
+  //Aula
+  getAula() {
+    return apiClient.get(`/aulas`)
+  },
+
+  getAlumnos() {
+    return apiClient.get(`/alumnosR/`)
+  },
+
+  getAlumnosPorAsignatura(numerocontrol) {
+    return apiClient.get(`/alumnosR/${numerocontrol}`)
+  },
+
+  //Grupo
+  getGrupo() {
+    return apiClient.get(`/grupos`)
+  },
+
+  crearUsuario(data) {
+    return apiClient.post('/usuarios', data)
+  },
+
+  getUsuarios() {
+    return apiClient.get(`/usuarios`)
+  },
+
+  eliminarUsuario(idusuario) {
+    return apiClient.delete(`/usuarios/${idusuario}`)
+  },
+
+  actualizarUsuario(idusuario, data) {
+    return apiClient.put(`/usuarios/${idusuario}`, data)
   },
 }

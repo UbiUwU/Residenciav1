@@ -2,64 +2,88 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Carrera;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Database\QueryException;
 
 class CarreraController extends Controller
 {
+    // Listar todas las carreras
     public function index()
     {
-        $carreras = DB::select("SELECT * FROM get_all_carreras()");
-        return response()->json($carreras);
+        $carreras = Carrera::all();
+        return response()->json($carreras, 200);
     }
 
-    public function show($clave)
+    // Mostrar una carrera específica
+    public function show($clavecarrera)
     {
-        $carrera = DB::select("SELECT * FROM get_carrera_by_clave(?)", [$clave]);
-        if (empty($carrera)) {
+        $carrera = Carrera::find($clavecarrera);
+        if (!$carrera) {
             return response()->json(['message' => 'Carrera no encontrada'], 404);
         }
-        return response()->json($carrera[0]);
+        return response()->json($carrera, 200);
     }
 
+    // Crear una nueva carrera
     public function store(Request $request)
     {
         $request->validate([
-            'ClaveCarrera' => 'required|string|max:20',
-            'Nombre' => 'required|string|max:100',
-            'Descripcion' => 'nullable|string|max:255',
+            'clavecarrera' => 'required|string|max:20|unique:carreras,clavecarrera',
+            'nombre' => 'required|string|max:100',
+            'descripcion' => 'required|string|max:255',
+            'generacion' => 'required|integer|min:1',
         ]);
 
-        $response = DB::select("SELECT insert_carrera(?, ?, ?) AS message", [
-            $request->ClaveCarrera,
-            $request->Nombre,
-            $request->Descripcion ?? '',
-        ]);
-
-        return response()->json(['message' => $response[0]->message]);
+        try {
+            $carrera = Carrera::create($request->only(['clavecarrera', 'nombre', 'descripcion', 'generacion']));
+            return response()->json([
+                'message' => 'Carrera creada exitosamente',
+                'carrera' => $carrera
+            ], 201);
+        } catch (QueryException $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
 
-    public function update(Request $request, $clave)
+    // Actualizar una carrera existente
+    public function update(Request $request, $clavecarrera)
     {
+        $carrera = Carrera::find($clavecarrera);
+        if (!$carrera) {
+            return response()->json(['message' => 'Carrera no encontrada'], 404);
+        }
+
         $request->validate([
-            'Nombre' => 'required|string|max:100',
-            'Descripcion' => 'nullable|string|max:255',
+            'nombre' => 'sometimes|required|string|max:100',
+            'descripcion' => 'sometimes|required|string|max:255',
+            'generacion' => 'sometimes|required|integer|min:1',
         ]);
 
-        $response = DB::select("SELECT update_carrera(?, ?, ?) AS message", [
-            $clave,
-            $request->Nombre,
-            $request->Descripcion ?? '',
-        ]);
-
-        return response()->json(['message' => $response[0]->message]);
+        try {
+            $carrera->update($request->only(['nombre', 'descripcion', 'generacion']));
+            return response()->json([
+                'message' => 'Carrera actualizada exitosamente',
+                'carrera' => $carrera
+            ], 200);
+        } catch (QueryException $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
 
-    public function destroy($clave)
+    // Eliminar una carrera
+    public function destroy($clavecarrera)
     {
-        $response = DB::select("SELECT delete_carrera(?) AS message", [$clave]);
-        return response()->json(['message' => $response[0]->message]);
+        $carrera = Carrera::find($clavecarrera);
+        if (!$carrera) {
+            return response()->json(['message' => 'Carrera no encontrada'], 404);
+        }
+
+        try {
+            $carrera->delete();
+            return response()->json(['message' => 'Carrera eliminada exitosamente'], 200);
+        } catch (QueryException $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
     }
 }

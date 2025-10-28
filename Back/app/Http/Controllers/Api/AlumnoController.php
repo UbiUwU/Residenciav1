@@ -23,7 +23,7 @@ class AlumnoController extends Controller
     // Obtener un alumno por número de control
     public function show($numeroControl)
     {
-        $alumno = DB::select("SELECT * FROM get_alumno_by_id(?)", [$numeroControl]);
+        $alumno = DB::select("select * from alumnos where numerocontrol = ?", [$numeroControl]);
 
         if (empty($alumno)) {
             return response()->json([
@@ -154,33 +154,33 @@ class AlumnoController extends Controller
 
     // 1. Ver horario del alumno
     public function getHorario($numeroControl)
-{
-    $result = DB::select("SELECT * FROM public.get_horario_alumno(?)", [$numeroControl]);
+    {
+        $result = DB::select("SELECT * FROM public.get_horario_alumno(?)", [$numeroControl]);
 
-    if (empty($result)) {
-        return response()->json([]);
+        if (empty($result)) {
+            return response()->json([]);
+        }
+
+        // Supongamos que la función devuelve un solo registro con un campo JSON en texto
+        $jsonString = $result[0]->get_horario_alumno ?? null;
+
+        if ($jsonString === null) {
+            return response()->json([]);
+        }
+
+        // Decodificar el JSON para obtener un array PHP
+        $horarioArray = json_decode($jsonString, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return response()->json([
+                'error' => 'Error al decodificar JSON del horario',
+                'message' => json_last_error_msg(),
+            ], 500);
+        }
+
+        // Retornar el JSON ya decodificado para mejor visualización
+        return response()->json($horarioArray);
     }
-
-    // Supongamos que la función devuelve un solo registro con un campo JSON en texto
-    $jsonString = $result[0]->get_horario_alumno ?? null;
-
-    if ($jsonString === null) {
-        return response()->json([]);
-    }
-
-    // Decodificar el JSON para obtener un array PHP
-    $horarioArray = json_decode($jsonString, true);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        return response()->json([
-            'error' => 'Error al decodificar JSON del horario',
-            'message' => json_last_error_msg(),
-        ], 500);
-    }
-
-    // Retornar el JSON ya decodificado para mejor visualización
-    return response()->json($horarioArray);
-}
 
 
     // 2. Registrar usuario y alumno
@@ -371,17 +371,88 @@ class AlumnoController extends Controller
 
     // 11. Registrar en bitácora
     public function registrarBitacora(Request $request)
-    {
+{
         $request->validate([
-            'numerocontrol' => 'required',
-            'numeroinventario' => 'required'
-        ]);
+        'numerocontrol' => 'required',
+        'numeroinventario' => 'required',
+        'horaEntrada' => 'required|date_format:Y-m-d H:i:s',
+        'horaSalida' => 'required|date_format:Y-m-d H:i:s',
+        'tiempoUso' => 'required'
+    ]);
 
-        DB::select("SELECT * FROM insert_bitacora_alumno(?, ?)", [
+    // Insertar en la base de datos
+    DB::insert(
+        "INSERT INTO public.bitacora_alumnos (
+            hora_entrada, hora_salida, tiempo_uso, numerocontrol, numeroinventario
+        ) VALUES (?, ?, ?, ?, ?)",
+        [
+            $request->horaEntrada,
+            $request->horaSalida,
+            $request->tiempoUso,
             $request->numerocontrol,
             $request->numeroinventario
-        ]);
+        ]
+    );
 
-        return response()->json(['success' => true, 'message' => 'Bitácora registrada']);
-    }
+    return response()->json([
+        'success' => true,
+        'message' => 'Bitácora registrada'
+    ]);
+}
+
+
+
+
+
+    //horario por aulas admin
+public function getHorarioAula($claveAula)
+{
+    $horario = DB::select("
+        SELECT jsonb_agg(
+            jsonb_strip_nulls(
+                jsonb_build_object(
+                    'Asignatura', m.\"NombreAsignatura\",
+                    'Aula', au.Nombre,
+                    'Profesor',  COALESCE(mtros.Nombre, '') || ' ' || 
+                                COALESCE(mtros.apellidopaterno, '') || ' ' || 
+                                COALESCE(mtros.apellidomaterno, ''),
+                    'Inicio Lunes', hm.lunes_hi,
+                    'Fin Lunes', hm.lunes_hf,
+                    'Inicio Martes', hm.martes_hi,
+                    'Fin Martes', hm.martes_hf,
+                    'Inicio Miercoles', hm.miercoles_hi,
+                    'Fin Miercoles', hm.miercoles_hf,
+                    'Inicio Jueves', hm.jueves_hi,
+                    'Fin Jueves', hm.jueves_hf,
+                    'Inicio Viernes', hm.viernes_hi,
+                    'Fin Viernes', hm.viernes_hf,
+                    'Inicio Sabado', hm.sabado_hi,
+                    'Fin Sabado', hm.sabado_hf
+                )
+            )
+        ) AS horario_aula
+        FROM HorarioAsignatura_Maestro hm
+        JOIN Asignatura m ON hm.ClaveAsignatura = m.\"ClaveAsignatura\"
+        JOIN Aulas au ON hm.ClaveAula = au.ClaveAula
+        JOIN Maestros mtros ON hm.tarjeta = mtros.tarjeta
+        WHERE hm.ClaveAula = ?
+    ", [$claveAula]);
+
+    return response()->json([
+        'success' => true,
+        'aula' => $claveAula,
+        'horario' => $horario[0]->horario_aula ?? []
+    ]);
+}
+
+public function getallBitacoraAlumno()
+{
+    $Bitacoraalumnos = DB::select("select * from bitacora_alumnos");
+
+    return response()->json([
+        'success' => true,
+        'data' => $Bitacoraalumnos
+    ]);
+
+}
 }

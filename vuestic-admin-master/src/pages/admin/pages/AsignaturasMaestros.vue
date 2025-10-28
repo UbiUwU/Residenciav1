@@ -8,14 +8,19 @@
 
     <div v-if="loading" class="loading">Cargando asignaturas...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
-
     <div v-else-if="asignaturas.length === 0" class="no-data">Este maestro no tiene asignaturas registradas.</div>
 
     <div v-else class="asignaturas-grid">
-      <div v-for="asignatura in asignaturas" :key="asignatura.ClaveAsignatura" class="asignatura-card">
-        <div class="asignatura-header" @click="toggleDetalle(asignatura.ClaveAsignatura)">
+      <!-- Usa clave compuesta para el key -->
+      <div
+        v-for="asignatura in asignaturas"
+        :key="asignatura.ClaveAsignatura + '-' + asignatura.Grupo"
+        class="asignatura-card"
+      >
+        <div class="asignatura-header" @click="toggleDetalle(asignatura.ClaveAsignatura, asignatura.Grupo)">
           <h3>{{ asignatura.ClaveAsignatura }} - {{ asignatura.NombreAsignatura }}</h3>
           <div class="asignatura-info">
+            <span>Grupo: {{ asignatura.Grupo }}</span>
             <span>Créditos: {{ asignatura.Creditos }}</span>
             <span>
               SATCA: {{ asignatura.Satca_Total }} (T:{{ asignatura.Satca_Teoricas }}, P:{{
@@ -25,12 +30,12 @@
           </div>
         </div>
 
-        <!-- Submenú: solo se muestra si es la asignatura seleccionada -->
-
         <Transition name="fade">
-          <div v-show="detalleAbierto === asignatura.ClaveAsignatura" class="submenu">
-            <button @click="verPDF('instrumentacion')">Instrumentación Didáctica</button>
-            <button @click="verPDF('avance')">Avance Programático</button>
+          <!-- Compara con la clave compuesta -->
+          <div v-show="detalleAbierto === asignatura.ClaveAsignatura + '-' + asignatura.Grupo" class="submenu">
+            <button @click="verPDF('instrumentacion', asignatura)">Instrumentación Didáctica</button>
+            <button @click="verPDF('avance', asignatura)">Avance Programático</button>
+            <button @click="verAlumnos(asignatura)">Ver alumnos</button>
           </div>
         </Transition>
       </div>
@@ -38,50 +43,58 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '../../../services/api'
 
+// Tipo para las asignaturas
+interface Asignatura {
+  ClaveAsignatura: string
+  NombreAsignatura: string
+  Creditos: number
+  Satca_Teoricas: number
+  Satca_Practicas: number
+  Satca_Total: number
+  Grupo: string
+  Periodo: number
+}
+
 const route = useRoute()
 const router = useRouter()
-const asignaturas = ref([])
-const loading = ref(true)
-const error = ref(null)
-const detalleAbierto = ref(null)
 
-const tarjeta = route.params.tarjeta
+// Refs tipados para evitar never[]
+const asignaturas = ref<Asignatura[]>([])
+const loading = ref<boolean>(true)
+const error = ref<string | null>(null)
+const detalleAbierto = ref<string | null>(null)
 
+const tarjeta = route.params.tarjeta as string
+
+// Cargar asignaturas desde el backend
 const fetchAsignaturas = async () => {
   try {
     loading.value = true
     const response = await api.getAsignaturaByTarjetaCompleta(tarjeta)
-    const data = response.data
 
-    if (Array.isArray(data) && data.length > 0) {
-      asignaturas.value = data.map((item) => ({
-        ClaveAsignatura: item.informacionbasica.clave,
-        NombreAsignatura: item.informacionbasica.nombre,
-        Creditos: item.informacionbasica.creditos,
-        Satca_Teoricas: item.informacionbasica.satca.teoricas,
-        Satca_Practicas: item.informacionbasica.satca.practicas,
-        Satca_Total: item.informacionbasica.satca.total,
+    const periodos = response.data?.data || {}
+    const horarios = Object.values(periodos).flat() as any[]
+
+    if (horarios.length > 0) {
+      asignaturas.value = horarios.map((item: any) => ({
+        ClaveAsignatura: item.asignatura?.ClaveAsignatura ?? 'N/A',
+        NombreAsignatura: item.asignatura?.NombreAsignatura ?? 'Sin nombre',
+        Creditos: item.asignatura?.Creditos ?? 0,
+        Satca_Teoricas: item.asignatura?.Satca_Teoricas ?? 0,
+        Satca_Practicas: item.asignatura?.Satca_Practicas ?? 0,
+        Satca_Total: item.asignatura?.Satca_Total ?? 0,
+        Grupo: item.grupo?.clavegrupo || 'Sin grupo',
+        Periodo: item.idperiodoescolar,
       }))
-
-      // Asignatura ficticia para prueba
-      asignaturas.value.push({
-        ClaveAsignatura: 'PRUEBA123',
-        NombreAsignatura: 'Asignatura de Prueba',
-        Creditos: 5,
-        Satca_Teoricas: 3,
-        Satca_Practicas: 2,
-        Satca_Total: 5,
-      })
     } else {
-      asignaturas.value = [] // No hay asignaturas
       asignaturas.value = []
     }
-  } catch (err) {
+  } catch (err: any) {
     error.value = 'Error al cargar las asignaturas: ' + (err.response?.data?.error || err.message)
     console.error(err)
   } finally {
@@ -90,24 +103,40 @@ const fetchAsignaturas = async () => {
 }
 
 const handleRegresar = () => {
-  window.history.back() // o router.back() si usas Vue Router
+  router.back()
 }
 
-const toggleDetalle = (clave) => {
-  detalleAbierto.value = detalleAbierto.value === clave ? null : clave
+const toggleDetalle = (clave: string, grupo: string) => {
+  const id = clave + '-' + grupo
+  detalleAbierto.value = detalleAbierto.value === id ? null : id
 }
 
-const verPDF = (tipo) => {
-  router.push({ name: 'pdf', params: { tarjeta, tipo } })
+const verPDF = (tipo: 'instrumentacion' | 'avance', asignatura: Asignatura) => {
+  const params = {
+    tarjeta: tarjeta,
+    periodo: asignatura.Periodo,
+    grupo: asignatura.Grupo,
+    clave_asignatura: asignatura.ClaveAsignatura,
+  }
+
+  const routeName = tipo === 'instrumentacion' ? 'instrumentacion' : 'avance'
+  router.push({ name: routeName, params })
 }
 
-onMounted(() => {
-  fetchAsignaturas()
-})
+const verAlumnos = (asignatura: Asignatura) => {
+  router.push({
+    name: 'alumnos',
+    params: {
+      clavegrupo: asignatura.Grupo,
+      claveasignatura: asignatura.ClaveAsignatura,
+    },
+  })
+}
+
+onMounted(fetchAsignaturas)
 </script>
 
 <style scoped>
-/* Transición */
 .fade-enter-active,
 .fade-leave-active {
   transition: all 0.3s ease;
@@ -118,7 +147,6 @@ onMounted(() => {
   transform: scaleY(0.95);
 }
 
-/* Layout */
 .asignaturas-container {
   padding: 20px;
   max-width: 1200px;
@@ -130,24 +158,14 @@ h1 {
   margin-bottom: 20px;
 }
 
-/* Grid responsivo */
 .asignaturas-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
 }
 
-/* Tarjeta */
 .asignatura-card {
-  background-color: var(--va-background-element);
-  color: var(--va-on-background);
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: var(--va-box-shadow);
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
-  background-color: white;
+  background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 20px;
@@ -157,6 +175,7 @@ h1 {
 .asignatura-card:hover {
   transform: translateY(-3px);
 }
+
 .asignatura-header {
   cursor: pointer;
 }
@@ -169,7 +188,6 @@ h1 {
   color: #555;
 }
 
-/* Submenú */
 .submenu {
   margin-top: 15px;
   padding-top: 12px;
@@ -192,7 +210,6 @@ h1 {
   background-color: #1e45cc;
 }
 
-/* Botón regresar */
 .boton-regresar {
   position: sticky;
   top: 1rem;
@@ -214,7 +231,6 @@ h1 {
   background-color: #1e45cc;
 }
 
-/* Estados */
 .loading,
 .error,
 .no-data {
@@ -222,6 +238,7 @@ h1 {
   padding: 20px;
   font-size: 1.1em;
 }
+
 .error {
   color: #e74c3c;
 }

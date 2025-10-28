@@ -32,8 +32,8 @@ const crearRol = async () => {
 
   try {
     const res = await api.crearRol({
-      IdRol: nuevoRol.value.idrol,
-      Nombre: nuevoRol.value.nombre,
+      idrol: nuevoRol.value.idrol,
+      nombre: nuevoRol.value.nombre,
     })
 
     init({
@@ -45,8 +45,8 @@ const crearRol = async () => {
   } catch (error) {
     const errorMsg =
       error.response?.data?.message ||
-      error.response?.data?.errors?.Nombre?.[0] ||
-      error.response?.data?.errors?.IdRol?.[0] ||
+      error.response?.data?.errors?.nombre?.[0] ||
+      error.response?.data?.errors?.idrol?.[0] ||
       'Error al crear rol'
 
     init({ message: errorMsg, color: 'danger' })
@@ -60,7 +60,7 @@ const prepararEdicion = (rowData) => {
     idrol: rol.idrol,
     nombre: rol.nombre,
   }
-  console.log('Datos preparados para editar:', rolEditando.value) // Para depuración
+  //console.log('Datos preparados para editar:', rolEditando.value) // Para depuración
   mostrarModalEdicion.value = true
 }
 
@@ -72,9 +72,9 @@ const actualizarRol = async () => {
       return
     }
 
-    console.log('Enviando actualización para rol ID:', rolEditando.value.idrol)
+    //console.log('Enviando actualización para rol ID:', rolEditando.value.idrol)
 
-    const res = await api.actualizarRol(rolEditando.value.idrol, { Nombre: rolEditando.value.nombre })
+    const res = await api.actualizarRol(rolEditando.value.idrol, { nombre: rolEditando.value.nombre })
 
     init({
       message: res.data.message || 'Rol actualizado exitosamente',
@@ -86,7 +86,7 @@ const actualizarRol = async () => {
   } catch (error) {
     console.error('Error al actualizar:', error)
     const errorMsg =
-      error.response?.data?.message || error.response?.data?.errors?.Nombre?.[0] || 'Error al actualizar rol'
+      error.response?.data?.message || error.response?.data?.errors?.nombre?.[0] || 'Error al actualizar rol'
 
     init({ message: errorMsg, color: 'danger' })
   }
@@ -99,7 +99,7 @@ const confirmarEliminacion = (rowData) => {
     idrol: rol.idrol,
     nombre: rol.nombre,
   }
-  console.log('Datos preparados para eliminar:', rolAEliminar.value) // Para depuración
+  //console.log('Datos preparados para eliminar:', rolAEliminar.value) // Para depuración
   mostrarModalConfirmacion.value = true
 }
 
@@ -111,7 +111,7 @@ const eliminarRol = async () => {
   }
 
   try {
-    console.log('Enviando solicitud para eliminar rol ID:', rolAEliminar.value.idrol)
+    //console.log('Enviando solicitud para eliminar rol ID:', rolAEliminar.value.idrol)
     const res = await api.eliminarRol(rolAEliminar.value.idrol)
 
     init({
@@ -121,7 +121,7 @@ const eliminarRol = async () => {
 
     await obtenerRoles()
   } catch (error) {
-    console.error('Error al eliminar:', error)
+    //console.error('Error al eliminar:', error)
     init({
       message: error.response?.data?.message || 'Error al eliminar el rol',
       color: 'danger',

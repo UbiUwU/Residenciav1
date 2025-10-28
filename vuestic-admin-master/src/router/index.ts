@@ -12,12 +12,18 @@ import RouteViewComponent from '../layouts/RouterBypass.vue'
 import departamento from '../test/departamentos.vue'
 import MateriasMaestroPage from '../pages/admin/pages/AsignaturasMaestros.vue'
 import reporteFinal from '../pages/admin/pages/ReporteFinal.vue'
-import PDFView from '../pages/admin/pages/AsignaturaDetail.vue'
+import PDFView from '../pages/admin/pages/InstrumentacionDidactica.vue'
 import maestro from '../pages/admin/pages/PaginaUsuarios.vue'
-import usuarios from '../test/usuarios.vue'
+import usuarios from '../pages/super/maestrosForm.vue'
 import roles from '../test/roles.vue'
+import evento from '../pages/super/eventoForm.vue'
 import periodos from '../test/periodos.vue'
-import horaraio2 from '../test/HorarioMaestro.vue'
+import horaraio2 from '../test/visualizarhorario.vue'
+import crearusuario from '../test/usuarios.vue'
+import InstrumentacionComponent from '../pages/admin/pages/InstrumentacionDidactica.vue'
+import AvanceComponent from '../pages/admin/pages/AvanceProgramatico.vue'
+import agregarHorario from '../pages/super/agregarHorario.vue'
+import addUsuario from '../pages/super/addUsuario.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -112,29 +118,39 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../test/Asignaturas.vue'),
       },
       {
-        name: 'admin-usuarios',
-        path: 'usuarios',
-        component: usuarios,
-      },
-      {
-        name: 'admin-departamentos',
+        name: 'super-departamentos',
         path: 'departamentos',
         component: departamento,
       },
       {
-        name: 'admin-roles',
+        name: 'super-roles',
         path: 'roles',
         component: roles,
       },
       {
-        name: 'admin-periodos',
+        name: 'super-evento',
+        path: 'evento',
+        component: evento,
+      },
+      {
+        name: 'super-periodos',
         path: 'periodos',
         component: periodos,
       },
       {
-        name: 'admin-maestros',
+        name: 'super-maestros',
         path: 'maestros',
-        component: maestro,
+        component: usuarios,
+      },
+      {
+        path: '/agregarHorario/:tarjeta',
+        name: 'agregarHorario',
+        component: agregarHorario,
+      },
+      {
+        name: 'super-usuario',
+        path: 'usuario',
+        component: addUsuario,
       },
     ],
   },
@@ -213,14 +229,36 @@ const routes: Array<RouteRecordRaw> = [
         component: PDFView,
       },
       {
-        path: '/visualizarhorario',
+        path: '/instrumentacion/:tarjeta/:grupo/:clave_asignatura',
+        name: 'instrumentacion',
+        component: InstrumentacionComponent,
+      },
+      {
+        path: '/avance/:tarjeta/:periodo/:grupo/:clave_asignatura',
+        name: 'avance',
+        component: AvanceComponent,
+      },
+      {
+        path: '/visualizarhorarios',
         name: 'vishorario',
         component: horaraio2,
+      },
+      {
+        path: '/crearusuarios',
+        name: 'crearusuario',
+        component: crearusuario,
       },
       {
         name: 'admin-reporte',
         path: 'admin-reporte',
         component: () => import('../pages/admin/pages/ReporteFinal.vue'),
+      },
+
+      {
+        path: '/alumnos/:clavegrupo/:claveasignatura',
+        name: 'alumnos',
+        component: () => import('../pages/admin/pages/AlumnosAsignatura.vue'),
+        props: true,
       },
     ],
   },
@@ -366,9 +404,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../pages/404.vue'),
   },
   {
-    name: '404',
-    path: '/404',
-    component: () => import('../pages/404.vue'),
+    name: 'plantilla',
+    path: '/plantilla',
+    component: () => import('../pages/Plantillas.vue'),
   },
 ]
 
