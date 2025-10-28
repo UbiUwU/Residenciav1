@@ -14,7 +14,6 @@
             label="Período académico"
             class="w-48"
           />
-          <VaButton preset="secondary" icon="refresh" @click="actualizarDatos"> Actualizar </VaButton>
         </div>
       </VaCardContent>
     </VaCard>

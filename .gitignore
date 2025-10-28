@@ -28,3 +28,4 @@ vendor/
 .idea/
 *.swp
 *.swo
+Back/.env
