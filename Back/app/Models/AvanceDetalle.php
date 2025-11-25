@@ -10,7 +10,9 @@ class AvanceDetalle extends Model
     use HasFactory;
 
     protected $table = 'avance_detalles';
+
     protected $primaryKey = 'id_avance_detalle';
+
     public $timestamps = true; // usa created_at y updated_at
 
     protected $fillable = [
@@ -18,7 +20,7 @@ class AvanceDetalle extends Model
         'id_tema',
         'porcentaje_aprobacion',
         'requiere_firma_docente',
-        'observaciones'
+        'observaciones',
     ];
 
     public function avance()
@@ -35,5 +37,4 @@ class AvanceDetalle extends Model
     {
         return $this->hasMany(AvanceDetalleFecha::class, 'id_avance_detalle');
     }
-
 }

@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class PeriodoEscolar extends Model
 {
     protected $table = 'periodo_escolar';
+
     protected $primaryKey = 'id_periodo_escolar';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -16,7 +18,7 @@ class PeriodoEscolar extends Model
         'nombre_periodo',
         'fecha_inicio',
         'fecha_fin',
-        'estado'
+        'estado',
     ];
 
     public function comisiones()

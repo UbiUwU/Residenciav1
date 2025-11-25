@@ -14,14 +14,14 @@ class EvaluacionCompetenciaInstrumentacionController extends Controller
             'id_competencia' => 'required|exists:competencias_instrumentacion,id_competencia',
             'evidencia_aprendizaje' => 'required|string',
             'evaluacion_formativa' => 'required|string',
-            'porcentaje_valor' => 'nullable|integer|min:0|max:100'
+            'porcentaje_valor' => 'nullable|integer|min:0|max:100',
         ]);
 
         $evaluacion = EvaluacionCompetenciaInstrumentacion::create($request->all());
 
         return response()->json([
             'message' => 'Evaluación de competencia creada exitosamente',
-            'data' => $evaluacion
+            'data' => $evaluacion,
         ], 201);
     }
 
@@ -33,7 +33,7 @@ class EvaluacionCompetenciaInstrumentacionController extends Controller
             'evaluaciones.*.id_competencia' => 'required|exists:competencias_instrumentacion,id_competencia',
             'evaluaciones.*.evidencia_aprendizaje' => 'required|string',
             'evaluaciones.*.evaluacion_formativa' => 'required|string',
-            'evaluaciones.*.porcentaje_valor' => 'nullable|integer|min:0|max:100'
+            'evaluaciones.*.porcentaje_valor' => 'nullable|integer|min:0|max:100',
         ]);
 
         $evaluaciones = [];
@@ -43,7 +43,7 @@ class EvaluacionCompetenciaInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Evaluaciones de competencia creadas exitosamente',
-            'data' => $evaluaciones
+            'data' => $evaluaciones,
         ], 201);
     }
 
@@ -53,7 +53,7 @@ class EvaluacionCompetenciaInstrumentacionController extends Controller
         $request->validate([
             'evidencia_aprendizaje' => 'sometimes|required|string',
             'evaluacion_formativa' => 'sometimes|required|string',
-            'porcentaje_valor' => 'nullable|integer|min:0|max:100'
+            'porcentaje_valor' => 'nullable|integer|min:0|max:100',
         ]);
 
         $evaluacion = EvaluacionCompetenciaInstrumentacion::findOrFail($id);
@@ -61,7 +61,7 @@ class EvaluacionCompetenciaInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Evaluación de competencia actualizada exitosamente',
-            'data' => $evaluacion
+            'data' => $evaluacion,
         ]);
     }
 
@@ -73,7 +73,7 @@ class EvaluacionCompetenciaInstrumentacionController extends Controller
             'evaluaciones.*.id_evaluacion_competencia' => 'required|exists:evaluacion_competencias_instrumentacion,id_evaluacion_competencia',
             'evaluaciones.*.evidencia_aprendizaje' => 'sometimes|required|string',
             'evaluaciones.*.evaluacion_formativa' => 'sometimes|required|string',
-            'evaluaciones.*.porcentaje_valor' => 'nullable|integer|min:0|max:100'
+            'evaluaciones.*.porcentaje_valor' => 'nullable|integer|min:0|max:100',
         ]);
 
         $evaluacionesActualizadas = [];
@@ -85,7 +85,7 @@ class EvaluacionCompetenciaInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Evaluaciones de competencia actualizadas exitosamente',
-            'data' => $evaluacionesActualizadas
+            'data' => $evaluacionesActualizadas,
         ]);
     }
 }

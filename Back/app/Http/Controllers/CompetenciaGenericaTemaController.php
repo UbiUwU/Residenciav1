@@ -14,14 +14,14 @@ class CompetenciaGenericaTemaController extends Controller
             'id_Tema' => 'required|exists:tema,id_Tema',
             'descripcion' => 'required|string',
             'nivel' => 'nullable|string|max:50',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $competencia = CompetenciaGenericaTema::create($request->all());
 
         return response()->json([
             'message' => 'Competencia genérica creada exitosamente',
-            'data' => $competencia
+            'data' => $competencia,
         ], 201);
     }
 
@@ -33,7 +33,7 @@ class CompetenciaGenericaTemaController extends Controller
             'competencias.*.id_Tema' => 'required|exists:tema,id_Tema',
             'competencias.*.descripcion' => 'required|string',
             'competencias.*.nivel' => 'nullable|string|max:50',
-            'competencias.*.orden' => 'nullable|integer'
+            'competencias.*.orden' => 'nullable|integer',
         ]);
 
         $competencias = [];
@@ -43,7 +43,7 @@ class CompetenciaGenericaTemaController extends Controller
 
         return response()->json([
             'message' => 'Competencias genéricas creadas exitosamente',
-            'data' => $competencias
+            'data' => $competencias,
         ], 201);
     }
 
@@ -53,7 +53,7 @@ class CompetenciaGenericaTemaController extends Controller
         $request->validate([
             'descripcion' => 'sometimes|required|string',
             'nivel' => 'nullable|string|max:50',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $competencia = CompetenciaGenericaTema::findOrFail($id);
@@ -61,7 +61,7 @@ class CompetenciaGenericaTemaController extends Controller
 
         return response()->json([
             'message' => 'Competencia genérica actualizada exitosamente',
-            'data' => $competencia
+            'data' => $competencia,
         ]);
     }
 
@@ -73,7 +73,7 @@ class CompetenciaGenericaTemaController extends Controller
             'competencias.*.id_competencia_generica' => 'required|exists:competencia_generica_tema,id_competencia_generica',
             'competencias.*.descripcion' => 'sometimes|required|string',
             'competencias.*.nivel' => 'nullable|string|max:50',
-            'competencias.*.orden' => 'nullable|integer'
+            'competencias.*.orden' => 'nullable|integer',
         ]);
 
         $competenciasActualizadas = [];
@@ -85,7 +85,7 @@ class CompetenciaGenericaTemaController extends Controller
 
         return response()->json([
             'message' => 'Competencias genéricas actualizadas exitosamente',
-            'data' => $competenciasActualizadas
+            'data' => $competenciasActualizadas,
         ]);
     }
 
@@ -96,7 +96,7 @@ class CompetenciaGenericaTemaController extends Controller
         $competencia->delete();
 
         return response()->json([
-            'message' => 'Competencia genérica eliminada exitosamente'
+            'message' => 'Competencia genérica eliminada exitosamente',
         ]);
     }
 }

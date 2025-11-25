@@ -13,14 +13,14 @@ class ApoyoDidacticoInstrumentacionController extends Controller
         $request->validate([
             'id_instrumentacion' => 'required|exists:instrumentacion,id_instrumentacion',
             'descripcion' => 'required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $apoyoDidactico = ApoyoDidacticoInstrumentacion::create($request->all());
 
         return response()->json([
             'message' => 'Apoyo didáctico creado exitosamente',
-            'data' => $apoyoDidactico
+            'data' => $apoyoDidactico,
         ], 201);
     }
 
@@ -31,7 +31,7 @@ class ApoyoDidacticoInstrumentacionController extends Controller
             'apoyos_didacticos' => 'required|array',
             'apoyos_didacticos.*.id_instrumentacion' => 'required|exists:instrumentacion,id_instrumentacion',
             'apoyos_didacticos.*.descripcion' => 'required|string',
-            'apoyos_didacticos.*.orden' => 'nullable|integer'
+            'apoyos_didacticos.*.orden' => 'nullable|integer',
         ]);
 
         $apoyosDidacticos = [];
@@ -41,7 +41,7 @@ class ApoyoDidacticoInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Apoyos didácticos creados exitosamente',
-            'data' => $apoyosDidacticos
+            'data' => $apoyosDidacticos,
         ], 201);
     }
 
@@ -50,7 +50,7 @@ class ApoyoDidacticoInstrumentacionController extends Controller
     {
         $request->validate([
             'descripcion' => 'sometimes|required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $apoyoDidactico = ApoyoDidacticoInstrumentacion::findOrFail($id);
@@ -58,7 +58,7 @@ class ApoyoDidacticoInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Apoyo didáctico actualizado exitosamente',
-            'data' => $apoyoDidactico
+            'data' => $apoyoDidactico,
         ]);
     }
 
@@ -69,7 +69,7 @@ class ApoyoDidacticoInstrumentacionController extends Controller
             'apoyos_didacticos' => 'required|array',
             'apoyos_didacticos.*.id_apoyo_didactico' => 'required|exists:apoyos_didacticos_instrumentacion,id_apoyo_didactico',
             'apoyos_didacticos.*.descripcion' => 'sometimes|required|string',
-            'apoyos_didacticos.*.orden' => 'nullable|integer'
+            'apoyos_didacticos.*.orden' => 'nullable|integer',
         ]);
 
         $apoyosActualizados = [];
@@ -81,7 +81,7 @@ class ApoyoDidacticoInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Apoyos didácticos actualizados exitosamente',
-            'data' => $apoyosActualizados
+            'data' => $apoyosActualizados,
         ]);
     }
 }

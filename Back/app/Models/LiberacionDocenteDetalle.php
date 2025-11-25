@@ -8,9 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class LiberacionDocenteDetalle extends Model
 {
     protected $table = 'liberacion_docente_detalles';
+
     protected $primaryKey = 'id_detalle';
+
     public $incrementing = true;
+
     protected $keyType = 'integer';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -19,20 +23,20 @@ class LiberacionDocenteDetalle extends Model
         'descripcion_actividad',
         'si',
         'no',
-        'na'
+        'na',
     ];
 
     protected $attributes = [
         'si' => false,
         'no' => false,
-        'na' => false
+        'na' => false,
     ];
 
     protected $casts = [
         'si' => 'boolean',
         'no' => 'boolean',
         'na' => 'boolean',
-        'numero_actividad' => 'integer'
+        'numero_actividad' => 'integer',
     ];
 
     /**
@@ -80,8 +84,13 @@ class LiberacionDocenteDetalle extends Model
      */
     public function getEstadoAttribute(): string
     {
-        if ($this->si) return 'SI';
-        if ($this->no) return 'NO';
+        if ($this->si) {
+            return 'SI';
+        }
+        if ($this->no) {
+            return 'NO';
+        }
+
         return 'N/A';
     }
 
@@ -126,9 +135,15 @@ class LiberacionDocenteDetalle extends Model
     public function validarEstadoUnico()
     {
         $estadosActivos = 0;
-        if ($this->si) $estadosActivos++;
-        if ($this->no) $estadosActivos++;
-        if ($this->na) $estadosActivos++;
+        if ($this->si) {
+            $estadosActivos++;
+        }
+        if ($this->no) {
+            $estadosActivos++;
+        }
+        if ($this->na) {
+            $estadosActivos++;
+        }
 
         if ($estadosActivos > 1) {
             throw new \Exception('Solo un estado (SI, NO, N/A) puede estar activo a la vez.');

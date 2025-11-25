@@ -8,40 +8,39 @@ use Illuminate\Support\Facades\DB;
 
 class MaestroMController extends Controller
 {
+    public function GetMaestro($tarjeta)
+    {
+        $maestro = DB::select('SELECT * FROM public.maestros where tarjeta=?', [$tarjeta]);
 
-    public function GetMaestro($tarjeta){
-        $maestro = DB::select("SELECT * FROM public.maestros where tarjeta=?", [$tarjeta]);
         return response()->json($maestro);
     }
 
-
     // 1. Obtener horario del maestro
     public function getHorario($tarjeta)
-{
-    $result = DB::select("SELECT * FROM public.get_horario_maestro(?)", [$tarjeta]);
+    {
+        $result = DB::select('SELECT * FROM public.get_horario_maestro(?)', [$tarjeta]);
 
-    if (empty($result)) {
-        return response()->json([]);
+        if (empty($result)) {
+            return response()->json([]);
+        }
+
+        $jsonString = $result[0]->get_horario_maestro ?? null;
+
+        if ($jsonString === null) {
+            return response()->json([]);
+        }
+
+        $horario = json_decode($jsonString, true); // <-- decodificamos el string JSON
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return response()->json([
+                'error' => 'No se pudo decodificar el horario',
+                'detalle' => json_last_error_msg(),
+            ], 500);
+        }
+
+        return response()->json($horario);
     }
-
-    $jsonString = $result[0]->get_horario_maestro ?? null;
-
-    if ($jsonString === null) {
-        return response()->json([]);
-    }
-
-    $horario = json_decode($jsonString, true); // <-- decodificamos el string JSON
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        return response()->json([
-            'error' => 'No se pudo decodificar el horario',
-            'detalle' => json_last_error_msg()
-        ], 500);
-    }
-
-    return response()->json($horario);
-}
-
 
     // 2. Verificar si ya tiene aula reservada hoy
     public function tieneReservacion(Request $request)
@@ -49,15 +48,15 @@ class MaestroMController extends Controller
         $request->validate([
             'tarjeta' => 'required|integer',
             'claveaula' => 'required|string',
-            'fecha' => 'required|date'
+            'fecha' => 'required|date',
         ]);
 
         $existe = DB::select(
-            "SELECT 1 FROM reservacionmaestros WHERE tarjeta = ? AND claveaula = ? AND fechareservacion = ? LIMIT 1",
+            'SELECT 1 FROM reservacionmaestros WHERE tarjeta = ? AND claveaula = ? AND fechareservacion = ? LIMIT 1',
             [$request->tarjeta, $request->claveaula, $request->fecha]
         );
 
-        return response()->json(['reservado' => !empty($existe)]);
+        return response()->json(['reservado' => ! empty($existe)]);
     }
 
     // 3. Obtener su reservación actual
@@ -65,7 +64,7 @@ class MaestroMController extends Controller
     {
         $request->validate([
             'tarjeta' => 'required|integer',
-            'fecha' => 'required|date'
+            'fecha' => 'required|date',
         ]);
 
         $data = DB::select("
@@ -86,13 +85,13 @@ class MaestroMController extends Controller
             'aula' => 'required|string',
             'fecha' => 'required|date',
             'horaInicio' => 'required',
-            'horaFin' => 'required'
+            'horaFin' => 'required',
         ]);
 
-        $conflictos = DB::select("
+        $conflictos = DB::select('
             SELECT * FROM reservacionmaestros 
             WHERE claveaula = ? AND fechareservacion = ?
-              AND (horainicio <= ? AND horafin >= ?)",
+              AND (horainicio <= ? AND horafin >= ?)',
             [$request->aula, $request->fecha, $request->horaFin, $request->horaInicio]);
 
         return response()->json(['disponible' => empty($conflictos)]);
@@ -106,12 +105,12 @@ class MaestroMController extends Controller
             'aula' => 'required|string',
             'fecha' => 'required|date',
             'horaInicio' => 'required',
-            'horaFin' => 'required'
+            'horaFin' => 'required',
         ]);
 
-        DB::insert("
+        DB::insert('
             INSERT INTO reservacionmaestros (tarjeta, claveaula, fechareservacion, horainicio, horafin)
-            VALUES (?, ?, ?, ?, ?)",
+            VALUES (?, ?, ?, ?, ?)',
             [$request->tarjeta, $request->aula, $request->fecha, $request->horaInicio, $request->horaFin]);
 
         return response()->json(['success' => true, 'message' => 'Aula reservada correctamente']);
@@ -122,12 +121,12 @@ class MaestroMController extends Controller
     {
         $request->validate([
             'tarjeta' => 'required|integer',
-            'aula' => 'required|string'
+            'aula' => 'required|string',
         ]);
 
-        DB::delete("
+        DB::delete('
             DELETE FROM reservacionmaestros 
-            WHERE tarjeta = ? AND claveaula = ?",
+            WHERE tarjeta = ? AND claveaula = ?',
             [$request->tarjeta, $request->aula]);
 
         return response()->json(['success' => true, 'message' => 'Reservación eliminada']);
@@ -136,8 +135,9 @@ class MaestroMController extends Controller
     // 7. Verificar si el aula existe
     public function verificarAula($clave_aula)
     {
-        $aula = DB::select("SELECT nombre FROM aulas WHERE claveaula = ? LIMIT 1", [$clave_aula]);
-        return response()->json(['existe' => !empty($aula), 'nombre' => $aula[0]->nombre ?? null]);
+        $aula = DB::select('SELECT nombre FROM aulas WHERE claveaula = ? LIMIT 1', [$clave_aula]);
+
+        return response()->json(['existe' => ! empty($aula), 'nombre' => $aula[0]->nombre ?? null]);
     }
 
     // 8. Registrar en bitácora
@@ -146,12 +146,12 @@ class MaestroMController extends Controller
         $request->validate([
             'tarjeta' => 'required|integer',
             'claveaula' => 'required|string',
-            'fecha' => 'required|date_format:Y-m-d H:i:s'
+            'fecha' => 'required|date_format:Y-m-d H:i:s',
         ]);
 
-        DB::insert("
+        DB::insert('
             INSERT INTO bitacora_maestros (tarjeta, claveaula, fechahora)
-            VALUES (?, ?, ?)",
+            VALUES (?, ?, ?)',
             [$request->tarjeta, $request->claveaula, $request->fecha]);
 
         return response()->json(['success' => true, 'message' => 'Registro en bitácora exitoso']);
@@ -160,15 +160,17 @@ class MaestroMController extends Controller
     // 9. Obtener aulas
     public function getAulas()
     {
-        $aulas = DB::select("SELECT * FROM aulas");
+        $aulas = DB::select('SELECT * FROM aulas');
+
         return response()->json($aulas);
     }
 
     // 10. Obtener edificios
     public function getEdificios()
     {
-        $edificios = DB::select("SELECT * FROM edificios");
-        return response()->json($edificios);                            
+        $edificios = DB::select('SELECT * FROM edificios');
+
+        return response()->json($edificios);
     }
 
     public function marcarReservado($clave_aula)
@@ -178,8 +180,8 @@ class MaestroMController extends Controller
 SET estado = 'reservado' where claveaula= ?;", [$clave_aula]);
 
         return response()->json(['success' => true, 'estado' => ' aula reservada']);
-    }   
-    
+    }
+
     public function marcarOcupado($clave_aula)
     {
         DB::update("
@@ -204,19 +206,17 @@ SET estado = 'disponible' where claveaula= ?;", [$clave_aula]);
             UPDATE aulas
 SET estado = 'Esperando aprobacion' where claveaula= ?;", [$clave_aula]);
 
-
         return response()->json(['success' => true, 'estado' => ' aula esperando aprobacion']);
-    }  
-
+    }
 
     public function getallBitacoraMaestro()
-{
-    $BitacoraMaestros = DB::select("select * from bitacora_maestros");
+    {
+        $BitacoraMaestros = DB::select('select * from bitacora_maestros');
 
-    return response()->json([
-        'success' => true,
-        'data' => $BitacoraMaestros
-    ]);
+        return response()->json([
+            'success' => true,
+            'data' => $BitacoraMaestros,
+        ]);
 
-}
+    }
 }

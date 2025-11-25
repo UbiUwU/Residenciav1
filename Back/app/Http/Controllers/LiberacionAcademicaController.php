@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Departamento;
 use App\Models\LiberacionAcademica;
 use App\Models\Maestro;
-use App\Models\PeriodoEscolar;
-use App\Models\Departamento;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class LiberacionAcademicaController extends Controller
 {
@@ -19,18 +18,18 @@ class LiberacionAcademicaController extends Controller
     {
         try {
             $query = LiberacionAcademica::with([
-                'departamento' => function($query) {
+                'departamento' => function ($query) {
                     $query->select('id_departamento', 'nombre', 'abreviacion');
                 },
-                'maestro' => function($query) {
+                'maestro' => function ($query) {
                     $query->select('tarjeta', 'nombre', 'apellidopaterno', 'apellidomaterno');
                 },
-                'periodoEscolar' => function($query) {
+                'periodoEscolar' => function ($query) {
                     $query->select('id_periodo_escolar', 'nombre_periodo', 'codigoperiodo');
                 },
-                'detalles' => function($query) {
+                'detalles' => function ($query) {
                     $query->orderBy('numero_actividad');
-                }
+                },
             ]);
 
             // Filtros por query parameters (opcionales)
@@ -54,13 +53,13 @@ class LiberacionAcademicaController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $liberaciones
+                'data' => $liberaciones,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al obtener las liberaciones: ' . $e->getMessage()
+                'message' => 'Error al obtener las liberaciones: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -72,32 +71,32 @@ class LiberacionAcademicaController extends Controller
     {
         try {
             $liberaciones = LiberacionAcademica::with([
-                'departamento' => function($query) {
+                'departamento' => function ($query) {
                     $query->select('id_departamento', 'nombre', 'abreviacion');
                 },
-                'maestro' => function($query) {
+                'maestro' => function ($query) {
                     $query->select('tarjeta', 'nombre', 'apellidopaterno', 'apellidomaterno');
                 },
-                'periodoEscolar' => function($query) {
+                'periodoEscolar' => function ($query) {
                     $query->select('id_periodo_escolar', 'nombre_periodo', 'codigoperiodo');
                 },
-                'detalles' => function($query) {
+                'detalles' => function ($query) {
                     $query->orderBy('numero_actividad');
-                }
+                },
             ])
-            ->where('id_departamento', $id_departamento)
-            ->where('id_periodo_escolar', $id_periodo_escolar)
-            ->get();
+                ->where('id_departamento', $id_departamento)
+                ->where('id_periodo_escolar', $id_periodo_escolar)
+                ->get();
 
             return response()->json([
                 'success' => true,
-                'data' => $liberaciones
+                'data' => $liberaciones,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al obtener las liberaciones: ' . $e->getMessage()
+                'message' => 'Error al obtener las liberaciones: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -109,31 +108,31 @@ class LiberacionAcademicaController extends Controller
     {
         try {
             $liberaciones = LiberacionAcademica::with([
-                'departamento' => function($query) {
+                'departamento' => function ($query) {
                     $query->select('id_departamento', 'nombre', 'abreviacion');
                 },
-                'maestro' => function($query) {
+                'maestro' => function ($query) {
                     $query->select('tarjeta', 'nombre', 'apellidopaterno', 'apellidomaterno');
                 },
-                'periodoEscolar' => function($query) {
+                'periodoEscolar' => function ($query) {
                     $query->select('id_periodo_escolar', 'nombre_periodo', 'codigoperiodo');
                 },
-                'detalles' => function($query) {
+                'detalles' => function ($query) {
                     $query->orderBy('numero_actividad');
-                }
+                },
             ])
-            ->where('id_departamento', $id_departamento)
-            ->get();
+                ->where('id_departamento', $id_departamento)
+                ->get();
 
             return response()->json([
                 'success' => true,
-                'data' => $liberaciones
+                'data' => $liberaciones,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al obtener las liberaciones: ' . $e->getMessage()
+                'message' => 'Error al obtener las liberaciones: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -145,31 +144,31 @@ class LiberacionAcademicaController extends Controller
     {
         try {
             $liberaciones = LiberacionAcademica::with([
-                'departamento' => function($query) {
+                'departamento' => function ($query) {
                     $query->select('id_departamento', 'nombre', 'abreviacion');
                 },
-                'maestro' => function($query) {
+                'maestro' => function ($query) {
                     $query->select('tarjeta', 'nombre', 'apellidopaterno', 'apellidomaterno');
                 },
-                'periodoEscolar' => function($query) {
+                'periodoEscolar' => function ($query) {
                     $query->select('id_periodo_escolar', 'nombre_periodo', 'codigoperiodo');
                 },
-                'detalles' => function($query) {
+                'detalles' => function ($query) {
                     $query->orderBy('numero_actividad');
-                }
+                },
             ])
-            ->where('id_periodo_escolar', $id_periodo_escolar)
-            ->get();
+                ->where('id_periodo_escolar', $id_periodo_escolar)
+                ->get();
 
             return response()->json([
                 'success' => true,
-                'data' => $liberaciones
+                'data' => $liberaciones,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al obtener las liberaciones: ' . $e->getMessage()
+                'message' => 'Error al obtener las liberaciones: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -181,31 +180,31 @@ class LiberacionAcademicaController extends Controller
     {
         try {
             $liberaciones = LiberacionAcademica::with([
-                'departamento' => function($query) {
+                'departamento' => function ($query) {
                     $query->select('id_departamento', 'nombre', 'abreviacion');
                 },
-                'maestro' => function($query) {
+                'maestro' => function ($query) {
                     $query->select('tarjeta', 'nombre', 'apellidopaterno', 'apellidomaterno');
                 },
-                'periodoEscolar' => function($query) {
+                'periodoEscolar' => function ($query) {
                     $query->select('id_periodo_escolar', 'nombre_periodo', 'codigoperiodo');
                 },
-                'detalles' => function($query) {
+                'detalles' => function ($query) {
                     $query->orderBy('numero_actividad');
-                }
+                },
             ])
-            ->where('tarjeta_maestro', $tarjeta_maestro)
-            ->get();
+                ->where('tarjeta_maestro', $tarjeta_maestro)
+                ->get();
 
             return response()->json([
                 'success' => true,
-                'data' => $liberaciones
+                'data' => $liberaciones,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al obtener las liberaciones: ' . $e->getMessage()
+                'message' => 'Error al obtener las liberaciones: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -217,32 +216,32 @@ class LiberacionAcademicaController extends Controller
     {
         try {
             $liberaciones = LiberacionAcademica::with([
-                'departamento' => function($query) {
+                'departamento' => function ($query) {
                     $query->select('id_departamento', 'nombre', 'abreviacion');
                 },
-                'maestro' => function($query) {
+                'maestro' => function ($query) {
                     $query->select('tarjeta', 'nombre', 'apellidopaterno', 'apellidomaterno');
                 },
-                'periodoEscolar' => function($query) {
+                'periodoEscolar' => function ($query) {
                     $query->select('id_periodo_escolar', 'nombre_periodo', 'codigoperiodo');
                 },
-                'detalles' => function($query) {
+                'detalles' => function ($query) {
                     $query->orderBy('numero_actividad');
-                }
+                },
             ])
-            ->where('tarjeta_maestro', $tarjeta_maestro)
-            ->where('id_periodo_escolar', $id_periodo_escolar)
-            ->get();
+                ->where('tarjeta_maestro', $tarjeta_maestro)
+                ->where('id_periodo_escolar', $id_periodo_escolar)
+                ->get();
 
             return response()->json([
                 'success' => true,
-                'data' => $liberaciones
+                'data' => $liberaciones,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al obtener las liberaciones: ' . $e->getMessage()
+                'message' => 'Error al obtener las liberaciones: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -260,14 +259,14 @@ class LiberacionAcademicaController extends Controller
                 'tarjeta_maestro' => 'required|exists:maestros,tarjeta',
                 'id_periodo_escolar' => 'required|exists:periodo_escolar,id_periodo_escolar',
                 'fecha_liberacion' => 'required|date',
-                'otorga_liberacion' => 'required|boolean'
+                'otorga_liberacion' => 'required|boolean',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Datos de entrada inválidos',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
@@ -279,7 +278,7 @@ class LiberacionAcademicaController extends Controller
             if ($existe) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Ya existe una liberación para este maestro en el período especificado'
+                    'message' => 'Ya existe una liberación para este maestro en el período especificado',
                 ], 409);
             }
 
@@ -289,7 +288,7 @@ class LiberacionAcademicaController extends Controller
                 'tarjeta_maestro' => $request->tarjeta_maestro,
                 'id_periodo_escolar' => $request->id_periodo_escolar,
                 'fecha_liberacion' => $request->fecha_liberacion,
-                'otorga_liberacion' => $request->otorga_liberacion
+                'otorga_liberacion' => $request->otorga_liberacion,
             ]);
 
             DB::commit();
@@ -300,14 +299,15 @@ class LiberacionAcademicaController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Liberación académica creada exitosamente',
-                'data' => $liberacion
+                'data' => $liberacion,
             ], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error al crear la liberación académica: ' . $e->getMessage()
+                'message' => 'Error al crear la liberación académica: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -319,29 +319,29 @@ class LiberacionAcademicaController extends Controller
     {
         try {
             $liberacion = LiberacionAcademica::with([
-                'departamento' => function($query) {
+                'departamento' => function ($query) {
                     $query->select('id_departamento', 'nombre', 'abreviacion');
                 },
-                'maestro' => function($query) {
+                'maestro' => function ($query) {
                     $query->select('tarjeta', 'nombre', 'apellidopaterno', 'apellidomaterno');
                 },
-                'periodoEscolar' => function($query) {
+                'periodoEscolar' => function ($query) {
                     $query->select('id_periodo_escolar', 'nombre_periodo', 'codigoperiodo', 'fecha_inicio', 'fecha_fin');
                 },
-                'detalles' => function($query) {
+                'detalles' => function ($query) {
                     $query->orderBy('numero_actividad');
-                }
+                },
             ])->findOrFail($id);
 
             return response()->json([
                 'success' => true,
-                'data' => $liberacion
+                'data' => $liberacion,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Liberación académica no encontrada: ' . $e->getMessage()
+                'message' => 'Liberación académica no encontrada: '.$e->getMessage(),
             ], 404);
         }
     }
@@ -356,14 +356,14 @@ class LiberacionAcademicaController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'fecha_liberacion' => 'sometimes|date',
-                'otorga_liberacion' => 'sometimes|boolean'
+                'otorga_liberacion' => 'sometimes|boolean',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Datos de entrada inválidos',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
@@ -388,14 +388,15 @@ class LiberacionAcademicaController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Liberación académica actualizada exitosamente',
-                'data' => $liberacion
+                'data' => $liberacion,
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar la liberación académica: ' . $e->getMessage()
+                'message' => 'Error al actualizar la liberación académica: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -415,14 +416,15 @@ class LiberacionAcademicaController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Liberación académica eliminada exitosamente'
+                'message' => 'Liberación académica eliminada exitosamente',
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar la liberación académica: ' . $e->getMessage()
+                'message' => 'Error al eliminar la liberación académica: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -434,14 +436,14 @@ class LiberacionAcademicaController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'otorga_liberacion' => 'required|boolean'
+                'otorga_liberacion' => 'required|boolean',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Datos de entrada inválidos',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
@@ -452,13 +454,13 @@ class LiberacionAcademicaController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Estado de liberación actualizado exitosamente',
-                'data' => $liberacion
+                'data' => $liberacion,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al cambiar el estado de liberación: ' . $e->getMessage()
+                'message' => 'Error al cambiar el estado de liberación: '.$e->getMessage(),
             ], 500);
         }
     }

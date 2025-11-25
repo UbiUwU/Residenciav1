@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Edificio;
-use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 
 class EdificioController extends Controller
 {
@@ -12,6 +12,7 @@ class EdificioController extends Controller
     public function index()
     {
         $edificios = Edificio::all();
+
         return response()->json($edificios);
     }
 
@@ -20,7 +21,7 @@ class EdificioController extends Controller
     {
         $edificio = Edificio::find($clave);
 
-        if (!$edificio) {
+        if (! $edificio) {
             return response()->json(['message' => 'Edificio no encontrado'], 404);
         }
 
@@ -41,7 +42,7 @@ class EdificioController extends Controller
 
             return response()->json([
                 'message' => 'Edificio creado exitosamente',
-                'edificio' => $edificio
+                'edificio' => $edificio,
             ], 201);
 
         } catch (QueryException $e) {
@@ -54,7 +55,7 @@ class EdificioController extends Controller
     {
         $edificio = Edificio::find($clave);
 
-        if (!$edificio) {
+        if (! $edificio) {
             return response()->json(['message' => 'Edificio no encontrado'], 404);
         }
 
@@ -68,7 +69,7 @@ class EdificioController extends Controller
 
             return response()->json([
                 'message' => 'Edificio actualizado exitosamente',
-                'edificio' => $edificio
+                'edificio' => $edificio,
             ]);
 
         } catch (QueryException $e) {
@@ -81,12 +82,13 @@ class EdificioController extends Controller
     {
         $edificio = Edificio::find($clave);
 
-        if (!$edificio) {
+        if (! $edificio) {
             return response()->json(['message' => 'Edificio no encontrado'], 404);
         }
 
         try {
             $edificio->delete();
+
             return response()->json(['message' => 'Edificio eliminado exitosamente']);
 
         } catch (QueryException $e) {

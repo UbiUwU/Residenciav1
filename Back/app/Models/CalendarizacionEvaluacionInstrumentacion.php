@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CalendarizacionEvaluacionInstrumentacion extends Model
 {
     protected $table = 'calendarizacion_evaluacion_instrumentacion';
+
     protected $primaryKey = 'id_calendarizacion';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -17,12 +19,12 @@ class CalendarizacionEvaluacionInstrumentacion extends Model
         'tiempo_planeado',
         'tiempo_real',
         'seguimiento_departamental',
-        'descripcion'
+        'descripcion',
     ];
 
     protected $casts = [
         'seguimiento_departamental' => 'boolean',
-        'fecha_creacion' => 'datetime'
+        'fecha_creacion' => 'datetime',
     ];
 
     public function instrumentacion(): BelongsTo

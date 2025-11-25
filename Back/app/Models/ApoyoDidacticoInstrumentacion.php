@@ -8,17 +8,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ApoyoDidacticoInstrumentacion extends Model
 {
     protected $table = 'apoyos_didacticos_instrumentacion';
+
     protected $primaryKey = 'id_apoyo_didactico';
+
     public $timestamps = false;
 
     protected $fillable = [
         'id_instrumentacion',
         'descripcion',
-        'orden'
+        'orden',
     ];
 
     protected $casts = [
-        'fecha_creacion' => 'datetime'
+        'fecha_creacion' => 'datetime',
     ];
 
     public function instrumentacion(): BelongsTo

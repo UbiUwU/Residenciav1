@@ -13,14 +13,14 @@ class IndicadorAlcanceController extends Controller
         $request->validate([
             'id_nivel_desempeno' => 'required|exists:niveles_desempeno_instrumentacion,id_nivel_desempeno',
             'descripcion' => 'required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $indicador = IndicadorAlcance::create($request->all());
 
         return response()->json([
             'message' => 'Indicador de alcance creado exitosamente',
-            'data' => $indicador
+            'data' => $indicador,
         ], 201);
     }
 
@@ -31,7 +31,7 @@ class IndicadorAlcanceController extends Controller
             'indicadores' => 'required|array',
             'indicadores.*.id_nivel_desempeno' => 'required|exists:niveles_desempeno_instrumentacion,id_nivel_desempeno',
             'indicadores.*.descripcion' => 'required|string',
-            'indicadores.*.orden' => 'nullable|integer'
+            'indicadores.*.orden' => 'nullable|integer',
         ]);
 
         $indicadores = [];
@@ -41,7 +41,7 @@ class IndicadorAlcanceController extends Controller
 
         return response()->json([
             'message' => 'Indicadores de alcance creados exitosamente',
-            'data' => $indicadores
+            'data' => $indicadores,
         ], 201);
     }
 
@@ -50,7 +50,7 @@ class IndicadorAlcanceController extends Controller
     {
         $request->validate([
             'descripcion' => 'sometimes|required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $indicador = IndicadorAlcance::findOrFail($id);
@@ -58,7 +58,7 @@ class IndicadorAlcanceController extends Controller
 
         return response()->json([
             'message' => 'Indicador de alcance actualizado exitosamente',
-            'data' => $indicador
+            'data' => $indicador,
         ]);
     }
 
@@ -69,7 +69,7 @@ class IndicadorAlcanceController extends Controller
             'indicadores' => 'required|array',
             'indicadores.*.id_indicador_alcance' => 'required|exists:indicadores_alcance,id_indicador_alcance',
             'indicadores.*.descripcion' => 'sometimes|required|string',
-            'indicadores.*.orden' => 'nullable|integer'
+            'indicadores.*.orden' => 'nullable|integer',
         ]);
 
         $indicadoresActualizados = [];
@@ -81,7 +81,7 @@ class IndicadorAlcanceController extends Controller
 
         return response()->json([
             'message' => 'Indicadores de alcance actualizados exitosamente',
-            'data' => $indicadoresActualizados
+            'data' => $indicadoresActualizados,
         ]);
     }
 }

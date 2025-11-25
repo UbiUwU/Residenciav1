@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Usuario extends Model
 {
     protected $table = 'usuarios';
+
     protected $primaryKey = 'idusuario';
+
     public $incrementing = true; // Porque usa secuencia
+
     public $timestamps = false;
 
     protected $fillable = [

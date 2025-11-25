@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Alumno;
 use App\Http\Resources\AlumnoResource;
+use App\Models\Alumno;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +17,7 @@ class AlumnoReworkController extends Controller
     public function index()
     {
         $alumnos = Alumno::get();
+
         return AlumnoResource::collection($alumnos);
     }
 
@@ -24,20 +25,20 @@ class AlumnoReworkController extends Controller
      * Mostrar un alumno en específico
      */
     public function show($numerocontrol)
-{
-    try {
-        $alumno = Alumno::with([
-            'cargasGenerales.detalles.horarioAsignatura.maestro'
-        ])->findOrFail($numerocontrol);
+    {
+        try {
+            $alumno = Alumno::with([
+                'cargasGenerales.detalles.horarioAsignatura.maestro',
+            ])->findOrFail($numerocontrol);
 
-        return new AlumnoResource($alumno);
+            return new AlumnoResource($alumno);
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Alumno no encontrado'
-        ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Alumno no encontrado',
+            ], 404);
+        }
     }
-}
 
     /**
      * Crear un nuevo alumno
@@ -52,7 +53,7 @@ class AlumnoReworkController extends Controller
             'correo' => 'required|email',
             'password' => 'sometimes|string|min:6', // Solo requerido si no existe usuario
             'clavecarrera' => 'required|string',
-            'idrol' => 'sometimes|integer|exists:roles,idrol' // Solo requerido si crea usuario
+            'idrol' => 'sometimes|integer|exists:roles,idrol', // Solo requerido si crea usuario
         ]);
 
         DB::beginTransaction();
@@ -61,11 +62,11 @@ class AlumnoReworkController extends Controller
             // Verificar si el usuario ya existe
             $usuario = Usuario::where('correo', $validated['correo'])->first();
 
-            if (!$usuario) {
+            if (! $usuario) {
                 // Validar campos requeridos para crear nuevo usuario
                 $request->validate([
                     'password' => 'required|string|min:6',
-                    'idrol' => 'required|integer|exists:roles,idrol'
+                    'idrol' => 'required|integer|exists:roles,idrol',
                 ]);
 
                 // Crear nuevo usuario
@@ -82,9 +83,10 @@ class AlumnoReworkController extends Controller
 
             if ($alumnoExistente) {
                 DB::rollBack();
+
                 return response()->json([
                     'message' => 'Ya existe un alumno asociado a este usuario',
-                    'alumno' => $alumnoExistente
+                    'alumno' => $alumnoExistente,
                 ], 409);
             }
 
@@ -103,14 +105,15 @@ class AlumnoReworkController extends Controller
                 'message' => 'Alumno creado exitosamente',
                 'alumno' => $alumno,
                 'usuario' => $usuario,
-                'usuario_existente' => !$usuario->wasRecentlyCreated // Indica si el usuario era existente
+                'usuario_existente' => ! $usuario->wasRecentlyCreated, // Indica si el usuario era existente
             ], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'message' => 'Error al crear el alumno',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -128,7 +131,7 @@ class AlumnoReworkController extends Controller
             'correo' => 'sometimes|email',
             'password' => 'nullable|string|min:6',
             'clavecarrera' => 'sometimes|string',
-            'idrol' => 'sometimes|integer|exists:roles,idrol'
+            'idrol' => 'sometimes|integer|exists:roles,idrol',
         ]);
 
         DB::beginTransaction();
@@ -146,7 +149,7 @@ class AlumnoReworkController extends Controller
             $camposAlumno = ['nombre', 'apellidopaterno', 'apellidomaterno', 'clavecarrera'];
 
             foreach ($camposAlumno as $campo) {
-                if (isset($validated[$campo]) && $alumno->$campo != $validated[$campo]) {
+                if (isset($validated[$campo]) && $validated[$campo] != $alumno->$campo) {
                     $alumno->$campo = $validated[$campo];
                     $alumnoActualizado = true;
                 }
@@ -164,8 +167,9 @@ class AlumnoReworkController extends Controller
 
                     if ($usuarioExistente) {
                         DB::rollBack();
+
                         return response()->json([
-                            'message' => 'El correo ya está en uso por otro usuario'
+                            'message' => 'El correo ya está en uso por otro usuario',
                         ], 409);
                     }
 
@@ -174,7 +178,7 @@ class AlumnoReworkController extends Controller
                 }
 
                 // Actualizar password si se proporciona
-                if (isset($validated['password']) && !empty($validated['password'])) {
+                if (isset($validated['password']) && ! empty($validated['password'])) {
                     $usuario->password = Hash::make($validated['password']);
                     $usuarioActualizado = true;
                 }
@@ -200,7 +204,7 @@ class AlumnoReworkController extends Controller
             $response = [
                 'message' => 'Alumno actualizado exitosamente',
                 'alumno_actualizado' => $alumnoActualizado,
-                'usuario_actualizado' => $usuarioActualizado
+                'usuario_actualizado' => $usuarioActualizado,
             ];
 
             // Opcional: agregar solo los campos actualizados si se quiere
@@ -210,14 +214,14 @@ class AlumnoReworkController extends Controller
                     'nombre' => $alumno->nombre,
                     'apellidopaterno' => $alumno->apellidopaterno,
                     'apellidomaterno' => $alumno->apellidomaterno,
-                    'clavecarrera' => $alumno->clavecarrera
+                    'clavecarrera' => $alumno->clavecarrera,
                 ];
             }
 
             if ($usuarioActualizado) {
                 $response['usuario'] = [
                     'idusuario' => $usuario->idusuario,
-                    'correo' => $usuario->correo
+                    'correo' => $usuario->correo,
                 ];
             }
 
@@ -225,9 +229,10 @@ class AlumnoReworkController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'message' => 'Error al actualizar el alumno',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

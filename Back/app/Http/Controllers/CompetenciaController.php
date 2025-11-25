@@ -13,15 +13,14 @@ class CompetenciaController extends Controller
         $request->validate([
             'ClaveAsignatura' => 'required|exists:asignatura,ClaveAsignatura',
             'Descripcion' => 'required|string|max:255',
-            'Tipo_Competencia' => 'required|in:Específica,Generica,Previas'
+            'Tipo_Competencia' => 'required|in:Específica,Generica,Previas',
         ]);
-
 
         $competencia = Competencia::create($request->all());
 
         return response()->json([
             'message' => 'Competencia creada exitosamente',
-            'data' => $competencia
+            'data' => $competencia,
         ], 201);
     }
 
@@ -32,7 +31,7 @@ class CompetenciaController extends Controller
             'competencias' => 'required|array',
             'competencias.*.ClaveAsignatura' => 'required|exists:asignatura,ClaveAsignatura',
             'competencias.*.Descripcion' => 'required|string|max:255',
-            'competencias.*.Tipo_Competencia' => 'required|in:Específica,Previas,Generica'
+            'competencias.*.Tipo_Competencia' => 'required|in:Específica,Previas,Generica',
         ]);
 
         $competencias = [];
@@ -42,7 +41,7 @@ class CompetenciaController extends Controller
 
         return response()->json([
             'message' => 'Competencias creadas exitosamente',
-            'data' => $competencias
+            'data' => $competencias,
         ], 201);
     }
 
@@ -51,7 +50,7 @@ class CompetenciaController extends Controller
     {
         $request->validate([
             'Descripcion' => 'sometimes|required|string|max:255',
-            'Tipo_Competencia' => 'sometimes|required|in:Específica,Previas,Generica'
+            'Tipo_Competencia' => 'sometimes|required|in:Específica,Previas,Generica',
         ]);
 
         $competencia = Competencia::findOrFail($id);
@@ -59,7 +58,7 @@ class CompetenciaController extends Controller
 
         return response()->json([
             'message' => 'Competencia actualizada exitosamente',
-            'data' => $competencia
+            'data' => $competencia,
         ]);
     }
 
@@ -70,7 +69,7 @@ class CompetenciaController extends Controller
             'competencias' => 'required|array',
             'competencias.*.id_Competencia' => 'required|exists:competencia,id_Competencia',
             'competencias.*.Descripcion' => 'sometimes|required|string|max:255',
-            'competencias.*.Tipo_Competencia' => 'sometimes|required|in:Específica,Previas,Generica'
+            'competencias.*.Tipo_Competencia' => 'sometimes|required|in:Específica,Previas,Generica',
         ]);
 
         $competenciasActualizadas = [];
@@ -82,7 +81,7 @@ class CompetenciaController extends Controller
 
         return response()->json([
             'message' => 'Competencias actualizadas exitosamente',
-            'data' => $competenciasActualizadas
+            'data' => $competenciasActualizadas,
         ]);
     }
 
@@ -93,7 +92,7 @@ class CompetenciaController extends Controller
         $competencia->delete();
 
         return response()->json([
-            'message' => 'Competencia eliminada exitosamente'
+            'message' => 'Competencia eliminada exitosamente',
         ]);
     }
 
@@ -105,7 +104,7 @@ class CompetenciaController extends Controller
             ->get();
 
         return response()->json([
-            'data' => $competencias
+            'data' => $competencias,
         ]);
     }
 }

@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class DisenioCurricular extends Model
 {
     protected $table = 'disenio_curricular';
+
     protected $primaryKey = 'id_disenio_curricular';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -19,12 +21,12 @@ class DisenioCurricular extends Model
         'FechaInicio',
         'FechaFinal',
         'NombreEvento',
-        'Descripcion'
+        'Descripcion',
     ];
 
     protected $casts = [
         'FechaInicio' => 'date',
-        'FechaFinal' => 'date'
+        'FechaFinal' => 'date',
     ];
 
     public function asignatura(): BelongsTo

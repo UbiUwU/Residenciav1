@@ -9,18 +9,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class EvaluacionCompetenciaInstrumentacion extends Model
 {
     protected $table = 'evaluacion_competencias_instrumentacion';
+
     protected $primaryKey = 'id_evaluacion_competencia';
+
     public $timestamps = false;
 
     protected $fillable = [
         'id_competencia',
         'evidencia_aprendizaje',
         'porcentaje_valor',
-        'evaluacion_formativa'
+        'evaluacion_formativa',
     ];
 
     protected $casts = [
-        'fecha_creacion' => 'datetime'
+        'fecha_creacion' => 'datetime',
     ];
 
     public function competencia(): BelongsTo

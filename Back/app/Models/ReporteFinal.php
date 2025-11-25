@@ -8,26 +8,30 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ReporteFinal extends Model
 {
     protected $table = 'reportefinal';
+
     protected $primaryKey = 'id_reportefinal';
+
     public $incrementing = true;
+
     protected $keyType = 'integer';
+
     public $timestamps = false;
 
     protected $fillable = [
         'tarjeta_profesor',
         'id_periodo_escolar',
         'id_departamento',
-        'estado'
+        'estado',
     ];
 
     protected $attributes = [
-        'estado' => 'borrador'
+        'estado' => 'borrador',
     ];
 
     protected $casts = [
         'tarjeta_profesor' => 'integer',
         'id_periodo_escolar' => 'integer',
-        'id_departamento' => 'integer'
+        'id_departamento' => 'integer',
     ];
 
     /**

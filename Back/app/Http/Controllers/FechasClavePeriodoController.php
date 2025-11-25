@@ -27,6 +27,7 @@ class FechasClavePeriodoController extends Controller
     public function show($id)
     {
         $fecha = FechasClavePeriodo::with(['periodoEscolar', 'tipoCatalogo'])->findOrFail($id);
+
         return response()->json($fecha, 200);
     }
 
@@ -37,12 +38,12 @@ class FechasClavePeriodoController extends Controller
     {
         $data = $request->validate([
             'periodo_escolar_id' => 'required|integer|exists:periodo_escolar,id_periodo_escolar',
-            'tipo_fecha_clave'   => 'required|string|max:50',
-            'nombre_fecha'       => 'required|string|max:100',
-            'descripcion'        => 'nullable|string',
-            'fecha'              => 'required|date',
-            'fecha_limite'       => 'nullable|date',
-            'es_obligatoria'     => 'boolean',
+            'tipo_fecha_clave' => 'required|string|max:50',
+            'nombre_fecha' => 'required|string|max:100',
+            'descripcion' => 'nullable|string',
+            'fecha' => 'required|date',
+            'fecha_limite' => 'nullable|date',
+            'es_obligatoria' => 'boolean',
         ]);
 
         $fecha = FechasClavePeriodo::create($data);
@@ -58,12 +59,12 @@ class FechasClavePeriodoController extends Controller
         $fecha = FechasClavePeriodo::findOrFail($id);
 
         $data = $request->validate([
-            'tipo_fecha_clave'   => 'sometimes|required|string|max:50',
-            'nombre_fecha'       => 'sometimes|required|string|max:100',
-            'descripcion'        => 'nullable|string',
-            'fecha'              => 'sometimes|required|date',
-            'fecha_limite'       => 'nullable|date',
-            'es_obligatoria'     => 'boolean',
+            'tipo_fecha_clave' => 'sometimes|required|string|max:50',
+            'nombre_fecha' => 'sometimes|required|string|max:100',
+            'descripcion' => 'nullable|string',
+            'fecha' => 'sometimes|required|date',
+            'fecha_limite' => 'nullable|date',
+            'es_obligatoria' => 'boolean',
         ]);
 
         $fecha->update($data);

@@ -9,9 +9,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Asignatura extends Model
 {
     protected $table = 'asignatura';
+
     protected $primaryKey = 'ClaveAsignatura';
+
     public $incrementing = false; // NO es autoincremental
+
     protected $keyType = 'string'; // varchar
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -20,7 +24,7 @@ class Asignatura extends Model
         'Creditos',
         'Satca_Practicas',
         'Satca_Teoricas',
-        'Satca_Total'
+        'Satca_Total',
     ];
 
     public function carreras()
@@ -44,18 +48,21 @@ class Asignatura extends Model
                 },
                 'intenciones' => function ($query) {
                     $query->orderBy('Orden');
-                }
+                },
             ]);
     }
+
     public function diseniosCurriculares(): HasMany
     {
         return $this->hasMany(DisenioCurricular::class, 'ClaveAsignatura', 'ClaveAsignatura');
     }
+
     public function temasConSubtemas()
     {
         return $this->hasMany(Tema::class, 'Clave_Asignatura', 'ClaveAsignatura')
             ->with('subtemasRecursivos');
     }
+
     public function practias(): HasMany
     {
         return $this->hasMany(Practiasasignatura::class, 'ClaveAsignatura', 'ClaveAsignatura')
@@ -84,6 +91,7 @@ class Asignatura extends Model
         return $this->hasMany(ProyectoAsignatura::class, 'ClaveAsignatura', 'ClaveAsignatura')
             ->orderBy('orden');
     }
+
     public function competenciasEspecificas(): HasMany
     {
         return $this->competencias()->where('Tipo_Competencia', 'Específica');
@@ -98,5 +106,4 @@ class Asignatura extends Model
     {
         return $this->competencias()->where('Tipo_Competencia', 'Generica');
     }
-
 }

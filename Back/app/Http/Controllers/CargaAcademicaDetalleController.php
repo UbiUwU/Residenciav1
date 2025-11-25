@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\CargaAcademicaDetalle;
 use App\Models\CargaAcademicaGeneral;
-use App\Models\HorarioAsignaturaMaestro;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -18,7 +17,7 @@ class CargaAcademicaDetalleController extends Controller
     {
         $detalles = CargaAcademicaDetalle::with([
             'cargaGeneral.alumno',
-            'horarioAsignatura'
+            'horarioAsignatura',
         ])->get();
 
         return response()->json($detalles);
@@ -32,13 +31,13 @@ class CargaAcademicaDetalleController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'numerocontrol' => 'required|exists:alumnos,numerocontrol',
-            'clavehorario' => 'required|exists:horarioasignatura_maestro,clavehorario'
+            'clavehorario' => 'required|exists:horarioasignatura_maestro,clavehorario',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -47,7 +46,7 @@ class CargaAcademicaDetalleController extends Controller
         try {
             // Buscar o crear la carga general del alumno
             $cargaGeneral = CargaAcademicaGeneral::firstOrCreate([
-                'numerocontrol' => $request->numerocontrol
+                'numerocontrol' => $request->numerocontrol,
             ]);
 
             // Verificar si ya está registrado en este horario
@@ -57,15 +56,16 @@ class CargaAcademicaDetalleController extends Controller
 
             if ($existente) {
                 DB::rollBack();
+
                 return response()->json([
-                    'message' => 'El alumno ya está registrado en este horario'
+                    'message' => 'El alumno ya está registrado en este horario',
                 ], 409);
             }
 
             // Crear el detalle de carga académica
             $detalle = CargaAcademicaDetalle::create([
                 'idcargageneral' => $cargaGeneral->idcargageneral,
-                'clavehorario' => $request->clavehorario
+                'clavehorario' => $request->clavehorario,
             ]);
 
             // Cargar solo la información del horario para la respuesta
@@ -77,23 +77,25 @@ class CargaAcademicaDetalleController extends Controller
                 'message' => 'Alumno registrado en el horario exitosamente',
                 'horario' => [
                     'clavehorario' => $detalle->horarioAsignatura->clavehorario,
-                    'clave_asignatura' => $detalle->horarioAsignatura->asignatura->ClaveAsignatura
-                ]
+                    'clave_asignatura' => $detalle->horarioAsignatura->asignatura->ClaveAsignatura,
+                ],
             ], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
-                'message' => 'Error al registrar el alumno en el horario'
+                'message' => 'Error al registrar el alumno en el horario',
             ], 500);
         }
     }
+
     public function indexAlumnosByHorario($clavehorario)
     {
         $validator = Validator::make(
             ['clavehorario' => $clavehorario],
             [
-                'clavehorario' => 'required|string|exists:horario_asignatura_maestro,clavehorario'
+                'clavehorario' => 'required|string|exists:horario_asignatura_maestro,clavehorario',
             ]
         );
 
@@ -101,12 +103,12 @@ class CargaAcademicaDetalleController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Parámetro inválido',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
         $alumnos = CargaAcademicaDetalle::with([
-            'cargaGeneral.alumno:numerocontrol,nombre,apellidopaterno,apellidomaterno'
+            'cargaGeneral.alumno:numerocontrol,nombre,apellidopaterno,apellidomaterno',
         ])
             ->where('clavehorario', $clavehorario)
             ->get()
@@ -118,9 +120,10 @@ class CargaAcademicaDetalleController extends Controller
             'success' => true,
             'data' => $alumnos,
             'count' => $alumnos->count(),
-            'clavehorario' => $clavehorario
+            'clavehorario' => $clavehorario,
         ], 200);
     }
+
     /**
      * Display the specified resource.
      */
@@ -130,14 +133,14 @@ class CargaAcademicaDetalleController extends Controller
             $detalle = CargaAcademicaDetalle::with([
                 'cargaGeneral.alumno',
                 'horarioAsignatura.asignatura',
-                'horarioAsignatura.maestro'
+                'horarioAsignatura.maestro',
             ])->findOrFail($id);
 
             return response()->json($detalle);
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Registro no encontrado'
+                'message' => 'Registro no encontrado',
             ], 404);
         }
     }
@@ -157,14 +160,15 @@ class CargaAcademicaDetalleController extends Controller
             DB::commit();
 
             return response()->json([
-                'message' => 'Registro eliminado exitosamente'
+                'message' => 'Registro eliminado exitosamente',
             ], 200);
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'message' => 'Error al eliminar el registro',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -177,24 +181,24 @@ class CargaAcademicaDetalleController extends Controller
         try {
             $cargaGeneral = CargaAcademicaGeneral::with([
                 'detalles.horarioAsignatura.asignatura',
-                'detalles.horarioAsignatura.maestro'
+                'detalles.horarioAsignatura.maestro',
             ])->where('numerocontrol', $numerocontrol)->first();
 
-            if (!$cargaGeneral) {
+            if (! $cargaGeneral) {
                 return response()->json([
-                    'message' => 'El alumno no tiene horarios registrados'
+                    'message' => 'El alumno no tiene horarios registrados',
                 ], 404);
             }
 
             return response()->json([
                 'alumno' => $cargaGeneral->alumno,
-                'horarios' => $cargaGeneral->detalles
+                'horarios' => $cargaGeneral->detalles,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al obtener los horarios',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -206,7 +210,7 @@ class CargaAcademicaDetalleController extends Controller
     {
         try {
             $alumnos = CargaAcademicaDetalle::with([
-                'cargaGeneral.alumno'
+                'cargaGeneral.alumno',
             ])->where('clavehorario', $clavehorario)->get();
 
             return response()->json([
@@ -214,13 +218,13 @@ class CargaAcademicaDetalleController extends Controller
                 'total_alumnos' => $alumnos->count(),
                 'alumnos' => $alumnos->map(function ($detalle) {
                     return $detalle->cargaGeneral->alumno;
-                })
+                }),
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al obtener los alumnos',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

@@ -21,6 +21,7 @@ class CatalogoTiposFechaController extends Controller
     public function show($id)
     {
         $tipo = CatalogoTiposFecha::findOrFail($id);
+
         return response()->json($tipo, 200);
     }
 
@@ -30,10 +31,10 @@ class CatalogoTiposFechaController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'clave'       => 'required|string|max:50|unique:catalogo_tipos_fecha,clave',
-            'nombre'      => 'required|string|max:100',
+            'clave' => 'required|string|max:50|unique:catalogo_tipos_fecha,clave',
+            'nombre' => 'required|string|max:100',
             'descripcion' => 'nullable|string',
-            'es_activo'   => 'boolean',
+            'es_activo' => 'boolean',
         ]);
 
         $tipo = CatalogoTiposFecha::create($data);
@@ -49,9 +50,9 @@ class CatalogoTiposFechaController extends Controller
         $tipo = CatalogoTiposFecha::findOrFail($id);
 
         $data = $request->validate([
-            'nombre'      => 'sometimes|required|string|max:100',
+            'nombre' => 'sometimes|required|string|max:100',
             'descripcion' => 'nullable|string',
-            'es_activo'   => 'boolean',
+            'es_activo' => 'boolean',
         ]);
 
         $tipo->update($data);

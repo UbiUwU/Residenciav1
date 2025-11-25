@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Usuario;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UsuarioController extends Controller
 {
@@ -14,6 +13,7 @@ class UsuarioController extends Controller
     public function index()
     {
         $usuarios = Usuario::with('rol')->get();
+
         return response()->json($usuarios);
     }
 
@@ -21,9 +21,10 @@ class UsuarioController extends Controller
     public function show($id)
     {
         $usuario = Usuario::with('rol')->find($id);
-        if (!$usuario) {
+        if (! $usuario) {
             return response()->json(['message' => 'Usuario no encontrado'], 404);
         }
+
         return response()->json($usuario);
     }
 
@@ -43,7 +44,7 @@ class UsuarioController extends Controller
                 [
                     'correo' => $request->correo,
                     'password' => $request->password,
-                    'idrol' => $request->idrol
+                    'idrol' => $request->idrol,
                 ]
             );
 
@@ -53,7 +54,7 @@ class UsuarioController extends Controller
 
             return response()->json([
                 'message' => 'Usuario registrado exitosamente',
-                'usuario' => $usuario
+                'usuario' => $usuario,
             ], 201);
 
         } catch (QueryException $e) {
@@ -63,12 +64,12 @@ class UsuarioController extends Controller
             // Opcional: identificar si es correo duplicado
             if (str_contains($errorMessage, 'Error: El correo ya está registrado')) {
                 return response()->json([
-                    'message' => 'El correo ya está registrado.'
+                    'message' => 'El correo ya está registrado.',
                 ], 400);
             }
 
             return response()->json([
-                'message' => $errorMessage
+                'message' => $errorMessage,
             ], 400);
         }
     }
@@ -91,7 +92,7 @@ class UsuarioController extends Controller
                     'idusuario' => $id,
                     'correo' => $request->correo,
                     'password' => $request->password,
-                    'idrol' => $request->idrol
+                    'idrol' => $request->idrol,
                 ]
             );
 
@@ -107,7 +108,7 @@ class UsuarioController extends Controller
 
             return response()->json([
                 'message' => $mensaje,
-                'usuario' => $usuario
+                'usuario' => $usuario,
             ]);
 
         } catch (\Illuminate\Database\QueryException $e) {
@@ -119,11 +120,12 @@ class UsuarioController extends Controller
     public function destroy($id)
     {
         $usuario = Usuario::find($id);
-        if (!$usuario) {
+        if (! $usuario) {
             return response()->json(['message' => 'Usuario no encontrado'], 404);
         }
 
         $usuario->delete();
+
         return response()->json(['message' => 'Usuario eliminado']);
     }
 }

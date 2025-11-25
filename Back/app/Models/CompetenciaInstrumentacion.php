@@ -9,17 +9,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class CompetenciaInstrumentacion extends Model
 {
     protected $table = 'competencias_instrumentacion';
+
     protected $primaryKey = 'id_competencia';
+
     public $timestamps = false;
 
     protected $fillable = [
         'id_instrumentacion',
         'id_tema',
-        'horas_dedicadas'
+        'horas_dedicadas',
     ];
 
     protected $casts = [
-        'fecha_creacion' => 'datetime'
+        'fecha_creacion' => 'datetime',
     ];
 
     public function instrumentacion(): BelongsTo

@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class ComputadoraController extends Controller
 {
     public function index()
     {
-        $computadoras = DB::select("SELECT * FROM get_all_computadoras()");
+        $computadoras = DB::select('SELECT * FROM get_all_computadoras()');
+
         return response()->json($computadoras);
     }
 
     public function show($numero_inventario)
     {
-        $computadora = DB::select("SELECT * FROM get_computadora_by_inventario(?)", [$numero_inventario]);
+        $computadora = DB::select('SELECT * FROM get_computadora_by_inventario(?)', [$numero_inventario]);
         if (empty($computadora)) {
             return response()->json(['message' => 'Computadora no encontrada'], 404);
         }
+
         return response()->json($computadora[0]);
     }
 
@@ -33,7 +33,7 @@ class ComputadoraController extends Controller
             'Estado' => 'required|string|max:50',
         ]);
 
-        $response = DB::select("SELECT insert_computadora(?, ?, ?, ?) AS message", [
+        $response = DB::select('SELECT insert_computadora(?, ?, ?, ?) AS message', [
             $request->NumeroInventario,
             $request->ClaveAula,
             $request->Marca,
@@ -51,7 +51,7 @@ class ComputadoraController extends Controller
             'Estado' => 'required|string|max:50',
         ]);
 
-        $response = DB::select("SELECT update_computadora(?, ?, ?, ?) AS message", [
+        $response = DB::select('SELECT update_computadora(?, ?, ?, ?) AS message', [
             $numero_inventario,
             $request->ClaveAula,
             $request->Marca,
@@ -63,7 +63,8 @@ class ComputadoraController extends Controller
 
     public function destroy($numero_inventario)
     {
-        $response = DB::select("SELECT delete_computadora(?) AS message", [$numero_inventario]);
+        $response = DB::select('SELECT delete_computadora(?) AS message', [$numero_inventario]);
+
         return response()->json(['message' => $response[0]->message]);
     }
 }

@@ -12,29 +12,29 @@ class AlumnoController extends Controller
     // Obtener todos los alumnos
     public function index()
     {
-        $alumnos = DB::select("SELECT * FROM get_all_alumnos()");
+        $alumnos = DB::select('SELECT * FROM get_all_alumnos()');
 
         return response()->json([
             'success' => true,
-            'data' => $alumnos
+            'data' => $alumnos,
         ]);
     }
 
     // Obtener un alumno por número de control
     public function show($numeroControl)
     {
-        $alumno = DB::select("select * from alumnos where numerocontrol = ?", [$numeroControl]);
+        $alumno = DB::select('select * from alumnos where numerocontrol = ?', [$numeroControl]);
 
         if (empty($alumno)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Alumno no encontrado'
+                'message' => 'Alumno no encontrado',
             ], 404);
         }
 
         return response()->json([
             'success' => true,
-            'data' => $alumno[0]
+            'data' => $alumno[0],
         ]);
     }
 
@@ -47,17 +47,17 @@ class AlumnoController extends Controller
             'apellido_paterno' => 'required|string|max:255',
             'apellido_materno' => 'required|string|max:255',
             'id_usuario' => 'required|integer|exists:usuarios,id',
-            'clave_carrera' => 'required|string|exists:carreras,ClaveCarrera'
+            'clave_carrera' => 'required|string|exists:carreras,ClaveCarrera',
         ]);
 
         try {
-            $result = DB::select("SELECT insert_alumno(?, ?, ?, ?, ?, ?) AS result", [
+            $result = DB::select('SELECT insert_alumno(?, ?, ?, ?, ?, ?) AS result', [
                 $validated['numero_control'],
                 $validated['nombre'],
                 $validated['apellido_paterno'],
                 $validated['apellido_materno'],
                 $validated['id_usuario'],
-                $validated['clave_carrera']
+                $validated['clave_carrera'],
             ]);
 
             $message = $result[0]->result;
@@ -65,20 +65,21 @@ class AlumnoController extends Controller
             if (str_contains($message, 'Error')) {
                 return response()->json([
                     'success' => false,
-                    'message' => $message
+                    'message' => $message,
                 ], 400);
             }
 
             return response()->json([
                 'success' => true,
                 'message' => $message,
-                'numero_control' => $validated['numero_control']
+                'numero_control' => $validated['numero_control'],
             ], 201);
         } catch (\Exception $e) {
-            Log::error('Error al crear alumno: ' . $e->getMessage());
+            Log::error('Error al crear alumno: '.$e->getMessage());
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error inesperado: ' . $e->getMessage()
+                'message' => 'Error inesperado: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -90,16 +91,16 @@ class AlumnoController extends Controller
             'nombre' => 'sometimes|string|max:255',
             'apellido_paterno' => 'sometimes|string|max:255',
             'apellido_materno' => 'sometimes|string|max:255',
-            'clave_carrera' => 'sometimes|string|exists:carreras,clavecarrera'
+            'clave_carrera' => 'sometimes|string|exists:carreras,clavecarrera',
         ]);
 
         try {
-            $result = DB::select("SELECT update_alumno(?, ?, ?, ?, ?) AS result", [
+            $result = DB::select('SELECT update_alumno(?, ?, ?, ?, ?) AS result', [
                 $numeroControl,
                 $validated['nombre'] ?? null,
                 $validated['apellido_paterno'] ?? null,
                 $validated['apellido_materno'] ?? null,
-                $validated['clave_carrera'] ?? null
+                $validated['clave_carrera'] ?? null,
             ]);
 
             $message = $result[0]->result;
@@ -107,20 +108,21 @@ class AlumnoController extends Controller
             if (str_contains($message, 'Error')) {
                 return response()->json([
                     'success' => false,
-                    'message' => $message
+                    'message' => $message,
                 ], 400);
             }
 
             return response()->json([
                 'success' => true,
                 'message' => $message,
-                'data' => $validated
+                'data' => $validated,
             ]);
         } catch (\Exception $e) {
-            Log::error('Error al actualizar alumno: ' . $e->getMessage());
+            Log::error('Error al actualizar alumno: '.$e->getMessage());
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error inesperado: ' . $e->getMessage()
+                'message' => 'Error inesperado: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -129,25 +131,26 @@ class AlumnoController extends Controller
     public function destroy($numeroControl)
     {
         try {
-            $result = DB::select("SELECT delete_alumno(?) AS result", [$numeroControl]);
+            $result = DB::select('SELECT delete_alumno(?) AS result', [$numeroControl]);
             $message = $result[0]->result;
 
             if (str_contains($message, 'Error')) {
                 return response()->json([
                     'success' => false,
-                    'message' => $message
+                    'message' => $message,
                 ], 404);
             }
 
             return response()->json([
                 'success' => true,
-                'message' => $message
+                'message' => $message,
             ]);
         } catch (\Exception $e) {
-            Log::error('Error al eliminar alumno: ' . $e->getMessage());
+            Log::error('Error al eliminar alumno: '.$e->getMessage());
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error inesperado: ' . $e->getMessage()
+                'message' => 'Error inesperado: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -155,7 +158,7 @@ class AlumnoController extends Controller
     // 1. Ver horario del alumno
     public function getHorario($numeroControl)
     {
-        $result = DB::select("SELECT * FROM public.get_horario_alumno(?)", [$numeroControl]);
+        $result = DB::select('SELECT * FROM public.get_horario_alumno(?)', [$numeroControl]);
 
         if (empty($result)) {
             return response()->json([]);
@@ -182,7 +185,6 @@ class AlumnoController extends Controller
         return response()->json($horarioArray);
     }
 
-
     // 2. Registrar usuario y alumno
     public function registrarAlumno(Request $request)
     {
@@ -193,46 +195,44 @@ class AlumnoController extends Controller
             'nombre' => 'required',
             'apellido_paterno' => 'required',
             'apellido_materno' => 'required',
-            'clavecarrera' => 'required'
+            'clavecarrera' => 'required',
         ]);
 
-        $userExists = DB::select("SELECT idusuario FROM usuarios WHERE correo = ? LIMIT 1", [$request->correo]);
+        $userExists = DB::select('SELECT idusuario FROM usuarios WHERE correo = ? LIMIT 1', [$request->correo]);
 
-        if (!empty($userExists)) {
+        if (! empty($userExists)) {
             return response()->json(['success' => false, 'message' => 'Correo ya registrado'], 409);
         }
 
-        $nuevoUsuario = DB::select("SELECT * FROM insert_usuario(?, ?, 1)", [
+        $nuevoUsuario = DB::select('SELECT * FROM insert_usuario(?, ?, 1)', [
             $request->correo,
-            $request->password
+            $request->password,
         ]);
 
-        $idUsuarioResult = DB::select("SELECT idusuario FROM usuarios WHERE correo = ?", [$request->correo]);
+        $idUsuarioResult = DB::select('SELECT idusuario FROM usuarios WHERE correo = ?', [$request->correo]);
         $idUsuario = $idUsuarioResult[0]->idusuario;
 
-        DB::select("SELECT * FROM insert_alumno(?, ?, ?, ?, ?, ?)", [
+        DB::select('SELECT * FROM insert_alumno(?, ?, ?, ?, ?, ?)', [
             $request->numerocontrol,
             $request->nombre,
             $request->apellido_paterno,
             $request->apellido_materno,
             $idUsuario,
-            $request->clavecarrera
+            $request->clavecarrera,
         ]);
 
         return response()->json(['success' => true, 'message' => 'Alumno registrado correctamente']);
     }
-
-
 
     // 3. Cambiar contraseña
     public function cambiarContrasena(Request $request)
     {
         $request->validate([
             'correo' => 'required|email',
-            'password' => 'required|string'
+            'password' => 'required|string',
         ]);
 
-        $usuario = DB::select("SELECT idusuario, idrol FROM usuarios WHERE correo = ?", [$request->correo]);
+        $usuario = DB::select('SELECT idusuario, idrol FROM usuarios WHERE correo = ?', [$request->correo]);
 
         if (empty($usuario)) {
             return response()->json(['success' => false, 'message' => 'Usuario no encontrado'], 404);
@@ -241,11 +241,11 @@ class AlumnoController extends Controller
         $idusuario = $usuario[0]->idusuario;
         $idrol = $usuario[0]->idrol;
 
-        DB::select("SELECT * FROM update_usuario(?, ?, ?, ?)", [
+        DB::select('SELECT * FROM update_usuario(?, ?, ?, ?)', [
             $idusuario,
             $request->correo,
             $request->password,
-            $idrol
+            $idrol,
         ]);
 
         return response()->json(['success' => true, 'message' => 'Contraseña actualizada']);
@@ -254,7 +254,8 @@ class AlumnoController extends Controller
     // 4. Ver computadoras disponibles
     public function computadorasDisponibles()
     {
-        $computadoras = DB::select("SELECT numeroinventario, claveaula, marca, estado FROM computadora ORDER BY claveaula, estado, numeroinventario");
+        $computadoras = DB::select('SELECT numeroinventario, claveaula, marca, estado FROM computadora ORDER BY claveaula, estado, numeroinventario');
+
         return response()->json($computadoras);
     }
 
@@ -263,12 +264,12 @@ class AlumnoController extends Controller
     {
         $request->validate([
             'control' => 'required',
-            'fecha' => 'required|date'
+            'fecha' => 'required|date',
         ]);
 
-        $reservas = DB::select("SELECT * FROM reservacionalumnos WHERE numerocontrol = ? AND fechareservacion >= ?", [
+        $reservas = DB::select('SELECT * FROM reservacionalumnos WHERE numerocontrol = ? AND fechareservacion >= ?', [
             $request->control,
-            $request->fecha
+            $request->fecha,
         ]);
 
         return response()->json(['reservas' => $reservas]);
@@ -280,15 +281,15 @@ class AlumnoController extends Controller
         $request->validate([
             'control' => 'required',
             'inventario' => 'required',
-            'fecha' => 'required|date'
+            'fecha' => 'required|date',
         ]);
 
-        $existe = DB::select("
+        $existe = DB::select('
             SELECT 1 FROM reservacionalumnos 
             WHERE numerocontrol = ? AND numeroinventario = ? AND fechareservacion = ?
-            LIMIT 1", [$request->control, $request->inventario, $request->fecha]);
+            LIMIT 1', [$request->control, $request->inventario, $request->fecha]);
 
-        return response()->json(['reservado' => !empty($existe)]);
+        return response()->json(['reservado' => ! empty($existe)]);
     }
 
     // 7. Ver sus reservaciones activas
@@ -296,15 +297,15 @@ class AlumnoController extends Controller
     {
         $request->validate([
             'control' => 'required',
-            'fecha' => 'required|date'
+            'fecha' => 'required|date',
         ]);
 
-        $reservas = DB::select("
+        $reservas = DB::select('
             SELECT ra.numeroinventario, ra.horainicio, ra.horafin, 
                    c.marca, c.claveaula, ra.fechareservacion
             FROM reservacionalumnos ra
             JOIN computadora c ON ra.numeroinventario = c.numeroinventario
-            WHERE ra.numerocontrol = ? AND ra.fechareservacion = ?",
+            WHERE ra.numerocontrol = ? AND ra.fechareservacion = ?',
             [$request->control, $request->fecha]
         );
 
@@ -319,15 +320,15 @@ class AlumnoController extends Controller
             'numeroinventario' => 'required',
             'fechareservacion' => 'required|date',
             'horainicio' => 'required',
-            'horafin' => 'required'
+            'horafin' => 'required',
         ]);
 
-        DB::select("SELECT insert_reservacion_alumno(?, ?, ?, ?, ?)", [
+        DB::select('SELECT insert_reservacion_alumno(?, ?, ?, ?, ?)', [
             $request->numerocontrol,
             $request->numeroinventario,
             $request->fechareservacion,
             $request->horainicio,
-            $request->horafin
+            $request->horafin,
         ]);
 
         return response()->json(['success' => true, 'message' => 'Computadora reservada']);
@@ -339,7 +340,7 @@ class AlumnoController extends Controller
         $request->validate([
             'inventario' => 'required',
             'horas' => 'required|integer',
-            'minutos' => 'required|integer'
+            'minutos' => 'required|integer',
         ]);
 
         DB::update("
@@ -357,12 +358,12 @@ class AlumnoController extends Controller
     {
         $request->validate([
             'control' => 'required',
-            'inventario' => 'required'
+            'inventario' => 'required',
         ]);
 
-        DB::delete("
+        DB::delete('
             DELETE FROM reservacionalumnos 
-            WHERE numerocontrol = ? AND numeroinventario = ?",
+            WHERE numerocontrol = ? AND numeroinventario = ?',
             [$request->control, $request->inventario]
         );
 
@@ -371,43 +372,39 @@ class AlumnoController extends Controller
 
     // 11. Registrar en bitácora
     public function registrarBitacora(Request $request)
-{
+    {
         $request->validate([
-        'numerocontrol' => 'required',
-        'numeroinventario' => 'required',
-        'horaEntrada' => 'required|date_format:Y-m-d H:i:s',
-        'horaSalida' => 'required|date_format:Y-m-d H:i:s',
-        'tiempoUso' => 'required'
-    ]);
+            'numerocontrol' => 'required',
+            'numeroinventario' => 'required',
+            'horaEntrada' => 'required|date_format:Y-m-d H:i:s',
+            'horaSalida' => 'required|date_format:Y-m-d H:i:s',
+            'tiempoUso' => 'required',
+        ]);
 
-    // Insertar en la base de datos
-    DB::insert(
-        "INSERT INTO public.bitacora_alumnos (
+        // Insertar en la base de datos
+        DB::insert(
+            'INSERT INTO public.bitacora_alumnos (
             hora_entrada, hora_salida, tiempo_uso, numerocontrol, numeroinventario
-        ) VALUES (?, ?, ?, ?, ?)",
-        [
-            $request->horaEntrada,
-            $request->horaSalida,
-            $request->tiempoUso,
-            $request->numerocontrol,
-            $request->numeroinventario
-        ]
-    );
+        ) VALUES (?, ?, ?, ?, ?)',
+            [
+                $request->horaEntrada,
+                $request->horaSalida,
+                $request->tiempoUso,
+                $request->numerocontrol,
+                $request->numeroinventario,
+            ]
+        );
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Bitácora registrada'
-    ]);
-}
+        return response()->json([
+            'success' => true,
+            'message' => 'Bitácora registrada',
+        ]);
+    }
 
-
-
-
-
-    //horario por aulas admin
-public function getHorarioAula($claveAula)
-{
-    $horario = DB::select("
+    // horario por aulas admin
+    public function getHorarioAula($claveAula)
+    {
+        $horario = DB::select("
         SELECT jsonb_agg(
             jsonb_strip_nulls(
                 jsonb_build_object(
@@ -438,21 +435,21 @@ public function getHorarioAula($claveAula)
         WHERE hm.ClaveAula = ?
     ", [$claveAula]);
 
-    return response()->json([
-        'success' => true,
-        'aula' => $claveAula,
-        'horario' => $horario[0]->horario_aula ?? []
-    ]);
-}
+        return response()->json([
+            'success' => true,
+            'aula' => $claveAula,
+            'horario' => $horario[0]->horario_aula ?? [],
+        ]);
+    }
 
-public function getallBitacoraAlumno()
-{
-    $Bitacoraalumnos = DB::select("select * from bitacora_alumnos");
+    public function getallBitacoraAlumno()
+    {
+        $Bitacoraalumnos = DB::select('select * from bitacora_alumnos');
 
-    return response()->json([
-        'success' => true,
-        'data' => $Bitacoraalumnos
-    ]);
+        return response()->json([
+            'success' => true,
+            'data' => $Bitacoraalumnos,
+        ]);
 
-}
+    }
 }

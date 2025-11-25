@@ -20,17 +20,17 @@ class FuenteInformacionController extends Controller
 
         $result = DB::select('SELECT crear_fuente_informacion(?, ?) AS id', [$clave, $referencia]);
 
-        if (!empty($result) && isset($result[0]->id)) {
+        if (! empty($result) && isset($result[0]->id)) {
             return response()->json([
                 'success' => true,
                 'id_fuente_info' => $result[0]->id,
-                'message' => 'Fuente de información creada correctamente'
+                'message' => 'Fuente de información creada correctamente',
             ]);
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'Error al crear fuente de información'
+            'message' => 'Error al crear fuente de información',
         ], 500);
     }
 
@@ -47,15 +47,16 @@ class FuenteInformacionController extends Controller
 
         try {
             DB::statement('SELECT actualizar_fuente_informacion(?, ?, ?)', [$id, $clave, $referencia]);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Fuente de información actualizada correctamente',
-                'id_fuente_info' => $id
+                'id_fuente_info' => $id,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar fuente de información: ' . $e->getMessage()
+                'message' => 'Error al actualizar fuente de información: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -65,15 +66,16 @@ class FuenteInformacionController extends Controller
     {
         try {
             DB::statement('SELECT eliminar_fuente_informacion(?)', [$id]);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Fuente de información eliminada correctamente',
-                'id_fuente_info' => $id
+                'id_fuente_info' => $id,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar fuente de información: ' . $e->getMessage()
+                'message' => 'Error al eliminar fuente de información: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -83,16 +85,16 @@ class FuenteInformacionController extends Controller
     {
         $fuente = DB::select('SELECT * FROM consultar_fuente_informacion_por_id(?)', [$id]);
 
-        if (!empty($fuente)) {
+        if (! empty($fuente)) {
             return response()->json([
                 'success' => true,
-                'fuente_informacion' => $fuente[0]
+                'fuente_informacion' => $fuente[0],
             ]);
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'Fuente de información no encontrada'
+            'message' => 'Fuente de información no encontrada',
         ], 404);
     }
 }

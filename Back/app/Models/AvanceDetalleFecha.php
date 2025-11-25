@@ -10,7 +10,9 @@ class AvanceDetalleFecha extends Model
     use HasFactory;
 
     protected $table = 'avance_detalles_fechas';
+
     protected $primaryKey = 'id_avance_detalle_fecha';
+
     public $timestamps = true;
 
     protected $fillable = [
@@ -20,7 +22,7 @@ class AvanceDetalleFecha extends Model
         'fecha_inicio_real',
         'fecha_fin_real',
         'fecha_evaluacion',
-        'fecha_evaluacion_real'
+        'fecha_evaluacion_real',
     ];
 
     public function avanceDetalle()

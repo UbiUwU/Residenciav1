@@ -10,6 +10,7 @@ class Plantilla extends Model
     use HasFactory;
 
     protected $table = 'plantillas';
+
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -20,7 +21,7 @@ class Plantilla extends Model
         'estado_id',
         'periodo_escolar_id',
         'creado_en',
-        'actualizado_en'
+        'actualizado_en',
     ];
 
     protected $casts = [
@@ -29,7 +30,7 @@ class Plantilla extends Model
         'estado_id' => 'integer',
         'periodo_escolar_id' => 'integer',
         'creado_en' => 'datetime',
-        'actualizado_en' => 'datetime'
+        'actualizado_en' => 'datetime',
     ];
 
     public $timestamps = false;
@@ -89,7 +90,7 @@ class Plantilla extends Model
     // Método para obtener la ruta completa del archivo
     public function getRutaArchivoAttribute()
     {
-        return storage_path('app/plantillas/' . $this->archivo);
+        return storage_path('app/plantillas/'.$this->archivo);
     }
 
     // Método para obtener la extensión del archivo

@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class DisenioCurricularParticipante extends Model
 {
     protected $table = 'disenio_curricular_participantes';
+
     protected $primaryKey = 'IdParticipacion';
+
     public $timestamps = false;
 
     protected $fillable = [
         'IdParticipacion',
         'id_disenio_curricular',
-        'Instituto'
+        'Instituto',
     ];
 
     public function disenioCurricular(): BelongsTo

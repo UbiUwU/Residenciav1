@@ -11,6 +11,7 @@ class TipoEventoController extends Controller
     public function index()
     {
         $tipos = TipoEvento::all();
+
         return response()->json($tipos, 200);
     }
 
@@ -20,14 +21,14 @@ class TipoEventoController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string|max:500',
-            'estado' => 'required|in:activo,inactivo'
+            'estado' => 'required|in:activo,inactivo',
         ]);
 
         $tipoEvento = TipoEvento::create($request->all());
 
         return response()->json([
             'message' => 'Tipo de evento creado exitosamente',
-            'data' => $tipoEvento
+            'data' => $tipoEvento,
         ], 201);
     }
 
@@ -36,7 +37,7 @@ class TipoEventoController extends Controller
     {
         $tipoEvento = TipoEvento::find($id);
 
-        if (!$tipoEvento) {
+        if (! $tipoEvento) {
             return response()->json(['message' => 'Tipo de evento no encontrado'], 404);
         }
 
@@ -49,12 +50,12 @@ class TipoEventoController extends Controller
         $request->validate([
             'nombre' => 'nullable|string|max:255',
             'descripcion' => 'nullable|string|max:500',
-            'estado' => 'nullable|in:activo,inactivo'
+            'estado' => 'nullable|in:activo,inactivo',
         ]);
 
         $tipoEvento = TipoEvento::find($id);
 
-        if (!$tipoEvento) {
+        if (! $tipoEvento) {
             return response()->json(['message' => 'Tipo de evento no encontrado'], 404);
         }
 
@@ -62,7 +63,7 @@ class TipoEventoController extends Controller
 
         return response()->json([
             'message' => 'Tipo de evento actualizado exitosamente',
-            'data' => $tipoEvento
+            'data' => $tipoEvento,
         ], 200);
     }
 
@@ -71,7 +72,7 @@ class TipoEventoController extends Controller
     {
         $tipoEvento = TipoEvento::find($id);
 
-        if (!$tipoEvento) {
+        if (! $tipoEvento) {
             return response()->json(['message' => 'Tipo de evento no encontrado'], 404);
         }
 

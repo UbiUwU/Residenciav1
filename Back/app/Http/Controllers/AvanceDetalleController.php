@@ -10,6 +10,7 @@ class AvanceDetalleController extends Controller
     public function index()
     {
         $detalles = AvanceDetalle::with(['avance', 'tema', 'tema.subtemas'])->get();
+
         return response()->json($detalles);
     }
 
@@ -17,7 +18,7 @@ class AvanceDetalleController extends Controller
     {
         $detalle = AvanceDetalle::with(['avance', 'tema', 'subtema'])->find($id);
 
-        if (!$detalle) {
+        if (! $detalle) {
             return response()->json(['message' => 'Detalle no encontrado'], 404);
         }
 
@@ -38,7 +39,7 @@ class AvanceDetalleController extends Controller
 
         return response()->json([
             'message' => 'Detalle agregado correctamente',
-            'detalle' => $detalle
+            'detalle' => $detalle,
         ], 201);
     }
 
@@ -46,7 +47,7 @@ class AvanceDetalleController extends Controller
     {
         $detalle = AvanceDetalle::find($id);
 
-        if (!$detalle) {
+        if (! $detalle) {
             return response()->json(['message' => 'Detalle no encontrado'], 404);
         }
 
@@ -61,14 +62,15 @@ class AvanceDetalleController extends Controller
 
         return response()->json([
             'message' => 'Detalle actualizado correctamente',
-            'detalle' => $detalle
+            'detalle' => $detalle,
         ]);
     }
+
     public function destroy($id)
     {
         $detalle = AvanceDetalle::find($id);
 
-        if (!$detalle) {
+        if (! $detalle) {
             return response()->json(['message' => 'Detalle no encontrado'], 404);
         }
 

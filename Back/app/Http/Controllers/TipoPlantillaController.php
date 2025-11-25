@@ -12,8 +12,9 @@ class TipoPlantillaController extends Controller
     public function index()
     {
         $tipos = TipoPlantilla::all();
+
         return response()->json([
-            'data' => $tipos
+            'data' => $tipos,
         ]);
     }
 
@@ -21,8 +22,9 @@ class TipoPlantillaController extends Controller
     public function show($id)
     {
         $tipo = TipoPlantilla::findOrFail($id);
+
         return response()->json([
-            'data' => $tipo
+            'data' => $tipo,
         ]);
     }
 
@@ -31,13 +33,13 @@ class TipoPlantillaController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string|max:50|unique:tipos_plantilla,nombre',
-            'descripcion' => 'nullable|string'
+            'descripcion' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -45,7 +47,7 @@ class TipoPlantillaController extends Controller
 
         return response()->json([
             'message' => 'Tipo de plantilla creado exitosamente',
-            'data' => $tipo
+            'data' => $tipo,
         ], 201);
     }
 
@@ -55,14 +57,14 @@ class TipoPlantillaController extends Controller
         $tipo = TipoPlantilla::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'nombre' => 'sometimes|required|string|max:50|unique:tipos_plantilla,nombre,' . $id,
-            'descripcion' => 'nullable|string'
+            'nombre' => 'sometimes|required|string|max:50|unique:tipos_plantilla,nombre,'.$id,
+            'descripcion' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -70,7 +72,7 @@ class TipoPlantillaController extends Controller
 
         return response()->json([
             'message' => 'Tipo de plantilla actualizado exitosamente',
-            'data' => $tipo
+            'data' => $tipo,
         ]);
     }
 
@@ -82,14 +84,14 @@ class TipoPlantillaController extends Controller
         // Verificar si hay plantillas asociadas
         if ($tipo->plantillas()->count() > 0) {
             return response()->json([
-                'message' => 'No se puede eliminar el tipo de plantilla porque tiene plantillas asociadas'
+                'message' => 'No se puede eliminar el tipo de plantilla porque tiene plantillas asociadas',
             ], 422);
         }
 
         $tipo->delete();
 
         return response()->json([
-            'message' => 'Tipo de plantilla eliminado exitosamente'
+            'message' => 'Tipo de plantilla eliminado exitosamente',
         ]);
     }
 }

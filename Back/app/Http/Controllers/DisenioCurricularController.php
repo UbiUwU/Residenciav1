@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Asignatura;
 use App\Models\DisenioCurricular;
 use App\Models\DisenioCurricularParticipante;
-use App\Models\Asignatura;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -22,13 +21,13 @@ class DisenioCurricularController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $disenios
+                'data' => $disenios,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener los diseños curriculares',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -48,12 +47,12 @@ class DisenioCurricularController extends Controller
             return response()->json([
                 'success' => true,
                 'asignatura' => $asignatura,
-                'data' => $disenios
+                'data' => $disenios,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al obtener los diseños curriculares de la asignatura'
+                'message' => 'Error al obtener los diseños curriculares de la asignatura',
             ], 404);
         }
     }
@@ -67,12 +66,12 @@ class DisenioCurricularController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $disenio
+                'data' => $disenio,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Diseño curricular no encontrado'
+                'message' => 'Diseño curricular no encontrado',
             ], 404);
         }
     }
@@ -88,14 +87,14 @@ class DisenioCurricularController extends Controller
             'NombreEvento' => 'required|string|max:200',
             'Descripcion' => 'nullable|string',
             'participantes' => 'sometimes|array',
-            'participantes.*.Instituto' => 'required_with:participantes|string|max:200'
+            'participantes.*.Instituto' => 'required_with:participantes|string|max:200',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -108,14 +107,14 @@ class DisenioCurricularController extends Controller
                     'FechaInicio' => $request->FechaInicio,
                     'FechaFinal' => $request->FechaFinal,
                     'NombreEvento' => $request->NombreEvento,
-                    'Descripcion' => $request->Descripcion
+                    'Descripcion' => $request->Descripcion,
                 ]);
 
                 // Agregar participantes si vienen en el request
                 if ($request->has('participantes')) {
                     foreach ($request->participantes as $participante) {
                         $disenio->participantes()->create([
-                            'Instituto' => $participante['Instituto']
+                            'Instituto' => $participante['Instituto'],
                         ]);
                     }
                 }
@@ -123,14 +122,14 @@ class DisenioCurricularController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Diseño curricular creado exitosamente',
-                    'data' => $disenio->load(['asignatura', 'participantes'])
+                    'data' => $disenio->load(['asignatura', 'participantes']),
                 ], 201);
             });
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al crear el diseño curricular',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -147,14 +146,14 @@ class DisenioCurricularController extends Controller
             'participantes' => 'sometimes|array',
             'participantes.*.IdParticipacion' => 'sometimes|integer|exists:disenio_curricular_participantes,IdParticipacion',
             'participantes.*.Instituto' => 'required_with:participantes|string|max:200',
-            'participantes.*._delete' => 'sometimes|boolean'
+            'participantes.*._delete' => 'sometimes|boolean',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -164,7 +163,7 @@ class DisenioCurricularController extends Controller
 
                 // Actualizar datos básicos
                 $disenio->update($request->only([
-                    'Lugar', 'FechaInicio', 'FechaFinal', 'NombreEvento', 'Descripcion'
+                    'Lugar', 'FechaInicio', 'FechaFinal', 'NombreEvento', 'Descripcion',
                 ]));
 
                 // Procesar participantes
@@ -176,6 +175,7 @@ class DisenioCurricularController extends Controller
                                 ->where('id_disenio_curricular', $id)
                                 ->firstOrFail();
                             $part->delete();
+
                             continue;
                         }
 
@@ -188,7 +188,7 @@ class DisenioCurricularController extends Controller
                         } else {
                             // Crear nuevo
                             $disenio->participantes()->create([
-                                'Instituto' => $participante['Instituto']
+                                'Instituto' => $participante['Instituto'],
                             ]);
                         }
                     }
@@ -197,14 +197,14 @@ class DisenioCurricularController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Diseño curricular actualizado exitosamente',
-                    'data' => $disenio->fresh(['asignatura', 'participantes'])
+                    'data' => $disenio->fresh(['asignatura', 'participantes']),
                 ]);
             });
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al actualizar el diseño curricular',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -225,15 +225,15 @@ class DisenioCurricularController extends Controller
                     'message' => 'Diseño curricular eliminado exitosamente',
                     'deleted' => [
                         'id_disenio_curricular' => $disenio->id_disenio_curricular,
-                        'participantes_eliminados' => $disenio->participantes_count
-                    ]
+                        'participantes_eliminados' => $disenio->participantes_count,
+                    ],
                 ]);
             });
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al eliminar el diseño curricular',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -246,12 +246,12 @@ class DisenioCurricularController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $disenio->participantes
+                'data' => $disenio->participantes,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Diseño curricular no encontrado'
+                'message' => 'Diseño curricular no encontrado',
             ], 404);
         }
     }
@@ -260,14 +260,14 @@ class DisenioCurricularController extends Controller
     public function agregarParticipante(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'Instituto' => 'required|string|max:200'
+            'Instituto' => 'required|string|max:200',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -275,19 +275,19 @@ class DisenioCurricularController extends Controller
             $disenio = DisenioCurricular::findOrFail($id);
 
             $participante = $disenio->participantes()->create([
-                'Instituto' => $request->Instituto
+                'Instituto' => $request->Instituto,
             ]);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Participante agregado exitosamente',
-                'data' => $participante
+                'data' => $participante,
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al agregar participante',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -304,12 +304,12 @@ class DisenioCurricularController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Participante eliminado exitosamente'
+                'message' => 'Participante eliminado exitosamente',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Participante no encontrado'
+                'message' => 'Participante no encontrado',
             ], 404);
         }
     }

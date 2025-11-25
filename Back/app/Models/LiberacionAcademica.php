@@ -9,9 +9,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class LiberacionAcademica extends Model
 {
     protected $table = 'liberacion_academica';
+
     protected $primaryKey = 'id_liberacion';
+
     public $incrementing = true;
+
     protected $keyType = 'integer';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -19,17 +23,17 @@ class LiberacionAcademica extends Model
         'tarjeta_maestro',
         'id_periodo_escolar',
         'fecha_liberacion',
-        'otorga_liberacion'
+        'otorga_liberacion',
     ];
 
     protected $attributes = [
-        'otorga_liberacion' => false
+        'otorga_liberacion' => false,
     ];
 
     protected $casts = [
         'fecha_liberacion' => 'date:Y-m-d',
         'otorga_liberacion' => 'boolean',
-        'tarjeta_maestro' => 'string'
+        'tarjeta_maestro' => 'string',
     ];
 
     /**

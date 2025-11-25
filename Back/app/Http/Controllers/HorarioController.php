@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class HorarioController extends Controller
 {
     public function index()
     {
-        $horarios = DB::select("SELECT * FROM get_all_horarios()");
+        $horarios = DB::select('SELECT * FROM get_all_horarios()');
+
         return response()->json($horarios);
     }
 
     public function show($clave_horario)
     {
-        $horario = DB::select("SELECT * FROM get_horario_by_clave(?)", [$clave_horario]);
+        $horario = DB::select('SELECT * FROM get_horario_by_clave(?)', [$clave_horario]);
         if (empty($horario)) {
             return response()->json(['message' => 'Horario no encontrado'], 404);
         }
+
         return response()->json($horario[0]);
     }
 
@@ -47,7 +47,7 @@ class HorarioController extends Controller
             'Sabado_HF' => 'nullable|date_format:H:i:s',
         ]);
 
-        $response = DB::select("SELECT insert_horario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) AS message", [
+        $response = DB::select('SELECT insert_horario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) AS message', [
             $request->ClaveHorario,
             $request->Tarjeta,
             $request->ClaveAula,
@@ -93,7 +93,7 @@ class HorarioController extends Controller
             'Sabado_HF' => 'nullable|date_format:H:i:s',
         ]);
 
-        $response = DB::select("SELECT update_horario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) AS message", [
+        $response = DB::select('SELECT update_horario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) AS message', [
             $clave_horario,
             $request->Tarjeta,
             $request->ClaveAula,
@@ -119,7 +119,8 @@ class HorarioController extends Controller
 
     public function destroy($clave_horario)
     {
-        $response = DB::select("SELECT delete_horario(?) AS message", [$clave_horario]);
+        $response = DB::select('SELECT delete_horario(?) AS message', [$clave_horario]);
+
         return response()->json(['message' => $response[0]->message]);
     }
 }

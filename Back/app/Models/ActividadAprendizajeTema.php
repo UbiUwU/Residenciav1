@@ -8,16 +8,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ActividadAprendizajeTema extends Model
 {
     protected $table = 'actividad_aprendizaje_tema';
+
     protected $primaryKey = 'id_actividad';
+
     public $timestamps = false;
 
     protected $fillable = [
         'id_Tema',
         'descripcion',
-        'orden'
+        'orden',
     ];
+
     protected $casts = [
-        'id_Tema' => 'integer'
+        'id_Tema' => 'integer',
     ];
 
     public function tema(): BelongsTo

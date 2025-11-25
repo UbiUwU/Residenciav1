@@ -9,13 +9,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Tema extends Model
 {
     protected $table = 'tema';
+
     protected $primaryKey = 'id_Tema';
+
     public $timestamps = false;
 
     protected $fillable = [
         'Clave_Asignatura',
         'Numero',
-        'Nombre_Tema'
+        'Nombre_Tema',
     ];
 
     public function asignatura(): BelongsTo
@@ -26,7 +28,7 @@ class Tema extends Model
     public function subtemas(): HasMany
     {
         return $this->hasMany(Subtema::class, 'Tema_id', 'id_Tema')
-            ->whereNull('Subtema_Padre_id') 
+            ->whereNull('Subtema_Padre_id')
             ->orderBy('Orden');
     }
 
@@ -52,6 +54,4 @@ class Tema extends Model
         return $this->hasMany(ActividadAprendizajeTema::class, 'id_Tema', 'id_Tema')
             ->orderBy('orden');
     }
-
-
 }

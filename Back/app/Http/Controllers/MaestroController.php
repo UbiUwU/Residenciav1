@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Departamento;
 use App\Models\Maestro;
 use App\Models\Usuario;
-use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,14 +18,17 @@ class MaestroController extends Controller
         if ($maestros->isEmpty()) {
             return response()->json(['message' => 'No hay maestros registrados'], 404);
         }
+
         return response()->json($maestros, 200);
     }
+
     public function indexL()
     {
         $maestros = Maestro::InfoBasicaMaestros()->get();
 
         return response()->json($maestros);
     }
+
     public function indexByDepartamentoBasic($idDepartamento)
     {
         // Validar que el departamento exista
@@ -38,7 +41,7 @@ class MaestroController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Departamento no encontrado',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 404);
         }
 
@@ -58,8 +61,8 @@ class MaestroController extends Controller
                 'count' => 0,
                 'departamento' => [
                     'id' => $departamento->id_departamento,
-                    'nombre' => $departamento->nombre
-                ]
+                    'nombre' => $departamento->nombre,
+                ],
             ], 200);
         }
 
@@ -69,21 +72,20 @@ class MaestroController extends Controller
             'count' => $maestros->count(),
             'departamento' => [
                 'id' => $departamento->id_departamento,
-                'nombre' => $departamento->nombre
-            ]
+                'nombre' => $departamento->nombre,
+            ],
         ], 200);
     }
 
     public function show($tarjeta)
     {
         $maestro = Maestro::with(['usuario.rol', 'departamento'])->find($tarjeta);
-        if (!$maestro) {
+        if (! $maestro) {
             return response()->json(['message' => 'Maestro no encontrado'], 404);
         }
 
         return response()->json($maestro, 200);
     }
-
 
     public function store(Request $request)
     {
@@ -119,7 +121,7 @@ class MaestroController extends Controller
                         'correo' => $request->correo,
                         'password' => bcrypt($request->password),
                         'idrol' => $request->idrol,
-                        'token' => null
+                        'token' => null,
                     ]);
 
                     $idusuario = $usuario->idusuario;
@@ -148,13 +150,13 @@ class MaestroController extends Controller
 
             return response()->json([
                 'message' => 'Maestro creado exitosamente',
-                'maestro' => $maestro->load(['usuario.rol', 'departamento'])
+                'maestro' => $maestro->load(['usuario.rol', 'departamento']),
             ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al crear el maestro',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -162,7 +164,7 @@ class MaestroController extends Controller
     public function update(Request $request, $tarjeta)
     {
         $maestro = Maestro::find($tarjeta);
-        if (!$maestro) {
+        if (! $maestro) {
             return response()->json(['message' => 'Maestro no encontrado'], 404);
         }
 
@@ -182,7 +184,7 @@ class MaestroController extends Controller
             'id_departamento' => 'sometimes|required|integer|exists:departamentos,id_departamento',
 
             // 👇 validaciones para usuario
-            'correo' => 'sometimes|required|email|unique:usuarios,correo,' . $maestro->idusuario . ',idusuario',
+            'correo' => 'sometimes|required|email|unique:usuarios,correo,'.$maestro->idusuario.',idusuario',
             'password' => 'sometimes|nullable|string|min:6',
             'idrol' => 'sometimes|required|integer|exists:roles,idrol',
         ]);
@@ -202,7 +204,7 @@ class MaestroController extends Controller
                 'estado_maestria',
                 'escolaridad_doctorado',
                 'estado_doctorado',
-                'id_departamento'
+                'id_departamento',
             ]));
 
             // 🔹 Actualizar usuario relacionado
@@ -219,12 +221,12 @@ class MaestroController extends Controller
 
             $maestro->load([
                 'usuario:idusuario,correo,idrol',
-                'departamento'
+                'departamento',
             ]);
 
             return response()->json([
                 'message' => 'Maestro actualizado exitosamente',
-                'maestro' => $maestro
+                'maestro' => $maestro,
             ], 200);
 
         } catch (\Exception $e) {
@@ -232,16 +234,16 @@ class MaestroController extends Controller
         }
     }
 
-
     public function destroy($tarjeta)
     {
         $maestro = Maestro::find($tarjeta);
-        if (!$maestro) {
+        if (! $maestro) {
             return response()->json(['message' => 'Maestro no encontrado'], 404);
         }
 
         try {
             $maestro->delete();
+
             return response()->json(['message' => 'Maestro eliminado exitosamente'], 200);
         } catch (QueryException $e) {
             return response()->json(['message' => $e->getMessage()], 400);

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Presentacion;
 use App\Models\Asignatura;
+use App\Models\Presentacion;
 use App\Models\PresentacionCaracterizacion;
 use App\Models\PresentacionIntencion;
 use Illuminate\Http\Request;
@@ -23,13 +22,13 @@ class PresentacionController extends Controller
             'intencion' => 'sometimes|array',
             'intencion.*.tema' => 'sometimes|string|max:100|nullable',
             'intencion.*.descripcion' => 'required_with:intencion|string|max:2000',
-            'intencion.*.orden' => 'sometimes|integer|min:1'
+            'intencion.*.orden' => 'sometimes|integer|min:1',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -46,13 +45,13 @@ class PresentacionController extends Controller
                 if ($presentacion) {
                     return response()->json([
                         'message' => 'La presentación ya existe. Use PUT para actualizar.',
-                        'data' => $presentacion
+                        'data' => $presentacion,
                     ], 409); // Conflict
                 }
 
                 // Crear nueva presentación
                 $presentacion = Presentacion::create([
-                    'Clave_Asignatura' => $asignatura->ClaveAsignatura
+                    'Clave_Asignatura' => $asignatura->ClaveAsignatura,
                 ]);
 
                 // Agregar caracterizaciones si vienen en el request
@@ -60,7 +59,7 @@ class PresentacionController extends Controller
                     foreach ($request->caracterizacion as $index => $item) {
                         $presentacion->caracterizaciones()->create([
                             'Orden' => $item['orden'] ?? $index + 1,
-                            'Punto' => $item['punto']
+                            'Punto' => $item['punto'],
                         ]);
                     }
                 }
@@ -71,7 +70,7 @@ class PresentacionController extends Controller
                         $presentacion->intenciones()->create([
                             'Orden' => $item['orden'] ?? $index + 1,
                             'Tema' => $item['tema'],
-                            'Descripcion' => $item['descripcion']
+                            'Descripcion' => $item['descripcion'],
                         ]);
                     }
                 }
@@ -84,14 +83,14 @@ class PresentacionController extends Controller
                         },
                         'intenciones' => function ($query) {
                             $query->orderBy('Orden');
-                        }
-                    ])
+                        },
+                    ]),
                 ], 201);
             });
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al crear la presentación',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -106,19 +105,19 @@ class PresentacionController extends Controller
                 },
                 'intenciones' => function ($query) {
                     $query->orderBy('Orden');
-                }
+                },
             ])
                 ->where('Clave_Asignatura', $claveAsignatura)
                 ->firstOrFail();
 
             return response()->json([
                 'success' => true,
-                'data' => $presentacion
+                'data' => $presentacion,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'No se encontró la presentación para la asignatura especificada'
+                'message' => 'No se encontró la presentación para la asignatura especificada',
             ], 404);
         }
     }
@@ -138,13 +137,13 @@ class PresentacionController extends Controller
             'intencion.*.tema' => 'sometimes|string|max:100|nullable',
             'intencion.*.descripcion' => 'required_with:intencion|string|max:2000',
             'intencion.*.orden' => 'sometimes|integer|min:1',
-            'intencion.*._delete' => 'sometimes|boolean' // Para eliminar
+            'intencion.*._delete' => 'sometimes|boolean', // Para eliminar
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -164,6 +163,7 @@ class PresentacionController extends Controller
                                 ->where('id_Presentacion', $presentacion->id_Presentacion)
                                 ->firstOrFail();
                             $caracterizacion->delete();
+
                             continue;
                         }
 
@@ -175,13 +175,13 @@ class PresentacionController extends Controller
 
                             $caracterizacion->update([
                                 'Punto' => $item['punto'],
-                                'Orden' => $item['orden'] ?? $caracterizacion->Orden
+                                'Orden' => $item['orden'] ?? $caracterizacion->Orden,
                             ]);
                         } else {
                             // Crear nueva
                             $presentacion->caracterizaciones()->create([
                                 'Orden' => $item['orden'] ?? 1,
-                                'Punto' => $item['punto']
+                                'Punto' => $item['punto'],
                             ]);
                         }
                     }
@@ -197,6 +197,7 @@ class PresentacionController extends Controller
                                 ->where('id_Presentacion', $presentacion->id_Presentacion)
                                 ->firstOrFail();
                             $intencion->delete();
+
                             continue;
                         }
 
@@ -209,14 +210,14 @@ class PresentacionController extends Controller
                             $intencion->update([
                                 'Tema' => $item['tema'],
                                 'Descripcion' => $item['descripcion'],
-                                'Orden' => $item['orden'] ?? $intencion->Orden
+                                'Orden' => $item['orden'] ?? $intencion->Orden,
                             ]);
                         } else {
                             // Crear nueva
                             $presentacion->intenciones()->create([
                                 'Orden' => $item['orden'] ?? 1,
                                 'Tema' => $item['tema'],
-                                'Descripcion' => $item['descripcion']
+                                'Descripcion' => $item['descripcion'],
                             ]);
                         }
                     }
@@ -230,72 +231,72 @@ class PresentacionController extends Controller
                         },
                         'intenciones' => function ($query) {
                             $query->orderBy('Orden');
-                        }
-                    ])
+                        },
+                    ]),
                 ]);
             });
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al actualizar la presentación',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
 
     // Eliminar la presentación completa de una asignatura
     public function destroy($claveAsignatura)
-{
-    try {
-        // Verificar primero si la asignatura existe
-        $asignatura = Asignatura::where('ClaveAsignatura', $claveAsignatura)->first();
-        
-        if (!$asignatura) {
+    {
+        try {
+            // Verificar primero si la asignatura existe
+            $asignatura = Asignatura::where('ClaveAsignatura', $claveAsignatura)->first();
+
+            if (! $asignatura) {
+                return response()->json([
+                    'message' => 'La asignatura no existe',
+                    'error' => 'Asignatura no encontrada',
+                ], 404);
+            }
+
+            // Buscar la presentación
+            $presentacion = Presentacion::where('Clave_Asignatura', $claveAsignatura)->first();
+
+            if (! $presentacion) {
+                return response()->json([
+                    'message' => 'No existe presentación para esta asignatura',
+                    'error' => 'Presentación no encontrada',
+                ], 404);
+            }
+
+            DB::transaction(function () use ($presentacion) {
+                // Eliminar en el orden correcto (primero las dependencias)
+                $presentacion->caracterizaciones()->delete();
+                $presentacion->intenciones()->delete();
+                $presentacion->delete();
+            });
+
             return response()->json([
-                'message' => 'La asignatura no existe',
-                'error' => 'Asignatura no encontrada'
-            ], 404);
-        }
+                'message' => 'Presentación eliminada exitosamente',
+                'deleted' => [
+                    'presentacion_id' => $presentacion->id_Presentacion,
+                    'asignatura' => $presentacion->Clave_Asignatura,
+                    'caracterizaciones_eliminadas' => $presentacion->caracterizaciones()->count(),
+                    'intenciones_eliminadas' => $presentacion->intenciones()->count(),
+                ],
+            ]);
 
-        // Buscar la presentación
-        $presentacion = Presentacion::where('Clave_Asignatura', $claveAsignatura)->first();
-
-        if (!$presentacion) {
+        } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
-                'message' => 'No existe presentación para esta asignatura',
-                'error' => 'Presentación no encontrada'
-            ], 404);
+                'message' => 'Error de base de datos al eliminar la presentación',
+                'error' => $e->getMessage(),
+            ], 500);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error inesperado al eliminar la presentación',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        DB::transaction(function () use ($presentacion) {
-            // Eliminar en el orden correcto (primero las dependencias)
-            $presentacion->caracterizaciones()->delete();
-            $presentacion->intenciones()->delete();
-            $presentacion->delete();
-        });
-
-        return response()->json([
-            'message' => 'Presentación eliminada exitosamente',
-            'deleted' => [
-                'presentacion_id' => $presentacion->id_Presentacion,
-                'asignatura' => $presentacion->Clave_Asignatura,
-                'caracterizaciones_eliminadas' => $presentacion->caracterizaciones()->count(),
-                'intenciones_eliminadas' => $presentacion->intenciones()->count()
-            ]
-        ]);
-
-    } catch (\Illuminate\Database\QueryException $e) {
-        return response()->json([
-            'message' => 'Error de base de datos al eliminar la presentación',
-            'error' => $e->getMessage()
-        ], 500);
-        
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Error inesperado al eliminar la presentación',
-            'error' => $e->getMessage()
-        ], 500);
     }
-}
 
     // Verificar si existe presentación para una asignatura
     public function exists($claveAsignatura)
@@ -304,7 +305,7 @@ class PresentacionController extends Controller
             ->exists();
 
         return response()->json([
-            'exists' => $exists
+            'exists' => $exists,
         ]);
     }
 }

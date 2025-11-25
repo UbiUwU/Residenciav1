@@ -16,10 +16,10 @@ class PracticaController extends Controller
 
         try {
             $result = DB::selectOne(
-                "SELECT crear_practica(?, ?) AS result",
+                'SELECT crear_practica(?, ?) AS result',
                 [
                     $validated['clave_asignatura'],
-                    $validated['descripcion']
+                    $validated['descripcion'],
                 ]
             );
 
@@ -28,10 +28,11 @@ class PracticaController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error en el servidor: ' . $e->getMessage()
+                'message' => 'Error en el servidor: '.$e->getMessage(),
             ], 500);
         }
     }
+
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -42,43 +43,42 @@ class PracticaController extends Controller
         try {
             // Llamar a la función PostgreSQL
             DB::statement(
-                "SELECT actualizar_practica(?, ?, ?)",
+                'SELECT actualizar_practica(?, ?, ?)',
                 [
                     $id,
                     $validated['clave_asignatura'],
-                    $validated['descripcion']
+                    $validated['descripcion'],
                 ]
             );
 
             return response()->json([
                 'success' => true,
                 'message' => 'Práctica actualizada correctamente',
-                'id_Practica' => $id
+                'id_Practica' => $id,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar la práctica: ' . $e->getMessage()
+                'message' => 'Error al actualizar la práctica: '.$e->getMessage(),
             ], 500);
         }
     }
+
     public function destroy($id)
     {
         try {
-            DB::statement("SELECT eliminar_practica(?)", [$id]);
+            DB::statement('SELECT eliminar_practica(?)', [$id]);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Práctica eliminada correctamente',
-                'id_Practica' => $id
+                'id_Practica' => $id,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar la práctica: ' . $e->getMessage()
+                'message' => 'Error al eliminar la práctica: '.$e->getMessage(),
             ], 500);
         }
     }
-
-
 }

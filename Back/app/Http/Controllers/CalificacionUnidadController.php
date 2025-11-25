@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 
 class CalificacionUnidadController extends Controller
 {
-
     public function getDetalleGruposPorCarrera($tarjeta)
     {
         // Validar que la tarjeta sea numérica positiva
-        if (!is_numeric($tarjeta) || $tarjeta <= 0) {
+        if (! is_numeric($tarjeta) || $tarjeta <= 0) {
             return response()->json(['status' => 'error', 'message' => 'Tarjeta inválida'], 400);
         }
 
@@ -27,5 +24,4 @@ class CalificacionUnidadController extends Controller
 
         return response()->json(json_decode($json));
     }
-
 }

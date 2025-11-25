@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Carrera;
-use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 
 class CarreraController extends Controller
 {
@@ -12,6 +12,7 @@ class CarreraController extends Controller
     public function index()
     {
         $carreras = Carrera::all();
+
         return response()->json($carreras, 200);
     }
 
@@ -19,9 +20,10 @@ class CarreraController extends Controller
     public function show($clavecarrera)
     {
         $carrera = Carrera::find($clavecarrera);
-        if (!$carrera) {
+        if (! $carrera) {
             return response()->json(['message' => 'Carrera no encontrada'], 404);
         }
+
         return response()->json($carrera, 200);
     }
 
@@ -37,9 +39,10 @@ class CarreraController extends Controller
 
         try {
             $carrera = Carrera::create($request->only(['clavecarrera', 'nombre', 'descripcion', 'generacion']));
+
             return response()->json([
                 'message' => 'Carrera creada exitosamente',
-                'carrera' => $carrera
+                'carrera' => $carrera,
             ], 201);
         } catch (QueryException $e) {
             return response()->json(['message' => $e->getMessage()], 400);
@@ -50,7 +53,7 @@ class CarreraController extends Controller
     public function update(Request $request, $clavecarrera)
     {
         $carrera = Carrera::find($clavecarrera);
-        if (!$carrera) {
+        if (! $carrera) {
             return response()->json(['message' => 'Carrera no encontrada'], 404);
         }
 
@@ -62,9 +65,10 @@ class CarreraController extends Controller
 
         try {
             $carrera->update($request->only(['nombre', 'descripcion', 'generacion']));
+
             return response()->json([
                 'message' => 'Carrera actualizada exitosamente',
-                'carrera' => $carrera
+                'carrera' => $carrera,
             ], 200);
         } catch (QueryException $e) {
             return response()->json(['message' => $e->getMessage()], 400);
@@ -75,12 +79,13 @@ class CarreraController extends Controller
     public function destroy($clavecarrera)
     {
         $carrera = Carrera::find($clavecarrera);
-        if (!$carrera) {
+        if (! $carrera) {
             return response()->json(['message' => 'Carrera no encontrada'], 404);
         }
 
         try {
             $carrera->delete();
+
             return response()->json(['message' => 'Carrera eliminada exitosamente'], 200);
         } catch (QueryException $e) {
             return response()->json(['message' => $e->getMessage()], 400);

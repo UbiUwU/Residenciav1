@@ -13,14 +13,14 @@ class ActividadEnsenanzaInstrumentacionController extends Controller
         $request->validate([
             'id_competencia' => 'required|exists:competencias_instrumentacion,id_competencia',
             'descripcion' => 'required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $actividad = ActividadEnsenanzaInstrumentacion::create($request->all());
 
         return response()->json([
             'message' => 'Actividad de enseñanza creada exitosamente',
-            'data' => $actividad
+            'data' => $actividad,
         ], 201);
     }
 
@@ -31,7 +31,7 @@ class ActividadEnsenanzaInstrumentacionController extends Controller
             'actividades' => 'required|array',
             'actividades.*.id_competencia' => 'required|exists:competencias_instrumentacion,id_competencia',
             'actividades.*.descripcion' => 'required|string',
-            'actividades.*.orden' => 'nullable|integer'
+            'actividades.*.orden' => 'nullable|integer',
         ]);
 
         $actividades = [];
@@ -41,7 +41,7 @@ class ActividadEnsenanzaInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Actividades de enseñanza creadas exitosamente',
-            'data' => $actividades
+            'data' => $actividades,
         ], 201);
     }
 
@@ -50,7 +50,7 @@ class ActividadEnsenanzaInstrumentacionController extends Controller
     {
         $request->validate([
             'descripcion' => 'sometimes|required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $actividad = ActividadEnsenanzaInstrumentacion::findOrFail($id);
@@ -58,7 +58,7 @@ class ActividadEnsenanzaInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Actividad de enseñanza actualizada exitosamente',
-            'data' => $actividad
+            'data' => $actividad,
         ]);
     }
 
@@ -69,7 +69,7 @@ class ActividadEnsenanzaInstrumentacionController extends Controller
             'actividades' => 'required|array',
             'actividades.*.id_actividades_ensenanza_instrumentacion' => 'required|exists:actividades_ensenanza_instrumentacion,id_actividades_ensenanza_instrumentacion',
             'actividades.*.descripcion' => 'sometimes|required|string',
-            'actividades.*.orden' => 'nullable|integer'
+            'actividades.*.orden' => 'nullable|integer',
         ]);
 
         $actividadesActualizadas = [];
@@ -81,7 +81,7 @@ class ActividadEnsenanzaInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Actividades de enseñanza actualizadas exitosamente',
-            'data' => $actividadesActualizadas
+            'data' => $actividadesActualizadas,
         ]);
     }
 }

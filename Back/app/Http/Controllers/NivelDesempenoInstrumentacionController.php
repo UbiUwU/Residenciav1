@@ -15,12 +15,12 @@ class NivelDesempenoInstrumentacionController extends Controller
             'nivel_desempeno' => 'required|string|max:100',
             'valoracion_inicial' => 'required|integer|min:0',
             'valoracion_final' => 'required|integer|min:0',
-            'desempeno_alcanzado' => 'nullable|boolean'
+            'desempeno_alcanzado' => 'nullable|boolean',
         ]);
 
         if ($request->valoracion_inicial > $request->valoracion_final) {
             return response()->json([
-                'message' => 'La valoración inicial no puede ser mayor que la valoración final'
+                'message' => 'La valoración inicial no puede ser mayor que la valoración final',
             ], 422);
         }
 
@@ -28,7 +28,7 @@ class NivelDesempenoInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Nivel de desempeño creado exitosamente',
-            'data' => $nivelDesempeno
+            'data' => $nivelDesempeno,
         ], 201);
     }
 
@@ -41,7 +41,7 @@ class NivelDesempenoInstrumentacionController extends Controller
             'niveles_desempeno.*.nivel_desempeno' => 'required|string|max:100',
             'niveles_desempeno.*.valoracion_inicial' => 'required|integer|min:0',
             'niveles_desempeno.*.valoracion_final' => 'required|integer|min:0',
-            'niveles_desempeno.*.desempeno_alcanzado' => 'nullable|boolean'
+            'niveles_desempeno.*.desempeno_alcanzado' => 'nullable|boolean',
         ]);
 
         $nivelesCreados = [];
@@ -51,8 +51,9 @@ class NivelDesempenoInstrumentacionController extends Controller
             if ($nivelData['valoracion_inicial'] > $nivelData['valoracion_final']) {
                 $errores[] = [
                     'data' => $nivelData,
-                    'error' => 'La valoración inicial no puede ser mayor que la valoración final'
+                    'error' => 'La valoración inicial no puede ser mayor que la valoración final',
                 ];
+
                 continue;
             }
 
@@ -62,17 +63,17 @@ class NivelDesempenoInstrumentacionController extends Controller
             } catch (\Exception $e) {
                 $errores[] = [
                     'data' => $nivelData,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ];
             }
         }
 
         $response = [
             'message' => 'Proceso de creación de niveles de desempeño completado',
-            'data' => $nivelesCreados
+            'data' => $nivelesCreados,
         ];
 
-        if (!empty($errores)) {
+        if (! empty($errores)) {
             $response['errores'] = $errores;
         }
 
@@ -86,13 +87,13 @@ class NivelDesempenoInstrumentacionController extends Controller
             'nivel_desempeno' => 'sometimes|required|string|max:100',
             'valoracion_inicial' => 'sometimes|required|integer|min:0',
             'valoracion_final' => 'sometimes|required|integer|min:0',
-            'desempeno_alcanzado' => 'nullable|boolean'
+            'desempeno_alcanzado' => 'nullable|boolean',
         ]);
 
-        if ($request->has('valoracion_inicial') && $request->has('valoracion_final') && 
+        if ($request->has('valoracion_inicial') && $request->has('valoracion_final') &&
             $request->valoracion_inicial > $request->valoracion_final) {
             return response()->json([
-                'message' => 'La valoración inicial no puede ser mayor que la valoración final'
+                'message' => 'La valoración inicial no puede ser mayor que la valoración final',
             ], 422);
         }
 
@@ -101,7 +102,7 @@ class NivelDesempenoInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Nivel de desempeño actualizado exitosamente',
-            'data' => $nivelDesempeno
+            'data' => $nivelDesempeno,
         ]);
     }
 
@@ -114,7 +115,7 @@ class NivelDesempenoInstrumentacionController extends Controller
             'niveles_desempeno.*.nivel_desempeno' => 'sometimes|required|string|max:100',
             'niveles_desempeno.*.valoracion_inicial' => 'sometimes|required|integer|min:0',
             'niveles_desempeno.*.valoracion_final' => 'sometimes|required|integer|min:0',
-            'niveles_desempeno.*.desempeno_alcanzado' => 'nullable|boolean'
+            'niveles_desempeno.*.desempeno_alcanzado' => 'nullable|boolean',
         ]);
 
         $nivelesActualizados = [];
@@ -123,13 +124,14 @@ class NivelDesempenoInstrumentacionController extends Controller
         foreach ($request->niveles_desempeno as $nivelData) {
             try {
                 $nivel = NivelDesempenoInstrumentacion::findOrFail($nivelData['id_nivel_desempeno']);
-                
-                if (isset($nivelData['valoracion_inicial']) && isset($nivelData['valoracion_final']) && 
+
+                if (isset($nivelData['valoracion_inicial']) && isset($nivelData['valoracion_final']) &&
                     $nivelData['valoracion_inicial'] > $nivelData['valoracion_final']) {
                     $errores[] = [
                         'id_nivel_desempeno' => $nivelData['id_nivel_desempeno'],
-                        'error' => 'La valoración inicial no puede ser mayor que la valoración final'
+                        'error' => 'La valoración inicial no puede ser mayor que la valoración final',
                     ];
+
                     continue;
                 }
 
@@ -138,17 +140,17 @@ class NivelDesempenoInstrumentacionController extends Controller
             } catch (\Exception $e) {
                 $errores[] = [
                     'id_nivel_desempeno' => $nivelData['id_nivel_desempeno'] ?? 'unknown',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ];
             }
         }
 
         $response = [
             'message' => 'Proceso de actualización de niveles de desempeño completado',
-            'data' => $nivelesActualizados
+            'data' => $nivelesActualizados,
         ];
 
-        if (!empty($errores)) {
+        if (! empty($errores)) {
             $response['errores'] = $errores;
         }
 

@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Practiasasignatura extends Model
 {
     protected $table = 'practias_asignatura';
+
     protected $primaryKey = 'id_practicas';
+
     public $timestamps = false;
 
     protected $fillable = [
         'ClaveAsignatura',
         'descripcion',
-        'orden'
+        'orden',
     ];
 
     public function tema(): BelongsTo

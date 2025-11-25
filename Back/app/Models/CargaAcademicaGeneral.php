@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class CargaAcademicaGeneral extends Model
 {
     protected $table = 'carga_academica_general';
+
     protected $primaryKey = 'idcargageneral';
+
     public $incrementing = true;
+
     public $timestamps = false;
 
     protected $fillable = [
-        'numerocontrol'
+        'numerocontrol',
     ];
 
     /**

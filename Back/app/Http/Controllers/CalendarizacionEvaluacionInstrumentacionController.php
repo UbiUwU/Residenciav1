@@ -16,7 +16,7 @@ class CalendarizacionEvaluacionInstrumentacionController extends Controller
             'tiempo_planeado' => 'nullable|string|max:100',
             'tiempo_real' => 'nullable|string|max:100',
             'seguimiento_departamental' => 'nullable|boolean',
-            'descripcion' => 'nullable|string'
+            'descripcion' => 'nullable|string',
         ]);
 
         // Verificar que no exista ya esta semana para esta instrumentación
@@ -27,7 +27,7 @@ class CalendarizacionEvaluacionInstrumentacionController extends Controller
         if ($existente) {
             return response()->json([
                 'message' => 'Ya existe una calendarización para esta semana en esta instrumentación',
-                'data' => $existente
+                'data' => $existente,
             ], 409);
         }
 
@@ -35,7 +35,7 @@ class CalendarizacionEvaluacionInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Calendarización creada exitosamente',
-            'data' => $calendarizacion
+            'data' => $calendarizacion,
         ], 201);
     }
 
@@ -49,7 +49,7 @@ class CalendarizacionEvaluacionInstrumentacionController extends Controller
             'calendarizaciones.*.tiempo_planeado' => 'nullable|string|max:100',
             'calendarizaciones.*.tiempo_real' => 'nullable|string|max:100',
             'calendarizaciones.*.seguimiento_departamental' => 'nullable|boolean',
-            'calendarizaciones.*.descripcion' => 'nullable|string'
+            'calendarizaciones.*.descripcion' => 'nullable|string',
         ]);
 
         $calendarizacionesCreadas = [];
@@ -65,8 +65,9 @@ class CalendarizacionEvaluacionInstrumentacionController extends Controller
                 if ($existente) {
                     $errores[] = [
                         'data' => $calendarizacionData,
-                        'error' => 'Ya existe una calendarización para la semana ' . $calendarizacionData['semana'] . ' en esta instrumentación'
+                        'error' => 'Ya existe una calendarización para la semana '.$calendarizacionData['semana'].' en esta instrumentación',
                     ];
+
                     continue;
                 }
 
@@ -75,17 +76,17 @@ class CalendarizacionEvaluacionInstrumentacionController extends Controller
             } catch (\Exception $e) {
                 $errores[] = [
                     'data' => $calendarizacionData,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ];
             }
         }
 
         $response = [
             'message' => 'Proceso de creación de calendarizaciones completado',
-            'data' => $calendarizacionesCreadas
+            'data' => $calendarizacionesCreadas,
         ];
 
-        if (!empty($errores)) {
+        if (! empty($errores)) {
             $response['errores'] = $errores;
         }
 
@@ -100,7 +101,7 @@ class CalendarizacionEvaluacionInstrumentacionController extends Controller
             'tiempo_planeado' => 'nullable|string|max:100',
             'tiempo_real' => 'nullable|string|max:100',
             'seguimiento_departamental' => 'nullable|boolean',
-            'descripcion' => 'nullable|string'
+            'descripcion' => 'nullable|string',
         ]);
 
         $calendarizacion = CalendarizacionEvaluacionInstrumentacion::findOrFail($id);
@@ -114,8 +115,8 @@ class CalendarizacionEvaluacionInstrumentacionController extends Controller
 
             if ($existente) {
                 return response()->json([
-                    'message' => 'Ya existe otra calendarización para la semana ' . $request->semana . ' en esta instrumentación',
-                    'data' => $existente
+                    'message' => 'Ya existe otra calendarización para la semana '.$request->semana.' en esta instrumentación',
+                    'data' => $existente,
                 ], 409);
             }
         }
@@ -124,7 +125,7 @@ class CalendarizacionEvaluacionInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Calendarización actualizada exitosamente',
-            'data' => $calendarizacion
+            'data' => $calendarizacion,
         ]);
     }
 
@@ -138,7 +139,7 @@ class CalendarizacionEvaluacionInstrumentacionController extends Controller
             'calendarizaciones.*.tiempo_planeado' => 'nullable|string|max:100',
             'calendarizaciones.*.tiempo_real' => 'nullable|string|max:100',
             'calendarizaciones.*.seguimiento_departamental' => 'nullable|boolean',
-            'calendarizaciones.*.descripcion' => 'nullable|string'
+            'calendarizaciones.*.descripcion' => 'nullable|string',
         ]);
 
         $calendarizacionesActualizadas = [];
@@ -158,8 +159,9 @@ class CalendarizacionEvaluacionInstrumentacionController extends Controller
                     if ($existente) {
                         $errores[] = [
                             'id_calendarizacion' => $calendarizacionData['id_calendarizacion'],
-                            'error' => 'Ya existe otra calendarización para la semana ' . $calendarizacionData['semana'] . ' en esta instrumentación'
+                            'error' => 'Ya existe otra calendarización para la semana '.$calendarizacionData['semana'].' en esta instrumentación',
                         ];
+
                         continue;
                     }
                 }
@@ -169,17 +171,17 @@ class CalendarizacionEvaluacionInstrumentacionController extends Controller
             } catch (\Exception $e) {
                 $errores[] = [
                     'id_calendarizacion' => $calendarizacionData['id_calendarizacion'] ?? 'unknown',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ];
             }
         }
 
         $response = [
             'message' => 'Proceso de actualización de calendarizaciones completado',
-            'data' => $calendarizacionesActualizadas
+            'data' => $calendarizacionesActualizadas,
         ];
 
-        if (!empty($errores)) {
+        if (! empty($errores)) {
             $response['errores'] = $errores;
         }
 

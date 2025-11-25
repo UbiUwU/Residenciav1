@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Plantilla;
-use App\Models\TipoPlantilla;
-use App\Models\EstadoPlantilla;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class PlantillaController extends Controller
 {
@@ -36,7 +34,7 @@ class PlantillaController extends Controller
         $plantillas = $query->orderBy('creado_en', 'desc')->get();
 
         return response()->json([
-            'data' => $plantillas
+            'data' => $plantillas,
         ]);
     }
 
@@ -44,8 +42,9 @@ class PlantillaController extends Controller
     public function show($id)
     {
         $plantilla = Plantilla::with(['tipo', 'estado', 'periodoEscolar'])->findOrFail($id);
+
         return response()->json([
-            'data' => $plantilla
+            'data' => $plantilla,
         ]);
     }
 
@@ -58,13 +57,13 @@ class PlantillaController extends Controller
             'archivo' => 'required|file|mimes:doc,docx,pdf|max:2048',
             'tipo_id' => 'required|exists:tipos_plantilla,id',
             'estado_id' => 'sometimes|exists:estados_plantilla,id',
-            'periodo_escolar_id' => 'nullable|exists:periodo_escolar,id_periodo_escolar'
+            'periodo_escolar_id' => 'nullable|exists:periodo_escolar,id_periodo_escolar',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -74,14 +73,12 @@ class PlantillaController extends Controller
         // Subir archivo
         if ($request->hasFile('archivo')) {
             $archivo = $request->file('archivo');
-            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
+            $nombreArchivo = time().'_'.$archivo->getClientOriginalName();
             $ruta = $archivo->storeAs('plantillas', $nombreArchivo, 'public');
             $data['archivo'] = $nombreArchivo;  // Store in $data array instead
         }
 
-
-
-        if (!isset($data['estado_id'])) {
+        if (! isset($data['estado_id'])) {
             $data['estado_id'] = 1; // Activo por defecto
         }
 
@@ -89,7 +86,7 @@ class PlantillaController extends Controller
 
         return response()->json([
             'message' => 'Plantilla creada exitosamente',
-            'data' => $plantilla->load(['tipo', 'estado', 'periodoEscolar'])
+            'data' => $plantilla->load(['tipo', 'estado', 'periodoEscolar']),
         ], 201);
     }
 
@@ -104,13 +101,13 @@ class PlantillaController extends Controller
             'archivo' => 'nullable|file|mimes:doc,docx,pdf|max:2048',
             'tipo_id' => 'sometimes|required|exists:tipos_plantilla,id',
             'estado_id' => 'sometimes|exists:estados_plantilla,id',
-            'periodo_escolar_id' => 'nullable|exists:periodo_escolar,id_periodo_escolar'
+            'periodo_escolar_id' => 'nullable|exists:periodo_escolar,id_periodo_escolar',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -118,12 +115,12 @@ class PlantillaController extends Controller
 
         if ($request->hasFile('archivo')) {
             // borrar archivo anterior si existe
-            if ($plantilla->archivo && Storage::disk('public')->exists('plantillas/' . $plantilla->archivo)) {
-                Storage::disk('public')->delete('plantillas/' . $plantilla->archivo);
+            if ($plantilla->archivo && Storage::disk('public')->exists('plantillas/'.$plantilla->archivo)) {
+                Storage::disk('public')->delete('plantillas/'.$plantilla->archivo);
             }
 
             $archivo = $request->file('archivo');
-            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
+            $nombreArchivo = time().'_'.$archivo->getClientOriginalName();
             $archivo->storeAs('plantillas', $nombreArchivo, 'public');
             $plantilla->archivo = $nombreArchivo;
         }
@@ -132,10 +129,9 @@ class PlantillaController extends Controller
 
         return response()->json([
             'message' => 'Plantilla actualizada exitosamente',
-            'data' => $plantilla->load(['tipo', 'estado', 'periodoEscolar'])
+            'data' => $plantilla->load(['tipo', 'estado', 'periodoEscolar']),
         ]);
     }
-
 
     // Eliminar una plantilla
     public function destroy($id)
@@ -148,7 +144,7 @@ class PlantillaController extends Controller
         $plantilla->delete();
 
         return response()->json([
-            'message' => 'Plantilla eliminada exitosamente'
+            'message' => 'Plantilla eliminada exitosamente',
         ]);
     }
 
@@ -158,13 +154,13 @@ class PlantillaController extends Controller
         $plantilla = Plantilla::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'estado_id' => 'required|exists:estados_plantilla,id'
+            'estado_id' => 'required|exists:estados_plantilla,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -172,7 +168,7 @@ class PlantillaController extends Controller
 
         return response()->json([
             'message' => 'Estado de plantilla actualizado exitosamente',
-            'data' => $plantilla->load(['tipo', 'estado', 'periodoEscolar'])
+            'data' => $plantilla->load(['tipo', 'estado', 'periodoEscolar']),
         ]);
     }
 
@@ -186,7 +182,7 @@ class PlantillaController extends Controller
             ->get();
 
         return response()->json([
-            'data' => $plantillas
+            'data' => $plantillas,
         ]);
     }
 
@@ -200,7 +196,7 @@ class PlantillaController extends Controller
             ->get();
 
         return response()->json([
-            'data' => $plantillas
+            'data' => $plantillas,
         ]);
     }
 
@@ -208,24 +204,24 @@ class PlantillaController extends Controller
     public function buscar(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'termino' => 'required|string|min:2'
+            'termino' => 'required|string|min:2',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
         $plantillas = Plantilla::with(['tipo', 'estado', 'periodoEscolar'])
-            ->where('nombre', 'ILIKE', '%' . $request->termino . '%')
-            ->orWhere('descripcion', 'ILIKE', '%' . $request->termino . '%')
+            ->where('nombre', 'ILIKE', '%'.$request->termino.'%')
+            ->orWhere('descripcion', 'ILIKE', '%'.$request->termino.'%')
             ->orderBy('creado_en', 'desc')
             ->get();
 
         return response()->json([
-            'data' => $plantillas
+            'data' => $plantillas,
         ]);
     }
 }

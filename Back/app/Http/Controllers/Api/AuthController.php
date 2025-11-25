@@ -12,19 +12,19 @@ class AuthController extends Controller
     {
         $request->validate([
             'correo' => 'required|email',
-            'password' => 'required|string'
+            'password' => 'required|string',
         ]);
 
         try {
-            $result = DB::select("SELECT * FROM login_usuario(?, ?)", [
+            $result = DB::select('SELECT * FROM login_usuario(?, ?)', [
                 $request->input('correo'),
-                $request->input('password')
+                $request->input('password'),
             ]);
 
             if (empty($result) || is_null($result[0]->idusuario)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Credenciales incorrectas'
+                    'message' => 'Credenciales incorrectas',
                 ], 401);
             }
 
@@ -35,31 +35,31 @@ class AuthController extends Controller
             $extraData = null;
 
             if ($tipo == '2') {
-                $maestro = DB::select("SELECT * FROM get_maestro_by_idusuario(?)", [$idusuario]);
-                $extraData = !empty($maestro) ? $maestro[0] : null;
+                $maestro = DB::select('SELECT * FROM get_maestro_by_idusuario(?)', [$idusuario]);
+                $extraData = ! empty($maestro) ? $maestro[0] : null;
             } elseif ($tipo == '1') {
-                $alumno = DB::select("
+                $alumno = DB::select('
                 SELECT a.*, u.correo 
                 FROM alumnos a
                 JOIN usuarios u ON a.idusuario = u.idusuario 
-                WHERE u.idusuario = ?", [$idusuario]);
-                $extraData = !empty($alumno) ? $alumno[0] : null;
+                WHERE u.idusuario = ?', [$idusuario]);
+                $extraData = ! empty($alumno) ? $alumno[0] : null;
             }
 
             return response()->json([
                 'success' => true,
                 'data' => [
                     'user' => $user,
-                    'detalle' => $extraData
+                    'detalle' => $extraData,
                 ],
-                'token' => $user->token
+                'token' => $user->token,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error en el servidor',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -69,19 +69,19 @@ class AuthController extends Controller
         try {
             $token = $request->bearerToken();
 
-            if (!$token) {
+            if (! $token) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Token no proporcionado'
+                    'message' => 'Token no proporcionado',
                 ], 401);
             }
 
-            $user = DB::select("SELECT * FROM usuarios WHERE token = ?", [$token]);
+            $user = DB::select('SELECT * FROM usuarios WHERE token = ?', [$token]);
 
             if (empty($user)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Token inválido o sesión expirada'
+                    'message' => 'Token inválido o sesión expirada',
                 ], 401);
             }
 
@@ -90,33 +90,34 @@ class AuthController extends Controller
             $detalle = null;
 
             if ($tipo === 'Maestro') {
-                $maestro = DB::select("SELECT * FROM get_maestro_by_idusuario(?)", [$usuario->idusuario]);
-                $detalle = !empty($maestro) ? $maestro[0] : null;
+                $maestro = DB::select('SELECT * FROM get_maestro_by_idusuario(?)', [$usuario->idusuario]);
+                $detalle = ! empty($maestro) ? $maestro[0] : null;
             } elseif ($tipo === 'Alumno') {
-                $alumno = DB::select("
+                $alumno = DB::select('
                 SELECT a.*, u.correo 
                 FROM alumnos a
                 JOIN usuarios u ON a.idusuario = u.idusuario 
-                WHERE u.idusuario = ?", [$usuario->idusuario]);
-                $detalle = !empty($alumno) ? $alumno[0] : null;
+                WHERE u.idusuario = ?', [$usuario->idusuario]);
+                $detalle = ! empty($alumno) ? $alumno[0] : null;
             }
 
             return response()->json([
                 'success' => true,
                 'data' => [
                     'user' => $usuario,
-                    'detalle' => $detalle
-                ]
+                    'detalle' => $detalle,
+                ],
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener información del usuario',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
+
     /**
      * Cambio de contraseña por correo
      */
@@ -124,20 +125,20 @@ class AuthController extends Controller
     {
         $request->validate([
             'correo' => 'required|email',
-            'password' => 'required|string|min:6'
+            'password' => 'required|string|min:6',
         ]);
 
         try {
             // 1. Obtener idusuario e idrol del usuario a partir de su correo
             $userData = DB::select(
-                "SELECT idusuario, idrol FROM usuarios WHERE correo = ?",
+                'SELECT idusuario, idrol FROM usuarios WHERE correo = ?',
                 [$request->input('correo')]
             );
 
             if (empty($userData)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Usuario no encontrado'
+                    'message' => 'Usuario no encontrado',
                 ], 404);
             }
 
@@ -146,12 +147,12 @@ class AuthController extends Controller
 
             // 2. Ejecutar la función de actualización de usuario
             $updateResult = DB::select(
-                "SELECT * FROM public.update_usuario(?, ?, ?, ?)",
+                'SELECT * FROM public.update_usuario(?, ?, ?, ?)',
                 [
                     $idusuario,
                     $request->input('correo'),
                     $request->input('password'),
-                    $idrol
+                    $idrol,
                 ]
             );
 
@@ -160,23 +161,21 @@ class AuthController extends Controller
             if (empty($updateResult)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'No se pudo actualizar la contraseña'
+                    'message' => 'No se pudo actualizar la contraseña',
                 ], 500);
             }
 
             return response()->json([
                 'success' => true,
-                'message' => 'Contraseña actualizada correctamente'
+                'message' => 'Contraseña actualizada correctamente',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error en el servidor al cambiar contraseña',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
-
-
 }

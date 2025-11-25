@@ -13,14 +13,14 @@ class CompetenciaGenericoInstrumentacionController extends Controller
         $request->validate([
             'id_competencia' => 'required|exists:competencias_instrumentacion,id_competencia',
             'descripcion' => 'required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $competenciaGenerica = CompetenciaGenericoInstrumentacion::create($request->all());
 
         return response()->json([
             'message' => 'Competencia genérica creada exitosamente',
-            'data' => $competenciaGenerica
+            'data' => $competenciaGenerica,
         ], 201);
     }
 
@@ -31,7 +31,7 @@ class CompetenciaGenericoInstrumentacionController extends Controller
             'competencias_genericas' => 'required|array',
             'competencias_genericas.*.id_competencia' => 'required|exists:competencias_instrumentacion,id_competencia',
             'competencias_genericas.*.descripcion' => 'required|string',
-            'competencias_genericas.*.orden' => 'nullable|integer'
+            'competencias_genericas.*.orden' => 'nullable|integer',
         ]);
 
         $competencias = [];
@@ -41,7 +41,7 @@ class CompetenciaGenericoInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Competencias genéricas creadas exitosamente',
-            'data' => $competencias
+            'data' => $competencias,
         ], 201);
     }
 
@@ -50,7 +50,7 @@ class CompetenciaGenericoInstrumentacionController extends Controller
     {
         $request->validate([
             'descripcion' => 'sometimes|required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $competenciaGenerica = CompetenciaGenericoInstrumentacion::findOrFail($id);
@@ -58,7 +58,7 @@ class CompetenciaGenericoInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Competencia genérica actualizada exitosamente',
-            'data' => $competenciaGenerica
+            'data' => $competenciaGenerica,
         ]);
     }
 
@@ -69,7 +69,7 @@ class CompetenciaGenericoInstrumentacionController extends Controller
             'competencias_genericas' => 'required|array',
             'competencias_genericas.*.id_competencia_generico_instrumentacion' => 'required|exists:competencia_generico_instrumentacion,id_competencia_generico_instrumentacion',
             'competencias_genericas.*.descripcion' => 'sometimes|required|string',
-            'competencias_genericas.*.orden' => 'nullable|integer'
+            'competencias_genericas.*.orden' => 'nullable|integer',
         ]);
 
         $competenciasActualizadas = [];
@@ -81,7 +81,7 @@ class CompetenciaGenericoInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Competencias genéricas actualizadas exitosamente',
-            'data' => $competenciasActualizadas
+            'data' => $competenciasActualizadas,
         ]);
     }
 }

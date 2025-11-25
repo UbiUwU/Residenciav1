@@ -7,9 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Carrera extends Model
 {
     protected $table = 'carreras';
+
     protected $primaryKey = 'clavecarrera';
+
     public $incrementing = false; // La PK es varchar, no autoincremental
+
     public $timestamps = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [

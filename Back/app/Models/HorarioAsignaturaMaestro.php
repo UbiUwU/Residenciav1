@@ -7,15 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 class HorarioAsignaturaMaestro extends Model
 {
     protected $table = 'horarioasignatura_maestro';
+
     protected $primaryKey = 'clavehorario';
+
     public $incrementing = true;
+
     protected $keyType = 'integer';
+
     public $timestamps = false;
 
     protected $fillable = [
         'tarjeta', 'claveaula', 'clavegrupo', 'claveasignatura', 'idperiodoescolar',
-        'lunes_hi','lunes_hf','martes_hi','martes_hf','miercoles_hi','miercoles_hf',
-        'jueves_hi','jueves_hf','viernes_hi','viernes_hf','sabado_hi','sabado_hf'
+        'lunes_hi', 'lunes_hf', 'martes_hi', 'martes_hf', 'miercoles_hi', 'miercoles_hf',
+        'jueves_hi', 'jueves_hf', 'viernes_hi', 'viernes_hf', 'sabado_hi', 'sabado_hf',
     ];
 
     public function maestro()
@@ -42,10 +46,9 @@ class HorarioAsignaturaMaestro extends Model
     {
         return $this->belongsTo(PeriodoEscolar::class, 'idperiodoescolar', 'id_periodo_escolar');
     }
-    
+
     public function cargaDetalles()
     {
         return $this->hasMany(CargaAcademicaDetalle::class, 'clavehorario', 'clavehorario');
     }
-
 }

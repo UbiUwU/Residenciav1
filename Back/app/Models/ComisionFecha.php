@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class ComisionFecha extends Model
 {
     protected $table = 'comision_fecha';
+
     protected $primaryKey = 'id_comision_fecha';
+
     public $timestamps = false;
 
     protected $fillable = [

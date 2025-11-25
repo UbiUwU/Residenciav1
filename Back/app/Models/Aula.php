@@ -7,9 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Aula extends Model
 {
     protected $table = 'aulas';
+
     protected $primaryKey = 'claveaula';
+
     public $incrementing = false; // claveaula es string
+
     protected $keyType = 'string'; // <-- agregado
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -26,4 +30,3 @@ class Aula extends Model
         return $this->belongsTo(Edificio::class, 'claveedificio', 'claveedificio');
     }
 }
-

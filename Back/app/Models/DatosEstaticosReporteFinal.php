@@ -8,22 +8,26 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class DatosEstaticosReporteFinal extends Model
 {
     protected $table = 'datos_estaticos_reportefinal';
+
     protected $primaryKey = 'id_datos_estaticos';
+
     public $incrementing = true;
+
     protected $keyType = 'integer';
+
     public $timestamps = false;
 
     protected $fillable = [
         'id_reportefinal',
         'numero_grupos_atendidos',
         'numero_estudiantes',
-        'numero_asignaturas_diferentes'
+        'numero_asignaturas_diferentes',
     ];
 
     protected $attributes = [
         'numero_grupos_atendidos' => 0,
         'numero_estudiantes' => 0,
-        'numero_asignaturas_diferentes' => 0
+        'numero_asignaturas_diferentes' => 0,
     ];
 
     protected $casts = [
@@ -31,7 +35,7 @@ class DatosEstaticosReporteFinal extends Model
         'numero_estudiantes' => 'integer',
         'numero_asignaturas_diferentes' => 'integer',
         'fecha_creacion' => 'datetime',
-        'fecha_actualizacion' => 'datetime'
+        'fecha_actualizacion' => 'datetime',
     ];
 
     /**

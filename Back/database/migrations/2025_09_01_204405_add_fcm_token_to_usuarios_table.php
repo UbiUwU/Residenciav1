@@ -10,16 +10,16 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up()
-{
-    Schema::table('usuarios', function (Blueprint $table) {
-        $table->text('fcm_token')->nullable()->after('password');
-    });
-}
+    {
+        Schema::table('usuarios', function (Blueprint $table) {
+            $table->text('fcm_token')->nullable()->after('password');
+        });
+    }
 
-public function down()
-{
-    Schema::table('usuarios', function (Blueprint $table) {
-        $table->dropColumn('fcm_token');
-    });
-}
+    public function down()
+    {
+        Schema::table('usuarios', function (Blueprint $table) {
+            $table->dropColumn('fcm_token');
+        });
+    }
 };

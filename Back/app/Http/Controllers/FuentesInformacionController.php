@@ -13,14 +13,14 @@ class FuentesInformacionController extends Controller
         $request->validate([
             'ClaveAsignatura' => 'required|exists:asignatura,ClaveAsignatura',
             'descripcion' => 'required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $fuente = FuentesInformacion::create($request->all());
 
         return response()->json([
             'message' => 'Fuente de información creada exitosamente',
-            'data' => $fuente
+            'data' => $fuente,
         ], 201);
     }
 
@@ -31,7 +31,7 @@ class FuentesInformacionController extends Controller
             'fuentes' => 'required|array',
             'fuentes.*.ClaveAsignatura' => 'required|exists:asignatura,ClaveAsignatura',
             'fuentes.*.descripcion' => 'required|string',
-            'fuentes.*.orden' => 'nullable|integer'
+            'fuentes.*.orden' => 'nullable|integer',
         ]);
 
         $fuentes = [];
@@ -41,7 +41,7 @@ class FuentesInformacionController extends Controller
 
         return response()->json([
             'message' => 'Fuentes de información creadas exitosamente',
-            'data' => $fuentes
+            'data' => $fuentes,
         ], 201);
     }
 
@@ -50,7 +50,7 @@ class FuentesInformacionController extends Controller
     {
         $request->validate([
             'descripcion' => 'sometimes|required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $fuente = FuentesInformacion::findOrFail($id);
@@ -58,7 +58,7 @@ class FuentesInformacionController extends Controller
 
         return response()->json([
             'message' => 'Fuente de información actualizada exitosamente',
-            'data' => $fuente
+            'data' => $fuente,
         ]);
     }
 
@@ -69,7 +69,7 @@ class FuentesInformacionController extends Controller
             'fuentes' => 'required|array',
             'fuentes.*.id_fuente' => 'required|exists:fuentes_informacion,id_fuente',
             'fuentes.*.descripcion' => 'sometimes|required|string',
-            'fuentes.*.orden' => 'nullable|integer'
+            'fuentes.*.orden' => 'nullable|integer',
         ]);
 
         $fuentesActualizadas = [];
@@ -81,7 +81,7 @@ class FuentesInformacionController extends Controller
 
         return response()->json([
             'message' => 'Fuentes de información actualizadas exitosamente',
-            'data' => $fuentesActualizadas
+            'data' => $fuentesActualizadas,
         ]);
     }
 
@@ -92,7 +92,7 @@ class FuentesInformacionController extends Controller
         $fuente->delete();
 
         return response()->json([
-            'message' => 'Fuente de información eliminada exitosamente'
+            'message' => 'Fuente de información eliminada exitosamente',
         ]);
     }
 }

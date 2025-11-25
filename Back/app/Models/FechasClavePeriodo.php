@@ -8,12 +8,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class FechasClavePeriodo extends Model
 {
     protected $table = 'fechas_clave_periodo';
+
     protected $primaryKey = 'id_fecha_clave';
+
     public $timestamps = true;
 
     protected $fillable = [
         'periodo_escolar_id',
-        'id_tipo_fecha', 
+        'id_tipo_fecha',
         'nombre_fecha',
         'descripcion',
         'fecha',

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Asignatura;
 use App\Models\Carrera;
-use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,12 +15,14 @@ class AsignaturaController extends Controller
     public function index()
     {
         $asignaturas = Asignatura::with('carreras')->get();
+
         return response()->json($asignaturas, 200);
     }
 
     public function indexC()
     {
         $asignaturas = Asignatura::all();
+
         return response()->json($asignaturas, 200);
     }
 
@@ -36,20 +38,22 @@ class AsignaturaController extends Controller
                 $query->with([
                     'competenciasGenericas',
                     'competenciasEspecificas',
-                    'actividadesAprendizaje'
+                    'actividadesAprendizaje',
                 ]);
             },
             'practias',
             'proyectos',
             'evaluacionesCompetencias',
-            'fuentesInformacion'
+            'fuentesInformacion',
         ])->find($ClaveAsignatura);
 
-        if (!$asignatura) {
+        if (! $asignatura) {
             return response()->json(['message' => 'Asignatura no encontrada'], 404);
         }
+
         return response()->json($asignatura, 200);
     }
+
     public function indexByCarrera($clavecarrera)
     {
         // Validar que la carrera exista
@@ -62,7 +66,7 @@ class AsignaturaController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Carrera no encontrada',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 404);
         }
 
@@ -77,7 +81,7 @@ class AsignaturaController extends Controller
         return response()->json([
             'success' => true,
             'data' => $asignaturas,
-            'count' => $asignaturas->count()
+            'count' => $asignaturas->count(),
         ], 200);
     }
 
@@ -107,7 +111,7 @@ class AsignaturaController extends Controller
                     'Creditos',
                     'Satca_Practicas',
                     'Satca_Teoricas',
-                    'Satca_Total'
+                    'Satca_Total',
                 ]));
 
                 // Asociar carreras si se proporcionan
@@ -116,7 +120,7 @@ class AsignaturaController extends Controller
                     foreach ($request->carreras as $c) {
                         $carrerasData[$c['clavecarrera']] = [
                             'Semestre' => $c['Semestre'],
-                            'Posicion' => $c['Posicion']
+                            'Posicion' => $c['Posicion'],
                         ];
                     }
                     $asignatura->carreras()->attach($carrerasData);
@@ -127,22 +131,21 @@ class AsignaturaController extends Controller
 
             return response()->json([
                 'message' => 'Asignatura creada exitosamente',
-                'asignatura' => $asignatura
+                'asignatura' => $asignatura,
             ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al crear la asignatura',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
 
-
     public function update(Request $request, $ClaveAsignatura)
     {
         $asignatura = Asignatura::find($ClaveAsignatura);
-        if (!$asignatura) {
+        if (! $asignatura) {
             return response()->json(['message' => 'Asignatura no encontrada'], 404);
         }
 
@@ -167,7 +170,7 @@ class AsignaturaController extends Controller
                     'Creditos',
                     'Satca_Practicas',
                     'Satca_Teoricas',
-                    'Satca_Total'
+                    'Satca_Total',
                 ]));
 
                 // Sincronizar carreras si se proporcionan
@@ -176,7 +179,7 @@ class AsignaturaController extends Controller
                     foreach ($request->carreras as $c) {
                         $carrerasData[$c['clavecarrera']] = [
                             'Semestre' => $c['Semestre'],
-                            'Posicion' => $c['Posicion']
+                            'Posicion' => $c['Posicion'],
                         ];
                     }
                     $asignatura->carreras()->sync($carrerasData); // Reemplaza las anteriores
@@ -187,7 +190,7 @@ class AsignaturaController extends Controller
 
             return response()->json([
                 'message' => 'Asignatura actualizada exitosamente',
-                'asignatura' => $updatedAsignatura
+                'asignatura' => $updatedAsignatura,
             ], 200);
 
         } catch (\Exception $e) {
@@ -195,17 +198,17 @@ class AsignaturaController extends Controller
         }
     }
 
-
     // Eliminar una asignatura
     public function destroy($ClaveAsignatura)
     {
         $asignatura = Asignatura::find($ClaveAsignatura);
-        if (!$asignatura) {
+        if (! $asignatura) {
             return response()->json(['message' => 'Asignatura no encontrada'], 404);
         }
 
         try {
             $asignatura->delete();
+
             return response()->json(['message' => 'Asignatura eliminada exitosamente'], 200);
         } catch (QueryException $e) {
             return response()->json(['message' => $e->getMessage()], 400);

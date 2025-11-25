@@ -13,14 +13,14 @@ class EvaluacionCompetenciasController extends Controller
         $request->validate([
             'ClaveAsignatura' => 'required|exists:asignatura,ClaveAsignatura',
             'descripcion' => 'required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $evaluacion = EvaluacionCompetencias::create($request->all());
 
         return response()->json([
             'message' => 'Evaluación por competencias creada exitosamente',
-            'data' => $evaluacion
+            'data' => $evaluacion,
         ], 201);
     }
 
@@ -31,7 +31,7 @@ class EvaluacionCompetenciasController extends Controller
             'evaluaciones' => 'required|array',
             'evaluaciones.*.ClaveAsignatura' => 'required|exists:asignatura,ClaveAsignatura',
             'evaluaciones.*.descripcion' => 'required|string',
-            'evaluaciones.*.orden' => 'nullable|integer'
+            'evaluaciones.*.orden' => 'nullable|integer',
         ]);
 
         $evaluaciones = [];
@@ -41,7 +41,7 @@ class EvaluacionCompetenciasController extends Controller
 
         return response()->json([
             'message' => 'Evaluaciones por competencias creadas exitosamente',
-            'data' => $evaluaciones
+            'data' => $evaluaciones,
         ], 201);
     }
 
@@ -50,7 +50,7 @@ class EvaluacionCompetenciasController extends Controller
     {
         $request->validate([
             'descripcion' => 'sometimes|required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $evaluacion = EvaluacionCompetencias::findOrFail($id);
@@ -58,7 +58,7 @@ class EvaluacionCompetenciasController extends Controller
 
         return response()->json([
             'message' => 'Evaluación por competencias actualizada exitosamente',
-            'data' => $evaluacion
+            'data' => $evaluacion,
         ]);
     }
 
@@ -69,7 +69,7 @@ class EvaluacionCompetenciasController extends Controller
             'evaluaciones' => 'required|array',
             'evaluaciones.*.id_evaluacion' => 'required|exists:evaluacion_competencias,id_evaluacion',
             'evaluaciones.*.descripcion' => 'sometimes|required|string',
-            'evaluaciones.*.orden' => 'nullable|integer'
+            'evaluaciones.*.orden' => 'nullable|integer',
         ]);
 
         $evaluacionesActualizadas = [];
@@ -81,7 +81,7 @@ class EvaluacionCompetenciasController extends Controller
 
         return response()->json([
             'message' => 'Evaluaciones por competencias actualizadas exitosamente',
-            'data' => $evaluacionesActualizadas
+            'data' => $evaluacionesActualizadas,
         ]);
     }
 
@@ -92,7 +92,7 @@ class EvaluacionCompetenciasController extends Controller
         $evaluacion->delete();
 
         return response()->json([
-            'message' => 'Evaluación por competencias eliminada exitosamente'
+            'message' => 'Evaluación por competencias eliminada exitosamente',
         ]);
     }
 }

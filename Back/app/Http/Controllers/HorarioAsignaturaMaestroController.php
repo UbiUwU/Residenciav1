@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\CargaAcademicaDetalle;
 use App\Models\HorarioAsignaturaMaestro;
-use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+
 class HorarioAsignaturaMaestroController extends Controller
 {
     // Listar todos los horarios
@@ -20,7 +21,7 @@ class HorarioAsignaturaMaestroController extends Controller
             'aula',
             'grupo',
             'asignatura',
-            'periodoEscolar'
+            'periodoEscolar',
         ])->get();
 
         return response()->json($horarios, 200);
@@ -34,10 +35,10 @@ class HorarioAsignaturaMaestroController extends Controller
             'aula',
             'grupo',
             'asignatura',
-            'periodoEscolar'
+            'periodoEscolar',
         ])->find($clavehorario);
 
-        if (!$horario) {
+        if (! $horario) {
             return response()->json(['message' => 'Horario no encontrado'], 404);
         }
 
@@ -51,7 +52,7 @@ class HorarioAsignaturaMaestroController extends Controller
             ['idperiodoescolar' => $idperiodoescolar, 'tarjeta' => $tarjeta],
             [
                 'idperiodoescolar' => 'required|integer|exists:periodo_escolar,id_periodo_escolar',
-                'tarjeta' => 'required|string|exists:maestros,tarjeta'
+                'tarjeta' => 'required|string|exists:maestros,tarjeta',
             ]
         );
 
@@ -59,14 +60,14 @@ class HorarioAsignaturaMaestroController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Parámetros inválidos',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
         $horarios = HorarioAsignaturaMaestro::with([
             'aula',
             'grupo',
-            'asignatura'
+            'asignatura',
         ])
             ->where('idperiodoescolar', $idperiodoescolar)
             ->where('tarjeta', $tarjeta)
@@ -78,14 +79,14 @@ class HorarioAsignaturaMaestroController extends Controller
                 'success' => true,
                 'message' => 'No se encontraron horarios para el maestro en el período especificado',
                 'data' => [],
-                'count' => 0
+                'count' => 0,
             ], 200);
         }
 
         return response()->json([
             'success' => true,
             'data' => $horarios,
-            'count' => $horarios->count()
+            'count' => $horarios->count(),
         ], 200);
     }
 
@@ -95,11 +96,11 @@ class HorarioAsignaturaMaestroController extends Controller
         $validator = Validator::make(
             [
                 'idperiodoescolar' => $idperiodoescolar,
-                'clavecarrera' => $clavecarrera
+                'clavecarrera' => $clavecarrera,
             ],
             [
                 'idperiodoescolar' => 'required|integer|exists:periodo_escolar,id_periodo_escolar',
-                'clavecarrera' => 'required|string|exists:carreras,clavecarrera'
+                'clavecarrera' => 'required|string|exists:carreras,clavecarrera',
             ]
         );
 
@@ -107,7 +108,7 @@ class HorarioAsignaturaMaestroController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Parámetros inválidos',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -140,14 +141,14 @@ class HorarioAsignaturaMaestroController extends Controller
                 'success' => true,
                 'message' => 'No se encontraron horarios para la carrera en el período especificado',
                 'data' => [],
-                'count' => 0
+                'count' => 0,
             ], 200);
         }
 
         return response()->json([
             'success' => true,
             'data' => $horarios,
-            'count' => $horarios->count()
+            'count' => $horarios->count(),
         ], 200);
     }
 
@@ -157,7 +158,7 @@ class HorarioAsignaturaMaestroController extends Controller
         $validator = Validator::make(
             ['tarjeta' => $tarjeta],
             [
-                'tarjeta' => 'required|string|exists:maestros,tarjeta'
+                'tarjeta' => 'required|string|exists:maestros,tarjeta',
             ]
         );
 
@@ -165,7 +166,7 @@ class HorarioAsignaturaMaestroController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Parámetro inválido',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -176,7 +177,7 @@ class HorarioAsignaturaMaestroController extends Controller
             'aula',
             'grupo',
             'asignatura',
-            'periodoEscolar'
+            'periodoEscolar',
         ])
             ->where('tarjeta', $tarjeta)
             ->orderBy('idperiodoescolar')
@@ -188,7 +189,7 @@ class HorarioAsignaturaMaestroController extends Controller
                 'success' => true,
                 'message' => 'No se encontraron horarios para el maestro especificado',
                 'data' => [],
-                'count' => 0
+                'count' => 0,
             ], 200);
         }
         // Agrupar horarios por período escolar para mejor organización
@@ -198,7 +199,7 @@ class HorarioAsignaturaMaestroController extends Controller
             'success' => true,
             'data' => $horariosAgrupados,
             'count' => $horarios->count(),
-            'periodos_count' => $horariosAgrupados->count()
+            'periodos_count' => $horariosAgrupados->count(),
         ], 200);
     }
 
@@ -208,7 +209,7 @@ class HorarioAsignaturaMaestroController extends Controller
         $validator = Validator::make(
             ['clavehorario' => $clavehorario],
             [
-                'clavehorario' => 'required|integer|exists:horarioasignatura_maestro,clavehorario'
+                'clavehorario' => 'required|integer|exists:horarioasignatura_maestro,clavehorario',
             ]
         );
 
@@ -216,7 +217,7 @@ class HorarioAsignaturaMaestroController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Parámetro inválido',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -231,13 +232,13 @@ class HorarioAsignaturaMaestroController extends Controller
             'periodoEscolar',
             'cargaDetalles.cargaGeneral.alumno' => function ($query) {
                 $query->select('numerocontrol', 'nombre', 'apellidopaterno', 'apellidomaterno');
-            }
+            },
         ])->find($clavehorario);
 
-        if (!$horario) {
+        if (! $horario) {
             return response()->json([
                 'success' => false,
-                'message' => 'Horario no encontrado'
+                'message' => 'Horario no encontrado',
             ], 404);
         }
 
@@ -251,9 +252,9 @@ class HorarioAsignaturaMaestroController extends Controller
                     'idcargadetalle' => $detalle->idcargadetalle,
                     'alumno' => $detalle->cargaGeneral->alumno,
                     'numerocontrol' => $detalle->cargaGeneral->alumno->numerocontrol,
-                    'nombre_completo' => $detalle->cargaGeneral->alumno->nombre . ' ' .
-                        $detalle->cargaGeneral->alumno->apellidopaterno . ' ' .
-                        $detalle->cargaGeneral->alumno->apellidomaterno
+                    'nombre_completo' => $detalle->cargaGeneral->alumno->nombre.' '.
+                        $detalle->cargaGeneral->alumno->apellidopaterno.' '.
+                        $detalle->cargaGeneral->alumno->apellidomaterno,
                 ]);
             }
         }
@@ -267,7 +268,7 @@ class HorarioAsignaturaMaestroController extends Controller
             'maestro' => $horario->maestro ? $horario->maestro->nombre_completo : null,
             'tarjeta' => $horario->tarjeta,
             'periodo' => $horario->periodoEscolar ? $horario->periodoEscolar->nombre_periodo : null,
-            'idperiodoescolar' => $horario->idperiodoescolar
+            'idperiodoescolar' => $horario->idperiodoescolar,
         ];
 
         return response()->json([
@@ -277,8 +278,8 @@ class HorarioAsignaturaMaestroController extends Controller
             'total_alumnos' => $alumnos->count(),
             'data' => [
                 'horario_info' => $infoHorario,
-                'alumnos_list' => $alumnos
-            ]
+                'alumnos_list' => $alumnos,
+            ],
         ], 200);
     }
 
@@ -289,7 +290,7 @@ class HorarioAsignaturaMaestroController extends Controller
         $validator = Validator::make(
             ['clavehorario' => $clavehorario],
             [
-                'clavehorario' => 'required|integer|exists:horarioasignatura_maestro,clavehorario'
+                'clavehorario' => 'required|integer|exists:horarioasignatura_maestro,clavehorario',
             ]
         );
 
@@ -297,13 +298,13 @@ class HorarioAsignaturaMaestroController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Parámetro inválido',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
         // Obtener solo los alumnos del horario (consulta más eficiente)
         $alumnos = CargaAcademicaDetalle::with([
-            'cargaGeneral.alumno:numerocontrol,nombre,apellidopaterno,apellidomaterno'
+            'cargaGeneral.alumno:numerocontrol,nombre,apellidopaterno,apellidomaterno',
         ])
             ->where('clavehorario', $clavehorario)
             ->get()
@@ -316,11 +317,12 @@ class HorarioAsignaturaMaestroController extends Controller
                         'nombre' => $detalle->cargaGeneral->alumno->nombre,
                         'apellido_paterno' => $detalle->cargaGeneral->alumno->apellidopaterno,
                         'apellido_materno' => $detalle->cargaGeneral->alumno->apellidomaterno,
-                        'nombre_completo' => $detalle->cargaGeneral->alumno->nombre . ' ' .
-                            $detalle->cargaGeneral->alumno->apellidopaterno . ' ' .
-                            $detalle->cargaGeneral->alumno->apellidomaterno
+                        'nombre_completo' => $detalle->cargaGeneral->alumno->nombre.' '.
+                            $detalle->cargaGeneral->alumno->apellidopaterno.' '.
+                            $detalle->cargaGeneral->alumno->apellidomaterno,
                     ];
                 }
+
                 return null;
             })
             ->filter() // Eliminar elementos null
@@ -339,13 +341,13 @@ class HorarioAsignaturaMaestroController extends Controller
                 'clavegrupo',
                 'tarjeta',
                 'idperiodoescolar',
-                'claveaula'
+                'claveaula',
             ]);
 
-        if (!$horarioInfo) {
+        if (! $horarioInfo) {
             return response()->json([
                 'success' => false,
-                'message' => 'Horario no encontrado'
+                'message' => 'Horario no encontrado',
             ], 404);
         }
 
@@ -361,7 +363,7 @@ class HorarioAsignaturaMaestroController extends Controller
                 'claveaula' => $horarioInfo->aula ? $horarioInfo->aula->claveaula : null,
             ],
             'alumnos' => $alumnos,
-            'total_alumnos' => $alumnos->count()
+            'total_alumnos' => $alumnos->count(),
         ], 200);
     }
 
@@ -385,7 +387,7 @@ class HorarioAsignaturaMaestroController extends Controller
             'viernes_hi' => 'nullable|string|max:100',
             'viernes_hf' => 'nullable|string|max:100',
             'sabado_hi' => 'nullable|string|max:100',
-            'sabado_hf' => 'nullable|string|max:100'
+            'sabado_hf' => 'nullable|string|max:100',
         ]);
 
         try {
@@ -397,13 +399,13 @@ class HorarioAsignaturaMaestroController extends Controller
 
             return response()->json([
                 'message' => 'Horario creado exitosamente',
-                'horario' => $horario
+                'horario' => $horario,
             ], 201);
 
         } catch (QueryException $e) {
             return response()->json([
                 'message' => 'Error al crear el horario',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 400);
         }
     }
@@ -413,7 +415,7 @@ class HorarioAsignaturaMaestroController extends Controller
     {
         $horario = HorarioAsignaturaMaestro::find($clavehorario);
 
-        if (!$horario) {
+        if (! $horario) {
             return response()->json(['message' => 'Horario no encontrado'], 404);
         }
 
@@ -434,7 +436,7 @@ class HorarioAsignaturaMaestroController extends Controller
             'viernes_hi' => 'nullable|string|max:100',
             'viernes_hf' => 'nullable|string|max:100',
             'sabado_hi' => 'nullable|string|max:100',
-            'sabado_hf' => 'nullable|string|max:100'
+            'sabado_hf' => 'nullable|string|max:100',
         ]);
 
         try {
@@ -444,13 +446,13 @@ class HorarioAsignaturaMaestroController extends Controller
 
             return response()->json([
                 'message' => 'Horario actualizado exitosamente',
-                'horario' => $horario
+                'horario' => $horario,
             ], 200);
 
         } catch (QueryException $e) {
             return response()->json([
                 'message' => 'Error al actualizar el horario',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 400);
         }
     }
@@ -460,7 +462,7 @@ class HorarioAsignaturaMaestroController extends Controller
     {
         $horario = HorarioAsignaturaMaestro::find($clavehorario);
 
-        if (!$horario) {
+        if (! $horario) {
             return response()->json(['message' => 'Horario no encontrado'], 404);
         }
 

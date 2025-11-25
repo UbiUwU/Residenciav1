@@ -8,14 +8,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CompetenciaGenericaTema extends Model
 {
     protected $table = 'competencia_generica_tema';
+
     protected $primaryKey = 'id_competencia_generica';
+
     public $timestamps = false;
 
     protected $fillable = [
         'id_Tema',
         'descripcion',
         'nivel',
-        'orden'
+        'orden',
     ];
 
     public function tema(): BelongsTo

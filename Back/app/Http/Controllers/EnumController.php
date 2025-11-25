@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class EnumController extends Controller
@@ -12,9 +11,9 @@ class EnumController extends Controller
         // Validamos que solo se consulten los tipos permitidos
         $tiposPermitidos = ['estado_enum', 'origen_enum'];
 
-        if (!in_array($tipo, $tiposPermitidos)) {
+        if (! in_array($tipo, $tiposPermitidos)) {
             return response()->json([
-                'message' => 'Tipo de ENUM no permitido'
+                'message' => 'Tipo de ENUM no permitido',
             ], 400);
         }
 
@@ -24,7 +23,7 @@ class EnumController extends Controller
         // Devolver en JSON
         return response()->json([
             'tipo' => $tipo,
-            'valores' => array_map(fn($v) => $v->valor, $valores)
+            'valores' => array_map(fn ($v) => $v->valor, $valores),
         ]);
     }
 }

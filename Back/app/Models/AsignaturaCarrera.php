@@ -7,15 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class AsignaturaCarrera extends Model
 {
     protected $table = 'asignatura_carrera';
+
     protected $primaryKey = 'idAsig_Carrera';
+
     public $incrementing = true; // usa secuencia
+
     public $timestamps = false;
 
     protected $fillable = [
         'Clave_Asignatura',
         'Clave_Carrera',
         'Semestre',
-        'Posicion'
+        'Posicion',
     ];
 
     // Relación con la carrera

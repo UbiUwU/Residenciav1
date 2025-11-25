@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Avance extends Model
 {
     protected $table = 'avance';
+
     protected $primaryKey = 'id_avance';
+
     public $timestamps = false; // Usamos campos personalizados, no el default de Laravel
 
     protected $fillable = [
@@ -20,7 +22,7 @@ class Avance extends Model
         'firma_jefe_carrera',
         'requiere_firma_jefe',
         'estado',
-        'clave_horario'
+        'clave_horario',
     ];
 
     // === Relaciones ===
@@ -54,6 +56,7 @@ class Avance extends Model
     {
         return $this->hasMany(AvanceDetalle::class, 'id_avance', 'id_avance');
     }
+
     public function fechas()
     {
         return $this->hasMany(AvanceFecha::class, 'id_avance');
@@ -64,5 +67,4 @@ class Avance extends Model
     {
         return $this->detalles()->with('fechas'); // 'fechas' es la relación en AvanceDetalle
     }
-
 }

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Tema;
-use App\Models\Subtema;
 use App\Models\Asignatura;
+use App\Models\Subtema;
+use App\Models\Tema;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -17,7 +16,7 @@ class TemaController extends Controller
     {
         try {
             $asignatura = Asignatura::findOrFail($claveAsignatura);
-            
+
             $temas = Tema::with(['subtemasRecursivos', 'competenciasGenericas', 'competenciasEspecificas', 'actividadesAprendizaje'])
                 ->where('Clave_Asignatura', $claveAsignatura)
                 ->orderBy('Numero')
@@ -26,12 +25,12 @@ class TemaController extends Controller
             return response()->json([
                 'success' => true,
                 'asignatura' => $asignatura,
-                'data' => $temas
+                'data' => $temas,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al obtener los temas de la asignatura'
+                'message' => 'Error al obtener los temas de la asignatura',
             ], 404);
         }
     }
@@ -45,17 +44,17 @@ class TemaController extends Controller
                 'subtemasRecursivos',
                 'competenciasGenericas',
                 'competenciasEspecificas',
-                'actividadesAprendizaje'
+                'actividadesAprendizaje',
             ])->findOrFail($idTema);
 
             return response()->json([
                 'success' => true,
-                'data' => $tema
+                'data' => $tema,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Tema no encontrado'
+                'message' => 'Tema no encontrado',
             ], 404);
         }
     }
@@ -70,14 +69,14 @@ class TemaController extends Controller
             'subtemas.*.Nombre_Subtema' => 'required_with:subtemas|string|max:255',
             'subtemas.*.Orden' => 'sometimes|integer|min:1',
             'subtemas.*.Nivel' => 'sometimes|integer|min:1',
-            'subtemas.*.hijos' => 'sometimes|array'
+            'subtemas.*.hijos' => 'sometimes|array',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -90,7 +89,7 @@ class TemaController extends Controller
                 $tema = Tema::create([
                     'Clave_Asignatura' => $asignatura->ClaveAsignatura,
                     'Numero' => $request->Numero,
-                    'Nombre_Tema' => $request->Nombre_Tema
+                    'Nombre_Tema' => $request->Nombre_Tema,
                 ]);
 
                 // Crear subtemas si vienen en el request
@@ -101,14 +100,14 @@ class TemaController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Tema creado exitosamente',
-                    'data' => $tema->load('subtemasRecursivos')
+                    'data' => $tema->load('subtemasRecursivos'),
                 ], 201);
             });
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al crear el tema',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -125,14 +124,14 @@ class TemaController extends Controller
             'subtemas.*.Orden' => 'sometimes|integer|min:1',
             'subtemas.*.Nivel' => 'sometimes|integer|min:1',
             'subtemas.*._delete' => 'sometimes|boolean',
-            'subtemas.*.hijos' => 'sometimes|array'
+            'subtemas.*.hijos' => 'sometimes|array',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -151,14 +150,14 @@ class TemaController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Tema actualizado exitosamente',
-                    'data' => $tema->fresh(['subtemasRecursivos'])
+                    'data' => $tema->fresh(['subtemasRecursivos']),
                 ]);
             });
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al actualizar el tema',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -180,15 +179,15 @@ class TemaController extends Controller
                     'message' => 'Tema eliminado exitosamente',
                     'deleted' => [
                         'tema_id' => $tema->id_Tema,
-                        'subtemas_eliminados' => $tema->subtemas_count
-                    ]
+                        'subtemas_eliminados' => $tema->subtemas_count,
+                    ],
                 ]);
             });
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al eliminar el tema',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -202,17 +201,17 @@ class TemaController extends Controller
             $subtema = Subtema::with([
                 'tema.asignatura',
                 'padre',
-                'hijosRecursivos'
+                'hijosRecursivos',
             ])->findOrFail($idSubtema);
 
             return response()->json([
                 'success' => true,
-                'data' => $subtema
+                'data' => $subtema,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Subtema no encontrado'
+                'message' => 'Subtema no encontrado',
             ], 404);
         }
     }
@@ -225,14 +224,14 @@ class TemaController extends Controller
             'Nombre_Subtema' => 'required|string|max:255',
             'Orden' => 'required|integer|min:1',
             'Nivel' => 'sometimes|integer|min:1',
-            'hijos' => 'sometimes|array'
+            'hijos' => 'sometimes|array',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -245,7 +244,7 @@ class TemaController extends Controller
                     'Subtema_Padre_id' => $request->Subtema_Padre_id,
                     'Nombre_Subtema' => $request->Nombre_Subtema,
                     'Orden' => $request->Orden,
-                    'Nivel' => $request->Nivel ?? 1
+                    'Nivel' => $request->Nivel ?? 1,
                 ]);
 
                 // Crear hijos si vienen en el request
@@ -256,14 +255,14 @@ class TemaController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Subtema creado exitosamente',
-                    'data' => $subtema->load('hijosRecursivos')
+                    'data' => $subtema->load('hijosRecursivos'),
                 ], 201);
             });
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al crear el subtema',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -280,14 +279,14 @@ class TemaController extends Controller
             'hijos.*.Nombre_Subtema' => 'required_with:hijos|string|max:255',
             'hijos.*.Orden' => 'sometimes|integer|min:1',
             'hijos.*.Nivel' => 'sometimes|integer|min:1',
-            'hijos.*._delete' => 'sometimes|boolean'
+            'hijos.*._delete' => 'sometimes|boolean',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error de validación',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -306,14 +305,14 @@ class TemaController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Subtema actualizado exitosamente',
-                    'data' => $subtema->fresh(['hijosRecursivos'])
+                    'data' => $subtema->fresh(['hijosRecursivos']),
                 ]);
             });
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al actualizar el subtema',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -333,14 +332,14 @@ class TemaController extends Controller
                 'message' => 'Subtema eliminado exitosamente',
                 'deleted' => [
                     'subtema_id' => $subtema->id_Subtema,
-                    'hijos_eliminados' => $subtema->hijos_count
-                ]
+                    'hijos_eliminados' => $subtema->hijos_count,
+                ],
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al eliminar el subtema',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -354,7 +353,7 @@ class TemaController extends Controller
                 'Subtema_Padre_id' => $padreId,
                 'Nombre_Subtema' => $subtemaData['Nombre_Subtema'],
                 'Orden' => $subtemaData['Orden'] ?? $index + 1,
-                'Nivel' => $subtemaData['Nivel'] ?? 1
+                'Nivel' => $subtemaData['Nivel'] ?? 1,
             ]);
 
             // Crear hijos recursivamente
@@ -376,6 +375,7 @@ class TemaController extends Controller
                 if ($subtema) {
                     $subtema->delete();
                 }
+
                 continue;
             }
 
@@ -384,11 +384,11 @@ class TemaController extends Controller
                 $subtema = Subtema::where('id_Subtema', $subtemaData['id_Subtema'])
                     ->where('Tema_id', $temaId)
                     ->firstOrFail();
-                
+
                 $subtema->update([
                     'Nombre_Subtema' => $subtemaData['Nombre_Subtema'],
                     'Orden' => $subtemaData['Orden'] ?? $subtema->Orden,
-                    'Nivel' => $subtemaData['Nivel'] ?? $subtema->Nivel
+                    'Nivel' => $subtemaData['Nivel'] ?? $subtema->Nivel,
                 ]);
             } else {
                 // Crear nuevo subtema
@@ -397,7 +397,7 @@ class TemaController extends Controller
                     'Subtema_Padre_id' => $padreId,
                     'Nombre_Subtema' => $subtemaData['Nombre_Subtema'],
                     'Orden' => $subtemaData['Orden'] ?? 1,
-                    'Nivel' => $subtemaData['Nivel'] ?? 1
+                    'Nivel' => $subtemaData['Nivel'] ?? 1,
                 ]);
             }
 
@@ -419,12 +419,12 @@ class TemaController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $asignatura
+                'data' => $asignatura,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al obtener la estructura de temas'
+                'message' => 'Error al obtener la estructura de temas',
             ], 404);
         }
     }

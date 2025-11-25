@@ -10,7 +10,8 @@ class AvanceController extends Controller
     // Obtener todos los avances
     public function index()
     {
-        $avances = Avance::with(['asignatura', 'profesor', 'periodoEscolar', 'horario', 'detalles', 'fechas' ,'detallesConFechas'])->get();
+        $avances = Avance::with(['asignatura', 'profesor', 'periodoEscolar', 'horario', 'detalles', 'fechas', 'detallesConFechas'])->get();
+
         return response()->json($avances);
     }
 
@@ -20,7 +21,7 @@ class AvanceController extends Controller
         $avance = Avance::with(['asignatura', 'profesor', 'periodoEscolar', 'horario', 'detalles'])
             ->find($id);
 
-        if (!$avance) {
+        if (! $avance) {
             return response()->json(['message' => 'Avance no encontrado'], 404);
         }
 
@@ -38,14 +39,14 @@ class AvanceController extends Controller
             'firma_profesor' => 'nullable|string|max:100',
             'firma_jefe_carrera' => 'nullable|string|max:100',
             'requiere_firma_jefe' => 'boolean',
-            'estado' => 'in:borrador,enviado,firmado,rechazado'
+            'estado' => 'in:borrador,enviado,firmado,rechazado',
         ]);
 
         $avance = Avance::create($validated);
 
         return response()->json([
             'message' => 'Avance creado exitosamente',
-            'avance' => $avance
+            'avance' => $avance,
         ], 201);
     }
 
@@ -54,7 +55,7 @@ class AvanceController extends Controller
     {
         $avance = Avance::find($id);
 
-        if (!$avance) {
+        if (! $avance) {
             return response()->json(['message' => 'Avance no encontrado'], 404);
         }
 
@@ -66,14 +67,14 @@ class AvanceController extends Controller
             'firma_profesor' => 'nullable|string|max:100',
             'firma_jefe_carrera' => 'nullable|string|max:100',
             'requiere_firma_jefe' => 'boolean',
-            'estado' => 'in:borrador,enviado,firmado,rechazado'
+            'estado' => 'in:borrador,enviado,firmado,rechazado',
         ]);
 
         $avance->update($validated);
 
         return response()->json([
             'message' => 'Avance actualizado exitosamente',
-            'avance' => $avance
+            'avance' => $avance,
         ]);
     }
 
@@ -82,7 +83,7 @@ class AvanceController extends Controller
     {
         $avance = Avance::find($id);
 
-        if (!$avance) {
+        if (! $avance) {
             return response()->json(['message' => 'Avance no encontrado'], 404);
         }
 

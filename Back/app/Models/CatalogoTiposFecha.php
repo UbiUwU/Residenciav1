@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class CatalogoTiposFecha extends Model
 {
     protected $table = 'catalogo_tipos_fecha';
+
     protected $primaryKey = 'id_tipo_fecha';
+
     public $timestamps = false;
 
     protected $fillable = [

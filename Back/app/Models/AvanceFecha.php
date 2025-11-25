@@ -7,14 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class AvanceFecha extends Model
 {
     protected $table = 'avance_fechas';
+
     protected $primaryKey = 'id_avance_fecha';
+
     public $timestamps = false;
 
     protected $fillable = [
         'id_avance',
         'id_fecha_clave',
         'observaciones',
-        'fecha_real'
+        'fecha_real',
     ];
 
     // Relación con Avance

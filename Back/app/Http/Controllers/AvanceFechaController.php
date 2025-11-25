@@ -11,6 +11,7 @@ class AvanceFechaController extends Controller
     public function index()
     {
         $fechas = AvanceFecha::with(['avance', 'fechaClave'])->get();
+
         return response()->json($fechas);
     }
 
@@ -19,7 +20,7 @@ class AvanceFechaController extends Controller
     {
         $fecha = AvanceFecha::with(['avance', 'fechaClave'])->find($id);
 
-        if (!$fecha) {
+        if (! $fecha) {
             return response()->json(['message' => 'Fecha de avance no encontrada'], 404);
         }
 
@@ -46,7 +47,7 @@ class AvanceFechaController extends Controller
     {
         $fecha = AvanceFecha::find($id);
 
-        if (!$fecha) {
+        if (! $fecha) {
             return response()->json(['message' => 'Fecha de avance no encontrada'], 404);
         }
 
@@ -67,7 +68,7 @@ class AvanceFechaController extends Controller
     {
         $fecha = AvanceFecha::find($id);
 
-        if (!$fecha) {
+        if (! $fecha) {
             return response()->json(['message' => 'Fecha de avance no encontrada'], 404);
         }
 

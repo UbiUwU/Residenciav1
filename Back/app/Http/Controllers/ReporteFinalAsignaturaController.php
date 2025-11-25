@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\ReporteFinalAsignatura;
-use App\Models\ReporteFinal;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ReporteFinalAsignaturaController extends Controller
 {
-
     public function update(Request $request, $id)
     {
         try {
@@ -23,21 +21,21 @@ class ReporteFinalAsignaturaController extends Controller
                 'e' => 'sometimes|numeric|min:0|max:100',
                 'f' => 'sometimes|integer|min:0',
                 'g' => 'sometimes|numeric|min:0|max:100',
-                'h' => 'sometimes|numeric|min:0|max:100'
+                'h' => 'sometimes|numeric|min:0|max:100',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Datos de entrada inválidos',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
             $asignatura = ReporteFinalAsignatura::findOrFail($id);
 
             // Actualizar solo los campos proporcionados
-            $asignatura->fill($request->only(['a', 'b','bco', 'c', 'd', 'e', 'f', 'g', 'h']));
+            $asignatura->fill($request->only(['a', 'b', 'bco', 'c', 'd', 'e', 'f', 'g', 'h']));
             $asignatura->save();
 
             // Recargar relaciones
@@ -46,13 +44,13 @@ class ReporteFinalAsignaturaController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Asignatura actualizada exitosamente',
-                'data' => $asignatura
+                'data' => $asignatura,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar la asignatura: ' . $e->getMessage()
+                'message' => 'Error al actualizar la asignatura: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -68,13 +66,13 @@ class ReporteFinalAsignaturaController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Asignatura eliminada exitosamente'
+                'message' => 'Asignatura eliminada exitosamente',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar la asignatura: ' . $e->getMessage()
+                'message' => 'Error al eliminar la asignatura: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -98,14 +96,14 @@ class ReporteFinalAsignaturaController extends Controller
                 'asignaturas.*.e' => 'sometimes|numeric|min:0|max:100',
                 'asignaturas.*.f' => 'sometimes|integer|min:0',
                 'asignaturas.*.g' => 'sometimes|numeric|min:0|max:100',
-                'asignaturas.*.h' => 'sometimes|numeric|min:0|max:100'
+                'asignaturas.*.h' => 'sometimes|numeric|min:0|max:100',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Datos de entrada inválidos',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
@@ -117,10 +115,10 @@ class ReporteFinalAsignaturaController extends Controller
                     ->firstOrFail();
 
                 // Actualizar solo los campos proporcionados
-                $asignatura->fill(array_filter($asignaturaData, function($key) {
+                $asignatura->fill(array_filter($asignaturaData, function ($key) {
                     return in_array($key, ['a', 'b', 'bco', 'c', 'd', 'e', 'f', 'g', 'h']);
                 }, ARRAY_FILTER_USE_KEY));
-                
+
                 $asignatura->save();
                 $asignaturasActualizadas[] = $asignatura->load(['asignatura', 'carrera']);
             }
@@ -130,14 +128,15 @@ class ReporteFinalAsignaturaController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Asignaturas actualizadas exitosamente',
-                'data' => $asignaturasActualizadas
+                'data' => $asignaturasActualizadas,
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar las asignaturas: ' . $e->getMessage()
+                'message' => 'Error al actualizar las asignaturas: '.$e->getMessage(),
             ], 500);
         }
     }

@@ -10,7 +10,7 @@ class CargaAcademicaGeneralResource extends JsonResource
     {
         return [
             'idcargageneral' => $this->idcargageneral,
-            'numerocontrol'  => $this->numerocontrol,
+            'numerocontrol' => $this->numerocontrol,
 
             // Relación con detalles
             'detalles' => CargaAcademicaDetalleResource::collection($this->whenLoaded('detalles')),

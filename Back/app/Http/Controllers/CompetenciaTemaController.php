@@ -28,20 +28,21 @@ class CompetenciaTemaController extends Controller
                 [
                     $request->tema_id,
                     $request->descripcion_competencia,
-                    '{' . implode(',', $request->tipo_competencia) . '}',
+                    '{'.implode(',', $request->tipo_competencia).'}',
                     $request->descripcion_actividad,
                 ]
             );
 
             return response()->json([
                 'mensaje' => 'Conjunto creado exitosamente',
-                'id_actividad_competencia' => $result[0]->id
+                'id_actividad_competencia' => $result[0]->id,
             ], 201);
 
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al crear el conjunto', 'detalle' => $e->getMessage()], 500);
         }
     }
+
     public function update(Request $request)
     {
         $validated = $request->validate([
@@ -56,17 +57,18 @@ class CompetenciaTemaController extends Controller
         $result = DB::select('SELECT actualizar_conjunto_competencia_actividad(?, ?, ?, ?, ?)', [
             $validated['comp_id'] ?? null,
             $validated['descripcion_competencia'] ?? null,
-            isset($validated['tipo_competencia']) ? '{' . implode(',', $validated['tipo_competencia']) . '}' : null,
+            isset($validated['tipo_competencia']) ? '{'.implode(',', $validated['tipo_competencia']).'}' : null,
             $validated['act_id'] ?? null,
             $validated['descripcion_actividad'] ?? null,
         ]);
 
         return response()->json(['mensaje' => 'Actualización realizada correctamente'], 200);
     }
+
     public function destroy($id)
     {
         DB::select('SELECT eliminar_conjunto_competencia_actividad(?)', [$id]);
+
         return response()->json(['mensaje' => 'Conjunto eliminado correctamente']);
     }
-
 }

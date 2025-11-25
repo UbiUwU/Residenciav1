@@ -4,20 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
-
 
 class InventarioController extends Controller
 {
     // 1. Verificar si el equipo existe
     public function verificarEquipo($num_inventario)
     {
-        $existe = DB::select("
-            SELECT 1 FROM computadora WHERE numeroinventario = ? LIMIT 1",
+        $existe = DB::select('
+            SELECT 1 FROM computadora WHERE numeroinventario = ? LIMIT 1',
             [$num_inventario]
         );
 
-        return response()->json(['existe' => !empty($existe)]);
+        return response()->json(['existe' => ! empty($existe)]);
     }
 
     // 2. Cambiar estado del equipo a "reservado"
@@ -40,8 +38,6 @@ class InventarioController extends Controller
         return response()->json(['success' => true, 'estado' => 'ocupado']);
     }
 
-
-
     // 4. Liberar equipo (estado: disponible)
     public function liberarEquipo($inventario)
     {
@@ -55,12 +51,13 @@ class InventarioController extends Controller
     // 5. eliminar reserva de equipo
     public function eliminarReserva($inventario)
     {
-        DB::delete("delete from public.reservacionalumnos 
-        where numeroinventario=?", [$inventario]);
+        DB::delete('delete from public.reservacionalumnos 
+        where numeroinventario=?', [$inventario]);
+
         return response()->json(['success' => true, 'mensaje' => 'Reserva eliminada']);
     }
 
-    //5.- cambiar estado a esperando aprovacion
+    // 5.- cambiar estado a esperando aprovacion
     public function marcarEsperandoAprovacion($inventario)
     {
         DB::update("

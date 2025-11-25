@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Departamento;
-use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 
 class DepartamentoController extends Controller
 {
@@ -12,6 +12,7 @@ class DepartamentoController extends Controller
     public function index()
     {
         $departamentos = Departamento::all();
+
         return response()->json($departamentos);
     }
 
@@ -20,7 +21,7 @@ class DepartamentoController extends Controller
     {
         $departamento = Departamento::find($id);
 
-        if (!$departamento) {
+        if (! $departamento) {
             return response()->json(['message' => 'Departamento no encontrado'], 404);
         }
 
@@ -38,9 +39,10 @@ class DepartamentoController extends Controller
 
         try {
             $departamento = Departamento::create($request->only(['id_departamento', 'nombre', 'abreviacion']));
+
             return response()->json([
                 'message' => 'Departamento creado exitosamente',
-                'departamento' => $departamento
+                'departamento' => $departamento,
             ], 201);
         } catch (QueryException $e) {
             return response()->json(['message' => $e->getMessage()], 400);
@@ -52,7 +54,7 @@ class DepartamentoController extends Controller
     {
         $departamento = Departamento::find($id);
 
-        if (!$departamento) {
+        if (! $departamento) {
             return response()->json(['message' => 'Departamento no encontrado'], 404);
         }
 
@@ -63,9 +65,10 @@ class DepartamentoController extends Controller
 
         try {
             $departamento->update($request->only(['nombre', 'abreviacion']));
+
             return response()->json([
                 'message' => 'Departamento actualizado exitosamente',
-                'departamento' => $departamento
+                'departamento' => $departamento,
             ]);
         } catch (QueryException $e) {
             return response()->json(['message' => $e->getMessage()], 400);
@@ -77,12 +80,13 @@ class DepartamentoController extends Controller
     {
         $departamento = Departamento::find($id);
 
-        if (!$departamento) {
+        if (! $departamento) {
             return response()->json(['message' => 'Departamento no encontrado'], 404);
         }
 
         try {
             $departamento->delete();
+
             return response()->json(['message' => 'Departamento eliminado exitosamente']);
         } catch (QueryException $e) {
             return response()->json(['message' => $e->getMessage()], 400);

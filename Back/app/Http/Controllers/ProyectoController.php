@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProyectoController extends Controller
 {
-     public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'clave_asignatura' => 'required|string|max:50',
@@ -17,19 +17,19 @@ class ProyectoController extends Controller
         try {
             $nuevoId = DB::selectOne('SELECT crear_proyecto_asignatura(?, ?) AS id', [
                 $request->clave_asignatura,
-                $request->descripcion
+                $request->descripcion,
             ])->id;
 
             return response()->json([
                 'success' => true,
                 'id_Proyecto_Asig' => $nuevoId,
-                'message' => 'Proyecto asignatura creado correctamente'
+                'message' => 'Proyecto asignatura creado correctamente',
             ], 201);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al crear proyecto asignatura: ' . $e->getMessage()
+                'message' => 'Error al crear proyecto asignatura: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -45,19 +45,19 @@ class ProyectoController extends Controller
             DB::statement('SELECT actualizar_proyecto_asignatura(?, ?, ?)', [
                 $id,
                 $request->clave_asignatura,
-                $request->descripcion
+                $request->descripcion,
             ]);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Proyecto asignatura actualizado correctamente',
-                'id_Proyecto_Asig' => $id
+                'id_Proyecto_Asig' => $id,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar proyecto asignatura: ' . $e->getMessage()
+                'message' => 'Error al actualizar proyecto asignatura: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -70,13 +70,13 @@ class ProyectoController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Proyecto asignatura eliminado correctamente',
-                'id_Proyecto_Asig' => $id
+                'id_Proyecto_Asig' => $id,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar proyecto asignatura: ' . $e->getMessage()
+                'message' => 'Error al eliminar proyecto asignatura: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -86,22 +86,22 @@ class ProyectoController extends Controller
         try {
             $proyecto = DB::selectOne('SELECT * FROM consultar_proyecto_asignatura_por_id(?)', [$id]);
 
-            if (!$proyecto) {
+            if (! $proyecto) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Proyecto asignatura no encontrado'
+                    'message' => 'Proyecto asignatura no encontrado',
                 ], 404);
             }
 
             return response()->json([
                 'success' => true,
-                'data' => $proyecto
+                'data' => $proyecto,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al consultar proyecto asignatura: ' . $e->getMessage()
+                'message' => 'Error al consultar proyecto asignatura: '.$e->getMessage(),
             ], 500);
         }
     }

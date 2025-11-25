@@ -27,20 +27,20 @@ class AvanceDetalleFechaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'id_avance_detalle'   => 'required|exists:avance_detalles,id_avance_detalle',
-            'fecha_inicio'        => 'required|date',
-            'fecha_fin'           => 'required|date|after_or_equal:fecha_inicio',
-            'fecha_inicio_real'   => 'nullable|date',
-            'fecha_fin_real'      => 'nullable|date|after_or_equal:fecha_inicio_real',
-            'fecha_evaluacion'    => 'nullable|date',
-            'fecha_evaluacion_real'=> 'nullable|date|after_or_equal:fecha_inicio_real',
+            'id_avance_detalle' => 'required|exists:avance_detalles,id_avance_detalle',
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+            'fecha_inicio_real' => 'nullable|date',
+            'fecha_fin_real' => 'nullable|date|after_or_equal:fecha_inicio_real',
+            'fecha_evaluacion' => 'nullable|date',
+            'fecha_evaluacion_real' => 'nullable|date|after_or_equal:fecha_inicio_real',
         ]);
 
         $fecha = AvanceDetalleFecha::create($validated);
 
         return response()->json([
             'message' => 'Fechas registradas correctamente',
-            'data' => $fecha
+            'data' => $fecha,
         ], 201);
     }
 
@@ -50,6 +50,7 @@ class AvanceDetalleFechaController extends Controller
     public function show($id)
     {
         $fecha = AvanceDetalleFecha::findOrFail($id);
+
         return response()->json($fecha);
     }
 
@@ -61,19 +62,19 @@ class AvanceDetalleFechaController extends Controller
         $fecha = AvanceDetalleFecha::findOrFail($id);
 
         $validated = $request->validate([
-            'fecha_inicio'        => 'sometimes|required|date',
-            'fecha_fin'           => 'sometimes|required|date|after_or_equal:fecha_inicio',
-            'fecha_inicio_real'   => 'nullable|date',
-            'fecha_fin_real'      => 'nullable|date|after_or_equal:fecha_inicio_real',
-            'fecha_evaluacion'    => 'nullable|date',
-            'fecha_evaluacion_real'=> 'nullable|date|after_or_equal:fecha_inicio_real',
+            'fecha_inicio' => 'sometimes|required|date',
+            'fecha_fin' => 'sometimes|required|date|after_or_equal:fecha_inicio',
+            'fecha_inicio_real' => 'nullable|date',
+            'fecha_fin_real' => 'nullable|date|after_or_equal:fecha_inicio_real',
+            'fecha_evaluacion' => 'nullable|date',
+            'fecha_evaluacion_real' => 'nullable|date|after_or_equal:fecha_inicio_real',
         ]);
 
         $fecha->update($validated);
 
         return response()->json([
             'message' => 'Fechas actualizadas correctamente',
-            'data' => $fecha
+            'data' => $fecha,
         ]);
     }
 

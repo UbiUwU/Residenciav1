@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -8,11 +9,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Presentacion extends Model
 {
     protected $table = 'presentacion';
+
     protected $primaryKey = 'id_Presentacion';
+
     public $timestamps = false;
 
     protected $fillable = [
-        'Clave_Asignatura'
+        'Clave_Asignatura',
     ];
 
     public function asignatura(): BelongsTo

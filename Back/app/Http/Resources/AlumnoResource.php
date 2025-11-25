@@ -9,11 +9,11 @@ class AlumnoResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'numerocontrol'    => $this->numerocontrol,
-            'nombre'           => $this->nombre,
-            'apellidopaterno'  => $this->apellidopaterno,
-            'apellidomaterno'  => $this->apellidomaterno,
-            'clavecarrera'     => $this->clavecarrera,
+            'numerocontrol' => $this->numerocontrol,
+            'nombre' => $this->nombre,
+            'apellidopaterno' => $this->apellidopaterno,
+            'apellidomaterno' => $this->apellidomaterno,
+            'clavecarrera' => $this->clavecarrera,
 
             // Relación con carga académica general
             'cargas_academicas' => CargaAcademicaGeneralResource::collection($this->whenLoaded('cargasGenerales')),

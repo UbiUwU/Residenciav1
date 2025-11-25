@@ -13,14 +13,14 @@ class ActividadAprendizajeTemaController extends Controller
         $request->validate([
             'id_Tema' => 'required|exists:tema,id_Tema',
             'descripcion' => 'required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $actividad = ActividadAprendizajeTema::create($request->all());
 
         return response()->json([
             'message' => 'Actividad de aprendizaje creada exitosamente',
-            'data' => $actividad
+            'data' => $actividad,
         ], 201);
     }
 
@@ -31,7 +31,7 @@ class ActividadAprendizajeTemaController extends Controller
             'actividades' => 'required|array',
             'actividades.*.id_Tema' => 'required|exists:tema,id_Tema',
             'actividades.*.descripcion' => 'required|string',
-            'actividades.*.orden' => 'nullable|integer'
+            'actividades.*.orden' => 'nullable|integer',
         ]);
 
         $actividades = [];
@@ -41,7 +41,7 @@ class ActividadAprendizajeTemaController extends Controller
 
         return response()->json([
             'message' => 'Actividades de aprendizaje creadas exitosamente',
-            'data' => $actividades
+            'data' => $actividades,
         ], 201);
     }
 
@@ -50,7 +50,7 @@ class ActividadAprendizajeTemaController extends Controller
     {
         $request->validate([
             'descripcion' => 'sometimes|required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $actividad = ActividadAprendizajeTema::findOrFail($id);
@@ -58,7 +58,7 @@ class ActividadAprendizajeTemaController extends Controller
 
         return response()->json([
             'message' => 'Actividad de aprendizaje actualizada exitosamente',
-            'data' => $actividad
+            'data' => $actividad,
         ]);
     }
 
@@ -69,7 +69,7 @@ class ActividadAprendizajeTemaController extends Controller
             'actividades' => 'required|array',
             'actividades.*.id_actividad' => 'required|exists:actividad_aprendizaje_tema,id_actividad',
             'actividades.*.descripcion' => 'sometimes|required|string',
-            'actividades.*.orden' => 'nullable|integer'
+            'actividades.*.orden' => 'nullable|integer',
         ]);
 
         $actividadesActualizadas = [];
@@ -81,7 +81,7 @@ class ActividadAprendizajeTemaController extends Controller
 
         return response()->json([
             'message' => 'Actividades de aprendizaje actualizadas exitosamente',
-            'data' => $actividadesActualizadas
+            'data' => $actividadesActualizadas,
         ]);
     }
 
@@ -92,7 +92,7 @@ class ActividadAprendizajeTemaController extends Controller
         $actividad->delete();
 
         return response()->json([
-            'message' => 'Actividad de aprendizaje eliminada exitosamente'
+            'message' => 'Actividad de aprendizaje eliminada exitosamente',
         ]);
     }
 }

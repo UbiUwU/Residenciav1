@@ -15,7 +15,7 @@ class IndicadorAlcanceEvaluacionInstrumentacionController extends Controller
             'letra_indicador' => 'required|string|max:5',
             'descripcion' => 'nullable|string',
             'porcentaje' => 'nullable|integer|min:0|max:100',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         // Verificar que no exista ya esta letra para esta evaluación
@@ -26,7 +26,7 @@ class IndicadorAlcanceEvaluacionInstrumentacionController extends Controller
         if ($existente) {
             return response()->json([
                 'message' => 'Ya existe un indicador con esta letra para esta evaluación',
-                'data' => $existente
+                'data' => $existente,
             ], 409);
         }
 
@@ -34,7 +34,7 @@ class IndicadorAlcanceEvaluacionInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Indicador de alcance para evaluación creado exitosamente',
-            'data' => $indicador
+            'data' => $indicador,
         ], 201);
     }
 
@@ -47,7 +47,7 @@ class IndicadorAlcanceEvaluacionInstrumentacionController extends Controller
             'indicadores.*.letra_indicador' => 'required|string|max:5',
             'indicadores.*.descripcion' => 'nullable|string',
             'indicadores.*.porcentaje' => 'nullable|integer|min:0|max:100',
-            'indicadores.*.orden' => 'nullable|integer'
+            'indicadores.*.orden' => 'nullable|integer',
         ]);
 
         $indicadoresCreados = [];
@@ -63,8 +63,9 @@ class IndicadorAlcanceEvaluacionInstrumentacionController extends Controller
                 if ($existente) {
                     $errores[] = [
                         'data' => $indicadorData,
-                        'error' => 'Ya existe un indicador con la letra ' . $indicadorData['letra_indicador'] . ' para esta evaluación'
+                        'error' => 'Ya existe un indicador con la letra '.$indicadorData['letra_indicador'].' para esta evaluación',
                     ];
+
                     continue;
                 }
 
@@ -73,17 +74,17 @@ class IndicadorAlcanceEvaluacionInstrumentacionController extends Controller
             } catch (\Exception $e) {
                 $errores[] = [
                     'data' => $indicadorData,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ];
             }
         }
 
         $response = [
             'message' => 'Proceso de creación de indicadores de alcance para evaluación completado',
-            'data' => $indicadoresCreados
+            'data' => $indicadoresCreados,
         ];
 
-        if (!empty($errores)) {
+        if (! empty($errores)) {
             $response['errores'] = $errores;
         }
 
@@ -97,7 +98,7 @@ class IndicadorAlcanceEvaluacionInstrumentacionController extends Controller
             'letra_indicador' => 'sometimes|required|string|max:5',
             'descripcion' => 'nullable|string',
             'porcentaje' => 'nullable|integer|min:0|max:100',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $indicador = IndicadorAlcanceEvaluacionInstrumentacion::findOrFail($id);
@@ -111,8 +112,8 @@ class IndicadorAlcanceEvaluacionInstrumentacionController extends Controller
 
             if ($existente) {
                 return response()->json([
-                    'message' => 'Ya existe otro indicador con la letra ' . $request->letra_indicador . ' para esta evaluación',
-                    'data' => $existente
+                    'message' => 'Ya existe otro indicador con la letra '.$request->letra_indicador.' para esta evaluación',
+                    'data' => $existente,
                 ], 409);
             }
         }
@@ -121,7 +122,7 @@ class IndicadorAlcanceEvaluacionInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Indicador de alcance para evaluación actualizado exitosamente',
-            'data' => $indicador
+            'data' => $indicador,
         ]);
     }
 
@@ -134,7 +135,7 @@ class IndicadorAlcanceEvaluacionInstrumentacionController extends Controller
             'indicadores.*.letra_indicador' => 'sometimes|required|string|max:5',
             'indicadores.*.descripcion' => 'nullable|string',
             'indicadores.*.porcentaje' => 'nullable|integer|min:0|max:100',
-            'indicadores.*.orden' => 'nullable|integer'
+            'indicadores.*.orden' => 'nullable|integer',
         ]);
 
         $indicadoresActualizados = [];
@@ -154,8 +155,9 @@ class IndicadorAlcanceEvaluacionInstrumentacionController extends Controller
                     if ($existente) {
                         $errores[] = [
                             'id_indicador_alcance' => $indicadorData['id_indicador_alcance'],
-                            'error' => 'Ya existe otro indicador con la letra ' . $indicadorData['letra_indicador'] . ' para esta evaluación'
+                            'error' => 'Ya existe otro indicador con la letra '.$indicadorData['letra_indicador'].' para esta evaluación',
                         ];
+
                         continue;
                     }
                 }
@@ -165,17 +167,17 @@ class IndicadorAlcanceEvaluacionInstrumentacionController extends Controller
             } catch (\Exception $e) {
                 $errores[] = [
                     'id_indicador_alcance' => $indicadorData['id_indicador_alcance'] ?? 'unknown',
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ];
             }
         }
 
         $response = [
             'message' => 'Proceso de actualización de indicadores de alcance para evaluación completado',
-            'data' => $indicadoresActualizados
+            'data' => $indicadoresActualizados,
         ];
 
-        if (!empty($errores)) {
+        if (! empty($errores)) {
             $response['errores'] = $errores;
         }
 

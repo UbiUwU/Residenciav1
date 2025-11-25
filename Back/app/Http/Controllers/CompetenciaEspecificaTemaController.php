@@ -13,14 +13,14 @@ class CompetenciaEspecificaTemaController extends Controller
         $request->validate([
             'id_Tema' => 'required|exists:tema,id_Tema',
             'descripcion' => 'required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $competencia = CompetenciaEspecificaTema::create($request->all());
 
         return response()->json([
             'message' => 'Competencia específica creada exitosamente',
-            'data' => $competencia
+            'data' => $competencia,
         ], 201);
     }
 
@@ -31,7 +31,7 @@ class CompetenciaEspecificaTemaController extends Controller
             'competencias' => 'required|array',
             'competencias.*.id_Tema' => 'required|exists:tema,id_Tema',
             'competencias.*.descripcion' => 'required|string',
-            'competencias.*.orden' => 'nullable|integer'
+            'competencias.*.orden' => 'nullable|integer',
         ]);
 
         $competencias = [];
@@ -41,7 +41,7 @@ class CompetenciaEspecificaTemaController extends Controller
 
         return response()->json([
             'message' => 'Competencias específicas creadas exitosamente',
-            'data' => $competencias
+            'data' => $competencias,
         ], 201);
     }
 
@@ -50,7 +50,7 @@ class CompetenciaEspecificaTemaController extends Controller
     {
         $request->validate([
             'descripcion' => 'sometimes|required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $competencia = CompetenciaEspecificaTema::findOrFail($id);
@@ -58,7 +58,7 @@ class CompetenciaEspecificaTemaController extends Controller
 
         return response()->json([
             'message' => 'Competencia específica actualizada exitosamente',
-            'data' => $competencia
+            'data' => $competencia,
         ]);
     }
 
@@ -69,7 +69,7 @@ class CompetenciaEspecificaTemaController extends Controller
             'competencias' => 'required|array',
             'competencias.*.id_competencia_especifica' => 'required|exists:competencia_especifica_tema,id_competencia_especifica',
             'competencias.*.descripcion' => 'sometimes|required|string',
-            'competencias.*.orden' => 'nullable|integer'
+            'competencias.*.orden' => 'nullable|integer',
         ]);
 
         $competenciasActualizadas = [];
@@ -81,7 +81,7 @@ class CompetenciaEspecificaTemaController extends Controller
 
         return response()->json([
             'message' => 'Competencias específicas actualizadas exitosamente',
-            'data' => $competenciasActualizadas
+            'data' => $competenciasActualizadas,
         ]);
     }
 
@@ -92,7 +92,7 @@ class CompetenciaEspecificaTemaController extends Controller
         $competencia->delete();
 
         return response()->json([
-            'message' => 'Competencia específica eliminada exitosamente'
+            'message' => 'Competencia específica eliminada exitosamente',
         ]);
     }
 }

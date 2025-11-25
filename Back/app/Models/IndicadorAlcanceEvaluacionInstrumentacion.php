@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class IndicadorAlcanceEvaluacionInstrumentacion extends Model
 {
     protected $table = 'indicadores_alcance_evaluacion_instrumentacion';
+
     protected $primaryKey = 'id_indicador_alcance';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -16,11 +18,11 @@ class IndicadorAlcanceEvaluacionInstrumentacion extends Model
         'letra_indicador',
         'porcentaje',
         'descripcion',
-        'orden'
+        'orden',
     ];
 
     protected $casts = [
-        'fecha_creacion' => 'datetime'
+        'fecha_creacion' => 'datetime',
     ];
 
     public function evaluacion(): BelongsTo

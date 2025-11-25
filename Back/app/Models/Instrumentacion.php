@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Instrumentacion extends Model
 {
     protected $table = 'instrumentacion';
+
     protected $primaryKey = 'id_instrumentacion';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -19,12 +21,12 @@ class Instrumentacion extends Model
         'id_periodo_escolar',
         'nombre_jefe_academico',
         'id_departamento',
-        'estado'
+        'estado',
     ];
 
     protected $casts = [
         'fecha_creacion' => 'date',
-        'fecha_ultima_actualizacion' => 'datetime'
+        'fecha_ultima_actualizacion' => 'datetime',
     ];
 
     public function asignatura(): BelongsTo
@@ -66,6 +68,7 @@ class Instrumentacion extends Model
     {
         return $this->hasMany(CalendarizacionEvaluacionInstrumentacion::class, 'id_instrumentacion', 'id_instrumentacion');
     }
+
     public function temasConSubtemas()
     {
         return $this->hasMany(Tema::class, 'Clave_Asignatura', 'ClaveAsignatura')

@@ -11,9 +11,13 @@ class Maestro extends Model
     use HasFactory;
 
     protected $table = 'maestros';
+
     protected $primaryKey = 'tarjeta';
+
     public $incrementing = true;      // bigserial
+
     protected $keyType = 'int';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -31,7 +35,7 @@ class Maestro extends Model
         'estado_maestria',
         'escolaridad_doctorado',
         'estado_doctorado',
-        'id_departamento'
+        'id_departamento',
     ];
 
     // Relaciones
@@ -44,6 +48,7 @@ class Maestro extends Model
     {
         return $this->belongsTo(Departamento::class, 'id_departamento', 'id_departamento');
     }
+
     public function scopeSoloNombre($query)
     {
         return $query->select('tarjeta', 'nombre', 'apellidopaterno', 'apellidomaterno');
@@ -61,14 +66,17 @@ class Maestro extends Model
             'departamentos.nombre as departamento_nombre'
         )->leftJoin('departamentos', 'maestros.id_departamento', '=', 'departamentos.id_departamento');
     }
+
     public function reportesFinales()
     {
         return $this->hasMany(ReporteFinal::class, 'tarjeta_profesor', 'tarjeta');
     }
+
     public function liberacionesDocentes(): HasMany
     {
         return $this->hasMany(LiberacionDocente::class, 'tarjeta_maestro', 'tarjeta');
     }
+
     public function liberacionesAcademicas(): HasMany
     {
         return $this->hasMany(LiberacionAcademica::class, 'tarjeta_maestro', 'tarjeta');

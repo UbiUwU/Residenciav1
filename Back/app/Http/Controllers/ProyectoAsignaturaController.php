@@ -13,14 +13,14 @@ class ProyectoAsignaturaController extends Controller
         $request->validate([
             'ClaveAsignatura' => 'required|exists:asignatura,ClaveAsignatura',
             'descripcion' => 'required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $proyecto = ProyectoAsignatura::create($request->all());
 
         return response()->json([
             'message' => 'Proyecto de asignatura creado exitosamente',
-            'data' => $proyecto
+            'data' => $proyecto,
         ], 201);
     }
 
@@ -31,7 +31,7 @@ class ProyectoAsignaturaController extends Controller
             'proyectos' => 'required|array',
             'proyectos.*.ClaveAsignatura' => 'required|exists:asignatura,ClaveAsignatura',
             'proyectos.*.descripcion' => 'required|string',
-            'proyectos.*.orden' => 'nullable|integer'
+            'proyectos.*.orden' => 'nullable|integer',
         ]);
 
         $proyectos = [];
@@ -41,7 +41,7 @@ class ProyectoAsignaturaController extends Controller
 
         return response()->json([
             'message' => 'Proyectos de asignatura creados exitosamente',
-            'data' => $proyectos
+            'data' => $proyectos,
         ], 201);
     }
 
@@ -50,7 +50,7 @@ class ProyectoAsignaturaController extends Controller
     {
         $request->validate([
             'descripcion' => 'sometimes|required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $proyecto = ProyectoAsignatura::findOrFail($id);
@@ -58,7 +58,7 @@ class ProyectoAsignaturaController extends Controller
 
         return response()->json([
             'message' => 'Proyecto de asignatura actualizado exitosamente',
-            'data' => $proyecto
+            'data' => $proyecto,
         ]);
     }
 
@@ -69,7 +69,7 @@ class ProyectoAsignaturaController extends Controller
             'proyectos' => 'required|array',
             'proyectos.*.id_proyecto' => 'required|exists:proyecto_asignatura,id_proyecto',
             'proyectos.*.descripcion' => 'sometimes|required|string',
-            'proyectos.*.orden' => 'nullable|integer'
+            'proyectos.*.orden' => 'nullable|integer',
         ]);
 
         $proyectosActualizados = [];
@@ -81,7 +81,7 @@ class ProyectoAsignaturaController extends Controller
 
         return response()->json([
             'message' => 'Proyectos de asignatura actualizados exitosamente',
-            'data' => $proyectosActualizados
+            'data' => $proyectosActualizados,
         ]);
     }
 
@@ -92,7 +92,7 @@ class ProyectoAsignaturaController extends Controller
         $proyecto->delete();
 
         return response()->json([
-            'message' => 'Proyecto de asignatura eliminado exitosamente'
+            'message' => 'Proyecto de asignatura eliminado exitosamente',
         ]);
     }
 
@@ -104,7 +104,7 @@ class ProyectoAsignaturaController extends Controller
             ->get();
 
         return response()->json([
-            'data' => $proyectos
+            'data' => $proyectos,
         ]);
     }
 }

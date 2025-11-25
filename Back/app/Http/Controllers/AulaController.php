@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Aula;
-use App\Models\Edificio;
-use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 
 class AulaController extends Controller
 {
@@ -13,6 +12,7 @@ class AulaController extends Controller
     public function index()
     {
         $aulas = Aula::with('edificio')->get();
+
         return response()->json($aulas);
     }
 
@@ -21,7 +21,7 @@ class AulaController extends Controller
     {
         $aula = Aula::with('edificio')->find($clave);
 
-        if (!$aula) {
+        if (! $aula) {
             return response()->json(['message' => 'Aula no encontrada'], 404);
         }
 
@@ -47,12 +47,12 @@ class AulaController extends Controller
                 'nombre',
                 'cantidadcomputadoras',
                 'horadisponible',
-                'estado'
+                'estado',
             ]));
 
             return response()->json([
                 'message' => 'Aula creada exitosamente',
-                'aula' => $aula
+                'aula' => $aula,
             ], 201);
 
         } catch (QueryException $e) {
@@ -65,7 +65,7 @@ class AulaController extends Controller
     {
         $aula = Aula::find($clave);
 
-        if (!$aula) {
+        if (! $aula) {
             return response()->json(['message' => 'Aula no encontrada'], 404);
         }
 
@@ -83,12 +83,12 @@ class AulaController extends Controller
                 'nombre',
                 'cantidadcomputadoras',
                 'horadisponible',
-                'estado'
+                'estado',
             ]));
 
             return response()->json([
                 'message' => 'Aula actualizada exitosamente',
-                'aula' => $aula
+                'aula' => $aula,
             ]);
 
         } catch (QueryException $e) {
@@ -101,12 +101,13 @@ class AulaController extends Controller
     {
         $aula = Aula::find($clave);
 
-        if (!$aula) {
+        if (! $aula) {
             return response()->json(['message' => 'Aula no encontrada'], 404);
         }
 
         try {
             $aula->delete();
+
             return response()->json(['message' => 'Aula eliminada exitosamente']);
 
         } catch (QueryException $e) {

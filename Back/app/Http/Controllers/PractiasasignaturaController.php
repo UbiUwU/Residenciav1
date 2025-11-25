@@ -13,14 +13,14 @@ class PractiasasignaturaController extends Controller
         $request->validate([
             'ClaveAsignatura' => 'required|exists:asignatura,ClaveAsignatura',
             'descripcion' => 'required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $practica = Practiasasignatura::create($request->all());
 
         return response()->json([
             'message' => 'Práctica creada exitosamente',
-            'data' => $practica
+            'data' => $practica,
         ], 201);
     }
 
@@ -31,7 +31,7 @@ class PractiasasignaturaController extends Controller
             'practicas' => 'required|array',
             'practicas.*.ClaveAsignatura' => 'required|exists:asignatura,ClaveAsignatura',
             'practicas.*.descripcion' => 'required|string',
-            'practicas.*.orden' => 'nullable|integer'
+            'practicas.*.orden' => 'nullable|integer',
         ]);
 
         $practicas = [];
@@ -41,7 +41,7 @@ class PractiasasignaturaController extends Controller
 
         return response()->json([
             'message' => 'Prácticas creadas exitosamente',
-            'data' => $practicas
+            'data' => $practicas,
         ], 201);
     }
 
@@ -50,7 +50,7 @@ class PractiasasignaturaController extends Controller
     {
         $request->validate([
             'descripcion' => 'sometimes|required|string',
-            'orden' => 'nullable|integer'
+            'orden' => 'nullable|integer',
         ]);
 
         $practica = Practiasasignatura::findOrFail($id);
@@ -58,7 +58,7 @@ class PractiasasignaturaController extends Controller
 
         return response()->json([
             'message' => 'Práctica actualizada exitosamente',
-            'data' => $practica
+            'data' => $practica,
         ]);
     }
 
@@ -69,7 +69,7 @@ class PractiasasignaturaController extends Controller
             'practicas' => 'required|array',
             'practicas.*.id_practicas' => 'required|exists:practias_asignatura,id_practicas',
             'practicas.*.descripcion' => 'sometimes|required|string',
-            'practicas.*.orden' => 'nullable|integer'
+            'practicas.*.orden' => 'nullable|integer',
         ]);
 
         $practicasActualizadas = [];
@@ -81,7 +81,7 @@ class PractiasasignaturaController extends Controller
 
         return response()->json([
             'message' => 'Prácticas actualizadas exitosamente',
-            'data' => $practicasActualizadas
+            'data' => $practicasActualizadas,
         ]);
     }
 
@@ -92,7 +92,7 @@ class PractiasasignaturaController extends Controller
         $practica->delete();
 
         return response()->json([
-            'message' => 'Práctica eliminada exitosamente'
+            'message' => 'Práctica eliminada exitosamente',
         ]);
     }
 }

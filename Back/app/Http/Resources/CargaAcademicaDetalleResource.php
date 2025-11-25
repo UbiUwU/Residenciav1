@@ -10,7 +10,7 @@ class CargaAcademicaDetalleResource extends JsonResource
     {
         return [
             'idcargadetalle' => $this->idcargadetalle,
-            'clavehorario'   => $this->clavehorario,
+            'clavehorario' => $this->clavehorario,
 
             // Relación con horario asignatura maestro
             'horario_asignatura' => new HorarioAsignaturaMaestroResource($this->whenLoaded('horarioAsignatura')),

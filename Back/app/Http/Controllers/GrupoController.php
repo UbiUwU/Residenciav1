@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Grupo;
-use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 
 class GrupoController extends Controller
 {
@@ -12,6 +12,7 @@ class GrupoController extends Controller
     public function index()
     {
         $grupos = Grupo::all();
+
         return response()->json($grupos, 200);
     }
 
@@ -19,9 +20,10 @@ class GrupoController extends Controller
     public function show($clavegrupo)
     {
         $grupo = Grupo::find($clavegrupo);
-        if (!$grupo) {
+        if (! $grupo) {
             return response()->json(['message' => 'Grupo no encontrado'], 404);
         }
+
         return response()->json($grupo, 200);
     }
 
@@ -36,9 +38,10 @@ class GrupoController extends Controller
 
         try {
             $grupo = Grupo::create($request->only(['clavegrupo', 'nombre', 'descripcion']));
+
             return response()->json([
                 'message' => 'Grupo creado exitosamente',
-                'grupo' => $grupo
+                'grupo' => $grupo,
             ], 201);
         } catch (QueryException $e) {
             return response()->json(['message' => $e->getMessage()], 400);
@@ -49,7 +52,7 @@ class GrupoController extends Controller
     public function update(Request $request, $clavegrupo)
     {
         $grupo = Grupo::find($clavegrupo);
-        if (!$grupo) {
+        if (! $grupo) {
             return response()->json(['message' => 'Grupo no encontrado'], 404);
         }
 
@@ -60,9 +63,10 @@ class GrupoController extends Controller
 
         try {
             $grupo->update($request->only(['nombre', 'descripcion']));
+
             return response()->json([
                 'message' => 'Grupo actualizado exitosamente',
-                'grupo' => $grupo
+                'grupo' => $grupo,
             ], 200);
         } catch (QueryException $e) {
             return response()->json(['message' => $e->getMessage()], 400);
@@ -73,12 +77,13 @@ class GrupoController extends Controller
     public function destroy($clavegrupo)
     {
         $grupo = Grupo::find($clavegrupo);
-        if (!$grupo) {
+        if (! $grupo) {
             return response()->json(['message' => 'Grupo no encontrado'], 404);
         }
 
         try {
             $grupo->delete();
+
             return response()->json(['message' => 'Grupo eliminado exitosamente'], 200);
         } catch (QueryException $e) {
             return response()->json(['message' => $e->getMessage()], 400);

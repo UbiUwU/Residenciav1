@@ -2,8 +2,17 @@
 
 use App\Http\Controllers\ActividadAprendizajeTemaController;
 use App\Http\Controllers\ActividadEnsenanzaInstrumentacionController;
+use App\Http\Controllers\AlumnoReworkController;
+use App\Http\Controllers\Api\AlumnoController;
 use App\Http\Controllers\ApoyoDidacticoInstrumentacionController;
+use App\Http\Controllers\AsignaturaController;
+use App\Http\Controllers\AulaController;
+use App\Http\Controllers\AvanceController;
+use App\Http\Controllers\AvanceDetalleController;
+use App\Http\Controllers\AvanceDetalleFechaController;
+use App\Http\Controllers\AvanceFechaController;
 use App\Http\Controllers\CalendarizacionEvaluacionInstrumentacionController;
+use App\Http\Controllers\CarreraController;
 use App\Http\Controllers\CatalogoTiposFechaController;
 use App\Http\Controllers\ComisionController;
 use App\Http\Controllers\CompetenciaController;
@@ -11,6 +20,7 @@ use App\Http\Controllers\CompetenciaEspecificaTemaController;
 use App\Http\Controllers\CompetenciaGenericaTemaController;
 use App\Http\Controllers\CompetenciaGenericoInstrumentacionController;
 use App\Http\Controllers\CompetenciaInstrumentacionController;
+use App\Http\Controllers\ComputadoraController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\DisenioCurricularController;
 use App\Http\Controllers\EdificioController;
@@ -19,43 +29,32 @@ use App\Http\Controllers\EvaluacionCompetenciaInstrumentacionController;
 use App\Http\Controllers\EvaluacionCompetenciasController;
 use App\Http\Controllers\FechasClavePeriodoController;
 use App\Http\Controllers\FuentesInformacionController;
+use App\Http\Controllers\GrupoController;
+use App\Http\Controllers\HorarioAsignaturaMaestroController;
+use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\IndicadorAlcanceController;
 use App\Http\Controllers\IndicadorAlcanceEvaluacionInstrumentacionController;
 use App\Http\Controllers\IndicadorAlcanceInstrumentacionController;
 use App\Http\Controllers\InstrumentacionController;
-use App\Http\Controllers\NivelDesempenoInstrumentacionController;
-use App\Http\Controllers\PlantillaController;
-use App\Http\Controllers\PractiasasignaturaController;
-use App\Http\Controllers\PracticaController;
-use App\Http\Controllers\ProyectoAsignaturaController;
-use App\Http\Controllers\ProyectoController;
-use App\Http\Controllers\TipoEventoController;
-use App\Http\Controllers\TipoPlantillaController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AsignaturaController;
-use App\Http\Controllers\MaestroController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\PeriodoEscolarController;
-use App\Http\Controllers\CarreraController;
-use App\Http\Controllers\ComputadoraController;
-use App\Http\Controllers\GrupoController;
-use App\Http\Controllers\HorarioController;
-use App\Http\Controllers\AulaController;
-use App\Http\Controllers\PresentacionController;
-use App\Http\Controllers\AvanceController;
-use App\Http\Controllers\RolController;
-use App\Http\Controllers\UsuarioController;
-use App\Http\Controllers\HorarioAsignaturaMaestroController;
-use App\Http\Controllers\AvanceDetalleController;
-use App\Http\Controllers\AvanceDetalleFechaController;
-use App\Http\Controllers\AvanceFechaController;
-use App\Http\Controllers\Api\AlumnoController;
-use App\Http\Controllers\AlumnoReworkController;
 use App\Http\Controllers\LiberacionAcademicaController;
 use App\Http\Controllers\LiberacionAcademicaDetalleController;
 use App\Http\Controllers\LiberacionDocenteController;
 use App\Http\Controllers\LiberacionDocenteDetalleController;
-
+use App\Http\Controllers\MaestroController;
+use App\Http\Controllers\NivelDesempenoInstrumentacionController;
+use App\Http\Controllers\PeriodoEscolarController;
+use App\Http\Controllers\PlantillaController;
+use App\Http\Controllers\PractiasasignaturaController;
+use App\Http\Controllers\PracticaController;
+use App\Http\Controllers\PresentacionController;
+use App\Http\Controllers\ProyectoAsignaturaController;
+use App\Http\Controllers\ProyectoController;
+use App\Http\Controllers\RolController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TipoEventoController;
+use App\Http\Controllers\TipoPlantillaController;
+use App\Http\Controllers\UsuarioController;
+use Illuminate\Support\Facades\Route;
 
 // Rutas para LiberacionDocente
 
@@ -75,38 +74,36 @@ Route::prefix('liberacionesdocentes')->group(function () {
 });
 
 Route::prefix('liberacionesdocentesde')->group(function () {
-// Rutas para LiberacionDocenteDetalleController
-Route::post('/{id_liberacion}', [LiberacionDocenteDetalleController::class, 'store']);
-Route::put('/{id}', [LiberacionDocenteDetalleController::class, 'update']);
-Route::delete('/{id}', [LiberacionDocenteDetalleController::class, 'destroy']);
-Route::post('/M/{id_liberacion}', [LiberacionDocenteDetalleController::class, 'storeMultiple']);
-Route::put('/MUpdate/{id_liberacion}', [LiberacionDocenteDetalleController::class, 'updateMultiple']);
-Route::put('liberacionesdocentes/detalles/{id}/estado', [LiberacionDocenteDetalleController::class, 'updateEstado']);
+    // Rutas para LiberacionDocenteDetalleController
+    Route::post('/{id_liberacion}', [LiberacionDocenteDetalleController::class, 'store']);
+    Route::put('/{id}', [LiberacionDocenteDetalleController::class, 'update']);
+    Route::delete('/{id}', [LiberacionDocenteDetalleController::class, 'destroy']);
+    Route::post('/M/{id_liberacion}', [LiberacionDocenteDetalleController::class, 'storeMultiple']);
+    Route::put('/MUpdate/{id_liberacion}', [LiberacionDocenteDetalleController::class, 'updateMultiple']);
+    Route::put('liberacionesdocentes/detalles/{id}/estado', [LiberacionDocenteDetalleController::class, 'updateEstado']);
 });
-
 
 Route::prefix('liberacionesacademicas')->group(function () {
-Route::get('/', [LiberacionAcademicaController::class, 'index']);
-Route::get('/departamento/{id_departamento}', [LiberacionAcademicaController::class, 'indexByDepartamento']);
-Route::get('/periodo/{id_periodo_escolar}', [LiberacionAcademicaController::class, 'indexByPeriodo']);
-Route::get('/departamento/{id_departamento}/periodo/{id_periodo_escolar}', [LiberacionAcademicaController::class, 'indexByDepartamentoPeriodo']);
-Route::get('/maestro/{tarjeta_maestro}', [LiberacionAcademicaController::class, 'indexByMaestro']);
-Route::get('/maestro/{tarjeta_maestro}/periodo/{id_periodo_escolar}', [LiberacionAcademicaController::class, 'indexByMaestroPeriodo']);
-Route::post('/', [LiberacionAcademicaController::class, 'store']);
-Route::get('/{id}', [LiberacionAcademicaController::class, 'show']);
-Route::put('/{id}', [LiberacionAcademicaController::class, 'update']);
-Route::delete('/{id}', [LiberacionAcademicaController::class, 'destroy']);
-Route::put('/{id}/estado', [LiberacionAcademicaController::class, 'cambiarEstadoLiberacion']);
+    Route::get('/', [LiberacionAcademicaController::class, 'index']);
+    Route::get('/departamento/{id_departamento}', [LiberacionAcademicaController::class, 'indexByDepartamento']);
+    Route::get('/periodo/{id_periodo_escolar}', [LiberacionAcademicaController::class, 'indexByPeriodo']);
+    Route::get('/departamento/{id_departamento}/periodo/{id_periodo_escolar}', [LiberacionAcademicaController::class, 'indexByDepartamentoPeriodo']);
+    Route::get('/maestro/{tarjeta_maestro}', [LiberacionAcademicaController::class, 'indexByMaestro']);
+    Route::get('/maestro/{tarjeta_maestro}/periodo/{id_periodo_escolar}', [LiberacionAcademicaController::class, 'indexByMaestroPeriodo']);
+    Route::post('/', [LiberacionAcademicaController::class, 'store']);
+    Route::get('/{id}', [LiberacionAcademicaController::class, 'show']);
+    Route::put('/{id}', [LiberacionAcademicaController::class, 'update']);
+    Route::delete('/{id}', [LiberacionAcademicaController::class, 'destroy']);
+    Route::put('/{id}/estado', [LiberacionAcademicaController::class, 'cambiarEstadoLiberacion']);
 });
-
 
 Route::prefix('liberacionesacademicasde')->group(function () {
     Route::post('/{id_liberacion}', [LiberacionAcademicaDetalleController::class, 'store']);
-Route::put('/{id}', [LiberacionAcademicaDetalleController::class, 'update']);
-Route::delete('/{id}', [LiberacionAcademicaDetalleController::class, 'destroy']);
-Route::post('/M/{id_liberacion}', [LiberacionAcademicaDetalleController::class, 'storeMultiple']);
-Route::put('/MUpdate/{id_liberacion}', [LiberacionAcademicaDetalleController::class, 'updateMultiple']);
-Route::put('/detalles/{id}/estado', [LiberacionAcademicaDetalleController::class, 'updateEstado']);
+    Route::put('/{id}', [LiberacionAcademicaDetalleController::class, 'update']);
+    Route::delete('/{id}', [LiberacionAcademicaDetalleController::class, 'destroy']);
+    Route::post('/M/{id_liberacion}', [LiberacionAcademicaDetalleController::class, 'storeMultiple']);
+    Route::put('/MUpdate/{id_liberacion}', [LiberacionAcademicaDetalleController::class, 'updateMultiple']);
+    Route::put('/detalles/{id}/estado', [LiberacionAcademicaDetalleController::class, 'updateEstado']);
 });
 
 Route::prefix('competenciasgenericastemas')->group(function () {
@@ -177,7 +174,6 @@ Route::prefix('competencias')->group(function () {
 
 });
 
-
 Route::prefix('calendarizacionesinstrumentacion')->group(function () {
     Route::post('/', [CalendarizacionEvaluacionInstrumentacionController::class, 'createOne']);
     Route::post('/M', [CalendarizacionEvaluacionInstrumentacionController::class, 'createMultiple']);
@@ -192,19 +188,18 @@ Route::prefix('apoyosdidacticosinstrumentacion')->group(function () {
     Route::put('/M/U', [ApoyoDidacticoInstrumentacionController::class, 'updateMultiple']);
 });
 
-
 Route::prefix('instrumentacion')->group(function () {
     // Index
     Route::get('/', [InstrumentacionController::class, 'indexCompleto']);
     Route::get('/Clean', [InstrumentacionController::class, 'indexBasico']);
-    
+
     // Búsquedas específicas
     Route::get('/periodo/{idPeriodo}', [InstrumentacionController::class, 'buscarPorPeriodo']);
     Route::get('/maestro/{tarjetaMaestro}', [InstrumentacionController::class, 'buscarPorMaestro']);
     Route::get('/departamento/{idDepartamento}', [InstrumentacionController::class, 'buscarPorDepartamento']);
     Route::get('/carrera/{claveCarrera}', [InstrumentacionController::class, 'buscarPorCarrera']);
     Route::get('/buscar', [InstrumentacionController::class, 'buscarCombinada']);
-    
+
     // CRUD básico
     Route::post('/', [InstrumentacionController::class, 'create']);
     Route::put('/{id}', [InstrumentacionController::class, 'update']);
@@ -309,7 +304,6 @@ Route::prefix('plantillas')->group(function () {
 // routes/api.php
 Route::get('/enum/{tipo}', [App\Http\Controllers\EnumController::class, 'getValores']);
 
-
 Route::prefix('avance')->group(function () {
     Route::get('/', [AvanceController::class, 'index']); // Listar todos
     Route::post('/', [AvanceController::class, 'store']); // Crear nuevo
@@ -380,7 +374,6 @@ Route::put('asignaturasReporteFinales/{id}', [ReporteFinalAsignaturaController::
 Route::delete('reportes-finales/asignaturas/{id}', [ReporteFinalAsignaturaController::class, 'destroy']);
 Route::put('asignaturasReporteFinales/M/{id_reportefinal}', [ReporteFinalAsignaturaController::class, 'updateMultiple']);
 
-
 Route::prefix('carreras')->group(function () {
     Route::get('/', [CarreraController::class, 'index']);
     Route::get('/{clave}', [CarreraController::class, 'show']);
@@ -422,8 +415,6 @@ Route::prefix('grupos')->group(function () {
     Route::delete('/{clavegrupo}', [GrupoController::class, 'destroy']); // Eliminar
 });
 
-
-
 Route::prefix('horarios')->group(function () {
     Route::get('/', [HorarioController::class, 'index']);
     Route::get('/{clave_horario}', [HorarioController::class, 'show']);
@@ -432,7 +423,7 @@ Route::prefix('horarios')->group(function () {
     Route::delete('/{clave_horario}', [HorarioController::class, 'destroy']);
 });
 
-//Rutas para los datos generales de la materia
+// Rutas para los datos generales de la materia
 Route::prefix('asignaturas')->group(function () {
     Route::get('/', [AsignaturaController::class, 'index']);
     Route::get('/clean', [AsignaturaController::class, 'indexC']);           // Listar todas
@@ -442,11 +433,10 @@ Route::prefix('asignaturas')->group(function () {
     Route::put('/{ClaveAsignatura}', [AsignaturaController::class, 'update']); // Actualizar
     Route::delete('/{ClaveAsignatura}', [AsignaturaController::class, 'destroy']); // Eliminar
 
-
     Route::get('/maestro/{clave}', [AsignaturaController::class, 'getByTarjetaComplete']);
     Route::get('/grupos/{clave}', [AsignaturaController::class, 'getDetalleGruposByTarjeta']);
     Route::get('/complete/{clave}', [AsignaturaController::class, 'getByClaveComplete']);
-    //Reporte
+    // Reporte
     Route::get('/asignaturas/generate-pdf', [AsignaturaController::class, 'generatePDF']);
 
 });
@@ -466,7 +456,7 @@ Route::prefix('disenioasignatura')->group(function () {
     Route::post('/', [DisenioCurricularController::class, 'store']);
     Route::put('/{id}', [DisenioCurricularController::class, 'update']);
     Route::delete('/{id}', [DisenioCurricularController::class, 'destroy']);
-    
+
     // Rutas para participantes
     Route::get('/participantes/{id}', [DisenioCurricularController::class, 'participantes']);
     Route::post('/participantes/{id}', [DisenioCurricularController::class, 'agregarParticipante']);
@@ -508,7 +498,7 @@ Route::prefix('temas')->group(function () {
     Route::post('/{claveAsignatura}', [TemaController::class, 'storeTema']);
     Route::put('/{idTema}', [TemaController::class, 'updateTema']);
     Route::delete('/{idTema}', [TemaController::class, 'destroyTema']);
-    
+
     // Rutas para subtemas
     Route::get('/subtema/{idSubtema}', [TemaController::class, 'showSubtema']);
     Route::post('/subtemas/{idTema}', [TemaController::class, 'storeSubtema']);
@@ -525,12 +515,10 @@ Route::prefix('actividades')->group(function () {
 
 });
 
-
 use App\Http\Controllers\CalificacionUnidadController;
 
 Route::post('/calificaciones', [CalificacionUnidadController::class, 'store']);
 Route::get('/calificaciones/reporte/{tarjeta}', [CalificacionUnidadController::class, 'getDetalleGruposPorCarrera']);
-
 
 Route::prefix('alumnosR')->group(function () {
     Route::get('/', [AlumnoReworkController::class, 'index']);           // Listar todas
@@ -620,7 +608,6 @@ Route::prefix('carreras')->group(function () {
     Route::delete('/{clavecarrera}', [CarreraController::class, 'destroy']); // Eliminar
 });
 
-
 Route::prefix('horario')->group(function () {
     Route::get('/', [HorarioAsignaturaMaestroController::class, 'index']);           // Listar todos los horarios
     Route::get('/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'show']); // Mostrar un horario
@@ -631,10 +618,8 @@ Route::prefix('horario')->group(function () {
     Route::get('/periodo/{idperiodoescolar}/carrera/{clavecarrera}', [HorarioAsignaturaMaestroController::class, 'indexByPeriodoAndCarrera']);
     Route::get('/maestro/{tarjeta}', [HorarioAsignaturaMaestroController::class, 'indexByMaestro']);
     Route::get('/alumnos/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'indexAlumnosByHorario']);
-Route::get('/alumnoss/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'indexAlumnosByHorarioSimple']);
+    Route::get('/alumnoss/{clavehorario}', [HorarioAsignaturaMaestroController::class, 'indexAlumnosByHorarioSimple']);
 });
-
-
 
 Route::prefix('fechasclave')->group(function () {
     Route::get('/', [FechasClavePeriodoController::class, 'index']);           // Listar todos los horarios
@@ -652,7 +637,7 @@ Route::prefix('catalogofecha')->group(function () {
     Route::delete('/{clavehorario}', [CatalogoTiposFechaController::class, 'destroy']); // Eliminar horario
 });
 
-//Esta zona es de la zona movil.
+// Esta zona es de la zona movil.
 use App\Http\Controllers\Api\MaestroMController;
 
 Route::prefix('maestro')->group(function () {
@@ -668,7 +653,6 @@ Route::prefix('maestro')->group(function () {
     Route::get('/edificios', [MaestroMController::class, 'getEdificios']);
     Route::get('/{tarjeta}', [MaestroMController::class, 'GetMaestro']);
 });
-
 
 Route::prefix('alumno')->group(function () {
     Route::get('/horario/{numeroControl}', [AlumnoController::class, 'getHorario']);
@@ -686,7 +670,6 @@ Route::prefix('alumno')->group(function () {
     // Ver bitácora completa de un alumno
     Route::get('/bitacora/{numerocontrol}', [AlumnoController::class, 'verBitacoraAlumno']);
 
-
     Route::get('/', [AlumnoController::class, 'index']);
     Route::get('/{numeroControl}', [AlumnoController::class, 'show']);
     Route::post('/', [AlumnoController::class, 'store']);
@@ -701,7 +684,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/bitacora-maestros', [MaestroMController::class, 'getallBitacoraMaestro']);
 
 });
-
 
 use App\Http\Controllers\Api\InventarioController;
 
@@ -727,7 +709,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 Route::post('/cambiar-contrasena', [AuthController::class, 'changePassword']);
 
-
 use App\Http\Controllers\Api\NotificacionesController;
 
 Route::prefix('notificaciones')->group(function () {
@@ -738,6 +719,5 @@ Route::prefix('notificaciones')->group(function () {
     Route::put('/{id}', [NotificacionesController::class, 'update']);
     Route::delete('/{id}', [NotificacionesController::class, 'destroy']);
 
-    
 }
 );

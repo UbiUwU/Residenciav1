@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class NivelDesempenoInstrumentacion extends Model
 {
     protected $table = 'niveles_desempeno_instrumentacion';
+
     protected $primaryKey = 'id_nivel_desempeno';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -17,12 +19,12 @@ class NivelDesempenoInstrumentacion extends Model
         'desempeno_alcanzado',
         'nivel_desempeno',
         'valoracion_inicial',
-        'valoracion_final'
+        'valoracion_final',
     ];
 
     protected $casts = [
         'desempeno_alcanzado' => 'boolean',
-        'fecha_creacion' => 'datetime'
+        'fecha_creacion' => 'datetime',
     ];
 
     public function competencia(): BelongsTo

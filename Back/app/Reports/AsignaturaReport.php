@@ -29,7 +29,7 @@ class AsignaturaReport extends FPDF
         // Arial italic 8
         $this->SetFont('Arial', 'I', 8);
         // Número de página
-        $this->Cell(0, 10, 'Página ' . $this->PageNo() . '/{nb}', 0, 0, 'C');
+        $this->Cell(0, 10, 'Página '.$this->PageNo().'/{nb}', 0, 0, 'C');
     }
 
     public function generateReport($data)
@@ -49,12 +49,12 @@ class AsignaturaReport extends FPDF
         // Datos de la tabla
         $this->SetFont('Arial', '', 10);
         foreach ($data as $asignatura) {
-           // Dentro del método generateReport()
-$this->Cell(30, 10, $asignatura->clave_asignatura, 1);
-$this->Cell(60, 8, utf8_decode($asignatura->nombre), 1);
-$this->Cell(30, 8, $asignatura->creditos, 1, 0, 'C');
-$this->Cell(30, 8, $asignatura->horas_teoricas, 1, 0, 'C');
-$this->Cell(30, 8, $asignatura->horas_practicas, 1, 1, 'C');
+            // Dentro del método generateReport()
+            $this->Cell(30, 10, $asignatura->clave_asignatura, 1);
+            $this->Cell(60, 8, utf8_decode($asignatura->nombre), 1);
+            $this->Cell(30, 8, $asignatura->creditos, 1, 0, 'C');
+            $this->Cell(30, 8, $asignatura->horas_teoricas, 1, 0, 'C');
+            $this->Cell(30, 8, $asignatura->horas_practicas, 1, 1, 'C');
         }
 
         return $this;

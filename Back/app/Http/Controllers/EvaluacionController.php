@@ -20,17 +20,17 @@ class EvaluacionController extends Controller
 
         $result = DB::select('SELECT crear_evaluacion(?, ?) AS id', [$clave, $criterios]);
 
-        if (!empty($result) && isset($result[0]->id)) {
+        if (! empty($result) && isset($result[0]->id)) {
             return response()->json([
                 'success' => true,
                 'id_evaluacion' => $result[0]->id,
-                'message' => 'Evaluación creada correctamente'
+                'message' => 'Evaluación creada correctamente',
             ]);
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'Error al crear evaluación'
+            'message' => 'Error al crear evaluación',
         ], 500);
     }
 
@@ -47,15 +47,16 @@ class EvaluacionController extends Controller
 
         try {
             DB::statement('SELECT actualizar_evaluacion(?, ?, ?)', [$id, $clave, $criterios]);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Evaluación actualizada correctamente',
-                'id_evaluacion' => $id
+                'id_evaluacion' => $id,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar evaluación: ' . $e->getMessage()
+                'message' => 'Error al actualizar evaluación: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -65,15 +66,16 @@ class EvaluacionController extends Controller
     {
         try {
             DB::statement('SELECT eliminar_evaluacion(?)', [$id]);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Evaluación eliminada correctamente',
-                'id_evaluacion' => $id
+                'id_evaluacion' => $id,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar evaluación: ' . $e->getMessage()
+                'message' => 'Error al eliminar evaluación: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -83,16 +85,16 @@ class EvaluacionController extends Controller
     {
         $evaluacion = DB::select('SELECT * FROM consultar_evaluacion_por_id(?)', [$id]);
 
-        if (!empty($evaluacion)) {
+        if (! empty($evaluacion)) {
             return response()->json([
                 'success' => true,
-                'evaluacion' => $evaluacion[0]
+                'evaluacion' => $evaluacion[0],
             ]);
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'Evaluación no encontrada'
+            'message' => 'Evaluación no encontrada',
         ], 404);
     }
 }

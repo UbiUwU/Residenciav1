@@ -10,15 +10,16 @@ class TipoPlantilla extends Model
     use HasFactory;
 
     protected $table = 'tipos_plantilla';
+
     protected $primaryKey = 'id';
 
     protected $fillable = [
         'nombre',
-        'descripcion'
+        'descripcion',
     ];
 
     protected $casts = [
-        'id' => 'integer'
+        'id' => 'integer',
     ];
 
     public $timestamps = false;

@@ -13,14 +13,14 @@ class CompetenciaInstrumentacionController extends Controller
         $request->validate([
             'id_instrumentacion' => 'required|exists:instrumentacion,id_instrumentacion',
             'id_tema' => 'required|exists:tema,id_Tema',
-            'horas_dedicadas' => 'required|integer|min:1'
+            'horas_dedicadas' => 'required|integer|min:1',
         ]);
 
         $competencia = CompetenciaInstrumentacion::create($request->all());
 
         return response()->json([
             'message' => 'Competencia creada exitosamente',
-            'data' => $competencia->load(['tema', 'competenciasGenericas', 'actividadesEnsenanza'])
+            'data' => $competencia->load(['tema', 'competenciasGenericas', 'actividadesEnsenanza']),
         ], 201);
     }
 
@@ -31,7 +31,7 @@ class CompetenciaInstrumentacionController extends Controller
             'competencias' => 'required|array',
             'competencias.*.id_instrumentacion' => 'required|exists:instrumentacion,id_instrumentacion',
             'competencias.*.id_tema' => 'required|exists:tema,id_Tema',
-            'competencias.*.horas_dedicadas' => 'required|integer|min:1'
+            'competencias.*.horas_dedicadas' => 'required|integer|min:1',
         ]);
 
         $competencias = [];
@@ -41,7 +41,7 @@ class CompetenciaInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Competencias creadas exitosamente',
-            'data' => $competencias
+            'data' => $competencias,
         ], 201);
     }
 
@@ -49,7 +49,7 @@ class CompetenciaInstrumentacionController extends Controller
     public function updateOne(Request $request, $id)
     {
         $request->validate([
-            'horas_dedicadas' => 'sometimes|required|integer|min:1'
+            'horas_dedicadas' => 'sometimes|required|integer|min:1',
         ]);
 
         $competencia = CompetenciaInstrumentacion::findOrFail($id);
@@ -57,7 +57,7 @@ class CompetenciaInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Competencia actualizada exitosamente',
-            'data' => $competencia->load(['tema', 'competenciasGenericas', 'actividadesEnsenanza'])
+            'data' => $competencia->load(['tema', 'competenciasGenericas', 'actividadesEnsenanza']),
         ]);
     }
 
@@ -67,7 +67,7 @@ class CompetenciaInstrumentacionController extends Controller
         $request->validate([
             'competencias' => 'required|array',
             'competencias.*.id_competencia' => 'required|exists:competencias_instrumentacion,id_competencia',
-            'competencias.*.horas_dedicadas' => 'sometimes|required|integer|min:1'
+            'competencias.*.horas_dedicadas' => 'sometimes|required|integer|min:1',
         ]);
 
         $competenciasActualizadas = [];
@@ -79,7 +79,7 @@ class CompetenciaInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Competencias actualizadas exitosamente',
-            'data' => $competenciasActualizadas
+            'data' => $competenciasActualizadas,
         ]);
     }
 }

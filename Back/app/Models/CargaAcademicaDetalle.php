@@ -7,13 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class CargaAcademicaDetalle extends Model
 {
     protected $table = 'carga_academica_detalles';
+
     protected $primaryKey = 'idcargadetalle';
+
     public $incrementing = true;
+
     public $timestamps = false;
 
     protected $fillable = [
         'clavehorario',
-        'idcargageneral'
+        'idcargageneral',
     ];
 
     /**

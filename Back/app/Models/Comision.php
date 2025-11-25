@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Comision extends Model
 {
     protected $table = 'comision';
+
     protected $primaryKey = 'id_comision';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -42,7 +44,7 @@ class Comision extends Model
 
     public function maestros()
     {
-        return $this->belongsToMany(Maestro::class,'comision_maestro',
+        return $this->belongsToMany(Maestro::class, 'comision_maestro',
             'id_comision',
             'tarjeta_maestro',
             'id_comision',

@@ -10,8 +10,10 @@ class PeriodoEscolarController extends Controller
     public function index()
     {
         $periodos = PeriodoEscolar::with(['fechasClave', 'fechasClave.tipoFecha'])->get();
+
         return response()->json($periodos);
     }
+
     public function indexL()
     {
         $periodos = PeriodoEscolar::periodos()->get();
@@ -19,6 +21,7 @@ class PeriodoEscolarController extends Controller
         return response()->json($periodos);
 
     }
+
     // En el Controller
     public function indexClean()
     {
@@ -42,21 +45,22 @@ class PeriodoEscolarController extends Controller
                         'obligatoria' => $fecha->es_obligatoria,
                         'tipo_fecha' => $fecha->tipoFecha ? [
                             'clave' => $fecha->tipoFecha->clave,
-                            'nombre' => $fecha->tipoFecha->nombre
-                        ] : null
+                            'nombre' => $fecha->tipoFecha->nombre,
+                        ] : null,
                     ];
-                })
+                }),
             ];
         });
 
         return response()->json($cleanPeriodos);
     }
+
     // Obtener un periodo escolar específico con sus fechas clave y tipos de fecha
     public function show($id)
     {
         $periodo = PeriodoEscolar::with(['fechasClave', 'fechasClave.tipoFecha'])->find($id);
 
-        if (!$periodo) {
+        if (! $periodo) {
             return response()->json(['message' => 'Periodo escolar no encontrado'], 404);
         }
 
@@ -67,7 +71,7 @@ class PeriodoEscolarController extends Controller
     {
         $periodo = PeriodoEscolar::with(['fechasClave.tipoFecha'])->find($id);
 
-        if (!$periodo) {
+        if (! $periodo) {
             return response()->json(['message' => 'Periodo escolar no encontrado'], 404);
         }
 
@@ -88,15 +92,14 @@ class PeriodoEscolarController extends Controller
                     'obligatoria' => $fecha->es_obligatoria,
                     'tipo_fecha' => $fecha->tipoFecha ? [
                         'clave' => $fecha->tipoFecha->clave,
-                        'nombre' => $fecha->tipoFecha->nombre
-                    ] : null
+                        'nombre' => $fecha->tipoFecha->nombre,
+                    ] : null,
                 ];
-            })
+            }),
         ];
 
         return response()->json($cleanPeriodo);
     }
-
 
     // Crear un nuevo periodo escolar
     public function store(Request $request)
@@ -113,7 +116,7 @@ class PeriodoEscolarController extends Controller
 
         return response()->json([
             'message' => 'Periodo escolar creado exitosamente',
-            'data' => $periodo
+            'data' => $periodo,
         ], 201);
     }
 
@@ -122,7 +125,7 @@ class PeriodoEscolarController extends Controller
     {
         $periodo = PeriodoEscolar::find($id);
 
-        if (!$periodo) {
+        if (! $periodo) {
             return response()->json(['message' => 'Periodo escolar no encontrado'], 404);
         }
 
@@ -138,7 +141,7 @@ class PeriodoEscolarController extends Controller
 
         return response()->json([
             'message' => 'Periodo escolar actualizado exitosamente',
-            'data' => $periodo
+            'data' => $periodo,
         ]);
     }
 
@@ -147,7 +150,7 @@ class PeriodoEscolarController extends Controller
     {
         $periodo = PeriodoEscolar::find($id);
 
-        if (!$periodo) {
+        if (! $periodo) {
             return response()->json(['message' => 'Periodo escolar no encontrado'], 404);
         }
 

@@ -13,14 +13,14 @@ class IndicadorAlcanceInstrumentacionController extends Controller
         $request->validate([
             'id_competencia' => 'required|exists:competencias_instrumentacion,id_competencia',
             'indicador_alcance' => 'required|string',
-            'valor_indicador' => 'required|integer|min:0'
+            'valor_indicador' => 'required|integer|min:0',
         ]);
 
         $indicador = IndicadorAlcanceInstrumentacion::create($request->all());
 
         return response()->json([
             'message' => 'Indicador de alcance creado exitosamente',
-            'data' => $indicador
+            'data' => $indicador,
         ], 201);
     }
 
@@ -31,7 +31,7 @@ class IndicadorAlcanceInstrumentacionController extends Controller
             'indicadores' => 'required|array',
             'indicadores.*.id_competencia' => 'required|exists:competencias_instrumentacion,id_competencia',
             'indicadores.*.indicador_alcance' => 'required|string',
-            'indicadores.*.valor_indicador' => 'required|integer|min:0'
+            'indicadores.*.valor_indicador' => 'required|integer|min:0',
         ]);
 
         $indicadores = [];
@@ -41,7 +41,7 @@ class IndicadorAlcanceInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Indicadores de alcance creados exitosamente',
-            'data' => $indicadores
+            'data' => $indicadores,
         ], 201);
     }
 
@@ -50,7 +50,7 @@ class IndicadorAlcanceInstrumentacionController extends Controller
     {
         $request->validate([
             'indicador_alcance' => 'sometimes|required|string',
-            'valor_indicador' => 'sometimes|required|integer|min:0'
+            'valor_indicador' => 'sometimes|required|integer|min:0',
         ]);
 
         $indicador = IndicadorAlcanceInstrumentacion::findOrFail($id);
@@ -58,7 +58,7 @@ class IndicadorAlcanceInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Indicador de alcance actualizado exitosamente',
-            'data' => $indicador
+            'data' => $indicador,
         ]);
     }
 
@@ -69,7 +69,7 @@ class IndicadorAlcanceInstrumentacionController extends Controller
             'indicadores' => 'required|array',
             'indicadores.*.id_indicador' => 'required|exists:indicadores_alcance_instrumentacion,id_indicador',
             'indicadores.*.indicador_alcance' => 'sometimes|required|string',
-            'indicadores.*.valor_indicador' => 'sometimes|required|integer|min:0'
+            'indicadores.*.valor_indicador' => 'sometimes|required|integer|min:0',
         ]);
 
         $indicadoresActualizados = [];
@@ -81,7 +81,7 @@ class IndicadorAlcanceInstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Indicadores de alcance actualizados exitosamente',
-            'data' => $indicadoresActualizados
+            'data' => $indicadoresActualizados,
         ]);
     }
 }

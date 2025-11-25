@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comision;
-use App\Models\ComisionFecha;
-use App\Models\ComisionMaestro;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +20,7 @@ class ComisionController extends Controller
                 $query->periodos();
             },
             'tipoEvento',
-            'fechas'
+            'fechas',
         ])
             ->orderBy('id_comision', 'asc')
             ->get();
@@ -33,98 +31,99 @@ class ComisionController extends Controller
     public function indexClean()
     {
         $comisiones = Comision::all();
+
         return response()->json($comisiones);
     }
 
     // Método para filtrar comisiones por período escolar
-public function indexByPeriodo($idPeriodoEscolar)
-{
-    $validator = Validator::make(
-        ['id_periodo_escolar' => $idPeriodoEscolar],
-        ['id_periodo_escolar' => 'required|integer|exists:periodo_escolar,id_periodo_escolar']
-    );
+    public function indexByPeriodo($idPeriodoEscolar)
+    {
+        $validator = Validator::make(
+            ['id_periodo_escolar' => $idPeriodoEscolar],
+            ['id_periodo_escolar' => 'required|integer|exists:periodo_escolar,id_periodo_escolar']
+        );
 
-    if ($validator->fails()) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Parámetro inválido',
-            'errors' => $validator->errors()
-        ], 422);
-    }
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parámetro inválido',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
 
-    $comisiones = Comision::with([
+        $comisiones = Comision::with([
 
         ])
-        ->where('id_periodo_escolar', $idPeriodoEscolar)
-        ->orderBy('id_comision', 'asc')
-        ->get();
+            ->where('id_periodo_escolar', $idPeriodoEscolar)
+            ->orderBy('id_comision', 'asc')
+            ->get();
 
-    return response()->json([
-        'success' => true,
-        'data' => $comisiones,
-        'count' => $comisiones->count(),
-        'filtros' => ['periodo_escolar' => $idPeriodoEscolar]
-    ]);
-}
-
-// Método para filtrar comisiones por maestro (tarjeta)
-public function indexByMaestro($tarjetaMaestro)
-{
-    $validator = Validator::make(
-        ['tarjeta_maestro' => $tarjetaMaestro],
-        ['tarjeta_maestro' => 'required|integer|exists:maestros,tarjeta']
-    );
-
-    if ($validator->fails()) {
         return response()->json([
-            'success' => false,
-            'message' => 'Parámetro inválido',
-            'errors' => $validator->errors()
-        ], 422);
+            'success' => true,
+            'data' => $comisiones,
+            'count' => $comisiones->count(),
+            'filtros' => ['periodo_escolar' => $idPeriodoEscolar],
+        ]);
     }
 
-    $comisiones = Comision::with([
+    // Método para filtrar comisiones por maestro (tarjeta)
+    public function indexByMaestro($tarjetaMaestro)
+    {
+        $validator = Validator::make(
+            ['tarjeta_maestro' => $tarjetaMaestro],
+            ['tarjeta_maestro' => 'required|integer|exists:maestros,tarjeta']
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parámetro inválido',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $comisiones = Comision::with([
             'maestros' => function ($query) {
                 $query->soloNombre();
             },
         ])
-        ->whereHas('maestros', function ($query) use ($tarjetaMaestro) {
-            $query->where('tarjeta', $tarjetaMaestro);
-        })
-        ->orderBy('id_comision', 'asc')
-        ->get();
+            ->whereHas('maestros', function ($query) use ($tarjetaMaestro) {
+                $query->where('tarjeta', $tarjetaMaestro);
+            })
+            ->orderBy('id_comision', 'asc')
+            ->get();
 
-    return response()->json([
-        'success' => true,
-        'data' => $comisiones,
-        'count' => $comisiones->count(),
-        'filtros' => ['tarjeta_maestro' => $tarjetaMaestro]
-    ]);
-}
-
-// Método para filtrar comisiones por período y maestro combinados
-public function indexByPeriodoAndMaestro($idPeriodoEscolar, $tarjetaMaestro)
-{
-    $validator = Validator::make(
-        [
-            'id_periodo_escolar' => $idPeriodoEscolar,
-            'tarjeta_maestro' => $tarjetaMaestro
-        ],
-        [
-            'id_periodo_escolar' => 'required|integer|exists:periodo_escolar,id_periodo_escolar',
-            'tarjeta_maestro' => 'required|integer|exists:maestros,tarjeta'
-        ]
-    );
-
-    if ($validator->fails()) {
         return response()->json([
-            'success' => false,
-            'message' => 'Parámetros inválidos',
-            'errors' => $validator->errors()
-        ], 422);
+            'success' => true,
+            'data' => $comisiones,
+            'count' => $comisiones->count(),
+            'filtros' => ['tarjeta_maestro' => $tarjetaMaestro],
+        ]);
     }
 
-    $comisiones = Comision::with([
+    // Método para filtrar comisiones por período y maestro combinados
+    public function indexByPeriodoAndMaestro($idPeriodoEscolar, $tarjetaMaestro)
+    {
+        $validator = Validator::make(
+            [
+                'id_periodo_escolar' => $idPeriodoEscolar,
+                'tarjeta_maestro' => $tarjetaMaestro,
+            ],
+            [
+                'id_periodo_escolar' => 'required|integer|exists:periodo_escolar,id_periodo_escolar',
+                'tarjeta_maestro' => 'required|integer|exists:maestros,tarjeta',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parámetros inválidos',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $comisiones = Comision::with([
             'maestros' => function ($query) {
                 $query->soloNombre();
             },
@@ -132,25 +131,25 @@ public function indexByPeriodoAndMaestro($idPeriodoEscolar, $tarjetaMaestro)
                 $query->periodos();
             },
             'tipoEvento',
-            'fechas'
+            'fechas',
         ])
-        ->where('id_periodo_escolar', $idPeriodoEscolar)
-        ->whereHas('maestros', function ($query) use ($tarjetaMaestro) {
-            $query->where('tarjeta', $tarjetaMaestro);
-        })
-        ->orderBy('id_comision', 'asc')
-        ->get();
+            ->where('id_periodo_escolar', $idPeriodoEscolar)
+            ->whereHas('maestros', function ($query) use ($tarjetaMaestro) {
+                $query->where('tarjeta', $tarjetaMaestro);
+            })
+            ->orderBy('id_comision', 'asc')
+            ->get();
 
-    return response()->json([
-        'success' => true,
-        'data' => $comisiones,
-        'count' => $comisiones->count(),
-        'filtros' => [
-            'periodo_escolar' => $idPeriodoEscolar,
-            'tarjeta_maestro' => $tarjetaMaestro
-        ]
-    ]);
-}
+        return response()->json([
+            'success' => true,
+            'data' => $comisiones,
+            'count' => $comisiones->count(),
+            'filtros' => [
+                'periodo_escolar' => $idPeriodoEscolar,
+                'tarjeta_maestro' => $tarjetaMaestro,
+            ],
+        ]);
+    }
 
     // Mostrar una comisión específica
     public function show($id)
@@ -163,7 +162,7 @@ public function indexByPeriodoAndMaestro($idPeriodoEscolar, $tarjetaMaestro)
                 $query->periodos();
             },
             'tipoEvento',
-            'fechas'
+            'fechas',
         ])
             ->findOrFail($id);
 
@@ -225,9 +224,11 @@ public function indexByPeriodoAndMaestro($idPeriodoEscolar, $tarjetaMaestro)
             }
 
             DB::commit();
+
             return response()->json($comision->load(['tipoEvento', 'periodoEscolar', 'fechas', 'maestros']), 201);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -290,9 +291,11 @@ public function indexByPeriodoAndMaestro($idPeriodoEscolar, $tarjetaMaestro)
             }
 
             DB::commit();
+
             return response()->json($comision->load(['tipoEvento', 'periodoEscolar', 'fechas', 'maestros']));
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -302,6 +305,7 @@ public function indexByPeriodoAndMaestro($idPeriodoEscolar, $tarjetaMaestro)
     {
         $comision = Comision::findOrFail($id);
         $comision->delete();
+
         return response()->json(['message' => 'Comisión eliminada correctamente']);
     }
 }

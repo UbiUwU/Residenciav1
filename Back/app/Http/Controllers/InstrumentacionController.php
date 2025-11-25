@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Instrumentacion;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class InstrumentacionController extends Controller
 {
@@ -24,11 +23,11 @@ class InstrumentacionController extends Controller
             'competencias.nivelesDesempeno.indicadoresAlcance',
             'competencias.evaluaciones.indicadoresAlcance',
             'apoyosDidacticos',
-            'calendarizaciones'
+            'calendarizaciones',
         ])->get();
 
         return response()->json([
-            'data' => $instrumentaciones
+            'data' => $instrumentaciones,
         ]);
     }
 
@@ -56,7 +55,7 @@ class InstrumentacionController extends Controller
             ->get();
 
         return response()->json([
-            'data' => $instrumentaciones
+            'data' => $instrumentaciones,
         ]);
     }
 
@@ -83,9 +82,8 @@ class InstrumentacionController extends Controller
             ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento')
             ->get();
 
-
         return response()->json([
-            'data' => $instrumentaciones
+            'data' => $instrumentaciones,
         ]);
     }
 
@@ -113,7 +111,7 @@ class InstrumentacionController extends Controller
             ->get();
 
         return response()->json([
-            'data' => $instrumentaciones
+            'data' => $instrumentaciones,
         ]);
     }
 
@@ -140,9 +138,8 @@ class InstrumentacionController extends Controller
             ->join('departamentos', 'instrumentacion.id_departamento', '=', 'departamentos.id_departamento')
             ->get();
 
-
         return response()->json([
-            'data' => $instrumentaciones
+            'data' => $instrumentaciones,
         ]);
     }
 
@@ -170,7 +167,7 @@ class InstrumentacionController extends Controller
             ->get();
 
         return response()->json([
-            'data' => $instrumentaciones
+            'data' => $instrumentaciones,
         ]);
     }
 
@@ -223,7 +220,7 @@ class InstrumentacionController extends Controller
         $instrumentaciones = $query->get();
 
         return response()->json([
-            'data' => $instrumentaciones
+            'data' => $instrumentaciones,
         ]);
     }
 
@@ -237,7 +234,7 @@ class InstrumentacionController extends Controller
             'id_periodo_escolar' => 'required|exists:periodo_escolar,id_periodo_escolar',
             'id_departamento' => 'required|exists:departamentos,id_departamento',
             'nombre_jefe_academico' => 'nullable|string|max:60',
-            'estado' => 'nullable|in:borrador,revision,aprobado,rechazado'
+            'estado' => 'nullable|in:borrador,revision,aprobado,rechazado',
         ]);
 
         $instrumentacion = Instrumentacion::create([
@@ -247,12 +244,12 @@ class InstrumentacionController extends Controller
             'id_periodo_escolar' => $request->id_periodo_escolar,
             'id_departamento' => $request->id_departamento,
             'nombre_jefe_academico' => $request->nombre_jefe_academico,
-            'estado' => $request->estado ?? 'borrador'
+            'estado' => $request->estado ?? 'borrador',
         ]);
 
         return response()->json([
             'message' => 'Instrumentación creada exitosamente',
-            'data' => $instrumentacion->load(['asignatura', 'maestro', 'carrera', 'periodoEscolar', 'departamento'])
+            'data' => $instrumentacion->load(['asignatura', 'maestro', 'carrera', 'periodoEscolar', 'departamento']),
         ], 201);
     }
 
@@ -266,7 +263,7 @@ class InstrumentacionController extends Controller
             'id_periodo_escolar' => 'sometimes|required|exists:periodo_escolar,id_periodo_escolar',
             'id_departamento' => 'sometimes|required|exists:departamentos,id_departamento',
             'nombre_jefe_academico' => 'nullable|string|max:60',
-            'estado' => 'nullable|in:borrador,revision,aprobado,rechazado'
+            'estado' => 'nullable|in:borrador,revision,aprobado,rechazado',
         ]);
 
         $instrumentacion = Instrumentacion::findOrFail($id);
@@ -275,7 +272,7 @@ class InstrumentacionController extends Controller
 
         return response()->json([
             'message' => 'Instrumentación actualizada exitosamente',
-            'data' => $instrumentacion->load(['asignatura', 'maestro', 'carrera', 'periodoEscolar', 'departamento'])
+            'data' => $instrumentacion->load(['asignatura', 'maestro', 'carrera', 'periodoEscolar', 'departamento']),
         ]);
     }
 
@@ -304,11 +301,11 @@ class InstrumentacionController extends Controller
                 ]);
             },
             'apoyosDidacticos',
-            'calendarizaciones'
+            'calendarizaciones',
         ])->findOrFail($id);
 
         return response()->json([
-            'data' => $instrumentacion
+            'data' => $instrumentacion,
         ]);
     }
 }

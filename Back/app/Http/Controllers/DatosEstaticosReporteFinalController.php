@@ -17,14 +17,14 @@ class DatosEstaticosReporteFinalController extends Controller
             $validator = Validator::make($request->all(), [
                 'numero_grupos_atendidos' => 'required|integer|min:0',
                 'numero_estudiantes' => 'required|integer|min:0',
-                'numero_asignaturas_diferentes' => 'required|integer|min:0'
+                'numero_asignaturas_diferentes' => 'required|integer|min:0',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Datos de entrada inválidos',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
@@ -45,13 +45,13 @@ class DatosEstaticosReporteFinalController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Datos estáticos actualizados exitosamente',
-                'data' => $datosEstaticos
+                'data' => $datosEstaticos,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar datos estáticos: ' . $e->getMessage()
+                'message' => 'Error al actualizar datos estáticos: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -68,13 +68,13 @@ class DatosEstaticosReporteFinalController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $datosEstaticos
+                'data' => $datosEstaticos,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Datos estáticos no encontrados: ' . $e->getMessage()
+                'message' => 'Datos estáticos no encontrados: '.$e->getMessage(),
             ], 404);
         }
     }
@@ -87,18 +87,18 @@ class DatosEstaticosReporteFinalController extends Controller
         try {
             $datosEstaticos = DatosEstaticosReporteFinal::where('id_reportefinal', $id_reportefinal)
                 ->firstOrFail();
-            
+
             $datosEstaticos->delete();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Datos estáticos eliminados exitosamente'
+                'message' => 'Datos estáticos eliminados exitosamente',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar datos estáticos: ' . $e->getMessage()
+                'message' => 'Error al eliminar datos estáticos: '.$e->getMessage(),
             ], 500);
         }
     }

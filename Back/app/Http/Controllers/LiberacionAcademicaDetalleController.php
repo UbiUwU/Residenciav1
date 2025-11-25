@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LiberacionAcademicaDetalle;
 use App\Models\LiberacionAcademica;
+use App\Models\LiberacionAcademicaDetalle;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class LiberacionAcademicaDetalleController extends Controller
 {
@@ -24,14 +24,14 @@ class LiberacionAcademicaDetalleController extends Controller
             $validator = Validator::make($request->all(), [
                 'numero_actividad' => 'required|integer|min:1',
                 'descripcion_actividad' => 'required|string|max:500',
-                'estado' => 'required|in:SI,NO,N/A'
+                'estado' => 'required|in:SI,NO,N/A',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Datos de entrada inválidos',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
@@ -43,12 +43,12 @@ class LiberacionAcademicaDetalleController extends Controller
             if ($existe) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Ya existe una actividad con el número ' . $request->numero_actividad . ' para esta liberación'
+                    'message' => 'Ya existe una actividad con el número '.$request->numero_actividad.' para esta liberación',
                 ], 409);
             }
 
             // Crear el detalle
-            $detalle = new LiberacionAcademicaDetalle();
+            $detalle = new LiberacionAcademicaDetalle;
             $detalle->id_liberacion = $id_liberacion;
             $detalle->numero_actividad = $request->numero_actividad;
             $detalle->descripcion_actividad = $request->descripcion_actividad;
@@ -63,14 +63,15 @@ class LiberacionAcademicaDetalleController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Detalle de liberación académica creado exitosamente',
-                'data' => $detalle
+                'data' => $detalle,
             ], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error al crear el detalle: ' . $e->getMessage()
+                'message' => 'Error al crear el detalle: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -85,14 +86,14 @@ class LiberacionAcademicaDetalleController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'descripcion_actividad' => 'sometimes|string|max:500',
-                'estado' => 'sometimes|in:SI,NO,N/A'
+                'estado' => 'sometimes|in:SI,NO,N/A',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Datos de entrada inválidos',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
@@ -117,14 +118,15 @@ class LiberacionAcademicaDetalleController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Detalle actualizado exitosamente',
-                'data' => $detalle
+                'data' => $detalle,
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar el detalle: ' . $e->getMessage()
+                'message' => 'Error al actualizar el detalle: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -144,14 +146,15 @@ class LiberacionAcademicaDetalleController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Detalle eliminado exitosamente'
+                'message' => 'Detalle eliminado exitosamente',
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar el detalle: ' . $e->getMessage()
+                'message' => 'Error al eliminar el detalle: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -171,14 +174,14 @@ class LiberacionAcademicaDetalleController extends Controller
                 'detalles' => 'required|array',
                 'detalles.*.numero_actividad' => 'required|integer|min:1',
                 'detalles.*.descripcion_actividad' => 'required|string|max:500',
-                'detalles.*.estado' => 'required|in:SI,NO,N/A'
+                'detalles.*.estado' => 'required|in:SI,NO,N/A',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Datos de entrada inválidos',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
@@ -192,13 +195,14 @@ class LiberacionAcademicaDetalleController extends Controller
 
                 if ($existe) {
                     DB::rollBack();
+
                     return response()->json([
                         'success' => false,
-                        'message' => 'Ya existe una actividad con el número ' . $detalleData['numero_actividad'] . ' para esta liberación'
+                        'message' => 'Ya existe una actividad con el número '.$detalleData['numero_actividad'].' para esta liberación',
                     ], 409);
                 }
 
-                $detalle = new LiberacionAcademicaDetalle();
+                $detalle = new LiberacionAcademicaDetalle;
                 $detalle->id_liberacion = $id_liberacion;
                 $detalle->numero_actividad = $detalleData['numero_actividad'];
                 $detalle->descripcion_actividad = $detalleData['descripcion_actividad'];
@@ -213,14 +217,15 @@ class LiberacionAcademicaDetalleController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Detalles creados exitosamente',
-                'data' => $detallesCreados
+                'data' => $detallesCreados,
             ], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error al crear los detalles: ' . $e->getMessage()
+                'message' => 'Error al crear los detalles: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -237,14 +242,14 @@ class LiberacionAcademicaDetalleController extends Controller
                 'detalles' => 'required|array',
                 'detalles.*.id_detalle' => 'required|exists:liberacion_academica_detalles,id_detalle',
                 'detalles.*.descripcion_actividad' => 'sometimes|string|max:500',
-                'detalles.*.estado' => 'sometimes|in:SI,NO,N/A'
+                'detalles.*.estado' => 'sometimes|in:SI,NO,N/A',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Datos de entrada inválidos',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
@@ -272,14 +277,15 @@ class LiberacionAcademicaDetalleController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Detalles actualizados exitosamente',
-                'data' => $detallesActualizados
+                'data' => $detallesActualizados,
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar los detalles: ' . $e->getMessage()
+                'message' => 'Error al actualizar los detalles: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -291,14 +297,14 @@ class LiberacionAcademicaDetalleController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'estado' => 'required|in:SI,NO,N/A'
+                'estado' => 'required|in:SI,NO,N/A',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Datos de entrada inválidos',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
@@ -309,13 +315,13 @@ class LiberacionAcademicaDetalleController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Estado actualizado exitosamente',
-                'data' => $detalle
+                'data' => $detalle,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar el estado: ' . $e->getMessage()
+                'message' => 'Error al actualizar el estado: '.$e->getMessage(),
             ], 500);
         }
     }

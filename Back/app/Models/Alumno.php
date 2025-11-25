@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Alumno extends Model
 {
     protected $table = 'alumnos';
+
     protected $primaryKey = 'numerocontrol';
-    public $incrementing = true; 
+
+    public $incrementing = true;
+
     public $timestamps = false; // La tabla no tiene created_at / updated_at
 
     protected $fillable = [
@@ -16,7 +19,7 @@ class Alumno extends Model
         'apellidopaterno',
         'apellidomaterno',
         'idusuario',
-        'clavecarrera'
+        'clavecarrera',
     ];
 
     /**
